@@ -1,0 +1,68 @@
+world-levels:
+  world: 1
+  world_nether: 1
+  world_the_end: 1
+
+world-whitelist:
+  reverse: false
+  list:
+  - world
+  - world_nether
+  - world_the_end
+
+region-blacklist:
+  reverse: false
+  list:
+  - pvp_arena
+
+exp:
+  use-tables: true
+  boss-bar:
+    enabled: false
+    title: '&e&lExp &6%exp%&7/&6%exp-max%'
+    color: YELLOW
+    style: SOLID
+  sources:
+    prevent-from:
+    - EGG
+    - DISPENSE_EGG
+    - SPAWNER
+    - SPAWNER_EGG
+    - SLIME_SPLIT
+    - BUILD_WITHER
+    - BUILD_SNOWMAN
+    - BUILD_IRONGOLEM
+    vanilla-mobs:
+      default:
+        min: 1
+        max: 2
+        chance: 100.0
+      PIG:
+        min: 3
+        max: 4
+        chance: 100.0
+    mythic-mobs:
+      default:
+        min: 2
+        max: 4
+        chance: 100.0
+      SkeletonKing:
+        min: 3
+        max: 5
+        chance: 100.0
+  loss:
+    on-death:
+      enabled: true
+      percent: 2
+    allow-negative: true
+  balance:
+    decrease-for-low-lvl-mobs:
+      enabled: true
+      every: 1
+      max-times: 10
+      percent: 10
+    increase-for-high-lvl-mobs:
+      enabled: true
+      every: 1
+      max-times: 10
+      percent: 10

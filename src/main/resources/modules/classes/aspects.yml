@@ -1,0 +1,56 @@
+aspects:
+  strength:
+    name: '&cStrength'
+    material: 'GOLDEN_SWORD'
+  dexterity:
+    name: '&eDexterity'
+    material: 'FEATHER'
+  defense:
+    name: '&bDefense'
+    material: 'DIAMOND_CHESTPLATE'
+  intelligence:
+    name: '&dIntelligence'
+    material: 'NETHER_STAR'
+
+gui:
+  title: Class Aspects
+  size: 27
+  aspect-slots: '10,11,15,16'
+  aspect-lore:
+  - '&7Current: &f%aspect_current%&7/&f%aspect_max%'
+  - '&7'
+  - '&c&lAffected Stats:'
+  - '&7%att_name%: &6+%att_inc% &7[&f%att_total%&7]'
+  - '&7%item_stat_name% &6+%item_stat_inc% &7[&f%item_stat_total%&7]'
+  - '&7%damage_name% &6+%damage_inc% &7[&f%damage_total%&7]'
+  - '&7%defense_name% &6+%defense_inc% &7[&f%defense_total%&7]'
+  - '&7'
+  - '&7Click to increase for &c%cost% AP&7!'
+  content:
+    filler_1:
+      material: BLACK_STAINED_GLASS_PANE
+      name: '&7'
+      slots: 0,1,2,3,5,6,7,8,9,17,18,19,20,21,22,23,24,25,26
+    filler_2:
+      material: CYAN_STAINED_GLASS_PANE
+      name: '&7'
+      slots: 1,2,6,7,19,20,24,25
+    filler_3:
+      material: IRON_BARS
+      name: '&7'
+      slots: 12,13,14
+    later:
+      material: REDSTONE
+      name: '&cReturn'
+      slots: '22'
+      type: RETURN
+    reset:
+      material: MILK_BUCKET
+      name: '&fReset'
+      lore:
+      - '&7Click to reset and return'
+      - '&7your &fAspect Points&7.'
+      item-flags:
+      - '*'
+      slots: 4
+      type: RESET

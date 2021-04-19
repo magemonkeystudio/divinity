@@ -1,0 +1,28 @@
+material: PRISMARINE_SHARD
+name: Rune of Speed
+lore:
+- '&7Grants &fSpeed %ITEM_LEVEL_ROMAN% &7effect'
+item-flags:
+- '*'
+tier: rare
+level:
+  min: 1
+  max: 3
+uses-by-level:
+  '1': 1
+success-rate-by-level:
+  '1': '75'
+  '2': '30 * %ITEM_LEVEL%'
+  '3': '30:50'
+socket-display: '&bRune: Speed %ITEM_LEVEL_ROMAN%'
+effect: SPEED
+target-requirements:
+  type:
+  - boots
+  level:
+    '1': '10'
+    '2': '20'
+    '3': '30'
+  module:
+  - '*'
+  socket: default

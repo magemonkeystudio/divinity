@@ -1,0 +1,6 @@
+command-aliases: drops
+
+multipliers:
+  vip: 1.25
+  premium: 1.5
+  gold: 1.75

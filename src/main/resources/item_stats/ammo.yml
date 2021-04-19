@@ -1,0 +1,44 @@
+ARROW:
+  enabled: true
+  name: Arrow
+  format: '&7➶ Ammo Type: &f%name%'
+
+SNOWBALL:
+  enabled: true
+  name: Snowball
+  format: '&7➶ Ammo Type: &f%name%'
+
+EGG:
+  enabled: true
+  name: Egg
+  format: '&7➶ Ammo Type: &f%name%'
+
+FIREBALL:
+  enabled: true
+  name: Fireball
+  format: '&7➶ Ammo Type: &f%name%'
+
+WITHER_SKULL:
+  enabled: true
+  name: Wither Skull
+  format: '&7➶ Ammo Type: &f%name%'
+
+SHULKER_BULLET:
+  enabled: true
+  name: Shulker Bullet
+  format: '&7➶ Ammo Type: &f%name%'
+
+LLAMA_SPIT:
+  enabled: true
+  name: Llama Spit
+  format: '&7➶ Ammo Type: &f%name%'
+
+ENDER_PEARL:
+  enabled: true
+  name: Ender Pearl
+  format: '&7➶ Ammo Type: &f%name%'
+
+EXP_POTION:
+  enabled: true
+  name: Exp Potion
+  format: '&7➶ Ammo Type: &f%name%'

@@ -1,0 +1,23 @@
+material: SHEARS
+name: 'Armor Extraction Tool'
+lore:
+- '&7Allows to extract item sockets.'
+tier: common
+item-flags:
+- '*'
+level:
+  min: 1
+  max: 3
+uses-by-level:
+  '1': 1
+  '2': 2
+  '3': 3
+target-requirements:
+  type:
+  - ARMOR
+  level:
+    '1': '1:5'
+    '2': '6:15'
+    '3': '16:30'
+  module:
+  - '*'

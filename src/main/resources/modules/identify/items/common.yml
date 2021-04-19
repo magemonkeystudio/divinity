@@ -1,0 +1,28 @@
+name: '&kUndentified Item'
+lore:
+- '&7Tier: %TIER_NAME%'
+- '&7Level: &f%ITEM_LEVEL%'
+- ''
+- '&4<Stats of this item are not known yet.>'
+- '&7'
+- '&cYou must have one of specified items'
+- '&cto unlock item stats:'
+- '&7▸ %tome-name%'
+tier: common
+item-flags:
+- '*'
+level:
+  min: 1
+  max: 25
+item-module: item_generator
+item-id: common
+applicable-tomes:
+- common
+- rare
+target-requirements:
+  type:
+  - '*'
+  level:
+    '1': 0
+  module:
+  - '*'

@@ -1,0 +1,345 @@
+package su.nightexpress.quantumrpg.modules.list.identify;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import su.nexmedia.engine.config.api.JYML;
+import su.nexmedia.engine.modules.IModule;
+import su.nexmedia.engine.utils.ItemUT;
+import su.nexmedia.engine.utils.actions.ActionManipulator;
+import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.api.QuantumAPI;
+import su.nightexpress.quantumrpg.modules.EModule;
+import su.nightexpress.quantumrpg.modules.LimitedItem;
+import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
+import su.nightexpress.quantumrpg.modules.list.identify.IdentifyManager.IdentifyItem;
+import su.nightexpress.quantumrpg.modules.list.identify.command.IdentifyCmd;
+import su.nightexpress.quantumrpg.modules.list.identify.event.PlayerIdentifyItemEvent;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
+import su.nightexpress.quantumrpg.stats.items.ItemStats;
+import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
+
+public class IdentifyManager extends QModuleDrop<IdentifyItem> {
+
+	private ActionManipulator actionsComplete;
+	private ActionManipulator actionsError;
+	
+	private static final String PERFIX_TOME = "tome-";
+	private static final String PREFIX_ITEM = "item-";
+	
+	public IdentifyManager(@NotNull QuantumRPG plugin) {
+		super(plugin, IdentifyItem.class);
+	}
+	
+	@Override
+	@NotNull
+	public String getId() {
+		return EModule.IDENTIFY;
+	}
+
+	@Override
+	@NotNull
+	public String version() {
+		return "1.2.0";
+	}
+
+	@Override
+	public void setup() {
+		this.actionsComplete = new ActionManipulator(plugin, cfg, "general.actions-complete");
+		this.actionsError = new ActionManipulator(plugin, cfg, "general.actions-error");
+		
+		this.moduleCommand.addSubCommand(new IdentifyCmd(this));
+	}
+
+	@Override
+	public void shutdown() {
+		
+	}
+	
+	@Override
+	protected void loadItems() {
+		this.items = new HashMap<>();
+		this.plugin.getConfigManager().extractFullPath(plugin.getDataFolder() + this.getItemsFolder());
+		this.plugin.getConfigManager().extractFullPath(plugin.getDataFolder() + this.getPath() + "tomes");
+		
+		for (JYML cfg : JYML.loadAll(this.getFullPath() + "tomes", true)) {
+			try {
+				IdentifyTome tome = new IdentifyTome(plugin, cfg);
+				this.items.put(tome.getId(), tome);
+			}
+			catch (Exception ex) {
+				this.error("Could not load item: " + cfg.getFile().getName());
+				ex.printStackTrace();
+			}
+		}
+		
+		for (JYML cfg : JYML.loadAll(plugin.getDataFolder() + this.getItemsFolder(), true)) {
+			try {
+				UnidentifiedItem item = new UnidentifiedItem(plugin, cfg);
+				this.items.put(item.getId(), item);
+			}
+			catch (Exception ex) {
+				this.error("Could not load item: " + cfg.getFile().getName());
+				ex.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param item ItemStack
+	 * @return true if item is IdentifyTome
+	 */
+	public boolean isUnidentified(@NotNull ItemStack item) {
+		String id = this.getItemId(item);
+		if (id == null) return false;
+		
+		return this.isUnidentified(this.getItemById(id));
+	}
+	
+	private boolean isUnidentified(@Nullable IdentifyItem item) {
+		return item instanceof UnidentifiedItem;
+	}
+	
+	public boolean isTome(@NotNull ItemStack item) {
+		String id = this.getItemId(item);
+		if (id == null) return false;
+		
+		return this.isTome(this.getItemById(id));
+	}
+	
+	private boolean isTome(@Nullable IdentifyItem item) {
+		return item instanceof IdentifyTome;
+	}
+	
+	private boolean isValidTome(@NotNull ItemStack target, @NotNull ItemStack tome) {
+		if (!this.isUnidentified(target)) return false;
+		if (!this.isTome(tome)) return false;
+		
+		IdentifyTome iTome = (IdentifyTome) this.getModuleItem(tome);
+		if (iTome == null) return false;
+		
+		UnidentifiedItem uItem = (UnidentifiedItem) this.getModuleItem(target);
+		if (uItem == null) return false;
+		
+		return uItem.getApplicableTomeIds().contains(iTome.getId());
+	}
+	
+	@Nullable
+	public ItemStack getIdentifiedOf(@NotNull ItemStack unknown) {
+		UnidentifiedItem uItem = (UnidentifiedItem) this.getModuleItem(unknown);
+		if (uItem == null) return null;
+		
+		ItemGeneratorManager generatorManager = plugin.getModuleCache().getTierManager();
+		
+		ItemStack unlock = null;
+		int lvl = ItemStats.getLevel(unknown);
+		
+		if (uItem.getResultModule() instanceof ItemGeneratorManager && generatorManager != null) {
+			GeneratorItem result = generatorManager.getItemById(uItem.getResultId());
+			if (result != null) {
+				unlock = result.create(lvl, -1, unknown.getType());
+			}
+		}
+		else {
+			unlock = QuantumAPI.getItemByModule(uItem.getResultModule(), uItem.getResultId(), lvl, -1, -1);
+		}
+		
+		return unlock;
+	}
+	
+	@Override
+	protected boolean onDragDrop(
+			@NotNull Player player, 
+			@NotNull ItemStack src, 
+			@NotNull ItemStack target, 
+			@NotNull IdentifyItem mItem, 
+			@NotNull InventoryClickEvent e) {
+		
+		// Check if IdentifyTome can be applied to this item
+		if (!this.isValidTome(target, src)) {
+			plugin.lang().Identify_Identify_Error_Tome.send(player);
+			return false;
+		}
+		
+		ItemStack unlock = this.getIdentifiedOf(target);
+		if (unlock == null || unlock.getType() == Material.AIR) {
+			plugin.lang().Error_Internal.send(player);
+			return false;
+		}
+		
+		UnidentifiedItem uItem = (UnidentifiedItem) this.getModuleItem(target);
+		IdentifyTome iTome = (IdentifyTome) this.getModuleItem(src);
+		if (uItem == null || iTome == null) return false;
+		
+    	PlayerIdentifyItemEvent eve = new PlayerIdentifyItemEvent(uItem, iTome, unlock, player);
+    	plugin.getPluginManager().callEvent(eve);
+    	if (eve.isCancelled()) {
+    		this.actionsError.process(player);
+    		return false;
+    	}
+		
+    	this.takeChargeClickEvent(player, src, e);
+
+		// Save other items in stack
+		// and then return them back to a player
+		ItemStack lost = null;
+		if (target.getAmount() > 1) {
+			lost = new ItemStack(target);
+			lost.setAmount(target.getAmount() - 1);
+		}
+		
+		ItemRequirements.updateItem(player, unlock);
+		e.setCurrentItem(unlock);
+		
+		if (lost != null) {
+			ItemUT.addItem(player, lost);
+		}
+		
+		plugin.lang().Identify_Identify_Success
+		.replace("%item%", ItemUT.getItemName(unlock))
+		.send(player);
+		
+		this.actionsComplete.process(player);
+		return true;
+	}
+	
+	public abstract class IdentifyItem extends LimitedItem {
+
+		public IdentifyItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
+			super(plugin, cfg, IdentifyManager.this);
+		}
+	}
+	
+	public class IdentifyTome extends IdentifyItem {
+		
+		public IdentifyTome(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+			super(plugin, cfg, IdentifyManager.this);
+			this.id = PERFIX_TOME + this.id; // Add tome prefix to item id
+		}
+	}
+	
+	public class UnidentifiedItem extends IdentifyItem {
+
+		private QModuleDrop<?> itemModule;
+		private String itemId;
+		private Set<String> applicableTomes;
+		
+		public UnidentifiedItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+			super(plugin, cfg, IdentifyManager.this);
+			this.id = PREFIX_ITEM + this.id; // Add item prefix to item id
+			
+			String itemModule = cfg.getString("item-module");
+			if (itemModule == null) {
+				throw new IllegalArgumentException("Invalid 'item-module' setting.");
+			}
+			IModule<?> mod = plugin.getModuleManager().getModule(itemModule);
+			if (mod == null || !mod.isLoaded() || !(mod instanceof QModuleDrop<?>)) {
+				throw new IllegalArgumentException("Invalid 'item-module' setting. No such module.");
+			}
+			this.itemModule = (QModuleDrop<?>) mod;
+			
+			String finalId = cfg.getString("item-id");
+			if (finalId == null || this.itemModule.getItemById(finalId) == null) {
+				throw new IllegalArgumentException("Invalid 'item-id' provided! No such item.");
+			}
+			this.setResultId(finalId);
+			
+			this.applicableTomes = new HashSet<>();
+			for (String s : cfg.getStringList("applicable-tomes")) {
+				this.applicableTomes.add(PERFIX_TOME + s.toLowerCase());
+			}
+		}
+		
+		@NotNull
+		public QModuleDrop<?> getResultModule() {
+			return this.itemModule;
+		}
+		
+		/**
+		 * @return Returns the final (original/identified) item id.
+		 * Returns an empty string if no item id was attached.
+		 */
+		@NotNull
+		public String getResultId() {
+			return this.itemId;
+		}
+		
+		
+		public void setResultId(@NotNull String item) {
+			this.itemId = item.toLowerCase();
+		}
+		
+		/**
+		 * @return Returns list with IdentifyTome ids, which are can
+		 * be applied to this item to identify it.
+		 */
+		@NotNull
+		public Set<String> getApplicableTomeIds() {
+			return this.applicableTomes;
+		}
+		
+		@Override
+		@NotNull
+		protected ItemStack build(int lvl, int uses) {
+			ItemStack orig = QuantumAPI.getItemByModule(this.getResultModule(), getResultId(), lvl, -1, -1);
+			if (orig == null) {
+				error("Invalid module for unidentified item '" + id + "' !");
+				return new ItemStack(Material.AIR);
+			}
+			
+			ItemStack item = super.build(lvl, uses);
+			item.setType(orig.getType());
+			
+			ItemMeta metaItem = item.getItemMeta();
+			ItemMeta metaOrig = orig.getItemMeta();
+			if (metaOrig != null && metaItem != null) {
+				if (metaOrig instanceof Damageable && metaItem instanceof Damageable) {
+					Damageable dOrig = (Damageable) metaOrig;
+					Damageable dItem = (Damageable) metaItem;
+					
+					dItem.setDamage(dOrig.getDamage());
+				}
+				if (metaOrig.hasCustomModelData()) {
+					metaItem.setCustomModelData(metaOrig.getCustomModelData());
+				}
+				
+				List<String> lore = metaItem.getLore();
+				if (lore == null) return item;
+				
+				List<String> loreCopy = new ArrayList<>();
+				for (String line : lore) {
+					if (line.contains("%tome-name%")) {
+						for (String tomeId : this.getApplicableTomeIds()) {
+							IdentifyItem tome = IdentifyManager.this.getItemById(tomeId);
+							if (tome == null) continue;
+							
+							ItemStack tomeItem = tome.create(1);
+							loreCopy.add(line.replace("%tome-name%", ItemUT.getItemName(tomeItem)));
+						}
+					}
+					else {
+						loreCopy.add(line);
+					}
+				}
+				metaItem.setLore(loreCopy);
+				item.setItemMeta(metaItem);
+			}
+			
+			return item;
+		}
+	}
+}

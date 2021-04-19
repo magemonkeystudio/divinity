@@ -1,0 +1,461 @@
+main: su.nightexpress.quantumrpg.QuantumRPG
+version: 5.10.2
+name: QuantumRPG
+author: NightExpress
+desciption: The most advanced, customizable and configurable RPG-Core plugin!
+depend: [NexEngine]
+loadafter: [Magic]
+softdepend:
+- Citizens
+- HolographicDisplays
+- LorinthsRpgMobs
+- MangoQuest
+- mcMMO
+- MythicMobs
+- PlaceholderAPI
+- PwingRaces
+- QuestCreator
+- RacesOfThana
+- SkillAPI
+- SkillsPro
+- Vault
+- WorldGuard
+api-version: 1.14
+permissions:
+  quantumrpg.admin:
+    description: Full access
+    default: op
+    children:
+      quantumrpg.user: true
+      quantumrpg.bypass: true
+      quantumrpg.classes: true
+      quantumrpg.dismantle: true
+      quantumrpg.extractor: true
+      quantumrpg.classes: true
+      quantumrpg.combatlog: true
+      quantumrpg.identify: true
+      quantumrpg.fortify: true
+      quantumrpg.magicdust: true
+      quantumrpg.party: true
+      quantumrpg.refine: true
+      quantumrpg.repair: true
+      quantumrpg.sell: true
+      quantumrpg.soulbound: true
+  
+  quantumrpg.user:
+    description: User access
+    default: true
+  
+  quantumrpg.bypass:
+    description: Bypass all the plugin restrictions and requirements.
+    default: op
+    children:
+      quantumrpg.bypass.requirement: true
+  quantumrpg.bypass.requirement:
+    description: Bypass all item player requirements.
+    default: op
+    children:
+      quantumrpg.bypass.class: true
+      quantumrpg.bypass.level: true
+      quantumrpg.bypass.soulbound: true
+      quantumrpg.bypass.untradeable: true
+  quantumrpg.bypass.requirement.level:
+    description: Bypass item player level requirement.
+    default: op
+  quantumrpg.bypass.requirement.class:
+    description: Bypass item player class requirement.
+    default: op
+  quantumrpg.bypass.requirement.soulbound:
+    description: Bypass item player soulbound requirement.
+    default: op
+  quantumrpg.bypass.requirement.untradeable:
+    description: Bypass item untradeable requirement.
+    default: op
+
+# Classes ----------------------------------------------------
+  quantumrpg.classes:
+    description: Full access to Classes module.
+    default: op
+    children:
+      quantumrpg.classes.cmd: true
+      quantumrpg.classes.class.*: true
+  quantumrpg.classes.cmd:
+    description: Full access to Classes commands.
+    default: op
+    children:
+      quantumrpg.classes.cmd.cast: true
+      quantumrpg.classes.cmd.select: true
+      quantumrpg.classes.cmd.skills: true
+      quantumrpg.classes.cmd.stats: true
+      quantumrpg.classes.cmd.aspects: true
+      quantumrpg.classes.cmd.addexp: true
+      quantumrpg.classes.cmd.addlevel: true
+      quantumrpg.classes.cmd.addskill: true
+      quantumrpg.classes.cmd.addaspectpoints: true
+      quantumrpg.classes.cmd.addskillpoints: true
+      quantumrpg.classes.cmd.setclass: true
+      quantumrpg.classes.cmd.reset: true
+      quantumrpg.classes.cmd.resetaspectpoints: true
+      quantumrpg.classes.cmd.resetskillpoints: true
+  quantumrpg.classes.cmd.cast:
+    description: Access to /class cast command.
+    default: op
+  quantumrpg.classes.cmd.select:
+    description: Access to /class select command.
+    default: true
+  quantumrpg.classes.cmd.skills:
+    description: Access to /class skills command.
+    default: true
+  quantumrpg.classes.cmd.stats:
+    description: Access to /class stats command.
+    default: true
+  quantumrpg.classes.cmd.aspects:
+    description: Access to /class aspects command.
+    default: true
+  quantumrpg.classes.cmd.addexp:
+    description: Access to /class addexp command.
+    default: op
+  quantumrpg.classes.cmd.addskillpoints:
+    description: Access to /class addskillpoints command.
+    default: op
+  quantumrpg.classes.cmd.addaspectpoints:
+    description: Access to /class addaspectpoints command.
+    default: op
+  quantumrpg.classes.cmd.addlevel:
+    description: Access to /class addlevel command.
+    default: op
+  quantumrpg.classes.cmd.setclass:
+    description: Access to /class setclass command.
+    default: op
+  quantumrpg.classes.cmd.reset:
+    description: Access to /class reset command.
+    default: op
+  quantumrpg.classes.cmd.resetaspectpoints:
+    description: Access to /class resetaspectpoints command.
+    default: op
+  quantumrpg.classes.cmd.resetskillpoints:
+    description: Access to /class resetskillpoints command.
+    default: op
+  quantumrpg.classes.class.*:
+    description: Access to all classes.
+    default: op
+
+# Combat Log ----------------------------------------------------
+  quantumrpg.combatlog:
+    description: Full access to Combat Log module.
+    default: op
+    children:
+      quantumrpg.combatlog.cmd: true
+  quantumrpg.combatlog.cmd:
+    description: Access to all Combat Log commands.
+    default: op
+    children:
+      quantumrpg.combatlog.cmd.log: true
+  quantumrpg.combatlog.cmd.log:
+    description: Access to /combatlog log command.
+    default: true
+
+# Dismantle ----------------------------------------------------
+  quantumrpg.dismantle:
+    description: Full access to the Dismantle module.
+    default: op
+    children:
+      quantumrpg.dismantle.cmd: true
+      quantumrpg.dismantle.gui: true
+  quantumrpg.dismantle.cmd:
+    description: Access to Dismantle commands.
+    default: op
+    children:
+      quantumrpg.dismantle.cmd.open: true
+  quantumrpg.dismantle.gui:
+    description: Access to Dismantle GUI.
+    default: op
+
+# Essences ----------------------------------------------------
+  quantumrpg.essences:
+    description: Full access to Essences module.
+    default: op
+    children:
+      quantumrpg.essences.cmd: true
+      quantumrpg.essences.gui: true
+  
+  quantumrpg.essences.cmd:
+    description: Access to all Essences commands.
+    default: op
+    children:
+      quantumrpg.essences.cmd.merchant: true
+      quantumrpg.essences.cmd.merchant.others: true
+  quantumrpg.essences.cmd.merchant:
+    description: Access to /essences merchant command.
+    default: op
+  quantumrpg.essences.cmd.merchant.others:
+    description: Access to /essences merchant [player] command.
+    default: op
+  
+  quantumrpg.essences.gui:
+    description: Access to all Essences GUIs.
+    default: op
+    children:
+      quantumrpg.essences.gui.user: true
+      quantumrpg.essences.gui.merchant: true
+  quantumrpg.essences.gui.user:
+    description: Access to Default Socketing GUI.
+    default: op
+  quantumrpg.essences.gui.merchant:
+    description: Access to Merchant Socketing GUI.
+    default: op
+
+# Extractor ----------------------------------------------------
+  quantumrpg.extractor:
+    description: Full access to Extractor module.
+    default: op
+    children:
+      quantumrpg.extractor.cmd: true
+      quantumrpg.extractor.gui: true
+  quantumrpg.extractor.cmd:
+    description: Access to all Extractor commands.
+    default: op
+    children:
+      quantumrpg.extractor.cmd.open: true
+  quantumrpg.extractor.cmd.open:
+    description: Access to /extractor open command.
+    default: op
+  quantumrpg.extractor.gui:
+    description: Access Extractor GUI.
+    default: op
+
+# Fortify ----------------------------------------------------
+  quantumrpg.fortify:
+    description: Full access to Fortify module.
+    default: op
+    children:
+      quantumrpg.fortify.cmd: true
+  quantumrpg.fortify.cmd:
+    description: Access to all Fortify commands.
+    default: op
+    children:
+      quantumrpg.fortify.cmd.fortify: true
+      quantumrpg.fortify.cmd.unfortify: true
+  quantumrpg.fortify.cmd.fortify:
+    description: Access to /fortify fortify command.
+    default: op
+  quantumrpg.fortify.cmd.unfortify:
+    description: Access to /fortify unfortify command.
+    default: op
+
+# Gems ----------------------------------------------------
+  quantumrpg.gems:
+    description: Full access to Gems module.
+    default: op
+    children:
+      quantumrpg.gems.cmd: true
+      quantumrpg.gems.gui: true
+  quantumrpg.gems.cmd:
+    description: Access to all Gems commands.
+    default: op
+    children:
+      quantumrpg.gems.cmd.merchant: true
+      quantumrpg.gems.cmd.merchant.others: true
+  quantumrpg.gems.cmd.merchant:
+    description: Access to /gems merchant command.
+    default: op
+  quantumrpg.gems.cmd.merchant.others:
+    description: Access to /gems merchant [player] command.
+    default: op
+  quantumrpg.gems.gui:
+    description: Access to all Gems GUIs.
+    default: op
+    children:
+      quantumrpg.gems.gui.user: true
+      quantumrpg.gems.gui.merchant: true
+  quantumrpg.gems.gui.user:
+    description: Access to user GUI.
+    default: op
+  quantumrpg.gems.gui.merchant:
+    description: Access to Merchant GUI.
+    default: op
+
+# Identify ----------------------------------------------------
+  quantumrpg.identify:
+    description: Full access to Identify module.
+    default: op
+    children:
+      quantumrpg.identify.cmd: true
+  quantumrpg.identify.cmd:
+    description: Access to all Identify commands.
+    default: op
+    children:
+      quantumrpg.identify.cmd.identify: true
+  quantumrpg.identify.cmd.identify:
+    description: Access to /identify identify command.
+    default: op
+
+# Magic Dust ----------------------------------------------------
+  quantumrpg.magicdust:
+    description: Full access to Magic Dust module.
+    default: op
+    children:
+      quantumrpg.magicdust.cmd: true
+      quantumrpg.magicdust.gui: true
+  quantumrpg.magicdust.cmd:
+    description: Full access to Magic Dust commands.
+    default: op
+    children:
+      quantumrpg.magicdust.cmd.open: true
+  quantumrpg.magicdust.cmd.open:
+    description: Allows to use /magicdust open command.
+    default: op
+  quantumrpg.magicdust.gui:
+    description: Allows to use Magic Dust GUI.
+    default: op
+
+# Party ----------------------------------------------------
+  quantumrpg.party:
+    description: Access to Party module.
+    default: true
+    children:
+      quantumrpg.party.cmd: true
+  quantumrpg.party.cmd:
+    description: Access to Party commands.
+    default: op
+    children:
+      quantumrpg.party.cmd.chat: true
+      quantumrpg.party.cmd.create: true
+      quantumrpg.party.cmd.disband: true
+      quantumrpg.party.cmd.drop: true
+      quantumrpg.party.cmd.exp: true
+      quantumrpg.party.cmd.invite: true
+      quantumrpg.party.cmd.join: true
+      quantumrpg.party.cmd.kick: true
+      quantumrpg.party.cmd.leave: true
+      quantumrpg.party.cmd.menu: true
+      quantumrpg.party.cmd.roll: true
+      quantumrpg.party.cmd.tp: true
+  quantumrpg.party.cmd.chat:
+    description: Access to /party chat command.
+    default: true
+  quantumrpg.party.cmd.create:
+    description: Access to /party create command.
+    default: true
+  quantumrpg.party.cmd.disband:
+    description: Access to /party disband command.
+    default: true
+  quantumrpg.party.cmd.drop:
+    description: Access to /party drop command.
+    default: true
+  quantumrpg.party.cmd.exp:
+    description: Access to /party exp command.
+    default: true
+  quantumrpg.party.cmd.invite:
+    description: Access to /party invite command.
+    default: true
+  quantumrpg.party.cmd.join:
+    description: Access to /party join command.
+    default: true
+  quantumrpg.party.cmd.kick:
+    description: Access to /party kick command.
+    default: true
+  quantumrpg.party.cmd.leave:
+    description: Access to /party leave command.
+    default: true
+  quantumrpg.party.cmd.menu:
+    description: Access to /party menu command.
+    default: true
+  quantumrpg.party.cmd.roll:
+    description: Access to /party roll command.
+    default: true
+  quantumrpg.party.cmd.tp:
+    description: Access to /party tp command.
+    default: true
+
+# Refine ----------------------------------------------------
+  quantumrpg.refine:
+    description: Access to Refine module.
+    default: op
+    children:
+      quantumrpg.refine.cmd: true
+  quantumrpg.refine.cmd:
+    description: Access to Refine commands.
+    default: op
+    children:
+      quantumrpg.refine.cmd.refine: true
+      quantumrpg.refine.cmd.downgrade: true
+
+# Repair ----------------------------------------------------
+  quantumrpg.repair:
+    description: Access to Repair module.
+    default: op
+    children:
+      quantumrpg.repair.cmd: true
+      quantumrpg.repair.gui: true
+  quantumrpg.repair.cmd:
+    description: Access to Repair commands.
+    default: op
+    children:
+      quantumrpg.repair.cmd.open: true
+  quantumrpg.repair.gui:
+    description: Access to Repair GUI.
+    default: op
+
+# Runes ----------------------------------------------------
+  quantumrpg.runes:
+    description: Full access to Runes module.
+    default: op
+    children:
+      quantumrpg.runes.cmd: true
+      quantumrpg.runes.gui: true
+  
+  quantumrpg.runes.cmd:
+    description: Access to all Runes commands.
+    default: op
+    children:
+      quantumrpg.runes.cmd.merchant: true
+      quantumrpg.runes.cmd.merchant.others: true
+  quantumrpg.runes.cmd.merchant:
+    description: Access to /runes merchant command.
+    default: op
+  quantumrpg.runes.cmd.merchant.others:
+    description: Access to /runes merchant [player] command.
+    default: op
+  
+  quantumrpg.runes.gui:
+    description: Access to all Runes GUIs.
+    default: op
+    children:
+      quantumrpg.runes.gui.user: true
+      quantumrpg.runes.gui.merchant: true
+  quantumrpg.runes.gui.user:
+    description: Access to Default Socketing GUI.
+    default: op
+  quantumrpg.runes.gui.merchant:
+    description: Access to Merchant Socketing GUI.
+    default: op
+
+# Sell ----------------------------------------------------
+  quantumrpg.sell:
+    description: Full access to the Sell module.
+    default: op
+    children:
+      quantumrpg.sell.cmd: true
+      quantumrpg.sell.gui: true
+  quantumrpg.sell.cmd:
+    description: Access to Sell commands.
+    default: op
+    children:
+      quantumrpg.sell.cmd.open: true
+  quantumrpg.sell.gui:
+    description: Access to Sell GUI.
+    default: op
+
+# Soulbound ----------------------------------------------------
+  quantumrpg.soulbound:
+    description: Access to Soulbound module.
+    default: op
+    children:
+      quantumrpg.soulbound.cmd: true
+  quantumrpg.soulbound.cmd:
+    description: Access to Soulbound commands.
+    default: op
+    children:
+      quantumrpg.soulbound.cmd.soul: true
+      quantumrpg.soulbound.cmd.untradeable: true

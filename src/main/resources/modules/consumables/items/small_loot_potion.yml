@@ -1,0 +1,48 @@
+material: POTION
+name: '&eSmall Loot Potion %ITEM_LEVEL_ROMAN%'
+lore:
+- '%ITEM_CHARGES%'
+- '&7Cooldown: &f1 minute&7.'
+- ''
+- '%USER_LEVEL%'
+- '%USER_CLASS%'
+- ''
+- '&7Increases a chance to find the item'
+- '&7by &f10%&7 for &f10 minutes&7.'
+tier: common
+skull-hash: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjZkM2E3ZTA3ZjVkYWRkNDdiYWRiMTM4MmE1YjE2Mjc4MThlZTE2YTE5YTdjMGJmMjc2OGFlNjI2MjczN2I2In19fQ==\
+color: 220,220,30
+item-flags:
+- '*'
+enchanted: false
+level:
+  min: 1
+  max: 3
+effects:
+  health: 0
+  hunger: 0
+user-requirements-by-level:
+  level:
+    '1': 10
+  class:
+    '1': Warrior,Berserker
+uses-by-level:
+  '1': 1
+  '2': 2
+  '3': 3
+usage:
+  RIGHT:
+    cooldown: 1
+    actions:
+      default:
+        target-selectors:
+          self:
+          - '[SELF]'
+        conditions:
+          list: []
+          actions-on-fail: 'null'
+        action-executors:
+        - '[COMMAND_CONSOLE] ~message: qrpg buff %executor% stat LOOT_RATE 10 600; ~target: self;'
+        - '[PARTICLE_SIMPLE] ~name: VILLAGER_HAPPY; ~offset: 0.3,0.3,0.3; ~speed: 0.3; ~amount: 50; ~target: self;'
+        - '[SOUND] ~name: BLOCK_NOTE_BLOCK_BELL; ~target: self;'
+target-requirements: {}

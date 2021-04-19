@@ -1,0 +1,105 @@
+_vanilla_generic:
+  priority: 50
+  name: 'Generic'
+  format: '&6⚔ %name%: &f%value%'
+  attached-damage-causes:
+  - DROWNING
+  - STARVATION
+  - SUFFOCATION
+  - SUICIDE
+  - THORNS
+  - VOID
+  on-hit-actions: {}
+  biome-damage-modifier: {}
+  entity-type-modifier: {}
+  mythic-mob-faction-modifier: {}
+
+physical:
+  priority: 1000
+  name: Physical Damage
+  format: '&6⚔ %name%: &f%value%'
+  attached-damage-causes: []
+  on-hit-actions: {}
+  biome-damage-modifier:
+    PLAINS: 1.0
+  entity-type-modifier:
+    PIG: 1.0
+  mythic-mob-faction-modifier:
+    faction: 1.0
+
+magical:
+  priority: 10
+  name: Magical Damage
+  format: '&d⚡ %name%: &f%value%'
+  attached-damage-causes:
+  - DRAGON_BREATH
+  - LIGHTNING
+  - MAGIC
+  - WITHER
+  on-hit-actions: {}
+  biome-damage-modifier:
+    PLAINS: 1.0
+  entity-type-modifier:
+    PIG: 1.0
+  mythic-mob-faction-modifier:
+    faction: 1.0
+
+fire:
+  priority: 10
+  name: Fire Damage
+  format: '&c☀ %name%: &f%value%'
+  attached-damage-causes:
+  - FIRE
+  - FIRE_TICK
+  - LAVA
+  - HOT_FLOOR
+  on-hit-actions: {}
+  biome-damage-modifier:
+    PLAINS: 1.0
+    NETHER: 1.25
+  entity-type-modifier:
+    PIG: 1.0
+  mythic-mob-faction-modifier:
+    faction: 1.0
+
+poison:
+  priority: 10
+  name: Poison Damage
+  format: '&a☣ %name%: &f%value%'
+  attached-damage-causes:
+  - POISON
+  on-hit-actions: {}
+  biome-damage-modifier:
+    PLAINS: 1.0
+    SWAMPLAND: 1.25
+  entity-type-modifier:
+    PIG: 1.0
+  mythic-mob-faction-modifier:
+    faction: 1.0
+
+water:
+  priority: 10
+  name: Water Damage
+  format: '&9⚓ %name%: &f%value%'
+  attached-damage-causes: []
+  on-hit-actions: {}
+  biome-damage-modifier:
+    PLAINS: 1.0
+    OCEAN: 1.25
+  entity-type-modifier:
+    PIG: 1.0
+  mythic-mob-faction-modifier:
+    faction: 1.0
+
+wind:
+  priority: 10
+  name: Wind Damage
+  format: '&7⚕ %name%: &f%value%'
+  attached-damage-causes: []
+  on-hit-actions: {}
+  biome-damage-modifier:
+    PLAINS: 1.0
+  entity-type-modifier:
+    PIG: 1.0
+  mythic-mob-faction-modifier:
+    faction: 1.0

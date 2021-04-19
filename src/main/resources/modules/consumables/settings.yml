@@ -1,0 +1,8 @@
+command-aliases: consumables,consumes
+consuming:
+  allow-on-full-health: true
+  allow-on-full-food: true
+item-format:
+  name: '%ITEM_NAME%'
+  lore:
+  - '%ITEM_LORE%'

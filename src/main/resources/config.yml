@@ -1,0 +1,214 @@
+core:
+  lang: en
+  command-aliases: quantumrpg,qrpg
+  prefix: QuantumRPG
+
+data:
+  auto-save: 15
+  storage:
+    type: sqlite
+    username: none
+    password: none
+    host: none
+    database: none
+  purge:
+    enabled: false
+    days: 60
+
+tiers:
+  default:
+    color: '&7'
+    name: '%TIER_COLOR%Default'
+  cursed:
+    color: '&4'
+    name: '%TIER_COLOR%Cursed'
+  common:
+    color: '&r&f'
+    name: '%TIER_COLOR%Common'
+  rare:
+    color: '&a'
+    name: '%TIER_COLOR%Rare'
+  superior:
+    color: '&9'
+    name: '%TIER_COLOR%Superior'
+  fabled:
+    color: '&e'
+    name: '%TIER_COLOR%Fabled'
+  eternal:
+    color: '&6'
+    name: '%TIER_COLOR%Eternal'
+  mythic:
+    color: '&5'
+    name: '%TIER_COLOR%Mythic'
+
+modules: {}
+
+item-sub-types:
+  axe:
+    name: Axe
+    materials:
+    - WOODEN_AXE
+    - GOLDEN_AXE
+    - IRON_AXE
+    - DIAMOND_AXE
+    - STONE_AXE
+  sword:
+    name: Sword
+    materials:
+    - WOODEN_SWORD
+    - GOLDEN_SWORD
+    - IRON_SWORD
+    - DIAMOND_SWORD
+    - STONE_SWORD
+  shears:
+    name: Shears
+    materials:
+    - SHEARS
+  shovel:
+    name: Shovel
+    materials:
+    - WOODEN_SHOVEL
+    - GOLDEN_SHOVEL
+    - IRON_SHOVEL
+    - DIAMOND_SHOVEL
+    - STONE_SHOVEL
+  pickaxe:
+    name: Pickaxe
+    materials:
+    - WOODEN_PICKAXE
+    - GOLDEN_PICKAXE
+    - IRON_PICKAXE
+    - DIAMOND_PICKAXE
+    - STONE_PICKAXE
+  hoe:
+    name: Hoe
+    materials:
+    - WOODEN_HOE
+    - GOLDEN_HOE
+    - IRON_HOE
+    - DIAMOND_HOE
+    - STONE_HOE
+  helmet:
+    name: Helmet
+    materials:
+    - GOLDEN_HELMET
+    - IRON_HELMET
+    - DIAMOND_HELMET
+    - CHAINMAIL_HELMET
+    - LEATHER_HELMET
+    - TURTLE_HELMET
+  chestplate:
+    name: Chestplate
+    materials:
+    - GOLDEN_CHESTPLATE
+    - IRON_CHESTPLATE
+    - DIAMOND_CHESTPLATE
+    - CHAINMAIL_CHESTPLATE
+    - LEATHER_CHESTPLATE
+  leggings:
+    name: Leggings
+    materials:
+    - GOLDEN_LEGGINGS
+    - IRON_LEGGINGS
+    - DIAMOND_LEGGINGS
+    - CHAINMAIL_LEGGINGS
+    - LEATHER_LEGGINGS
+  boots:
+    name: Boots
+    materials:
+    - GOLDEN_BOOTS
+    - IRON_BOOTS
+    - DIAMOND_BOOTS
+    - CHAINMAIL_BOOTS
+    - LEATHER_BOOTS
+  elytra:
+    name: Elytra
+    materials:
+    - ELYTRA
+  shield:
+    name: Shield
+    materials:
+    - SHIELD
+  bow:
+    name: Bow
+    materials:
+    - BOW
+  fishing_rod:
+    name: Fishing Rod
+    materials:
+    - FISHING_ROD
+  trident:
+    name: 'Trident'
+    materials:
+    - TRIDENT
+
+item-groups:
+  WEAPON:
+    name: Weapon
+    materials:
+    - WOODEN_SWORD
+    - WOODEN_AXE
+    - STONE_SWORD
+    - STONE_AXE
+    - GOLDEN_SWORD
+    - GOLDEN_AXE
+    - IRON_SWORD
+    - IRON_AXE
+    - DIAMOND_SWORD
+    - DIAMOND_AXE
+    - SHEARS
+    - FISHING_ROD
+    - BOW
+    - CROSSBOW
+    - TRIDENT
+  TOOL:
+    name: Tool
+    materials:
+    - WOODEN_HOE
+    - WOODEN_AXE
+    - WOODEN_SHOVEL
+    - WOODEN_PICKAXE
+    - STONE_HOE
+    - STONE_AXE
+    - STONE_SHOVEL
+    - STONE_PICKAXE
+    - GOLDEN_HOE
+    - GOLDEN_AXE
+    - GOLDEN_SHOVEL
+    - GOLDEN_PICKAXE
+    - IRON_HOE
+    - IRON_AXE
+    - IRON_SHOVEL
+    - IRON_PICKAXE
+    - DIAMOND_HOE
+    - DIAMOND_AXE
+    - DIAMOND_SHOVEL
+    - DIAMOND_PICKAXE
+    - SHEARS
+    - FISHING_ROD
+  ARMOR:
+    name: Armor
+    materials:
+    - LEATHER_HELMET
+    - LEATHER_CHESTPLATE
+    - LEATHER_LEGGINGS
+    - LEATHER_BOOTS
+    - GOLDEN_HELMET
+    - GOLDEN_CHESTPLATE
+    - GOLDEN_LEGGINGS
+    - GOLDEN_BOOTS
+    - CHAINMAIL_HELMET
+    - CHAINMAIL_CHESTPLATE
+    - CHAINMAIL_LEGGINGS
+    - CHAINMAIL_BOOTS
+    - IRON_HELMET
+    - IRON_CHESTPLATE
+    - IRON_LEGGINGS
+    - IRON_BOOTS
+    - DIAMOND_HELMET
+    - DIAMOND_CHESTPLATE
+    - DIAMOND_LEGGINGS
+    - DIAMOND_BOOTS
+    - SHIELD
+    - ELYTRA
+    - TURTLE_HELMET

@@ -1,0 +1,9 @@
+profile:
+  select-on-join: false
+  change-cooldown: 60
+  name-regex: '[a-zA-Z0-9_]*'
+
+profiles-amount:
+  default: 1
+  vip: 2
+  admin: -1

@@ -1,0 +1,149 @@
+name: '&cGladiator'
+permission-required: false
+description:
+- '&7Gladiators has huge damage skills,'
+- '&7but be careful in combat:'
+- '&7your attack speed and defense'
+- '&7is not good as your damage.'
+- '&7'
+- '&a&lClass Stats:'
+- '&a▸ &7%att_name_ARMOR%: &a%att_start_ARMOR% &7(&f+%att_lvl_ARMOR%&7)'
+- '&a▸ &7%att_name_ARMOR_TOUGHNESS%: &a%att_start_ARMOR_TOUGHNESS% &7(&f+%att_lvl_ARMOR_TOUGHNESS%&7)'
+- '&a▸ &7%att_name_ATTACK_DAMAGE%: &a%att_start_ATTACK_DAMAGE% &7(&f+%att_lvl_ATTACK_DAMAGE%&7)'
+- '&a▸ &7%att_name_ATTACK_SPEED%: &a%att_start_ATTACK_SPEED% &7(&f+%att_lvl_ATTACK_SPEED%&7)'
+- '&a▸ &7%att_name_FLYING_SPEED%: &a%att_start_FLYING_SPEED% &7(&f+%att_lvl_FLYING_SPEED%&7)'
+- '&a▸ &7%att_name_KNOCKBACK_RESISTANCE%: &a%att_start_KNOCKBACK_RESISTANCE% &7(&f+%att_lvl_KNOCKBACK_RESISTANCE%&7)'
+- '&a▸ &7%att_name_LUCK%: &a%att_start_LUCK% &7(&f+%att_lvl_LUCK%&7)'
+- '&a▸ &7%att_name_MAX_HEALTH%: &a%att_start_MAX_HEALTH% &7(&f+%att_lvl_MAX_HEALTH%&7)'
+- '&a▸ &7%att_name_MOVEMENT_SPEED%: &a%att_start_MOVEMENT_SPEED% &7(&f+%att_lvl_MOVEMENT_SPEED%&7)'
+icon:
+  material: DIAMOND_AXE
+  name: '%name%'
+  lore:
+  - '%description%'
+actions-on-select:
+  default:
+    target-selectors:
+      self:
+      - '[SELF]'
+    conditions:
+      list: []
+      on-fail: 'null'
+    action-executors:
+    - '[COMMAND_CONSOLE] ~message: class addskill %executor% furious_charge 1; ~target: self;'
+leveling:
+  start-level: 10
+  max-level: 50
+  start-exp: 200
+  exp-formula: '%exp% * 1.14'
+  skill-points: 2
+  aspect-points: 1
+  actions-on-level:
+    '15':
+      default:
+        target-selectors:
+          self:
+          - '[SELF]'
+        conditions:
+          list: []
+          on-fail: 'null'
+        action-executors:
+        - '[COMMAND_CONSOLE] ~message: class addskill %executor% energy_impact 1; ~target: self;'
+    '20':
+      default:
+        target-selectors:
+          self:
+          - '[SELF]'
+        conditions:
+          list: []
+          on-fail: 'null'
+        action-executors:
+        - '[COMMAND_CONSOLE] ~message: class addskill %executor% rupture 1; ~target: self;'
+sub-class:
+  sub-classes: []
+  level-to-change: -1
+mana:
+  symbol: ⚡
+  name: '&9Mana'
+  regen-of-max: 1.9
+attributes:
+  ARMOR:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  ARMOR_TOUGHNESS:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  ATTACK_DAMAGE:
+    start-value: 1.65
+    per-level-value: 0.065
+    max-value: -1.0
+  ATTACK_SPEED:
+    start-value: 3.7
+    per-level-value: 0.0
+    max-value: -1.0
+  FLYING_SPEED:
+    start-value: 0.4
+    per-level-value: 0.0
+    max-value: -1.0
+  KNOCKBACK_RESISTANCE:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  LUCK:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  MAX_HEALTH:
+    start-value: 28.0
+    per-level-value: 0.75
+    max-value: -1.0
+  MOVEMENT_SPEED:
+    start-value: 0.1
+    per-level-value: 0.0
+    max-value: -1.0
+aspects:
+  STRENGTH:
+    start-value: 0
+    max-value: 10
+    per-point-values:
+      attributes:
+        ATTACK_DAMAGE: 0.11
+        MAX_HEALTH: 0.25
+      stats:
+        HEALTH_REGEN: 0.25
+      damage-types:
+        physical: 0.65%
+  DEFENSE:
+    start-value: 0
+    max-value: 10
+    per-point-values:
+      attributes:
+        ARMOR: 0.06
+      stats: {}
+      defense-types:
+        physical: 0.24%
+      item-stats:
+        BLOCK_RATE: 0.4%
+        BLOCK_DAMAGE: 0.2%
+  DEXTERITY:
+    start-value: 0
+    max-value: 10
+    per-point-values:
+      attributes:
+        ATTACK_SPEED: 0.011
+        MOVEMENT_SPEED: 0.001
+      item-stats:
+        ACCURACY_RATE: 0.25%
+  INTELLIGENCE:
+    start-value: 0
+    max-value: 10
+    per-point-values:
+      attributes: {}
+      stats:
+        COOLDOWN_REDUCE: 0.2
+        MAX_MANA: 0.25
+        MANA_REGEN: 0.25
+      damage-types:
+        magical: 0.15%

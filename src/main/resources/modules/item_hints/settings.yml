@@ -1,0 +1,36 @@
+command-aliases: itemhints,hints
+
+glow:
+  enabled: true
+  ignored-items:
+    vanilla: false
+    by-material:
+    - BEDROCK
+    - BARRIER
+    by-name:
+    - 'some word'
+    - '***{'
+    - 'QS_SHOWCASE'
+    by-lore:
+    - 'some lore word'
+    by-module:
+    - 'module name'
+
+hint:
+  enabled: true
+  format:
+    singular: '%name%'
+    plural: '%name% &7x%amount%'
+  ignored-items:
+    vanilla: false
+    by-material:
+    - BEDROCK
+    - BARRIER
+    by-name:
+    - 'some word'
+    - '***{'
+    - 'QS_SHOWCASE'
+    by-lore:
+    - 'some lore word'
+    by-module:
+    - 'module name'

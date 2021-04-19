@@ -1,0 +1,43 @@
+material: ARROW
+name: 'Piercing Arrow'
+lore:
+- '&f⚔ &7Arrow Damage: &c-10%'
+- '&f⚔ &7Enemy Defense: &a-50%'
+- ''
+- '&7This arrow will &fignore 50%&7 of enemy'
+- '&7defense, but doing &f10% less &7damage.'
+tier: common
+level:
+  min: 1
+  max: 1
+
+bonuses-by-level:
+  '1':
+    additional-stats: {}
+    additional-damage:
+      physical: -10.0%
+    defense-ignoring:
+      physical: 50.0%
+
+on-fly-actions:
+  default:
+    target-selectors:
+      self:
+      - '[SELF]'
+    conditions:
+      list: []
+      actions-on-fail: 'null'
+    action-executors:
+    - '[PARTICLE_SIMPLE] ~name: REDSTONE:255,255,255; ~amount: 1; ~offset:0,0,0; ~speed: 0; ~target: self;'
+on-hit-actions:
+  default:
+    target-selectors:
+      sight:
+      - '[FROM_SIGHT] ~distance: 3; ~party-member: false; ~attackable: true; ~allow-self: false;'
+    conditions:
+      list: []
+      actions-on-fail: 'null'
+    action-executors:
+    - '[PARTICLE_SIMPLE] ~name: ITEM_CRACK:IRON_SWORD; ~offset:0.2,0.2,0.2; ~speed: 0.2; ~amount: 50; ~target: sight;'
+
+target-requirements: {}

@@ -1,0 +1,210 @@
+#+------------------------------------------------------+
+#|   Quantum RPG Engine Config (Beta)                   |
+#|                                                      |
+#| This file contains options for internal              |
+#| plugin functions and features that you               |
+#| probably would like to adjust.                       |
+#|                                                      |
+#| If you think you had break something here,           |
+#| simply delete this file to generate a default one.   |
+#|                                                      |
+#+------------------------------------------------------+
+
+# Packet Handler
+# Unlocks some unique plugin features based on game packets.
+packets:
+  # Enables/Disabled packet handling.
+  enabled: true
+  modules:
+    # When enabled, items that are affected by ItemHints module glow,
+    # will have glow color similar to the item name color.
+    glow-color: true
+    # When enabled, highly reduces the amount of heart particles that appears in combat.
+    # Setting this on 'true' can save player's FPS in combat with huge damage values.
+    reduce-damage-particles: true
+
+compatibility:
+  player-level-plugin: 'QuantumRPG'
+  player-class-plugin: 'QuantumRPG'
+  mob-level-plugin: 'MythicMobs'
+
+# Performance settings.
+# Adjusting these values may result in performance improvements or make it even worse.
+# Also, thoughtless adjusting some values can make gameplay worse.
+performance:
+  # Allowed values: 0,1,2
+  evaluator-engine: 1
+  entity-stats:
+    # How often entity AttributeModifiers should be updated (in ticks).
+    # This setting will update entity vanilla attribute bonuses added by Sets, Gems, Classes and other modules.
+    # Setting this value to 0 will cause manual updating which may not be accurate.
+    # Setting this value to low value may cause performance issues.
+    # Default value: 50 ticks (2.5 seconds).
+    # Recommended: 20 or more (1+ seconds).
+    bonus-update-interval: 50
+
+# Item Attributes Settings.
+attributes:
+  durability:
+    # When enabled, items will break on zero durability like for vanilla durability.
+    break-items-on-zero: true
+    effective-for:
+      # When enabled, all mobs equipment will be affected to the durability stat.
+      mobs: true
+      # When enabled, casting SkillAPI skills will reduce the durability of an item in hand.
+      skill-api-skills: true
+  # When enabled, mobs will be able to use all the plugin attributes: dealing custom damage, protecting by custom defense, etc.
+  effective-for-mobs: true
+  # When enabled, attributes from an offhand item will have effect as well.
+  effective-in-offhand: false
+  # When enabled, allows to hold in hand items with requirements that player don't meet.
+  # Even when this is 'true', item attributes won't be applied to a player until he meet the requirements.
+  allow-hold-items-you-cant-use: false
+
+combat:
+  # Shield settings.
+  shield:
+    block:
+      # Value bonus to BLOCK_RATE and BLOCK_DAMAGE stats.
+      # This value will be added to entity's stats on successful vanilla shield block.
+      block-rate-bonus: 100.0
+      block-damage-bonus: 35.0
+      # Cooldown that will be applied to entity's shield after the successful vanilla shield block.
+      cooldown: 2
+  # Disables vanilla sweep attack. Can be useful when AOE_DAMAGE stat is enabled to prevent extra damage.
+  # Setting this on 'true' will make it so swords will damage only ONE entity.
+  disable-vanilla-sweep-attack: true
+  # When enabled, reduces the amount of player's hearts in health bar to 10 hearts.
+  # This setting DOES NOT AFFECT THE REAL PLAYER'S HEALTH!
+  # This only reduces the VISUAL HEART DISPLAY to save the screen's space.
+  # NOTE: Sometimes this setting may have weird behavior with result of visual death bugs. This is either a plugin conflict or a Spigot bug.
+  compress-player-health-bar: false
+  # When enabled, Fishing Rod can be used to damage entities by Fishing hook.
+  fishing-hook-do-damage: true
+  # When enabled, Bows will do the full damage (depends on Damage Attributes) in melee combat.
+  bows-do-full-melee-damage: false
+  # Defines the damage modifier for attack cooldown.
+  # 1.0 = 100%, no changes.
+  # 0 = 0%, no damage for attack cooldown.
+  damage-modifier-for-cooldown: 1.0
+  # Maximal distance where entity can be reached when using Custom Actions Engine, Class Skills, etc.
+  max-get-target-distance: 30.0
+
+lore:
+  chars:
+    percent: '%'
+    negative: '&c'
+    positive: '+'
+    multiplier: 'x'
+  stats:
+    style:
+      # Default values separator.
+      separator:
+        value: '&7/'
+        color: '&f'
+      durability:
+        # Durability format. Use names from 'format-list'.
+        # Feel free to create your own!
+        format: 'default'
+        # Defines format for unbreakable items.
+        # Overrides 'format' value.
+        unbreakable: '&fUnbreakable'
+        # Placeholders:
+        # %current% - Current item durability.
+        # %max% - Maximal item durability.
+        # %percent% - Current item durability in percent of maximal.
+        format-list:
+          default:
+            '0': '&f%current%&7/&f%max%'
+          bar:
+            '100': '&a◼◼◼◼◼◼◼◼◼◼'
+            '90': '&a◼◼◼◼◼◼◼◼◼&7◼'
+            '80': '&2◼◼◼◼◼◼◼◼&7◼◼'
+            '70': '&2◼◼◼◼◼◼◼&7◼◼◼'
+            '60': '&e◼◼◼◼◼◼&7◼◼◼◼'
+            '50': '&e◼◼◼◼◼&7◼◼◼◼◼'
+            '40': '&6◼◼◼◼&7◼◼◼◼◼◼'
+            '30': '&6◼◼◼&7◼◼◼◼◼◼◼'
+            '20': '&c◼◼&7◼◼◼◼◼◼◼◼'
+            '1': '&4◼&7◼◼◼◼◼◼◼◼◼'
+            '0': '&7◼◼◼◼◼◼◼◼◼◼'
+          text:
+            '100': '&aGood &7(%percent%%)'
+            '70': '&2Pretty good &7(%percent%%)'
+            '50': '&eDamaged &7(%percent%%)'
+            '25': '&6Need repair &7(%percent%%)'
+            '10': '&cAlmost broken &7(%percent%%)'
+            '0': '&4Broken &7(%percent%%)'
+      damage:
+        format:
+          single: '&f%value%'
+          double: '&f%min% &7- &f%max%'
+      charges:
+        enabled: true
+        name: 'Charges'
+        format:
+          main: '&7%name%: &f%value%'
+          value:
+            default: '&f%min%&7/&f%max%'
+            unlimited: 'Unlimited'
+        break-items-on-zero:
+          enabled: true
+          excluded-modules:
+          - 'item_generator'
+      requirements:
+        user:
+          dynamic:
+            enabled: true
+            format:
+              'true': '&a&l✓ &r&a'
+              'false': '&c&l✗ &r&c'
+          level:
+            enabled: true
+            name: 'Player Level'
+            format:
+              main: '&c%state%%name%: &f%value%'
+              value:
+                single: '%min%+'
+                range: '%min%-%max%'
+          class:
+            enabled: true
+            name: 'Player Class'
+            format:
+              main: '&c%state%%name%: %value%'
+              value:
+                separator: '&7/'
+                color: '&f'
+        item:
+          level:
+            enabled: true
+            name: 'Item Level'
+            format:
+              main: '&c▸ %name%: %value%'
+              value:
+                single: '%min%+'
+                range: '%min% ~ %max%'
+          module:
+            enabled: true
+            name: 'Item Module'
+            format:
+              main: '&c▸ %name%: %value%'
+              value:
+                separator: '&7/'
+                color: '&f'
+          type:
+            enabled: true
+            name: 'Item Type'
+            format:
+              main: '&c▸ %name%: %value%'
+              value:
+                separator: '&7/'
+                color: '&f'
+          socket:
+            name: 'Socket Type'
+            format:
+              main: '&c▸ %name%: %value%'
+          tier:
+            enabled: true
+            name: 'Tier'
+            format:
+              main: '&c▸ %name%: %value%'

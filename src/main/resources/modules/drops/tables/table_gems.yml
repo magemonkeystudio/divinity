@@ -1,0 +1,23 @@
+name: '&dExample Gems Table'
+roll-once: true
+level-penalty:
+  enabled: false
+  variance: 10
+world-whitelist:
+- world
+- world_nether
+- world_the_end
+biome-whitelist:
+- '*'
+region-blacklist: []
+items:
+  gem-random:
+    chance: 5.0
+    module-id: 'gems'
+    item-id: 'random'
+    min-amount: 1
+    max-amount: 1
+    min-level: '%mob_lvl% + 1'
+    max-level: '%mob_lvl% + 3'
+    additional-conditions: []
+    actions-on-drop: {}

@@ -1,0 +1,39 @@
+GEM:
+  categories:
+    common:
+      tier: common
+      name: '%TIER_NAME% Gem Socket'
+      format:
+        main: '%value%'
+        value:
+          empty: '%TIER_COLOR%□ <%name%>'
+          filled: '%TIER_COLOR%▣ &7%value%'
+    rare:
+      tier: rare
+      name: '%TIER_NAME% Gem Socket'
+      format:
+        main: '%value%'
+        value:
+          empty: '%TIER_COLOR%□ <%name%>'
+          filled: '%TIER_COLOR%▣ &7%value%'
+    
+RUNE:
+  categories:
+    default:
+      tier: common
+      name: '%TIER_COLOR%Rune Socket'
+      format:
+        main: '%value%'
+        value:
+          empty: '%TIER_COLOR%□ <%name%>'
+          filled: '%TIER_COLOR%▣ &7%value%'
+ESSENCE:
+  categories:
+    default:
+      tier: common
+      name: '%TIER_COLOR%Essence Socket'
+      format:
+        main: '%value%'
+        value:
+          empty: '%TIER_COLOR%□ <%name%>'
+          filled: '%TIER_COLOR%▣ &7%value%'

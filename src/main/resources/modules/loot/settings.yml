@@ -1,0 +1,35 @@
+command-aliases: loot,qloot
+
+general:
+  protect-drop: true
+  time-to-loot: 300
+  entity-blacklist:
+  - ARMOR_STAND
+  mythic-blacklist:
+  - SkeletonKing123
+  world-blacklist:
+  - someworld
+  - anotherworld
+  region-blacklist:
+  - mob_arena
+  - myregion123
+  spawn-reason-blacklist:
+  - SPAWNER
+  death-cause-blacklist:
+  - LAVA
+
+lootbox:
+  skull-hash: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWFhMzY4MzY1YjYwMzM3NWQ1Y2RkYTlkYWE5MjRiOTY0YjFmMTE4YTcyNTAxODdhNjk2YTA3ZmYxOGNmMDIifX19\
+  particles:
+    static: SPELL_WITCH
+    despawn: CLOUD
+  holograms:
+    enabled: true
+    text:
+    - '&f%entity%&7''s Loot'
+    - '&6» &eTime: &6%time%'
+    - '&6» &eOwner: &6%owner%'
+
+party:
+  drop-modes:
+    roll-time: 15

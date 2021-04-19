@@ -1,0 +1,12 @@
+command-aliases: activeitems
+
+item-format:
+  name: '%TIER_COLOR%%ITEM_NAME% %ITEM_LEVEL_ROMAN%'
+  lore:
+  - '&7Tier: %TIER_NAME%'
+  - '%ITEM_CHARGES%'
+  - ''
+  - '%USER_LEVEL%'
+  - '%USER_CLASS%'
+  - ''
+  - '%ITEM_LORE%'

@@ -1,0 +1,41 @@
+package su.nightexpress.quantumrpg.modules.list.classes.object;
+
+import java.util.Map;
+
+import org.jetbrains.annotations.NotNull;
+
+import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
+
+public class ClassAspectBonus {
+
+	private int maxValue;
+	private Map<ClassAttributeType, Double> pointAtt;
+	private BonusMap bonusMap;
+	
+	public ClassAspectBonus(
+			int maxValue,
+			Map<ClassAttributeType, Double> pointAtt,
+			BonusMap bonusMap
+			) {
+		this.setMaxValue(maxValue);
+		this.pointAtt = pointAtt;
+		this.bonusMap = bonusMap;
+	}
+	
+	public int getMaxValue() {
+		return this.maxValue;
+	}
+	
+	public void setMaxValue(int maxValue) {
+		this.maxValue = maxValue;
+	}
+	
+	public double getPerPointAttribute(@NotNull ClassAttributeType type) {
+		return this.pointAtt.getOrDefault(type, 0D);
+	}
+	
+	@NotNull
+	public BonusMap getBonusMap() {
+		return this.bonusMap;
+	}
+}

@@ -1,0 +1,27 @@
+command-aliases: identify,identifying
+general:
+  actions-complete:
+    default:
+      target-selectors:
+        self:
+        - '[SELF]'
+      conditions:
+        list: []
+        actions-on-fail: 'null'
+      action-executors:
+      - '[PARTICLE_SIMPLE] ~name: SPELL_WITCH; ~offset: 0.25,0.4,0.25; ~speed: 0.2; ~amount: 50; ~target: self;'
+      - '[SOUND] ~name: BLOCK_NOTE_BLOCK_BELL; ~target: self;'
+  actions-error:
+    default:
+      target-selectors:
+        self:
+        - '[SELF]'
+      conditions:
+        list: []
+        actions-on-fail: 'null'
+      action-executors:
+      - '[SOUND] ~name: ENTITY_VILLAGER_NO; ~target: self;'
+item-format:
+  name: '%TIER_COLOR%%ITEM_NAME%'
+  lore:
+  - '%ITEM_LORE%'

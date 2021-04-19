@@ -1,0 +1,36 @@
+material: COAL
+name: 'Fortify Stone'
+lore:
+- '&7Fortifies the item when socketing &fRunes&7.'
+enchanted: false
+tier: common
+level:
+  min: 1
+  max: 10
+uses-by-level:
+  '1': 1
+  '5': 2
+  '10': 3
+protection:
+  modules:
+  - runes
+  chance-by-level:
+    '1': 15
+    '2': 20
+    '3': 25
+    '4': 30
+    '5': 35
+    '6': 40
+    '7': 45
+    '8': 50
+    '9': 55
+    '10': 60
+target-requirements:
+  type:
+  - 'WEAPON'
+  - 'ARMOR'
+  level:
+    '1': '1:10'
+    '2': '11:20'
+  module:
+  - '*'

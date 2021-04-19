@@ -1,0 +1,141 @@
+name: '&aArcher'
+permission-required: false
+description:
+- '&7Archer''s power is in &frange combat&7.'
+- '&7Stay away from the enemies and'
+- '&7kill them with your bow!'
+- '&7'
+- '&a&lClass Stats:'
+- '&a▸ &7%att_name_ARMOR%: &a%att_start_ARMOR% &7(&f+%att_lvl_ARMOR%&7)'
+- '&a▸ &7%att_name_ARMOR_TOUGHNESS%: &a%att_start_ARMOR_TOUGHNESS% &7(&f+%att_lvl_ARMOR_TOUGHNESS%&7)'
+- '&a▸ &7%att_name_ATTACK_DAMAGE%: &a%att_start_ATTACK_DAMAGE% &7(&f+%att_lvl_ATTACK_DAMAGE%&7)'
+- '&a▸ &7%att_name_ATTACK_SPEED%: &a%att_start_ATTACK_SPEED% &7(&f+%att_lvl_ATTACK_SPEED%&7)'
+- '&a▸ &7%att_name_FLYING_SPEED%: &a%att_start_FLYING_SPEED% &7(&f+%att_lvl_FLYING_SPEED%&7)'
+- '&a▸ &7%att_name_KNOCKBACK_RESISTANCE%: &a%att_start_KNOCKBACK_RESISTANCE% &7(&f+%att_lvl_KNOCKBACK_RESISTANCE%&7)'
+- '&a▸ &7%att_name_LUCK%: &a%att_start_LUCK% &7(&f+%att_lvl_LUCK%&7)'
+- '&a▸ &7%att_name_MAX_HEALTH%: &a%att_start_MAX_HEALTH% &7(&f+%att_lvl_MAX_HEALTH%&7)'
+- '&a▸ &7%att_name_MOVEMENT_SPEED%: &a%att_start_MOVEMENT_SPEED% &7(&f+%att_lvl_MOVEMENT_SPEED%&7)'
+- '&7'
+- '&e&lSub Classes:'
+- '&b▸ &bIce Archer: &7Punish enemies with the power of ice!'
+- '&c▸ &cFire Archer: &7Burn enemies in the hell flames!'
+icon:
+  material: BOW
+  name: '%name%'
+  lore:
+  - '%description%'
+actions-on-select:
+  default:
+    target-selectors:
+      self:
+      - '[SELF]'
+    conditions:
+      list: []
+      on-fail: 'null'
+    action-executors:
+    - '[COMMAND_PLAYER] ~message: me &eI''m &aArcher&e now!; ~target: self;'
+leveling:
+  start-level: 1
+  max-level: 10
+  start-exp: 30
+  exp-formula: '%exp% * 1.13'
+  skill-points: 2
+  aspect-points: 1
+  actions-on-level:
+    '2':
+      default:
+        target-selectors:
+          self:
+          - '[SELF]'
+        conditions:
+          list: []
+          on-fail: 'null'
+        action-executors:
+        - '[COMMAND_PLAYER] ~message: me Leveled up!; ~target: self;'
+sub-class:
+  sub-classes:
+  - archer_fire
+  - archer_ice
+  level-to-change: 10
+mana:
+  symbol: ⚡
+  name: '&9Mana'
+  regen-of-max: 2.3
+attributes:
+  ARMOR:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  ARMOR_TOUGHNESS:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  ATTACK_DAMAGE:
+    start-value: 1.0
+    per-level-value: 0.0
+    max-value: -1.0
+  ATTACK_SPEED:
+    start-value: 4.0
+    per-level-value: 0.0
+    max-value: -1.0
+  FLYING_SPEED:
+    start-value: 0.4
+    per-level-value: 0.0
+    max-value: -1.0
+  KNOCKBACK_RESISTANCE:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  LUCK:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  MAX_HEALTH:
+    start-value: 20.0
+    per-level-value: 0.5
+    max-value: -1.0
+  MOVEMENT_SPEED:
+    start-value: 0.11
+    per-level-value: 0.0
+    max-value: -1.0
+aspects:
+  STRENGTH:
+    start-value: 0
+    max-value: 10
+    per-point-values:
+      attributes:
+        ATTACK_DAMAGE: 0.1
+        MAX_HEALTH: 0.166
+      stats:
+        HEALTH_REGEN: 0.25
+      damage-types:
+        physical: 0.4%
+  DEFENSE:
+    start-value: 0
+    max-value: 10
+    per-point-values:
+      attributes:
+        ARMOR: 0.05
+      stats: {}
+      defense-types:
+        physical: 0.17%
+  DEXTERITY:
+    start-value: 0
+    max-value: 10
+    per-point-values:
+      attributes:
+        ATTACK_SPEED: 0.015
+        MOVEMENT_SPEED: 0.0015
+      item-stats:
+        DODGE_RATE: 0.8%
+  INTELLIGENCE:
+    start-value: 0
+    max-value: 10
+    per-point-values:
+      attributes: {}
+      stats:
+        COOLDOWN_REDUCE: 0.3
+        MAX_MANA: 0.35
+        MANA_REGEN: 0.35
+      damage-types:
+        magical: 0.15%

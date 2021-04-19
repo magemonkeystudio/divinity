@@ -1,0 +1,99 @@
+command-aliases: refine
+refine:
+  actions-on-success:
+    default:
+      target-selectors:
+        self:
+        - '[SELF]'
+      conditions:
+        list: []
+        actions-on-fail: 'null'
+      action-executors:
+      - '[SOUND] ~name: ENTITY_EXPERIENCE_ORB_PICKUP; ~target: self;'
+      - '[PARTICLE_SIMPLE] ~name: VILLAGER_HAPPY; ~offset: 0.15, 0.15, 0.15; ~speed: 0.1; ~amount: 50; ~target: self;'
+  actions-on-failure:
+    default:
+      target-selectors:
+        self:
+        - '[SELF]'
+      conditions:
+        list: []
+        actions-on-fail: 'null'
+      action-executors:
+      - '[SOUND] ~name: BLOCK_ANVIL_DESTROY; ~target: self;'
+      - '[PARTICLE_SIMPLE] ~name: VILLAGER_ANGRY; ~offset: 0.15, 0.15, 0.15; ~speed: 0.1; ~amount: 50; ~target: self;'
+  max-level: 15
+  fail-level-downgrade:
+    '1': 1
+    '12': 2
+    '13': 3
+    '14': 4
+    '15': 5
+  fail-silent-rate-bonus:
+    by-refine-level:
+      '0': 7
+      '1': 5
+      '2': 3
+format:
+  item-name:
+    as-prefix: true
+    format-by-level:
+      '1': '+%level% '
+      '3': '&c&l+%level% '
+  item-lore:
+    format: ' &8(&7+%amount%&8)'
+    text:
+    - '%ITEM_LORE%'
+    - '&7'
+    - '&7Refined with: &e%stone%'
+item-format:
+  name: '%TIER_COLOR%%ITEM_NAME% (Lv. %ITEM_LEVEL%)'
+  lore:
+  - '&8&m               &f  「 INFO 」  &8&m               '
+  - '&7This stone can increase your'
+  - '&7item stats for a bit up to 15 lvl.'
+  - '&7Success Rate: &a%ITEM_SUCCESS_RATE%%'
+  - '&7Tier: %TIER_NAME%'
+  - '%ITEM_CHARGES%'
+  - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+  - '%TARGET_LEVEL%'
+  - '%TARGET_TYPE%'
+  - '%TARGET_MODULE%'
+  - '%TARGET_TIER%'
+  - '&8&m               &f 「 USAGE 」 &8&m               '
+  - '&7Drag & drop onto item to refine.'
+gui:
+  title: '&2&l<&2&nRefining&2&l>'
+  size: 9
+  item-slot: 3
+  source-slot: 4
+  result-slot: 5
+  content:
+    filler:
+      material: BLACK_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: ''
+      lore: []
+      slots: 1,2,6,7
+      type: NONE
+    accept:
+      material: LIME_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: '&2« &aAccept &2»'
+      lore:
+      - '&7You will try to refine your item.'
+      - ''
+      - '&7In case of failure your item refine level'
+      - '&7will be &cdowngraded&7 to &c%downgrade% Lvl.'
+      slots: '8'
+      type: ACCEPT
+    exit:
+      material: RED_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: '&4« &cCancel &4»'
+      lore: []
+      slots: '0'
+      type: EXIT

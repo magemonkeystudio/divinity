@@ -1,0 +1,34 @@
+material: REDSTONE
+name: Essence of Magic
+lore:
+- '&7Creates a &fMagic Helix %ITEM_LEVEL_ROMAN% &7around you.'
+socket-display: '&cMagic Helix %ITEM_LEVEL_ROMAN%'
+enchanted: true
+item-flags:
+- '*'
+tier: rare
+level:
+  min: 1
+  max: 2
+uses-by-level:
+  '1': 1
+success-rate-by-level:
+  '1': '75'
+  '2': 30 * %ITEM_LEVEL%
+  '3': '30:50'
+effect:
+  type: HELIX
+  name: SPELL_WITCH
+  speed: 0
+  amount: 1
+  offset-x: 0
+  offset-y: 0
+  offset-z: 0
+target-requirements:
+  type:
+  - ARMOR
+  level:
+    '1': 10
+  module:
+  - '*'
+  socket: default

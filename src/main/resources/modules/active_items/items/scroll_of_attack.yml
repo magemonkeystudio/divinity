@@ -1,0 +1,46 @@
+material: MAP
+name: 'Scroll of Attack'
+lore:
+- '&7Gives &fStrength Lv. %var_lvl% &7effect for &f%var_dur%.'
+tier: common
+level:
+  min: 1
+  max: 3
+uses-by-level:
+  '1': 1
+  '2': 2
+  '3': 3
+user-requirements-by-level:
+  level:
+    '1': '5'
+  class: {}
+variables-by-level:
+  '1':
+    lvl: 1
+    dur: '&f30 &7seconds'
+    durTick: 600
+  '2':
+    lvl: 2
+    dur: '&f1 &7minute'
+    durTick: 1200
+  '3':
+    lvl: 3
+    dur: '&f2 &7minutes'
+    durTick: 2400
+usage:
+  RIGHT:
+    cooldown: 1
+    actions:
+      default:
+        target-selectors:
+          self:
+          - '[SELF]'
+        conditions:
+          list: []
+          actions-on-fail: 'null'
+        action-executors:
+        - '[PARTICLE_SIMPLE] ~offset: 0.4,0.5,0.4; ~speed: 0.2; ~name: REDSTONE:255,0,0; ~target: self; ~amount: 50;'
+        - '[POTION] ~name: INCREASE_DAMAGE; ~amount: %var_lvl%; ~duration: %var_durtick%; ~target: self;'
+        - '[SOUND] ~name: BLOCK_NOTE_BLOCK_BELL; ~target: self;'
+
+target-requirements: {}

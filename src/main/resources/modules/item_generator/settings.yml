@@ -1,0 +1,5 @@
+command-aliases: itemgenerator,itemgen
+item-format:
+  name: '%TIER_COLOR%%ITEM_NAME%'
+  lore:
+  - '%ITEM_LORE%'

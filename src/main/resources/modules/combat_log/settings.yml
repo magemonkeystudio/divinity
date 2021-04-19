@@ -1,0 +1,86 @@
+cfg_version: 1.0
+command-aliases: combatlog
+general:
+  logging:
+    enabled: true
+    max-amount: 5
+    format:
+      time: 'HH:mm'
+      text: '&6[%time%] &r%message% %damage% %defense% %details% %weapon%'
+      buttons:
+        damage:
+          name: '&c&l[Damage]'
+          text:
+          - '&6▸ &eAttack Power: &6%attack_power%%'
+          - '&7'
+          - '&6▸ &e%damage_type%: &6%amount% &7of &6%raw% &c(%percent%%)'
+          - '&7'
+          - '&e&lTotal: &6%amount_total% &7of &6%raw_total% &c(%percent_total%%)'
+        defense:
+          name: '&b&l[Defense]'
+          text:
+          - '&9&l&nDefended Damage'
+          - '&7'
+          - '&3▸ &b%defense_type%: &f%amount% &7of &f%damage% &9(%percent%%)'
+          - '&7'
+          - '&b&lTotal: &f%amount_total% &7of &f%damage_total% &9(%percent_total%%)'
+        details:
+          name: '&e&l[Details]'
+          text:
+          - '&2▸ &aDirect Modifier: &2x%direct_modifier%'
+          - '&2▸ &aCritical Modifier: &2x%critical_modifier%'
+          - '&2▸ &aBlock Modifier: &2x%block_modifier%'
+          - '&2▸ &aDefense Penetration: &2x%penetrate_modifier%'
+          - '&2▸ &aPvE/PvP Modifier: &2x%pvpe_modifier%'
+          - '&2▸ &aEnchant Protection Factor: &2x%enchantment_protection_factor%'
+        weapon:
+          name: '&d&l[Weapon]'
+messages:
+  ignore-zero-damage: false
+  types:
+    NORMAL:
+      enabled: true
+      messages:
+        damager: '&e*** You dealt &7%damage% &edamage to &7%entity%&e. ***'
+        victim: '&c*** &7%entity% &cdealt &7%damage% &cdamage to you. ***'
+        indicator: ''
+      sound: NONE
+    CRITICAL:
+      enabled: true
+      messages:
+        damager: '&e*** &lCritical! &eYou dealt &7%damage% &edamage to &7%entity%&e. ***'
+        victim: '&d*** &lCritical! &7%entity% &ddealt &7%damage% &ddamage to you. ***'
+        indicator: '&8[&c&lCritical!&8]'
+      sound: ENTITY_GENERIC_EXPLODE
+    DODGE:
+      enabled: true
+      messages:
+        damager: '&6*** &7%entity% &6has dodged your attack! ***'
+        victim: '&6*** You has dodged &7%entity% &6attack! ***'
+        indicator: '&8[&b&lDodge!&8]'
+      sound: BLOCK_SNOW_FALL
+    BLOCK:
+      enabled: true
+      messages:
+        damager: '&6*** &7%entity% &6has blocked &7%block%% &6of your attack! Total damage: &7%damage% &6***'
+        victim: '&6*** You blocked &7%block%% &6of &7%entity% &6attack! Total damage: &7%damage% &6***'
+        indicator: '&8[&e&lBlocked!&8]'
+      sound: BLOCK_ANVIL_PLACE
+indicators:
+  enabled: true
+  format:
+    order:
+    - '%critical%'
+    - '%block%'
+    - '%dodge%'
+    - '%damage%'
+    damage-types:
+      physical: '&c-%damage%❤'
+      magical: '&d-%damage%'
+      fire: '&4-%damage%☀'
+      poison: '&a-%damage%☣'
+      wind: '&7-%damage%'
+      water: '&9-%damage%'
+      _vanilla_generic: '&7-%damage%❤'
+    regen-sources:
+      default: '&a+%hp%❤'

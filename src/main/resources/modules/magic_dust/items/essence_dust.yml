@@ -1,0 +1,29 @@
+material: GLOWSTONE_DUST
+name: 'Essence Magic Dust'
+lore: []
+tier: common
+enchanted: true
+item-flags:
+- '*'
+level:
+  min: 1
+  max: 5
+uses-by-level:
+  '1': 1
+  '3': 2
+rate-increasing:
+  max-value: 80
+  values-by-level:
+    '1': 1
+    '2': 2
+    '3': 3
+    '4': 4
+    '5': 5
+target-requirements:
+  type:
+  - '*'
+  module:
+  - essences
+  level:
+    '1': '1:3'
+    '3': '3'

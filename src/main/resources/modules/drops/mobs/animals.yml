@@ -1,0 +1,8 @@
+chance: 5.0
+roll-once: true
+vanilla-mobs:
+- 'ANIMAL'
+mythic-mobs: []
+prevent-from: []
+drop-tables:
+- table_gems

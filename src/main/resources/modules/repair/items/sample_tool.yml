@@ -1,0 +1,26 @@
+material: IRON_AXE
+name: 'Repair Tool'
+lore: []
+tier: common
+item-flags:
+- '*'
+level:
+  min: 1
+  max: 5
+uses-by-level:
+  '1': 1
+  '2': 3
+repair-by-level:
+  '1': 10
+  '2': 20
+  '3': 30
+  '4': 40
+  '5': 50
+target-requirements:
+  type:
+  - 'WEAPON'
+  - 'ARMOR'
+  level:
+    '1': 1
+  module:
+  - '*'

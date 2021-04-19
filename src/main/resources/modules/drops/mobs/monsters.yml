@@ -1,0 +1,9 @@
+chance: 10.0
+roll-once: true
+vanilla-mobs:
+- MONSTER
+mythic-mobs:
+- '*'
+prevent-from: []
+drop-tables:
+- table_multi

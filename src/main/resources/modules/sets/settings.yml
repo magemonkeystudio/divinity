@@ -1,0 +1,12 @@
+command-aliases: sets
+
+format:
+  element:
+    active: '%c%• %name% &a✓'
+    inactive: '%c%• %name% &c✗'
+  lore:
+  - ''
+  - '%set%:'
+  - '%elements%'
+  - ''
+  - '%effects%'

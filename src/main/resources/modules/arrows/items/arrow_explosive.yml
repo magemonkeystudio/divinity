@@ -1,0 +1,51 @@
+material: ARROW
+name: 'Explosive Arrow'
+lore:
+- '&f⚔ &7Dodge Rate: &c-10%'
+- '&f⚔ &7Burn Rate: &a+15%'
+- ''
+- '&7This arrow will &fexplode &7on'
+- '&7hit and damage all enemies in a'
+- '&7range of &f5 blocks&7.'
+tier: common
+level:
+  min: 1
+  max: 1
+
+bonuses-by-level:
+  '1':
+    additional-stats:
+      BURN_RATE: 15.0
+      DODGE_RATE: -10.0
+    additional-damage:
+      physical: 10%
+    defense-ignoring: {}
+
+on-fly-actions:
+  default:
+    target-selectors:
+      self:
+      - '[SELF]'
+    conditions:
+      list: []
+      actions-on-fail: 'null'
+    action-executors:
+    - '[PARTICLE_SIMPLE] ~name: SMOKE_NORMAL; ~amount: 1; ~offset:0,0,0; ~speed: 0; ~target: self;'
+on-hit-actions:
+  default:
+    target-selectors:
+      near:
+      - '[RADIUS] ~distance: 5; ~party-member: false; ~attackable: true; ~allow-self: false;'
+      all:
+      - '[RADIUS] ~distance: 5; ~allow-self: true;'
+      self:
+      - '[SELF]'
+    conditions:
+      list: []
+      actions-on-fail: 'null'
+    action-executors:
+    - '[PARTICLE_SIMPLE] ~name: EXPLOSION_LARGE; ~offset:2,2,2; ~speed: 0.1; ~amount: 50; ~target: self;'
+    - '[SOUND] ~name: ENTITY_GENERIC_EXPLODE; ~target: all;'
+    - '[DAMAGE] ~amount: -50%; ~target: near;'
+target-requirements: {}
+

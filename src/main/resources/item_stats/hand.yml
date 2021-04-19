@@ -1,0 +1,9 @@
+ONE:
+  enabled: true
+  name: '&fOne-handed'
+  format: '&7Hand: &f%name%'
+
+TWO:
+  enabled: true
+  name: '&eTwo-handed'
+  format: '&7Hand: &f%name%'

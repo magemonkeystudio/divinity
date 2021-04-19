@@ -1,0 +1,39 @@
+input-module: gems
+output-by-item-id-level:
+  default:
+    '1':
+      cost: 15
+      output:
+        example:
+          chance: 10.0
+          item:
+            material: 'EMERALD'
+            amount: 17
+            name: '&aEmerald'
+            lore: []
+          commands: []
+          preview:
+            material: 'EMERALD'
+            amount: 17
+            name: '&aEmerald &7(100%)'
+            lore: []
+            enchanted: false
+        sulphur:
+          chance: 100.0
+          item:
+            material: 'GUNPOWDER'
+          commands: []
+          preview:
+            material: 'GUNPOWDER'
+            name: '&8Sulphur &7(25%)'
+            lore: []
+            enchanted: false
+        nugget:
+          chance: 15.0
+          commands:
+          - '[CONSOLE] eco give %player% 10'
+          preview:
+            material: 'GOLD_NUGGET'
+            name: '&e10$ &7(15%)'
+            lore: []
+            enchanted: false

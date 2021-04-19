@@ -1,0 +1,28 @@
+material: PRISMARINE_SHARD
+name: Rune of Resistance
+lore:
+- '&7Grants &fResistance %ITEM_LEVEL_ROMAN% &7effect'
+item-flags:
+- '*'
+tier: fabled
+level:
+  min: 1
+  max: 1
+uses-by-level:
+  '1': 1
+success-rate-by-level:
+  '1': '75'
+  '2': '30 * %ITEM_LEVEL%'
+  '3': '30:50'
+socket-display: '&bRune: Resistance %ITEM_LEVEL_ROMAN%'
+effect: DAMAGE_RESISTANCE
+target-requirements:
+  type:
+  - chestplate
+  level:
+    '1': '10'
+    '2': '20'
+    '3': '30'
+  module:
+  - '*'
+  socket: default

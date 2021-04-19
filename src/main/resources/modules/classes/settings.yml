@@ -1,0 +1,179 @@
+command-aliases: class,classes,skill,skills
+
+combo:
+  enabled: true
+
+boss-bar:
+  health:
+    enabled: true
+    title: '&c&lHealth &f%cur%&7/&f%max%'
+    color: RED
+    style: SOLID
+  mana:
+    enabled: true
+    title: '&b&lMana &f%cur%&7/&f%max%'
+    color: BLUE
+    style: SOLID
+
+selection:
+  default-class: none
+  select-once: false
+  cooldown: 60
+  gui:
+    popup:
+      on-join: true
+      on-child-level: true
+    type:
+      title: Class Select
+      size: 27
+      content:
+        filler_1:
+          material: BLACK_STAINED_GLASS_PANE
+          name: '&7'
+          slots: 0,1,2,6,7,8,9,17,18,19,20,24,25,26
+        filler_2:
+          material: CYAN_STAINED_GLASS_PANE
+          name: '&7'
+          slots: 3,4,5,21,22,23
+        class_main:
+          material: BOOK
+          name: '&6Select main class'
+          slots: 12
+          type: SELECT_MAIN
+        class_child:
+          material: EXPERIENCE_BOTTLE
+          name: '&eSelect sub-class'
+          slots: 14
+          type: SELECT_CHILD
+    main:
+      allow-close: true
+      class-slots: 10,11,12,13,14,15,16
+      title: Class Select
+      size: 27
+      content:
+        filler_1:
+          material: BLACK_STAINED_GLASS_PANE
+          name: '&7'
+          slots: 0,1,2,6,7,8,9,17,18,19,20,24,25,26
+        filler_2:
+          material: CYAN_STAINED_GLASS_PANE
+          name: '&7'
+          slots: 3,4,5,21,22,23
+        later:
+          material: BARRIER
+          name: '&cRemind me later'
+          slots: '22'
+          type: EXIT
+        next:
+          material: ARROW
+          name: '&aNext Page'
+          slots: '17'
+          type: NEXT
+        back:
+          material: ARROW
+          name: '&cPrevious Page'
+          slots: '9'
+          type: BACK
+
+gui:
+  class-stats:
+    title: Class Stats
+    size: 27
+    content:
+      exp_info:
+        material: EXPERIENCE_BOTTLE
+        name: '&eLeveling Info'
+        lore:
+        - '&7Class: &f%class%'
+        - '&7Level: &f%level%&7/&f%level-max%'
+        - '&7Exp: &f%exp%&7/&f%exp-max%'
+        slots: 10
+      attributes:
+        material: BOOK
+        name: '&6Attributes'
+        lore:
+        - '&7%att_name_ARMOR%: &6%att_total_ARMOR% &7(&f%att_start_ARMOR% &7+ &f%att_lvl_ARMOR%
+          &7+ &f%att_aspect_ARMOR%&7)'
+        - '&7%att_name_ARMOR_TOUGHNESS%: &6%att_total_ARMOR_TOUGHNESS% &7(&f%att_start_ARMOR_TOUGHNESS%
+          &7+ &f%att_lvl_ARMOR_TOUGHNESS% &7+ &f%att_aspect_ARMOR_TOUGHNESS%&7)'
+        - '&7%att_name_ATTACK_DAMAGE%: &6%att_total_ATTACK_DAMAGE% &7(&f%att_start_ATTACK_DAMAGE%
+          &7+ &f%att_lvl_ATTACK_DAMAGE% &7+ &f%att_aspect_ATTACK_DAMAGE%&7)'
+        - '&7%att_name_ATTACK_SPEED%: &6%att_total_ATTACK_SPEED% &7(&f%att_start_ATTACK_SPEED%
+          &7+ &f%att_lvl_ATTACK_SPEED% &7+ &f%att_aspect_ATTACK_SPEED%&7)'
+        - '&7%att_name_FLYING_SPEED%: &6%att_total_FLYING_SPEED% &7(&f%att_start_FLYING_SPEED%
+          &7+ &f%att_lvl_FLYING_SPEED% &7+ &f%att_aspect_FLYING_SPEED%&7)'
+        - '&7%att_name_KNOCKBACK_RESISTANCE%: &6%att_total_KNOCKBACK_RESISTANCE% &7(&f%att_start_KNOCKBACK_RESISTANCE%
+          &7+ &f%att_lvl_KNOCKBACK_RESISTANCE% &7+ &f%att_aspect_KNOCKBACK_RESISTANCE%&7)'
+        - '&7%att_name_LUCK%: &6%att_total_LUCK% &7(&f%att_start_LUCK% &7+ &f%att_lvl_LUCK%
+          &7+ &f%att_aspect_LUCK%&7)'
+        - '&7%att_name_MAX_HEALTH%: &6%att_total_MAX_HEALTH% &7(&f%att_start_MAX_HEALTH%
+          &7+ &f%att_lvl_MAX_HEALTH% &7+ &f%att_aspect_MAX_HEALTH%&7)'
+        - '&7%att_name_MOVEMENT_SPEED%: &6%att_total_MOVEMENT_SPEED% &7(&f%att_start_MOVEMENT_SPEED%
+          &7+ &f%att_lvl_MOVEMENT_SPEED% &7+ &f%att_aspect_MOVEMENT_SPEED%&7)'
+        slots: 11
+      skills:
+        material: GOLDEN_SWORD
+        name: '&eSkills'
+        lore:
+        - '&7Skill Points: &e%skill-points%'
+        - '&7'
+        - '&7Click to manage skills!'
+        slots: 14
+        item-flags:
+        - '*'
+        type: CLASS_SKILLS
+      aspects:
+        material: NETHER_STAR
+        name: '&dAspects'
+        lore:
+        - '&7Aspect Points: &e%aspect-points%'
+        - '&7'
+        - '&7Click to manage aspects!'
+        item-flags:
+        - '*'
+        slots: 15
+        type: CLASS_ASPECTS
+  skill-list:
+    title: Skills
+    size: 45
+    skill-slots: 10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,35
+    upgrade-preview:
+      name: '&a[Preview] %name%'
+      lore:
+      - '%lore%'
+      - '&8&m                            '
+      - '&6&lRight-Click to upgrade for &f%cost% &6SP'
+    content:
+      filler1:
+        material: YELLOW_STAINED_GLASS_PANE
+        name: '&7'
+        slots: 0,1,7,8,9,17,18,26,27,35,36,37,43,44
+      filler2:
+        material: ORANGE_STAINED_GLASS_PANE
+        name: '&7'
+        slots: 2,3,5,6,38,39,40,41,42
+      reset:
+        material: MILK_BUCKET
+        name: '&fReset'
+        lore:
+        - '&7Click to reset and return'
+        - '&7your &fSkill Points&7.'
+        item-flags:
+        - '*'
+        slots: 4
+        type: RESET
+      next:
+        material: ARROW
+        name: '&aNext Page'
+        slots: 26
+        type: NEXT
+      back:
+        material: ARROW
+        name: '&aPrevious Page'
+        slots: 18
+        type: BACK
+      return:
+        material: REDSTONE
+        name: '&cReturn'
+        slots: 40
+        type: RETURN

@@ -1,0 +1,112 @@
+socketing:
+  chance:
+    merchant-bonus:
+      amount: 15
+      maximal: 80
+  silent-rate-bonus:
+    enabled: false
+
+price:
+  socket-worth-modifier: 1.0
+  item-worth-modifier: 1.2
+
+gui:
+  title: '&8&m    &9&l Merchant Socketing &8&m    '
+  size: 45
+  item-slot: 20
+  source-slot: 22
+  result-slot: 24
+  animation:
+    tick: 10
+    progressive: true
+  content:
+    filler_1:
+      material: BLACK_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: ''
+      lore: []
+      slots: 2,3,4,5,6,10,11,15,16,19,28,29,25,34,33,38,39,40,41,42,12,21,30,14,23,32
+      type: NONE
+    filler_2:
+      material: CYAN_STAINED_GLASS_PANE
+      name: '&7'
+      slots: 0,1,9,7,8,17,27,36,37,35,44,43
+    
+    filler_4_a1:
+      material: PURPLE_STAINED_GLASS_PANE
+      name: '&5&lItem Slot'
+      lore:
+      - '&f» &7Click on item with at least &fone'
+      - '&7free socket to put it into the GUI.'
+      - ''
+      - '&f» &7Click on item in GUI to take it back.'
+      slots: 11,29
+      animation:
+        auto-play: true
+        start-frame: 0
+      animation-frames:
+        '1':
+          material: MAGENTA_STAINED_GLASS_PANE
+          name: '&d&lItem Slot'
+          lore:
+          - '&f» &7Click on item with at least &fone'
+          - '&7free socket to put it into the GUI.'
+          - ''
+          - '&f» &7Click on item in GUI to take it back.'
+    
+    filler_4_a3:
+      material: PURPLE_STAINED_GLASS_PANE
+      name: '&5&lRune Slot'
+      lore:
+      - '&f» &7Click on a &frune &7item in inventory'
+      - '&7to put it into the GUI.'
+      - ''
+      - '&f» &7Click on item in GUI to take it back.'
+      slots: 13,31
+      animation:
+        auto-play: true
+        start-frame: 0
+      animation-frames:
+        '2':
+          material: MAGENTA_STAINED_GLASS_PANE
+          name: '&d&lRune Slot'
+          lore:
+          - '&f» &7Click on an &frune &7item in inventory'
+          - '&7to put it into the GUI.'
+          - ''
+          - '&f» &7Click on item in GUI to take it back.'
+    
+    filler_4_a5:
+      material: PURPLE_STAINED_GLASS_PANE
+      name: '&5&lResult Preview'
+      slots: 15,33
+      animation:
+        auto-play: true
+        start-frame: 0
+      animation-frames:
+        '3':
+          material: MAGENTA_STAINED_GLASS_PANE
+          name: '&d&lResult Preview'
+    
+    accept:
+      material: LIME_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: '&2« &aAccept &2»'
+      lore:
+      - '&a» &7Price: &a$%cost%'
+      - '&a» &7Balance: &a$%balance%'
+      - '&a» &7Success Chance: &a%chance%%'
+      - '&7'
+      - '&7In case of failure your item will be &cdestroyed&7.'
+      slots: 26
+      type: ACCEPT
+    exit:
+      material: RED_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: '&4« &cCancel &4»'
+      lore: []
+      slots: 18
+      type: EXIT

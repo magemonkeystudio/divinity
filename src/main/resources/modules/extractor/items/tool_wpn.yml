@@ -1,0 +1,23 @@
+material: SHEARS
+name: 'Weapon Extraction Tool'
+lore:
+- '&7Allows to extract item sockets.'
+tier: common
+item-flags:
+- '*'
+level:
+  min: 1
+  max: 3
+uses-by-level:
+  '1': 1
+  '2': 2
+  '3': 3
+target-requirements:
+  type:
+  - WEAPON
+  level:
+    '1': '1'
+    '2': '10'
+    '3': '20'
+  module:
+  - '*'

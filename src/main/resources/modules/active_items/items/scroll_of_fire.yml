@@ -1,0 +1,51 @@
+material: MAP
+name: 'Scroll of Fire'
+lore:
+- '&7Ignites all enemies in a radius of &f%var_rad% &7blocks'
+- '&7for %var_dur% &7and applies &fBlind&7 effect to them.'
+tier: common
+level:
+  min: 1
+  max: 3
+variables-by-level:
+  '1':
+    rad: 4.0
+    dur: '&f10 &7seconds'
+    durTick: 200
+  '2':
+    rad: 7.0
+    dur: '&f15 &7seconds'
+    durTick: 300
+  '3':
+    rad: 10.0
+    dur: '&f20 &7seconds'
+    durTick: 400
+uses-by-level:
+  '1': 1
+  '2': 2
+  '3': 3
+user-requirements-by-level:
+  level:
+    '1': '5'
+  class:
+    '1': 'Mage'
+usage:
+  RIGHT:
+    cooldown: 1
+    actions:
+      default:
+        target-selectors:
+          radius:
+          - '[RADIUS] ~distance: %var_rad%; ~allow-self: false; ~party-member: false; ~attackable: true;'
+          self:
+          - '[SELF]'
+        conditions:
+          list: []
+          actions-on-fail: 'null'
+        action-executors:
+        - '[PROGRESS_BAR] ~title: &e&lCasting...; ~subtitle: •; ~color-empty: &7; ~color-fill: &e; ~duration: 35; ~target: self;'
+        - '[PARTICLE_SIMPLE] ~offset: 0.2,0.3,0.2; ~speed: 0.1; ~name: FLAME; ~target: radius; ~amount: 30; ~delay: 23;'
+        - '[POTION] ~name: BLINDNESS; ~amount: 1; ~duration: %var_durTick%; ~target: radius; ~delay: 23;'
+        - '[BURN] ~duration: %var_durtick%; ~target: radius; ~delay: 23;'
+        - '[SOUND] ~name: BLOCK_FIRE_EXTINGUISH; ~target: self; ~delay: 23;'
+target-requirements: {}

@@ -1,0 +1,31 @@
+material: ENCHANTED_BOOK
+name: 'Identify Tome %ITEM_LEVEL_ROMAN%'
+lore:
+- '&8&m               &f  「 INFO 」  &8&m               '
+- '&7Tier: %TIER_NAME%'
+- '%ITEM_CHARGES%'
+- '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+- '%TARGET_LEVEL%'
+- '%TARGET_TYPE%'
+- '&8&m              &f  「 USAGE 」  &8&m              '
+- '&7Drag & Drop onto item to identify.'
+tier: rare
+uses-by-level:
+  '1': 1
+  '2': 2
+  '3': 3
+item-level-requirements:
+  '1': 1-10
+  '2': 11-25
+  '3': 26-45
+level:
+  min: 1
+  max: 3
+target-requirements:
+  type:
+  - '*'
+  level:
+    '1': 0
+  module:
+  - '*'
+

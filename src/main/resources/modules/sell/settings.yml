@@ -1,0 +1,33 @@
+command-aliases: sell
+
+gui:
+  title: '&4&l<&4&nSelling&4&l>'
+  size: 54
+  item-slots: 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+  content:
+    filler_yellow:
+      material: YELLOW_STAINED_GLASS_PANE
+      name: '&7'
+      slots: 45,46,52,53
+      type: NONE
+    filler_orange:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: '&7'
+      slots: 47,51
+      type: NONE
+    filler_red:
+      material: RED_STAINED_GLASS_PANE
+      name: '&7'
+      slots: 48,50
+      type: NONE
+    sell:
+      material: EMERALD
+      skull-hash: ''
+      enchanted: false
+      name: '&2« &aSell &2»'
+      lore:
+      - '&eTotal cost:             &6$%cost%'
+      - '&8&m                                      '
+      - '&7Sell all items in GUI.'
+      slots: '49'
+      type: ACCEPT

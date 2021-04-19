@@ -1,0 +1,104 @@
+cfg_version: 1.0
+command-aliases: essence,essences
+socketing:
+  allow-duplicated-items: true
+  animated-bar:
+    enabled: true
+    bar-title: '&e&lSocketing...'
+    bar-char: '◼'
+    bar-size: 20
+    bar-format: '&a&l%success%%&r %bar%&r &c&l%failure%%'
+    color-neutral: 'DARK_GRAY'
+    color-success: 'GREEN'
+    color-failure: 'RED'
+    fill-interval: 1
+    fill-amount: 1
+    min-success: 50
+  merchant:
+    enabled: true
+  actions-complete:
+    default:
+      target-selectors:
+        self:
+        - '[SELF]'
+      conditions:
+        list: []
+        actions-on-fail: 'null'
+      action-executors:
+      - '[PARTICLE_SIMPLE] ~name: SPELL_WITCH; ~offset: 0.25,0.4,0.25; ~speed: 0.2; ~amount: 50; ~target: self;'
+      - '[SOUND] ~name: BLOCK_NOTE_BLOCK_BELL; ~target: self;'
+      - '[TITLES] ~title: &a&lSocketing; ~subtitle: &7You successfully socketed item!; ~fadeIn: 10; ~stay: 40; ~fadeOut: 10; ~target: self;'
+  actions-error:
+    default:
+      target-selectors:
+        self:
+        - '[SELF]'
+      conditions:
+        list: []
+        actions-on-fail: 'null'
+      action-executors:
+      - '[SOUND] ~name: ENTITY_VILLAGER_NO; ~target: self;'
+      - '[TITLES] ~title: &c&lSocketing; ~subtitle: &7You could not socket item!; ~fadeIn: 10; ~stay: 40; ~fadeOut: 10; ~target: self;'
+  failure:
+    destroy-target: true
+    destroy-source: false
+    wipe-filled-sockets: false
+    silent-rate-bonus:
+      max-bonus: 20
+      by-item-sockets:
+        '0': 7
+        '1': 5
+        '2': 3
+        '3': 1
+item-format:
+  name: '%TIER_COLOR%%ITEM_NAME% %ITEM_LEVEL_ROMAN%'
+  lore:
+  - '&8&m               &f  「 INFO 」  &8&m               '
+  - '&7Enchant Chance: &a&l%ITEM_SUCCESS_RATE%%'
+  - '&7Tier: %TIER_NAME%'
+  - '%ITEM_CHARGES%'
+  - '%ITEM_LORE%'
+  - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+  - '%TARGET_LEVEL%'
+  - '%TARGET_TYPE%'
+  - '%TARGET_MODULE%'
+  - '%TARGET_SOCKET%'
+  - '%TARGET_TIER%'
+  - '&8&m               &f 「 USAGE 」 &8&m               '
+  - '&7Drag & Drop onto item to start socketing.'
+gui:
+  title: '&4&l<&4&nEssence Socketing&4&l>'
+  size: 9
+  item-slot: 3
+  source-slot: 4
+  result-slot: 5
+  content:
+    filler:
+      material: BLACK_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: ''
+      lore: []
+      slots: 0,1,2,3,4,5,6,7,8
+      type: NONE
+    accept:
+      material: LIME_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: '&a&l&nAccept'
+      lore:
+      - '&7You will try to socket the essence'
+      - '&7into your item.'
+      - ''
+      - '&7In case of failure your item'
+      - '&7will be &cdestroyed&7.'
+      slots: '8'
+      type: ACCEPT
+    exit:
+      material: RED_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: '&c&l&nCancel'
+      lore: []
+      slots: '0'
+      type: EXIT

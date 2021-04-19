@@ -1,0 +1,26 @@
+command-aliases: fortify
+format:
+  item-name:
+    as-prefix: false
+    format: '&e (Fortified)'
+  item-lore:
+    format:
+    - '%item-lore%'
+    - '&8&m               &f  「 FORTIFY 」  &8&m               '
+    - '&7Fortify Level: &f%fortify-level%'
+    - '&7Fortify Rate: &f%fortify-rate%%'
+    - '&7Effective for: &f%fortify-modules%'
+item-format:
+  name: '%TIER_COLOR%%ITEM_NAME% (Lv. %ITEM_LEVEL%)'
+  lore:
+  - '&8&m               &f  「 INFO 」  &8&m               '
+  - '&7Tier: %TIER_NAME%'
+  - '&7Fortify chance: &f%fortify-rate%%'
+  - '%ITEM_LORE%'
+  - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+  - '%TARGET_LEVEL%'
+  - '%TARGET_TYPE%'
+  - '%TARGET_MODULE%'
+  - '%TARGET_TIER%'
+  - '&8&m               &f 「 USAGE 」 &8&m               '
+  - '&7Drag & drop onto item to fortify.'

@@ -1,0 +1,38 @@
+name: '&eWild Cat Set'
+prefix: '&a&fBroken '
+suffix: 'of Wild Cat'
+color:
+  active: '&a'
+  inactive: '&8'
+elements:
+  helmet:
+    materials:
+    - GOLDEN_HELMET
+    name: '%prefix%Helmet %suffix%'
+  chestplate:
+    materials:
+    - GOLDEN_CHESTPLATE
+    name: '%prefix%Chestplate %suffix%'
+  leggings:
+    materials:
+    - GOLDEN_LEGGINGS
+    name: '%prefix%Leggings %suffix%'
+  boots:
+    materials:
+    - GOLDEN_BOOTS
+    name: '%prefix%Boots %suffix%'
+bonuses:
+  by-elements-amount:
+    '2':
+      lore:
+      - '%c%&lSet Bonuses (2/4):'
+      - '%c%▸ +25% PvE Damage'
+      - '%c%▸ +10 Max. Health'
+      - '%c%▸ Speed I'
+      item-stats:
+        MAX_HEALTH: 10.0
+        PVE_DAMAGE: 25
+      damage-types: {}
+      defense-types: {}
+      potion-effects:
+        SPEED: 1

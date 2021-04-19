@@ -1,0 +1,148 @@
+name: '&bIce Archer'
+permission-required: false
+description:
+- '&7Ice archers uses the power of ice'
+- '&7to fight their enemies! They have'
+- '&7enough skills to control enemies'
+- '&7and keep them at distance.'
+- '&7'
+- '&a&lClass Stats:'
+- '&a▸ &7%att_name_ARMOR%: &a%att_start_ARMOR% &7(&f+%att_lvl_ARMOR%&7)'
+- '&a▸ &7%att_name_ARMOR_TOUGHNESS%: &a%att_start_ARMOR_TOUGHNESS% &7(&f+%att_lvl_ARMOR_TOUGHNESS%&7)'
+- '&a▸ &7%att_name_ATTACK_DAMAGE%: &a%att_start_ATTACK_DAMAGE% &7(&f+%att_lvl_ATTACK_DAMAGE%&7)'
+- '&a▸ &7%att_name_ATTACK_SPEED%: &a%att_start_ATTACK_SPEED% &7(&f+%att_lvl_ATTACK_SPEED%&7)'
+- '&a▸ &7%att_name_FLYING_SPEED%: &a%att_start_FLYING_SPEED% &7(&f+%att_lvl_FLYING_SPEED%&7)'
+- '&a▸ &7%att_name_KNOCKBACK_RESISTANCE%: &a%att_start_KNOCKBACK_RESISTANCE% &7(&f+%att_lvl_KNOCKBACK_RESISTANCE%&7)'
+- '&a▸ &7%att_name_LUCK%: &a%att_start_LUCK% &7(&f+%att_lvl_LUCK%&7)'
+- '&a▸ &7%att_name_MAX_HEALTH%: &a%att_start_MAX_HEALTH% &7(&f+%att_lvl_MAX_HEALTH%&7)'
+- '&a▸ &7%att_name_MOVEMENT_SPEED%: &a%att_start_MOVEMENT_SPEED% &7(&f+%att_lvl_MOVEMENT_SPEED%&7)'
+icon:
+  material: ICE
+  name: '%name%'
+  lore:
+  - '%description%'
+actions-on-select:
+  default:
+    target-selectors:
+      self:
+      - '[SELF]'
+    conditions:
+      list: []
+      on-fail: 'null'
+    action-executors:
+    - '[COMMAND_CONSOLE] ~message: class addskill %executor% ice_arrows 1; ~target: self;'
+leveling:
+  start-level: 10
+  max-level: 50
+  start-exp: 200
+  exp-formula: '%exp% * 1.14'
+  skill-points: 2
+  aspect-points: 1
+  actions-on-level:
+    '15':
+      default:
+        target-selectors:
+          self:
+          - '[SELF]'
+        conditions:
+          list: []
+          on-fail: 'null'
+        action-executors:
+        - '[COMMAND_CONSOLE] ~message: class addskill %executor% silence_arrow 1; ~target: self;'
+    '20':
+      default:
+        target-selectors:
+          self:
+          - '[SELF]'
+        conditions:
+          list: []
+          on-fail: 'null'
+        action-executors:
+        - '[COMMAND_CONSOLE] ~message: class addskill %executor% arrow_storm 1; ~target: self;'
+sub-class:
+  sub-classes: []
+  level-to-change: -1
+mana:
+  symbol: ⚡
+  name: '&9Mana'
+  regen-of-max: 2.8
+attributes:
+  ARMOR:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  ARMOR_TOUGHNESS:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  ATTACK_DAMAGE:
+    start-value: 1.0
+    per-level-value: 0.0
+    max-value: -1.0
+  ATTACK_SPEED:
+    start-value: 4.0
+    per-level-value: 0.0
+    max-value: -1.0
+  FLYING_SPEED:
+    start-value: 0.4
+    per-level-value: 0.0
+    max-value: -1.0
+  KNOCKBACK_RESISTANCE:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  LUCK:
+    start-value: 0.0
+    per-level-value: 0.0
+    max-value: -1.0
+  MAX_HEALTH:
+    start-value: 25.0
+    per-level-value: 0.5
+    max-value: -1.0
+  MOVEMENT_SPEED:
+    start-value: 0.11
+    per-level-value: 0.0
+    max-value: 0.35
+aspects:
+  STRENGTH:
+    start-value: 0
+    max-value: 30
+    per-point-values:
+      attributes:
+        ATTACK_DAMAGE: 0.1
+        MAX_HEALTH: 0.166
+      stats:
+        HEALTH_REGEN: 0.25
+      damage-types:
+        physical: 0.4%
+        water: 0.12%
+  DEFENSE:
+    start-value: 0
+    max-value: 30
+    per-point-values:
+      attributes:
+        ARMOR: 0.05
+      stats: {}
+      defense-types:
+        physical: 0.17%
+        water: 0.3%
+  DEXTERITY:
+    start-value: 0
+    max-value: 30
+    per-point-values:
+      attributes:
+        ATTACK_SPEED: 0.015
+        MOVEMENT_SPEED: 0.0015
+      item-stats:
+        DODGE_RATE: 0.8%
+  INTELLIGENCE:
+    start-value: 0
+    max-value: 30
+    per-point-values:
+      attributes: {}
+      stats:
+        COOLDOWN_REDUCE: 0.3
+        MAX_MANA: 0.35
+        MANA_REGEN: 0.35
+      damage-types:
+        magical: 0.15%

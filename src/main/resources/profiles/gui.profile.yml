@@ -1,0 +1,24 @@
+title: '&8&m            &8&l[ &9&lProfile &8&l]&8&m            '
+size: 9
+content:
+  change:
+    material: 'PLAYER_HEAD'
+    name: '&b&lChange Profile'
+    lore:
+    - '&7Switch active profile.'
+    type: PROFILE_CHANGE
+    slots: 0
+
+  settings:
+    material: 'MAP'
+    name: '&6&lSettings'
+    lore:
+    - '&7Change account settings.'
+    type: PROFILE_SETTINGS
+    slots: 3
+  
+  exit:
+    material: 'BARRIER'
+    name: '&c&lExit'
+    type: EXIT
+    slots: 8

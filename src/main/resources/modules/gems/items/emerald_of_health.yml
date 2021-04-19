@@ -1,0 +1,44 @@
+material: EMERALD
+name: 'Emerald of Health'
+socket-display: '&aHealth Emerald %ITEM_LEVEL_ROMAN% &7(&fHP +%ITEM_STAT_MAX_HEALTH%&7)'
+lore:
+- '&7Max. Health: &f+%ITEM_STAT_MAX_HEALTH%'
+enchanted: false
+tier: rare
+item-flags:
+- '*'
+level:
+  min: 1
+  max: 3
+uses-by-level:
+  '1': 1
+success-rate-by-level:
+  '1': '40:80'
+  '2': '35:70'
+  '3': '30:60'
+bonuses-by-level:
+  '1':
+    item-stats:
+      MAX_HEALTH: 0.5
+    damage-types: {}
+    defense-types: {}
+  '2':
+    item-stats:
+      MAX_HEALTH: 1.0
+    damage-types: {}
+    defense-types: {}
+  '3':
+    item-stats:
+      MAX_HEALTH: 1.5
+    damage-types: {}
+    defense-types: {}
+target-requirements:
+  level:
+    '1': '1:10'
+    '2': '10:20'
+    '3': '30'
+  type:
+  - ARMOR
+  socket: rare
+  module:
+  - '*'

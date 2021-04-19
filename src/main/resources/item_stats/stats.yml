@@ -1,0 +1,165 @@
+DIRECT_DAMAGE:
+  enabled: true
+  name: Direct Damage
+  format: '&f▸ %name%: &f%value%'
+  capacity: 100.0
+
+AOE_DAMAGE:
+  enabled: true
+  name: AoE Damage
+  format: '&3▸ %name%: &f%value%'
+  capacity: -1
+
+PVP_DAMAGE:
+  enabled: true
+  name: PvP Damage
+  format: '&b▸ %name%: &f%value%'
+  capacity: 200.0
+
+PVE_DAMAGE:
+  enabled: true
+  name: PvE Damage
+  format: '&b▸ %name%: &f%value%'
+  capacity: 200.0
+
+DODGE_RATE:
+  enabled: true
+  name: Dodge Rate
+  format: '&6▸ %name%: &f%value%'
+  capacity: 45.0
+
+ACCURACY_RATE:
+  enabled: true
+  name: Accuracy Rate
+  format: '&6▸ %name%: &f%value%'
+  capacity: 30.0
+
+BLOCK_RATE:
+  enabled: true
+  name: Block Rate
+  format: '&6▸ %name%: &f%value%'
+  capacity: 100.0
+
+BLOCK_DAMAGE:
+  enabled: true
+  name: Block Damage
+  format: '&6▸ %name%: &f%value%'
+  capacity: 100.0
+
+CRITICAL_RATE:
+  enabled: true
+  name: Crit. Strike Rate
+  format: '&a▸ %name%: &f%value%'
+  capacity: 100.0
+
+CRITICAL_DAMAGE:
+  enabled: true
+  name: Crit. Strike Dmg
+  format: '&a▸ %name%: &f%value%'
+  capacity: 3.5
+
+PVP_DEFENSE:
+  enabled: true
+  name: PvP Defense
+  format: '&b▸ %name%: &f%value%'
+  capacity: 100.0
+
+PVE_DEFENSE:
+  enabled: true
+  name: PvE Defense
+  format: '&b▸ %name%: &f%value%'
+  capacity: 100.0
+
+LOOT_RATE:
+  enabled: true
+  name: Loot Rate
+  format: '&e▸ %name%: &f%value%'
+  capacity: 250.0
+
+MOVEMENT_SPEED:
+  enabled: true
+  name: Movement Speed
+  format: '&e▸ %name%: &f%value%'
+  capacity: 70.0
+
+DURABILITY:
+  enabled: true
+  name: Durability
+  format: '&7▸ %name%: &f%value%'
+  capacity: -1
+
+PENETRATION:
+  enabled: true
+  name: Armor Penetration
+  format: '&c▸ %name%: &f%value%'
+  capacity: 60.0
+
+VAMPIRISM:
+  enabled: true
+  name: Vampirism
+  format: '&c▸ %name%: &f%value%'
+  capacity: 35.0
+
+BURN_RATE:
+  enabled: true
+  name: Chance to Burn
+  format: '&c▸ %name%: &f%value%'
+  capacity: 100.0
+
+ATTACK_SPEED:
+  enabled: true
+  name: Attack Speed
+  format: '&e▸ %name%: &f%value%'
+  capacity: -1
+
+MAX_HEALTH:
+  enabled: true
+  name: Max Health
+  format: '&c▸ %name%: &f%value%'
+  capacity: 20
+
+SALE_PRICE:
+  enabled: true
+  name: Sale Price
+  format: '&d▸ %name%: &f%value%'
+  capacity: -1
+
+BLEED_RATE:
+  enabled: true
+  name: Chance to Open Wounds
+  format: '&c▸ %name%: &f%value%'
+  capacity: 75.0
+  settings:
+    damage: '%damage% * 0.5'
+    of-max-health: false
+    duration: 10.0
+
+DISARM_RATE:
+  enabled: true
+  name: Chance to Disarm
+  format: '&c▸ %name%: &f%value%'
+  capacity: 25.0
+
+RANGE:
+  enabled: true
+  name: Range
+  format: '&6▸ %name%: &f%value%'
+  capacity: 7.0
+
+THORNMAIL:
+  enabled: true
+  name: Thornmail
+  format: '&c▸ %name%: &f%value%'
+  capacity: 35.0
+
+HEALTH_REGEN:
+  enabled: true
+  name: Health Regen
+  format: '&c▸ %name%: &f%value%'
+  capacity: -1.0
+
+MANA_REGEN:
+  enabled: true
+  name: Mana Regen
+  format: '&9▸ %name%: &f%value%'
+  capacity: -1.0

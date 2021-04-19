@@ -1,0 +1,23 @@
+material: REDSTONE
+name: '&cRed Magic Dust'
+lore: []
+tier: common
+enchanted: true
+item-flags:
+- '*'
+level:
+  min: 5
+  max: 5
+uses-by-level:
+  '1': 3
+rate-increasing:
+  max-value: 100
+  values-by-level:
+    '1': 5
+target-requirements:
+  type:
+  - '*'
+  module:
+  - '*'
+  level:
+    '1': 1

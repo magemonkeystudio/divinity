@@ -1,0 +1,118 @@
+command-aliases: party
+party:
+  max-size: 6
+  leader-leave-disband: false
+  invite-timeout: 60
+  quit-auto-leave: false
+  quit-timeout: 10
+  tp-cooldown: 60
+chat:
+  enabled: true
+  format: '&9[Group] &l{player}: &7{message}'
+size-permissions:
+  vip: 8
+  premium: 10
+hooks:
+  level-plugins:
+    enabled: true
+    balance-exp:
+      enabled: true
+      max-distance: 25
+  quest-plugins:
+    enabled: true
+    objectives:
+      mob-kill:
+        enabled: true
+        max-distance: 25
+sounds:
+  CREATE: ENTITY_FIREWORK_ROCKET_TWINKLE
+  INVITE: BLOCK_NOTE_BLOCK_BASS
+  JOIN: ENTITY_EXPERIENCE_ORB_PICKUP
+  LEAVE: ENTITY_EXPERIENCE_ORB_PICKUP
+  KICK: BLOCK_ANVIL_PLACE
+  DISBAND: BLOCK_GLASS_BREAK
+  QUIT: ENTITY_EXPERIENCE_ORB_PICKUP
+  BACK: ENTITY_EXPERIENCE_ORB_PICKUP
+  TP: ENTITY_ENDERMAN_TELEPORT
+gui:
+  title: '&4&l<&4&nParty&4&l>'
+  size: 54
+  member:
+    name: '&eParty Member'
+    lore:
+    - '&7» &fOnline:           &e%online%'
+    - '&7» &fName:             &e%name%'
+    - '&8&m                                      '
+    - '&7This is member of your party.'
+    - ''
+    - '&8&oLeft-Click to &6&oTeleport'
+    - '&8&oRight-Click to &c&oKick'
+    slots: 18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+  content:
+    filler_black:
+      material: BLACK_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: ''
+      lore: []
+      slots: 9,10,11,12,13,14,15,16,17,45,46,47,48,49,50,51,52,53
+      type: NONE
+    filler_gray:
+      material: GRAY_STAINED_GLASS_PANE
+      skull-hash: ''
+      enchanted: false
+      name: ''
+      lore: []
+      slots: 18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+      type: NONE
+    party_disband:
+      material: BARRIER
+      skull-hash: ''
+      enchanted: false
+      name: '&4Disband Party  &c[Leader only]'
+      lore: []
+      slots: '0'
+      type: PARTY_DISBAND
+    party_chat:
+      material: FEATHER
+      skull-hash: ''
+      enchanted: false
+      name: '&fToggle Party Chat'
+      lore:
+      - '&7Toggle chat channel to party chat.'
+      slots: '2'
+      type: PARTY_CHAT
+    party_info:
+      material: MAP
+      skull-hash: ''
+      enchanted: false
+      name: '&6Party Info'
+      lore:
+      - '&7» &fName:             &6%party_name%'
+      - '&7» &fLeader:           &6%party_leader%'
+      - '&7» &fMembers:          &e%party_members%/%party_size%'
+      - '&7» &fDrop mode:        &e%party_drop%'
+      - '&7» &fExp mode:        &e%party_exp%'
+      - '&8&m                                      '
+      - '&7'
+      slots: '4'
+      type: NONE
+    party_drop:
+      material: CHEST
+      skull-hash: ''
+      enchanted: false
+      name: '&6Toggle Drop Mode &c[Leader only]'
+      lore:
+      - '&7» &fDrop mode:        &e%party_drop%'
+      - '&8&m                                      '
+      - '&7Toggles party drop mode.'
+      slots: '6'
+      type: PARTY_DROP
+    party_leave:
+      material: IRON_DOOR
+      skull-hash: ''
+      enchanted: false
+      name: '&9Leave Party'
+      lore: []
+      slots: '8'
+      type: PARTY_LEAVE

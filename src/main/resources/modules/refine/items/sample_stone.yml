@@ -1,0 +1,99 @@
+material: CHARCOAL
+name: 'Enchantment Stone'
+lore: []
+tier: common
+enchanted: false
+level:
+  min: 1
+  max: 3
+uses-by-level:
+  '1': 1
+  '2': 2
+refine-by-level:
+  '1':
+    item-stats: {}
+    damage-types:
+      physical: 1%
+    defense-types: {}
+  '2':
+    item-stats: {}
+    damage-types:
+      physical: 1.5%
+    defense-types: {}
+  '3':
+    item-stats: {}
+    damage-types:
+      physical: 2%
+    defense-types: {}
+  '4':
+    item-stats: {}
+    damage-types:
+      physical: 2.5%
+    defense-types: {}
+  '5':
+    item-stats: {}
+    damage-types:
+      physical: 3%
+    defense-types: {}
+  '6':
+    item-stats: {}
+    damage-types:
+      physical: 3.5%
+    defense-types: {}
+  '7':
+    item-stats: {}
+    damage-types:
+      physical: 4%
+    defense-types: {}
+  '8':
+    item-stats: {}
+    damage-types:
+      physical: 4.5%
+    defense-types: {}
+  '9':
+    item-stats: {}
+    damage-types:
+      physical: 5%
+    defense-types: {}
+  '10':
+    item-stats: {}
+    damage-types:
+      physical: 5.5%
+    defense-types: {}
+  '11':
+    item-stats: {}
+    damage-types:
+      physical: 6%
+    defense-types: {}
+  '12':
+    item-stats: {}
+    damage-types:
+      physical: 6.5%
+    defense-types: {}
+  '13':
+    item-stats: {}
+    damage-types:
+      physical: 7%
+    defense-types: {}
+  '14':
+    item-stats: {}
+    damage-types:
+      physical: 7.5%
+    defense-types: {}
+  '15':
+    item-stats: {}
+    damage-types:
+      physical: 8%
+    defense-types: {}
+success-rate-by-level:
+  '1': '75'
+  '2': '35 * %ITEM_LEVEL%'
+  '3': '30:50'
+target-requirements:
+  type:
+  - 'WEAPON'
+  - 'ARMOR'
+  level:
+    '1': '1'
+  module:
+  - '*'

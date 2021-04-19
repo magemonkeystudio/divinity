@@ -1,0 +1,89 @@
+command-aliases: dismantle
+general:
+  actions-complete:
+    default:
+      target-selectors:
+        self:
+        - '[SELF]'
+      conditions:
+        list: []
+        actions-on-fail: 'null'
+      action-executors:
+      - '[SOUND] ~name: BLOCK_ANVIL_USE; ~target: self;'
+  actions-error:
+    default:
+      target-selectors:
+        self:
+        - '[SELF]'
+      conditions:
+        list: []
+        actions-on-fail: 'null'
+      action-executors:
+      - '[SOUND] ~name: ENTITY_VILLAGER_NO; ~target: self;'
+item-format:
+  name: '%TIER_COLOR%%ITEM_NAME% %ITEM_LEVEL_ROMAN%'
+  lore:
+  - '&8&m               &f  「 INFO 」  &8&m               '
+  - '&7Tier: %TIER_NAME%'
+  - '%ITEM_CHARGES%'
+  - '%ITEM_LORE%'
+  - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+  - '%TARGET_LEVEL%'
+  - '%TARGET_TYPE%'
+  - '%TARGET_MODULE%'
+  - '%TARGET_TIER%'
+  - '&8&m              &f  「 USAGE 」  &8&m              '
+  - '&7Drag & Drop onto item to dismantle.'
+gui:
+  title: '&4&l<&4&nDismantle&4&l>'
+  size: 54
+  item-slots: 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
+  result-slots: 27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+  content:
+    filler_black:
+      material: BLACK_STAINED_GLASS_PANE
+      name: '&7'
+      slots: 46,47,48,49,50,51,52
+      type: NONE
+    filler_result_saver:
+      material: GRAY_STAINED_GLASS_PANE
+      name: '&7'
+      slots: 27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44
+      type: NONE
+    filler_yellow:
+      material: YELLOW_STAINED_GLASS_PANE
+      name: '&7'
+      slots: 18,19,25,26
+      type: NONE
+    filler_orange:
+      material: ORANGE_STAINED_GLASS_PANE
+      name: '&7'
+      slots: 20,21,23,24
+      type: NONE
+    hopper-result:
+      material: HOPPER
+      skull-hash: ''
+      enchanted: false
+      name: '&6&l&nResult'
+      lore: []
+      slots: '22'
+      type: NONE
+    accept:
+      material: EMERALD
+      skull-hash: ''
+      enchanted: false
+      name: '&a&l&nConfirm'
+      lore:
+      - '&eDismantle Cost: &c$%cost%'
+      - '&7'
+      - '&eAll selected items will be dismantled.'
+      slots: '53'
+      type: ACCEPT
+    exit:
+      material: BARRIER
+      skull-hash: ''
+      enchanted: false
+      name: '&c&l&nCancel'
+      lore: []
+      slots: '45'
+      type: EXIT
