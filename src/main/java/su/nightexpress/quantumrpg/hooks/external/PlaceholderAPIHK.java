@@ -1,5 +1,7 @@
 package su.nightexpress.quantumrpg.hooks.external;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.expansion.ExpansionManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,7 +35,8 @@ public class PlaceholderAPIHK extends NHook<QuantumRPG> {
 	
 	@Override
 	public void shutdown() {
-		this.expansion.unregister();
+		PlaceholderAPI.unregisterExpansion(this.expansion);
+//		this.expansion.unregister();
 	}
     
     class QRPGExpansion extends PlaceholderExpansion {

@@ -123,7 +123,7 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
 		int amountLeft = this.getAmount(item);
 		PersistentDataContainer container = meta.getPersistentDataContainer();
 		
-		List<@NotNull Z> valuesLeft = new ArrayList<>();
+		List<Z> valuesLeft = new ArrayList<>();
 		
 		//System.out.println("Reordering: " + amountLeft + " Left");
 		

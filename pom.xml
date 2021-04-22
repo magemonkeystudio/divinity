@@ -15,6 +15,10 @@
 
     <repositories>
         <repository>
+            <id>spigot-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
             <id>elmakers-repo</id>
             <url>http://maven.elmakers.com/repository/</url>
         </repository>
@@ -29,6 +33,11 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.15.2-R0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>su.nexmedia</groupId>
             <artifactId>NexEngine</artifactId>
@@ -84,6 +93,13 @@
             <version>1.10.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/LorinthsRpgMobs-1.10.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>mango</groupId>
+            <artifactId>MangoQuest</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/MangoQuest.jar</systemPath>
         </dependency>
     </dependencies>
 

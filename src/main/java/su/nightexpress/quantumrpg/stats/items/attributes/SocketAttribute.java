@@ -179,7 +179,7 @@ public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements
 	}
 
 	@Override
-	public String@NotNull[] getDefaultValue() {
+	public String[] getDefaultValue() {
 		return new String[] {"", ""};
 	}
 }

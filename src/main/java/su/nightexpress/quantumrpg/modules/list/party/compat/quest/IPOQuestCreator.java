@@ -1,3 +1,4 @@
+/*
 package su.nightexpress.quantumrpg.modules.list.party.compat.quest;
 
 import java.util.Set;
@@ -39,13 +40,16 @@ public class IPOQuestCreator extends IPartyObjective {
                 }
                 // progress the quest, not checking if the player is a member of the quest and if he has the correct role
                 // TODO
-                /*CheckResult result = quest.check(e, killer, false);
+                */
+/*CheckResult result = quest.check(e, killer, false);
                 if (result.equals(CheckResult.PROGRESSED)) {// progressed the quest
                 } else if (result.equals(CheckResult.STOPPED)) {// stopped the quest
                 } else if (result.equals(CheckResult.PAUSED)) {// paused the quest
                 } else if (result.equals(CheckResult.NONE)) {// no effect
-                }*/
+                }*//*
+
             }
         }
 	}
 }
+*/

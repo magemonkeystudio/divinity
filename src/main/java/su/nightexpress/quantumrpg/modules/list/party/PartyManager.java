@@ -56,7 +56,7 @@ import su.nightexpress.quantumrpg.modules.list.party.compat.level.IPEInternal;
 import su.nightexpress.quantumrpg.modules.list.party.compat.level.IPESkillAPI;
 import su.nightexpress.quantumrpg.modules.list.party.compat.level.IPartyLevelManager;
 import su.nightexpress.quantumrpg.modules.list.party.compat.quest.IPOMangoQuest;
-import su.nightexpress.quantumrpg.modules.list.party.compat.quest.IPOQuestCreator;
+//import su.nightexpress.quantumrpg.modules.list.party.compat.quest.IPOQuestCreator;
 import su.nightexpress.quantumrpg.modules.list.party.compat.quest.IPartyObjective;
 import su.nightexpress.quantumrpg.modules.list.party.event.PlayerLeavePartyEvent;
 
@@ -139,10 +139,10 @@ public class PartyManager extends QModule {
 		
 		// Quest plugin compatibility
 		if (this.settings.isQuestHooksEnabled()) {
-			if (Hooks.hasPlugin(EHook.QUEST_CREATOR)) {
-				this.iQuestObjective = new IPOQuestCreator(plugin, this);
-			}
-			else if (Hooks.hasPlugin(EHook.MANGO_QUEST)) {
+//			if (Hooks.hasPlugin(EHook.QUEST_CREATOR)) {
+//				this.iQuestObjective = new IPOQuestCreator(plugin, this);
+//			}
+			/*else */if (Hooks.hasPlugin(EHook.MANGO_QUEST)) {
 				this.iQuestObjective = new IPOMangoQuest(plugin, this);
 			}
 			

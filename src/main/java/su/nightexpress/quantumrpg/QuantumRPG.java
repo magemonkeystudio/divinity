@@ -25,8 +25,8 @@ import su.nightexpress.quantumrpg.hooks.external.MyPetHK;
 import su.nightexpress.quantumrpg.hooks.external.MythicMobsHK;
 import su.nightexpress.quantumrpg.hooks.external.PlaceholderAPIHK;
 import su.nightexpress.quantumrpg.hooks.external.PwingRacesHK;
-import su.nightexpress.quantumrpg.hooks.external.RacesOfThanaHK;
 import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
+//import su.nightexpress.quantumrpg.hooks.external.RacesOfThanaHK;
 //import su.nightexpress.quantumrpg.hooks.external.SkillsProHK;
 import su.nightexpress.quantumrpg.manager.EntityManager;
 import su.nightexpress.quantumrpg.manager.damage.DamageManager;
@@ -205,8 +205,8 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 			this.registerHook(Hooks.PLACEHOLDER_API, PlaceholderAPIHK.class);
 		}
 		this.registerHook(EHook.PWING_RACES, PwingRacesHK.class);
-		this.registerHook(EHook.RACES_OF_THANA, RacesOfThanaHK.class);
 		this.registerHook(EHook.SKILL_API, SkillAPIHK.class);
+//		this.registerHook(EHook.RACES_OF_THANA, RacesOfThanaHK.class);
 //		this.registerHook(EHook.SKILLS, SkillsProHK.class);
 	}
 	

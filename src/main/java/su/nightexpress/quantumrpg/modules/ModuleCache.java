@@ -61,32 +61,32 @@ public class ModuleCache {
 	}
 	
 	public void initialize() {
-		this.gemsManager = this.plugin.getModuleManager().register(new GemManager(plugin));
-		this.essencesManager = this.plugin.getModuleManager().register(new EssencesManager(plugin));
-		this.runesManager = this.plugin.getModuleManager().register(new RuneManager(plugin));
-		this.arrowManager = this.plugin.getModuleManager().register(new ArrowManager(plugin));
-		this.setManager = this.plugin.getModuleManager().register(new SetManager(plugin));
-		this.itemGeneratorManager = this.plugin.getModuleManager().register(new ItemGeneratorManager(plugin));
+		this.gemsManager = (GemManager) this.plugin.getModuleManager().register(new GemManager(plugin));
+		this.essencesManager = (EssencesManager) this.plugin.getModuleManager().register(new EssencesManager(plugin));
+		this.runesManager = (RuneManager) this.plugin.getModuleManager().register(new RuneManager(plugin));
+		this.arrowManager = (ArrowManager) this.plugin.getModuleManager().register(new ArrowManager(plugin));
+		this.setManager = (SetManager) this.plugin.getModuleManager().register(new SetManager(plugin));
+		this.itemGeneratorManager = (ItemGeneratorManager) this.plugin.getModuleManager().register(new ItemGeneratorManager(plugin));
 		
-		this.classManager = this.plugin.getModuleManager().register(new ClassManager(plugin));
+		this.classManager = (ClassManager) this.plugin.getModuleManager().register(new ClassManager(plugin));
 		
 		// Utility
-		this.refineManager = this.plugin.getModuleManager().register(new RefineManager(plugin));
-		this.fortifyManager = this.plugin.getModuleManager().register(new FortifyManager(plugin));
-		this.identifyManager = this.plugin.getModuleManager().register(new IdentifyManager(plugin));
-		this.magicDustManager = this.plugin.getModuleManager().register(new MagicDustManager(plugin));
-		this.soulboundManager = this.plugin.getModuleManager().register(new SoulboundManager(plugin));
-		this.repairManager = this.plugin.getModuleManager().register(new RepairManager(plugin));
-		this.dismantleManager = this.plugin.getModuleManager().register(new DismantleManager(plugin));
-		this.extractorManager = this.plugin.getModuleManager().register(new ExtractorManager(plugin));
-		this.partyManager = this.plugin.getModuleManager().register(new PartyManager(plugin));
-		this.itemHintsManager = this.plugin.getModuleManager().register(new ItemHintsManager(plugin));
+		this.refineManager = (RefineManager) this.plugin.getModuleManager().register(new RefineManager(plugin));
+		this.fortifyManager = (FortifyManager) this.plugin.getModuleManager().register(new FortifyManager(plugin));
+		this.identifyManager = (IdentifyManager) this.plugin.getModuleManager().register(new IdentifyManager(plugin));
+		this.magicDustManager = (MagicDustManager) this.plugin.getModuleManager().register(new MagicDustManager(plugin));
+		this.soulboundManager = (SoulboundManager) this.plugin.getModuleManager().register(new SoulboundManager(plugin));
+		this.repairManager = (RepairManager) this.plugin.getModuleManager().register(new RepairManager(plugin));
+		this.dismantleManager = (DismantleManager) this.plugin.getModuleManager().register(new DismantleManager(plugin));
+		this.extractorManager = (ExtractorManager) this.plugin.getModuleManager().register(new ExtractorManager(plugin));
+		this.partyManager = (PartyManager) this.plugin.getModuleManager().register(new PartyManager(plugin));
+		this.itemHintsManager = (ItemHintsManager) this.plugin.getModuleManager().register(new ItemHintsManager(plugin));
 		
-		this.dropManager = this.plugin.getModuleManager().register(new DropManager(plugin));
-		this.lootManager = this.plugin.getModuleManager().register(new LootManager(plugin));
+		this.dropManager = (DropManager) this.plugin.getModuleManager().register(new DropManager(plugin));
+		this.lootManager = (LootManager) this.plugin.getModuleManager().register(new LootManager(plugin));
 		
-		this.sellManager = this.plugin.getModuleManager().register(new SellManager(plugin));
-		this.combatLogManager = this.plugin.getModuleManager().register(new CombatLogManager(plugin));
+		this.sellManager = (SellManager) this.plugin.getModuleManager().register(new SellManager(plugin));
+		this.combatLogManager = (CombatLogManager) this.plugin.getModuleManager().register(new CombatLogManager(plugin));
 	}
 	
 	public void shutdown() {

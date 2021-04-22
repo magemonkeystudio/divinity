@@ -1,3 +1,4 @@
+/*
 package su.nightexpress.quantumrpg.hooks.external;
 
 import org.bukkit.entity.Player;
@@ -42,3 +43,4 @@ public class RacesOfThanaHK extends NHook<QuantumRPG> implements HookClass {
 		throw new UnsupportedOperationException("Your class plugin does not provides mana function.");
 	}
 }
+*/

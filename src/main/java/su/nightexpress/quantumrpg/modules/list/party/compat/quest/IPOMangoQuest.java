@@ -45,7 +45,7 @@ public class IPOMangoQuest extends IPartyObjective {
             			return;
             		}
             	}
-            	playerData.killEntity(entity);
+            	playerData.killMob(entity);
             }
         }
 	}

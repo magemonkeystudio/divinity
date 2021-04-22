@@ -27,7 +27,7 @@ public class SingleAttributeGenerator<A extends ItemLoreStat<String>> extends Ab
 			@NotNull QuantumRPG plugin,
 			@NotNull GeneratorItem generatorItem,
 			@NotNull String path,
-			@NotNull Collection<@NotNull A> attributesAll, 
+			@NotNull Collection<A> attributesAll,
 			@NotNull String placeholder) {
 		super(plugin, generatorItem, placeholder);
 		JYML cfg = this.generatorItem.getConfig();

@@ -41,7 +41,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
 			@NotNull QuantumRPG plugin,
 			@NotNull GeneratorItem generatorItem,
 			@NotNull String path,
-			@NotNull Collection<@NotNull A> attributesAll,
+			@NotNull Collection<A> attributesAll,
 			@NotNull String placeholder
 			) {
 		super(plugin, generatorItem, placeholder);

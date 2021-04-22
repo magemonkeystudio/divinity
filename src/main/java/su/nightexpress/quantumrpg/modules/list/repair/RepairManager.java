@@ -410,7 +410,8 @@ public class RepairManager extends QModuleDrop<RepairItem> {
 		if (this.anvilUseAction == null) return;
 		if (e.useItemInHand() == Result.DENY) return;
 		if (e.useInteractedBlock() == Result.DENY) return;
-		
+		if(e.getAction() == Action.PHYSICAL) return;
+
 		Block block = e.getClickedBlock();
 		if (block == null || block.getType() != Material.ANVIL) return;
 		
