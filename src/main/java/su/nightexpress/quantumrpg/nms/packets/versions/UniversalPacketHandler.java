@@ -122,7 +122,7 @@ public class UniversalPacketHandler implements IPacketHandler {
 
         Object p = packetParticlesClass.cast(packet);
 
-        Object j = packetParticlesClass.cast(Reflex.getFieldValue(p, "j"));
+        Object j = Reflex.getFieldValue(p, "j");
         if (j == null) return;
 
         Method a = Reflex.getMethod(particleParamClass, "a");

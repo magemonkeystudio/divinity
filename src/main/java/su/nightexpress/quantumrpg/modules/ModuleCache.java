@@ -68,7 +68,8 @@ public class ModuleCache {
 		this.setManager = (SetManager) this.plugin.getModuleManager().register(new SetManager(plugin));
 		this.itemGeneratorManager = (ItemGeneratorManager) this.plugin.getModuleManager().register(new ItemGeneratorManager(plugin));
 		
-		this.classManager = (ClassManager) this.plugin.getModuleManager().register(new ClassManager(plugin));
+//		this.classManager = (ClassManager) this.plugin.getModuleManager().register(new ClassManager(plugin));
+//		classManager.loadClasses();
 		
 		// Utility
 		this.refineManager = (RefineManager) this.plugin.getModuleManager().register(new RefineManager(plugin));

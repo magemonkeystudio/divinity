@@ -97,7 +97,7 @@
         <dependency>
             <groupId>mango</groupId>
             <artifactId>MangoQuest</artifactId>
-            <version>1.0</version>
+            <version>1.01</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/MangoQuest.jar</systemPath>
         </dependency>

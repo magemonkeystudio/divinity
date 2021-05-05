@@ -23,6 +23,7 @@ import su.nexmedia.engine.utils.actions.ActionManipulator;
 import su.nexmedia.engine.utils.eval.Evaluator;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.list.classes.ClassManager;
 import su.nightexpress.quantumrpg.modules.list.classes.object.ClassAspect;
 import su.nightexpress.quantumrpg.modules.list.classes.object.ClassAspectBonus;
@@ -152,6 +153,8 @@ public class RPGClass extends LoadableItem {
 			
 			// Aspect validate
 			ClassAspect aspect = classManager == null ? null : classManager.getAspectManager().getAspectById(aspectId);
+			if(classManager == null)
+				plugin.error("Class manager is null.");
 			if (aspect == null) {
 				plugin.error("Invalid aspect '" + aspectId +"' in " + cfg.getFile().getName());
 				continue;
