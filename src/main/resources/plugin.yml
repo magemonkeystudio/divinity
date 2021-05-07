@@ -1,9 +1,9 @@
 main: su.nightexpress.quantumrpg.QuantumRPG
 version: 5.10.2
-name: QuantumRPG
-author: NightExpress
+name: ProRPGItems
+authors: [Travja, goflish]
 desciption: The most advanced, customizable and configurable RPG-Core plugin!
-depend: [NexEngine]
+depend: [ProMCCore]
 loadafter: [Magic]
 softdepend:
 - Citizens
