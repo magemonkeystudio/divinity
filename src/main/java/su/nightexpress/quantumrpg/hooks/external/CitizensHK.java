@@ -10,10 +10,10 @@ import su.nightexpress.quantumrpg.QuantumRPG;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CitizensHook extends NHook<QuantumRPG> {
+public class CitizensHK extends NHook<QuantumRPG> {
     private Set<TraitInfo> traits;
 
-    public CitizensHook(@NotNull QuantumRPG plugin) {
+    public CitizensHK(@NotNull QuantumRPG plugin) {
         super(plugin);
     }
 
