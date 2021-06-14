@@ -6,7 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.quantumrpg.modules.UsableItem;
+import su.nightexpress.quantumrpg.modules.LimitedItem;
 import su.nightexpress.quantumrpg.types.QClickType;
 
 public class QuantumPlayerItemUseEvent extends Event implements Cancellable {
@@ -16,13 +16,13 @@ public class QuantumPlayerItemUseEvent extends Event implements Cancellable {
 
     private ItemStack item;
 
-    private UsableItem ci;
+    private LimitedItem ci;
 
     private Player p;
 
     private QClickType click;
 
-    public QuantumPlayerItemUseEvent(@NotNull ItemStack item, @NotNull Player p, @NotNull UsableItem ci, @NotNull QClickType click) {
+    public QuantumPlayerItemUseEvent(@NotNull ItemStack item, @NotNull Player p, @NotNull LimitedItem ci, @NotNull QClickType click) {
         this.item = item;
         this.ci = ci;
         this.p = p;
@@ -47,7 +47,7 @@ public class QuantumPlayerItemUseEvent extends Event implements Cancellable {
     }
 
     @NotNull
-    public UsableItem getItem() {
+    public LimitedItem getItem() {
         return this.ci;
     }
 

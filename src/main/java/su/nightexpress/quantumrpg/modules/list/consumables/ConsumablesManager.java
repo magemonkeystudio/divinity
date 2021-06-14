@@ -1,7 +1,5 @@
 package su.nightexpress.quantumrpg.modules.list.consumables;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,7 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import su.nexmedia.engine.config.api.JYML;
 import su.nexmedia.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
-import su.nightexpress.quantumrpg.api.events.QuantumPlayerItemUseEvent;
+import su.nightexpress.quantumrpg.api.event.QuantumPlayerItemUseEvent;
+import su.nightexpress.quantumrpg.modules.LimitedItem;
 import su.nightexpress.quantumrpg.modules.UsableItem;
 import su.nightexpress.quantumrpg.modules.api.QModuleUsage;
 import su.nightexpress.quantumrpg.stats.EntityStats;
@@ -44,20 +43,20 @@ public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume>
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onConsume(QuantumPlayerItemUseEvent e) {
-        UsableItem uItem = e.getItem();
+        LimitedItem uItem = e.getItem();
         if (!(uItem instanceof Consume))
             return;
         Player p = e.getPlayer();
         Consume c = (Consume) uItem;
         ItemStack i = e.getItemStack();
-        double maxHealth = EntityStats.getEntityMaxHealth((LivingEntity) p);
+        double maxHealth = EntityStats.getEntityMaxHealth(p);
         if (c.getHealth() > 0.0D && !isConsumingAllowedOnFullHealth() && p.getHealth() >= maxHealth) {
-            (((QuantumRPG) this.plugin).lang()).Consumables_Consume_Error_HealthLevel.replace("%item%", ItemUT.getItemName(i)).send((CommandSender) p, true);
+            (this.plugin.lang()).Consumables_Consume_Error_HealthLevel.replace("%item%", ItemUT.getItemName(i)).send(p);
             e.setCancelled(true);
             return;
         }
         if (c.getHunger() > 0.0D && !isConsumingAllowedOnFullFood() && p.getFoodLevel() >= 20) {
-            (((QuantumRPG) this.plugin).lang()).Consumables_Consume_Error_FoodLevel.replace("%item%", ItemUT.getItemName(i)).send((CommandSender) p, true);
+            (this.plugin.lang()).Consumables_Consume_Error_FoodLevel.replace("%item%", ItemUT.getItemName(i)).send(p);
             e.setCancelled(true);
             return;
         }
@@ -73,9 +72,9 @@ public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume>
     }
 
     public class Consume extends UsableItem {
-        private double hp;
+        private final double hp;
 
-        private double hunger;
+        private final double hunger;
 
         public Consume(@NotNull QuantumRPG plugin, JYML cfg) {
             super(plugin, cfg, ConsumablesManager.this);
@@ -92,7 +91,7 @@ public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume>
         }
 
         public void applyEffects(@NotNull Player p) {
-            double max = EntityStats.getEntityMaxHealth((LivingEntity) p);
+            double max = EntityStats.getEntityMaxHealth(p);
             int food = (int) Math.min(20.0D, p.getFoodLevel() + getHunger());
             int saturation = 20 - food;
             p.setHealth(Math.min(p.getHealth() + getHealth(), max));
