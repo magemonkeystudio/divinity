@@ -1,20 +1,30 @@
 package su.nightexpress.quantumrpg.api.event;
 
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.api.event.IEvent;
+public class EntityEquipmentChangeEvent extends Event {
+    private static final HandlerList handlers = new HandlerList();
 
-public class EntityEquipmentChangeEvent extends IEvent {
-	
-	private LivingEntity entity;
+    private LivingEntity entity;
 
-	public EntityEquipmentChangeEvent(@NotNull LivingEntity entity) {
-	    this.entity = entity;
-	}
-	
-	@NotNull
-	public LivingEntity getEntity() {
-		return this.entity;
-	}
+    public EntityEquipmentChangeEvent(@NotNull LivingEntity entity) {
+        this.entity = entity;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
+
+    @NotNull
+    public final HandlerList getHandlers() {
+        return handlers;
+    }
+
+    @NotNull
+    public LivingEntity getEntity() {
+        return this.entity;
+    }
 }

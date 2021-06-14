@@ -6,9 +6,8 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 
-public class EntityRPGItemPickupEvent extends Event implements Cancellable {
+public class QuantumItemDamageEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private boolean cancelled;
@@ -17,12 +16,9 @@ public class EntityRPGItemPickupEvent extends Event implements Cancellable {
 
     private LivingEntity li;
 
-    private QModuleDrop<?> module;
-
-    public EntityRPGItemPickupEvent(@NotNull ItemStack item, @NotNull LivingEntity li, @NotNull QModuleDrop<?> module) {
+    public QuantumItemDamageEvent(@NotNull ItemStack item, @NotNull LivingEntity li) {
         this.item = item;
         this.li = li;
-        this.module = module;
     }
 
     public static HandlerList getHandlerList() {
@@ -50,10 +46,5 @@ public class EntityRPGItemPickupEvent extends Event implements Cancellable {
     @NotNull
     public LivingEntity getEntity() {
         return this.li;
-    }
-
-    @NotNull
-    public QModuleDrop<?> getModule() {
-        return this.module;
     }
 }
