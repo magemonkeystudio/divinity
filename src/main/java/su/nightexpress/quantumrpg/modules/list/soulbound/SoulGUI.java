@@ -8,13 +8,13 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.manager.api.gui.ContentType;
-import su.nexmedia.engine.manager.api.gui.GuiClick;
-import su.nexmedia.engine.manager.api.gui.GuiItem;
-import su.nexmedia.engine.manager.api.gui.JIcon;
-import su.nexmedia.engine.manager.api.gui.NGUI;
-import su.nexmedia.engine.utils.ItemUT;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.api.gui.ContentType;
+import mc.promcteam.engine.manager.api.gui.GuiClick;
+import mc.promcteam.engine.manager.api.gui.GuiItem;
+import mc.promcteam.engine.manager.api.gui.JIcon;
+import mc.promcteam.engine.manager.api.gui.NGUI;
+import mc.promcteam.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class SoulGUI extends NGUI<QuantumRPG> {

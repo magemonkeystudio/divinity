@@ -6,10 +6,10 @@ import java.util.Set;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.hooks.Hooks;
-import su.nexmedia.engine.utils.actions.params.IParamValue;
+import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.utils.actions.params.IParamValue;
 
-public class AttackableParam extends su.nexmedia.engine.utils.actions.params.list.AttackableParam {
+public class AttackableParam extends mc.promcteam.engine.utils.actions.params.list.AttackableParam {
 
 	public AttackableParam() {
 		super();

@@ -3,7 +3,7 @@ package su.nightexpress.quantumrpg.modules.list.classes.event;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.api.event.IEvent;
+import mc.promcteam.engine.manager.api.event.IEvent;
 import su.nightexpress.quantumrpg.modules.list.classes.api.UserClassData;
 
 public abstract class PlayerClassEvent extends IEvent {

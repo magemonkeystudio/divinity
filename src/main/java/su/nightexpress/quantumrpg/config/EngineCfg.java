@@ -8,9 +8,9 @@ import java.util.TreeMap;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.hooks.NHook;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.hooks.NHook;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.HookClass;
 import su.nightexpress.quantumrpg.hooks.HookLevel;

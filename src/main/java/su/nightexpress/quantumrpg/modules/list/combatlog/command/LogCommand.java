@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.ClickText;
+import mc.promcteam.engine.utils.ClickText;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.modules.command.MCmd;
 import su.nightexpress.quantumrpg.modules.list.combatlog.CombatLogManager;

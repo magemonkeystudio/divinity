@@ -13,7 +13,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
 public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {

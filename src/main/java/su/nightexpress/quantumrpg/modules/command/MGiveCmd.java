@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.ItemUT;
-import su.nexmedia.engine.utils.PlayerUT;
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.PlayerUT;
+import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;

@@ -5,8 +5,8 @@ import java.util.function.Function;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.NumberUT;
-import su.nexmedia.engine.utils.eval.Evaluator;
+import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.eval.Evaluator;
 import su.nightexpress.quantumrpg.manager.effects.main.BleedEffect;
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;

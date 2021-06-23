@@ -4,11 +4,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.manager.api.gui.ContentType;
-import su.nexmedia.engine.manager.api.gui.GuiClick;
-import su.nexmedia.engine.manager.api.gui.GuiItem;
-import su.nexmedia.engine.manager.api.gui.NGUI;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.api.gui.ContentType;
+import mc.promcteam.engine.manager.api.gui.GuiClick;
+import mc.promcteam.engine.manager.api.gui.GuiItem;
+import mc.promcteam.engine.manager.api.gui.NGUI;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.classes.ClassManager;
 

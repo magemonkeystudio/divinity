@@ -2,8 +2,8 @@ package su.nightexpress.quantumrpg.data.api.serialize;
 
 import com.google.gson.*;
 import org.bukkit.inventory.ItemStack;
-import su.nexmedia.engine.utils.CollectionsUT;
-import su.nexmedia.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.CollectionsUT;
+import mc.promcteam.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
 import su.nightexpress.quantumrpg.data.api.UserEntityNamesMode;

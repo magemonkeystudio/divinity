@@ -15,12 +15,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.modules.IModule;
-import su.nexmedia.engine.utils.DataUT;
-import su.nexmedia.engine.utils.ItemUT;
-import su.nexmedia.engine.utils.StringUT;
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.modules.IModule;
+import mc.promcteam.engine.utils.DataUT;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.StringUT;
+import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.modules.EModule;

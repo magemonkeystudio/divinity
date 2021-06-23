@@ -8,8 +8,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import su.nexmedia.engine.utils.EffectUT;
-import su.nexmedia.engine.utils.LocUT;
+import mc.promcteam.engine.utils.EffectUT;
+import mc.promcteam.engine.utils.LocUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.essences.EssencesManager.EssenceEffect;
 

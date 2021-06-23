@@ -9,7 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.stats.EntityStats;
 
 public abstract class IEffect {

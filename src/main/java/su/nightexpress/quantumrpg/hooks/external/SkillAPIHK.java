@@ -10,9 +10,9 @@ import com.sucy.skill.api.event.PlayerCastSkillEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.player.PlayerData;
 
-import su.nexmedia.engine.hooks.HookState;
-import su.nexmedia.engine.hooks.NHook;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.hooks.HookState;
+import mc.promcteam.engine.hooks.NHook;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.hooks.HookClass;

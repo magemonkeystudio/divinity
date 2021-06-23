@@ -10,9 +10,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.citizensnpcs.api.trait.TraitInfo;
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.hooks.external.citizens.CitizensHK;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.hooks.external.citizens.CitizensHK;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.SocketItem;

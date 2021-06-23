@@ -9,9 +9,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.actions.ActionManipulator;
-import su.nexmedia.engine.utils.eval.Evaluator;
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.utils.actions.ActionManipulator;
+import mc.promcteam.engine.utils.eval.Evaluator;
+import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 

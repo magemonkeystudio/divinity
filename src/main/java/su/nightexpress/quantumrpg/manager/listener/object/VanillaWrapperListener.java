@@ -23,9 +23,9 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.hooks.Hooks;
-import su.nexmedia.engine.manager.IListener;
-import su.nexmedia.engine.utils.ItemUT;
+import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.manager.IListener;
+import mc.promcteam.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.QuantumProjectileLaunchEvent;
 import su.nightexpress.quantumrpg.api.event.RPGDamageEvent;

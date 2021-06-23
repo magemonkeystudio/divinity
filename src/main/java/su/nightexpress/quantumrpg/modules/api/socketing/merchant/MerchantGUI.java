@@ -11,9 +11,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.hooks.external.VaultHK;
-import su.nexmedia.engine.utils.ItemUT;
-import su.nexmedia.engine.utils.NumberUT;
+import mc.promcteam.engine.hooks.external.VaultHK;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.NumberUT;
 import su.nightexpress.quantumrpg.modules.SocketItem;
 import su.nightexpress.quantumrpg.modules.api.socketing.ISocketGUI;
 import su.nightexpress.quantumrpg.modules.api.socketing.ModuleSocket;

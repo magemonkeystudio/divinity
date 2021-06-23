@@ -2,7 +2,7 @@ package su.nightexpress.quantumrpg.modules.list.classes.object;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.NumberUT;
 
 public class ClassAttribute {
 

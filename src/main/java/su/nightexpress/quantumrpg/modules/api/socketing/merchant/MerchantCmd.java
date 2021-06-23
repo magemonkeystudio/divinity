@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.PlayerUT;
+import mc.promcteam.engine.utils.PlayerUT;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.modules.api.socketing.ModuleSocket;
 import su.nightexpress.quantumrpg.modules.command.MCmd;

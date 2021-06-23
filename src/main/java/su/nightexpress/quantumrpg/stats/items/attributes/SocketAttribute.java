@@ -4,8 +4,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.utils.DataUT;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.utils.DataUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.modules.SocketItem;
 import su.nightexpress.quantumrpg.modules.api.socketing.ModuleSocket;
 import su.nightexpress.quantumrpg.modules.list.essences.EssencesManager;

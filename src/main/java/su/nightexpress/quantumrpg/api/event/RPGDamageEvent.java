@@ -8,7 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import su.nexmedia.engine.manager.api.event.ICancellableEvent;
+import mc.promcteam.engine.manager.api.event.ICancellableEvent;
 import su.nightexpress.quantumrpg.manager.damage.DamageMeta;
 import su.nightexpress.quantumrpg.modules.list.arrows.ArrowManager.QArrow;
 import su.nightexpress.quantumrpg.stats.EntityStats;

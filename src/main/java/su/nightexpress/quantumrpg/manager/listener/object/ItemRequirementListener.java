@@ -29,8 +29,8 @@ import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.Sets;
 
-import su.nexmedia.engine.manager.IListener;
-import su.nexmedia.engine.utils.ItemUT;
+import mc.promcteam.engine.manager.IListener;
+import mc.promcteam.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;

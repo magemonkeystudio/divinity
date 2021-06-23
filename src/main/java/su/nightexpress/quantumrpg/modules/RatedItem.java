@@ -6,9 +6,9 @@ import java.util.TreeMap;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.utils.StringUT;
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.utils.StringUT;
+import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.api.socketing.ModuleSocket;

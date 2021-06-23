@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 import com.gmail.nossr50.api.ExperienceAPI;
 
-import su.nexmedia.engine.hooks.HookState;
-import su.nexmedia.engine.hooks.NHook;
+import mc.promcteam.engine.hooks.HookState;
+import mc.promcteam.engine.hooks.NHook;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.HookLevel;
 

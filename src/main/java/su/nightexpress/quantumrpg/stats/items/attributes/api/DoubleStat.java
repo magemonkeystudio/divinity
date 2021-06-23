@@ -2,7 +2,7 @@ package su.nightexpress.quantumrpg.stats.items.attributes.api;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.DataUT;
+import mc.promcteam.engine.utils.DataUT;
 
 public abstract class DoubleStat extends AbstractStat<double[]> {
 

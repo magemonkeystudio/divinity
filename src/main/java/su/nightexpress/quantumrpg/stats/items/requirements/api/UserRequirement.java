@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.ILangMsg;
+import mc.promcteam.engine.config.api.ILangMsg;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 
 public abstract class UserRequirement<Z> extends ItemLoreStat<Z> {

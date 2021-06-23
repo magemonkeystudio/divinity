@@ -21,11 +21,11 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.manager.api.task.ITask;
-import su.nexmedia.engine.utils.ItemUT;
-import su.nexmedia.engine.utils.StringUT;
-import su.nexmedia.engine.utils.actions.ActionManipulator;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.api.task.ITask;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.StringUT;
+import mc.promcteam.engine.utils.actions.ActionManipulator;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.QuantumProjectileLaunchEvent;
 import su.nightexpress.quantumrpg.modules.EModule;

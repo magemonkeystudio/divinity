@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.classes;
 
+import mc.promcteam.engine.manager.api.gui.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -7,10 +8,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.manager.api.gui.*;
-import su.nexmedia.engine.utils.NumberUT;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.data.api.RPGUser;

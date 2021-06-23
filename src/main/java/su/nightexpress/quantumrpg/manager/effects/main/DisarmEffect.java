@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.manager.effects.IEffect;
 import su.nightexpress.quantumrpg.manager.effects.IEffectType;
 

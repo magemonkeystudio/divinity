@@ -8,9 +8,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.core.Version;
-import su.nexmedia.engine.nms.packets.IPacketHandler;
-import su.nexmedia.engine.utils.Reflex;
+import mc.promcteam.engine.core.Version;
+import mc.promcteam.engine.nms.packets.IPacketHandler;
+import mc.promcteam.engine.utils.Reflex;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class PacketManager {

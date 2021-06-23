@@ -6,10 +6,10 @@ import org.bukkit.event.EventPriority;
 import org.jetbrains.annotations.NotNull;
 
 import net.citizensnpcs.api.trait.TraitInfo;
-import su.nexmedia.engine.hooks.external.VaultHK;
-import su.nexmedia.engine.hooks.external.citizens.CitizensHK;
-import su.nexmedia.engine.utils.NumberUT;
-import su.nexmedia.engine.utils.actions.ActionManipulator;
+import mc.promcteam.engine.hooks.external.VaultHK;
+import mc.promcteam.engine.hooks.external.citizens.CitizensHK;
+import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.actions.ActionManipulator;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.EModule;

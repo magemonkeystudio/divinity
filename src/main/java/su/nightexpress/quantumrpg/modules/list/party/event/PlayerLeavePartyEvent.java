@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.manager.api.event.IEvent;
+import mc.promcteam.engine.manager.api.event.IEvent;
 import su.nightexpress.quantumrpg.modules.list.party.PartyManager.PartyMember;
 
 public class PlayerLeavePartyEvent extends IEvent {

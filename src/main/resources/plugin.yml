@@ -1,5 +1,5 @@
 main: su.nightexpress.quantumrpg.QuantumRPG
-version: 5.10.2
+version: %PROJECT_VERSION%
 name: ProRPGItems
 authors: [Travja, goflish]
 desciption: The most advanced, customizable and configurable RPG-Core plugin!

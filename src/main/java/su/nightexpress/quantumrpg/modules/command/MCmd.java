@@ -2,7 +2,7 @@ package su.nightexpress.quantumrpg.modules.command;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.commands.api.ISubCommand;
+import mc.promcteam.engine.commands.api.ISubCommand;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModule;
 

@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.commands.api.IGeneralCommand;
+import mc.promcteam.engine.commands.api.IGeneralCommand;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class ProfileCommand extends IGeneralCommand<QuantumRPG> {

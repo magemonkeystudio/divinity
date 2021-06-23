@@ -5,7 +5,7 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.IListener;
+import mc.promcteam.engine.manager.IListener;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.party.PartyManager;
 import su.nightexpress.quantumrpg.modules.list.party.PartyManager.Party;

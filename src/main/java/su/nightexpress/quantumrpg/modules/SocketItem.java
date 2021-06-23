@@ -4,9 +4,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.utils.NumberUT;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.socketing.ModuleSocket;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager.Gem;

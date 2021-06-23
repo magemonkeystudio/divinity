@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.api.event.RPGItemDamageEvent;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;

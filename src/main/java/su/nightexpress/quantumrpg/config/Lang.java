@@ -2,9 +2,9 @@ package su.nightexpress.quantumrpg.config;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.ILangMsg;
-import su.nexmedia.engine.core.config.CoreLang;
-import su.nexmedia.engine.manager.types.ClickType;
+import mc.promcteam.engine.config.api.ILangMsg;
+import mc.promcteam.engine.core.config.CoreLang;
+import mc.promcteam.engine.manager.types.ClickType;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.data.api.UserEntityNamesMode;
 import su.nightexpress.quantumrpg.modules.list.classes.object.ClassAttributeType;

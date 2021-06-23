@@ -6,10 +6,10 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.modules.IModuleExecutor;
-import su.nexmedia.engine.utils.ClickText;
-import su.nexmedia.engine.utils.CollectionsUT;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.modules.IModuleExecutor;
+import mc.promcteam.engine.utils.ClickText;
+import mc.promcteam.engine.utils.CollectionsUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.ModuleItem;

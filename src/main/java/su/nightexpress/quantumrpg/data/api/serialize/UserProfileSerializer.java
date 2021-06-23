@@ -15,8 +15,8 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import su.nexmedia.engine.utils.CollectionsUT;
-import su.nexmedia.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.CollectionsUT;
+import mc.promcteam.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
 import su.nightexpress.quantumrpg.data.api.UserEntityNamesMode;

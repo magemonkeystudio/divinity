@@ -1,14 +1,13 @@
 package su.nightexpress.quantumrpg.hooks.external;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.expansion.ExpansionManager;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import su.nexmedia.engine.hooks.HookState;
-import su.nexmedia.engine.hooks.NHook;
-import su.nexmedia.engine.utils.NumberUT;
+import mc.promcteam.engine.hooks.HookState;
+import mc.promcteam.engine.hooks.NHook;
+import mc.promcteam.engine.utils.NumberUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.classes.ClassManager;
 import su.nightexpress.quantumrpg.modules.list.classes.api.UserClassData;

@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.NumberUT;
-import su.nexmedia.engine.utils.constants.JStrings;
+import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.constants.JStrings;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager.Gem;
 import su.nightexpress.quantumrpg.modules.list.refine.RefineManager;

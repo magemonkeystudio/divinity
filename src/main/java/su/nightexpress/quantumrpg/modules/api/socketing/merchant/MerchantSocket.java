@@ -3,9 +3,9 @@ package su.nightexpress.quantumrpg.modules.api.socketing.merchant;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.manager.api.Loadable;
-import su.nexmedia.engine.modules.IModuleExecutor;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.api.Loadable;
+import mc.promcteam.engine.modules.IModuleExecutor;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.socketing.ModuleSocket;

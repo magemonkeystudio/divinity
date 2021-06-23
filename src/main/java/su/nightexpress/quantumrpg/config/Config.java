@@ -12,11 +12,11 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.config.api.IConfigTemplate;
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.utils.StringUT;
-import su.nexmedia.engine.utils.actions.ActionManipulator;
-import su.nexmedia.engine.utils.constants.JStrings;
+import mc.promcteam.engine.config.api.IConfigTemplate;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.utils.StringUT;
+import mc.promcteam.engine.utils.actions.ActionManipulator;
+import mc.promcteam.engine.utils.constants.JStrings;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.AmmoAttribute;

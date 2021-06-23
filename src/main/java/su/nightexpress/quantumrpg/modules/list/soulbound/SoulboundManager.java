@@ -27,9 +27,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.commands.CommandRegister;
-import su.nexmedia.engine.utils.ItemUT;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.commands.CommandRegister;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.EModule;

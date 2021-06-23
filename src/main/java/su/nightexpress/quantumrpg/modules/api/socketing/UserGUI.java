@@ -5,7 +5,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.api.gui.JIcon;
+import mc.promcteam.engine.manager.api.gui.JIcon;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 
 class UserGUI extends ISocketGUI {

@@ -9,9 +9,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.manager.LoadableItem;
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.LoadableItem;
+import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.drops.DropManager;
 

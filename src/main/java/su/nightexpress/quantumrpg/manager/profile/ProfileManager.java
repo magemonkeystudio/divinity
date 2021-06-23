@@ -14,11 +14,11 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.hooks.Hooks;
-import su.nexmedia.engine.manager.IListener;
-import su.nexmedia.engine.manager.api.Loadable;
-import su.nexmedia.engine.utils.constants.JStrings;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.manager.IListener;
+import mc.promcteam.engine.manager.api.Loadable;
+import mc.promcteam.engine.utils.constants.JStrings;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.data.api.RPGUser;
 import su.nightexpress.quantumrpg.data.api.UserProfile;

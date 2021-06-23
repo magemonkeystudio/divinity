@@ -58,7 +58,7 @@ public class ModuleCache {
     private CombatLogManager combatLogManager;
 
     private ConsumablesManager consumablesManager;
-    private ActiveItemManager activeItemManager;
+//    private ActiveItemManager activeItemManager;
 
     public ModuleCache(@NotNull QuantumRPG plugin) {
         this.plugin = plugin;
@@ -94,7 +94,7 @@ public class ModuleCache {
         this.combatLogManager = (CombatLogManager) this.plugin.getModuleManager().register(new CombatLogManager(plugin));
 
         this.consumablesManager = (ConsumablesManager) this.plugin.getModuleManager().register(new ConsumablesManager(plugin));
-        this.activeItemManager = (ActiveItemManager) this.plugin.getModuleManager().register(new ActiveItemManager(plugin));
+//        this.activeItemManager = (ActiveItemManager) this.plugin.getModuleManager().register(new ActiveItemManager(plugin));
     }
 
     public void shutdown() {

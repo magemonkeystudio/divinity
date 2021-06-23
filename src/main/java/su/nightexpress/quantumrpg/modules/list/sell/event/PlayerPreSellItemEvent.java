@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.api.event.ICancellableEvent;
+import mc.promcteam.engine.manager.api.event.ICancellableEvent;
 
 public class PlayerPreSellItemEvent extends ICancellableEvent {
 	

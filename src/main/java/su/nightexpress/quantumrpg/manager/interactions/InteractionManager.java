@@ -10,8 +10,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.IListener;
-import su.nexmedia.engine.manager.api.Loadable;
+import mc.promcteam.engine.manager.IListener;
+import mc.promcteam.engine.manager.api.Loadable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class InteractionManager extends IListener<QuantumRPG> implements Loadable {

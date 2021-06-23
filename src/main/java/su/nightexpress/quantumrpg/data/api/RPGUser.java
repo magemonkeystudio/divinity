@@ -8,8 +8,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.data.users.IAbstractUser;
-import su.nexmedia.engine.utils.constants.JStrings;
+import mc.promcteam.engine.data.users.IAbstractUser;
+import mc.promcteam.engine.utils.constants.JStrings;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class RPGUser extends IAbstractUser<QuantumRPG> {

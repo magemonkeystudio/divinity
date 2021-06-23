@@ -7,7 +7,7 @@ import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.EffectUT;
+import mc.promcteam.engine.utils.EffectUT;
 import su.nightexpress.quantumrpg.manager.effects.IEffectType;
 import su.nightexpress.quantumrpg.manager.effects.IPeriodicEffect;
 

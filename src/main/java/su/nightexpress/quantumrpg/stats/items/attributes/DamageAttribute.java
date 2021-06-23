@@ -14,11 +14,11 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.utils.DataUT;
-import su.nexmedia.engine.utils.NumberUT;
-import su.nexmedia.engine.utils.actions.ActionManipulator;
-import su.nexmedia.engine.utils.constants.JStrings;
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.utils.DataUT;
+import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.actions.ActionManipulator;
+import mc.promcteam.engine.utils.constants.JStrings;
+import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager.Gem;

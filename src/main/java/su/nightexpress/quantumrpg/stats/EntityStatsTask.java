@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.api.task.ITask;
+import mc.promcteam.engine.manager.api.task.ITask;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class EntityStatsTask extends ITask<QuantumRPG> {

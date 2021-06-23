@@ -3,7 +3,7 @@ package su.nightexpress.quantumrpg.modules.list.classes.object;
 import org.bukkit.attribute.Attribute;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.utils.StringUT;
 
 public enum ClassAttributeType {
 	

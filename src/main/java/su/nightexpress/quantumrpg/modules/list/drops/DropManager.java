@@ -25,11 +25,11 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Sets;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.hooks.Hooks;
-import su.nexmedia.engine.manager.types.MobGroup;
-import su.nexmedia.engine.utils.actions.ActionManipulator;
-import su.nexmedia.engine.utils.constants.JStrings;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.manager.types.MobGroup;
+import mc.promcteam.engine.utils.actions.ActionManipulator;
+import mc.promcteam.engine.utils.constants.JStrings;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
 import su.nightexpress.quantumrpg.hooks.external.MyPetHK;

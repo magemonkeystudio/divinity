@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.utils.ItemUT;
-import su.nexmedia.engine.utils.constants.JStrings;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.constants.JStrings;
 import su.nightexpress.quantumrpg.manager.effects.buffs.SavedBuff;
 import su.nightexpress.quantumrpg.modules.list.classes.api.UserClassData;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;

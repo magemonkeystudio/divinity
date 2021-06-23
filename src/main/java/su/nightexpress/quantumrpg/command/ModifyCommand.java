@@ -15,10 +15,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.commands.api.ISubCommand;
-import su.nexmedia.engine.utils.CollectionsUT;
-import su.nexmedia.engine.utils.ItemUT;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.commands.api.ISubCommand;
+import mc.promcteam.engine.utils.CollectionsUT;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.utils.ItemUtils;

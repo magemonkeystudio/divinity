@@ -3,7 +3,7 @@ package su.nightexpress.quantumrpg.hooks.internal;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.data.api.RPGUser;
 import su.nightexpress.quantumrpg.data.api.UserProfile;

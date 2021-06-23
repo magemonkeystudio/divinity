@@ -11,9 +11,9 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.actions.actions.IActionExecutor;
-import su.nexmedia.engine.utils.actions.params.IParamResult;
-import su.nexmedia.engine.utils.actions.params.IParamType;
+import mc.promcteam.engine.utils.actions.actions.IActionExecutor;
+import mc.promcteam.engine.utils.actions.params.IParamResult;
+import mc.promcteam.engine.utils.actions.params.IParamType;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.manager.effects.main.AdjustStatEffect;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;

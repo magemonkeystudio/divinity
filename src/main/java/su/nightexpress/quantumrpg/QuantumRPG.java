@@ -1,9 +1,9 @@
 package su.nightexpress.quantumrpg;
 
 import org.jetbrains.annotations.NotNull;
-import su.nexmedia.engine.NexDataPlugin;
-import su.nexmedia.engine.commands.api.IGeneralCommand;
-import su.nexmedia.engine.hooks.Hooks;
+import mc.promcteam.engine.NexDataPlugin;
+import mc.promcteam.engine.commands.api.IGeneralCommand;
+import mc.promcteam.engine.hooks.Hooks;
 import su.nightexpress.quantumrpg.command.BuffCommand;
 import su.nightexpress.quantumrpg.command.ModifyCommand;
 import su.nightexpress.quantumrpg.command.SetCommand;
@@ -194,7 +194,6 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         }
         this.registerHook(EHook.PWING_RACES, PwingRacesHK.class);
         this.registerHook(EHook.SKILL_API, SkillAPIHK.class);
-        this.registerHook(EHook.CITIZENS, CitizensHK.class);
 //		this.registerHook(EHook.RACES_OF_THANA, RacesOfThanaHK.class);
 //		this.registerHook(EHook.SKILLS, SkillsProHK.class);
     }

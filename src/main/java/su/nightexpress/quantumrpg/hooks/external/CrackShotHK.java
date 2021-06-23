@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 import com.shampaggon.crackshot.CSDirector;
 
-import su.nexmedia.engine.hooks.HookState;
-import su.nexmedia.engine.hooks.NHook;
+import mc.promcteam.engine.hooks.HookState;
+import mc.promcteam.engine.hooks.NHook;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class CrackShotHK extends NHook<QuantumRPG> {

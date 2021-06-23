@@ -4,7 +4,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.NumberUT;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 

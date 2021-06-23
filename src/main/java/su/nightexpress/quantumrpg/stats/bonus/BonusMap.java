@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.utils.NumberUT;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;

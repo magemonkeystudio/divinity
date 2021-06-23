@@ -4,8 +4,8 @@ import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import me.lorinth.rpgmobs.LorinthsRpgMobs;
-import su.nexmedia.engine.hooks.HookState;
-import su.nexmedia.engine.hooks.NHook;
+import mc.promcteam.engine.hooks.HookState;
+import mc.promcteam.engine.hooks.NHook;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.HookMobLevel;
 

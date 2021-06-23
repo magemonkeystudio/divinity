@@ -4,8 +4,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.ILangMsg;
-import su.nexmedia.engine.utils.DataUT;
+import mc.promcteam.engine.config.api.ILangMsg;
+import mc.promcteam.engine.utils.DataUT;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.hooks.HookClass;

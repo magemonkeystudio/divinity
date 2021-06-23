@@ -4,7 +4,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.ILangMsg;
+import mc.promcteam.engine.config.api.ILangMsg;
 import su.nightexpress.quantumrpg.config.Config;
 import su.nightexpress.quantumrpg.modules.ModuleItem;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;

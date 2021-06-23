@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.requirements.api.DynamicUserRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.api.ItemRequirement;

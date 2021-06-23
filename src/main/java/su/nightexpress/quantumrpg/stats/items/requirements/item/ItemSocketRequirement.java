@@ -4,8 +4,8 @@ import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.ILangMsg;
-import su.nexmedia.engine.utils.DataUT;
+import mc.promcteam.engine.config.api.ILangMsg;
+import mc.promcteam.engine.utils.DataUT;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;

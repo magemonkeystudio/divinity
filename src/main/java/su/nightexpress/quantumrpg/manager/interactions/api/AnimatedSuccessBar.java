@@ -5,9 +5,9 @@ import java.util.function.Function;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.api.task.ITask;
-import su.nexmedia.engine.utils.StringUT;
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.manager.api.task.ITask;
+import mc.promcteam.engine.utils.StringUT;
+import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class AnimatedSuccessBar extends ICustomInteraction {

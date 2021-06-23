@@ -6,8 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
-import su.nexmedia.engine.hooks.HookState;
-import su.nexmedia.engine.hooks.NHook;
+import mc.promcteam.engine.hooks.HookState;
+import mc.promcteam.engine.hooks.NHook;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class MyPetHK extends NHook<QuantumRPG> {

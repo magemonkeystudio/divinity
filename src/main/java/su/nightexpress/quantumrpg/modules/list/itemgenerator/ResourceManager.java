@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.api.Loadable;
-import su.nexmedia.engine.utils.FileUT;
+import mc.promcteam.engine.manager.api.Loadable;
+import mc.promcteam.engine.utils.FileUT;
 import su.nightexpress.quantumrpg.config.Config;
 import su.nightexpress.quantumrpg.stats.tiers.Tier;
 

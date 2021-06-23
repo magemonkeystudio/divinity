@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.api.event.IEvent;
+import mc.promcteam.engine.manager.api.event.IEvent;
 
 public class PlayerSellItemEvent extends IEvent {
 

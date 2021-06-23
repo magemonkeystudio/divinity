@@ -9,9 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.commands.api.ISubCommand;
-import su.nexmedia.engine.utils.PlayerUT;
-import su.nexmedia.engine.utils.TimeUT;
+import mc.promcteam.engine.commands.api.ISubCommand;
+import mc.promcteam.engine.utils.PlayerUT;
+import mc.promcteam.engine.utils.TimeUT;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.data.api.RPGUser;

@@ -23,10 +23,10 @@ import org.jetbrains.annotations.Nullable;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 
-import su.nexmedia.engine.hooks.Hooks;
-import su.nexmedia.engine.utils.CollectionsUT;
-import su.nexmedia.engine.utils.ItemUT;
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.utils.CollectionsUT;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.Config;
 import su.nightexpress.quantumrpg.config.EngineCfg;

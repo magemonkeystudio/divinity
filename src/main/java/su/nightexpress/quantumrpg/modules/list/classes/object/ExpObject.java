@@ -1,6 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.classes.object;
 
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.utils.random.Rnd;
 
 public class ExpObject {
 

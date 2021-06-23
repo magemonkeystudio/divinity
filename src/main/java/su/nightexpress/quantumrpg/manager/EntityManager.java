@@ -20,8 +20,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.IListener;
-import su.nexmedia.engine.manager.api.task.ITask;
+import mc.promcteam.engine.manager.IListener;
+import mc.promcteam.engine.manager.api.task.ITask;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.EntityEquipmentChangeEvent;
 import su.nightexpress.quantumrpg.api.event.EntityRPGItemPickupEvent;

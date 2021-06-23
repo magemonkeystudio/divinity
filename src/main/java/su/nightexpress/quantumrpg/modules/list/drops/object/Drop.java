@@ -2,7 +2,7 @@ package su.nightexpress.quantumrpg.modules.list.drops.object;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.utils.random.Rnd;
 
 public class Drop {
 

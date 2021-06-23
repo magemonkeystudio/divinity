@@ -2,7 +2,7 @@ package su.nightexpress.quantumrpg.stats.tiers;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.StringUT;
+import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 
 public class Tier {

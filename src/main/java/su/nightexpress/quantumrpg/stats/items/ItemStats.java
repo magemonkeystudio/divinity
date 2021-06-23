@@ -17,8 +17,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.modules.IModule;
-import su.nexmedia.engine.utils.DataUT;
+import mc.promcteam.engine.modules.IModule;
+import mc.promcteam.engine.utils.DataUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.stats.items.api.DuplicableItemLoreStat;

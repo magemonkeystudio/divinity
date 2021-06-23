@@ -31,11 +31,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.md_5.bungee.api.ChatColor;
-import su.nexmedia.engine.config.api.JYML;
-import su.nexmedia.engine.manager.LoadableItem;
-import su.nexmedia.engine.utils.ItemUT;
-import su.nexmedia.engine.utils.StringUT;
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.LoadableItem;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.StringUT;
+import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.api.QModule;

@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.config.api.ILangMsg;
+import mc.promcteam.engine.config.api.ILangMsg;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.modules.list.soulbound.SoulboundManager;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;

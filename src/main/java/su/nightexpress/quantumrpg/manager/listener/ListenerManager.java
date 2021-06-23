@@ -2,7 +2,7 @@ package su.nightexpress.quantumrpg.manager.listener;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.manager.api.Loadable;
+import mc.promcteam.engine.manager.api.Loadable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.manager.listener.object.ItemDurabilityListener;
 import su.nightexpress.quantumrpg.manager.listener.object.ItemHandListener;

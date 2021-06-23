@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.utils.actions.conditions.IConditionValidator;
-import su.nexmedia.engine.utils.actions.params.IParamResult;
-import su.nexmedia.engine.utils.actions.params.IParamType;
-import su.nexmedia.engine.utils.actions.params.IParamValue;
-import su.nexmedia.engine.utils.actions.params.IParamValue.IOperator;
+import mc.promcteam.engine.utils.actions.conditions.IConditionValidator;
+import mc.promcteam.engine.utils.actions.params.IParamResult;
+import mc.promcteam.engine.utils.actions.params.IParamType;
+import mc.promcteam.engine.utils.actions.params.IParamValue;
+import mc.promcteam.engine.utils.actions.params.IParamValue.IOperator;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 

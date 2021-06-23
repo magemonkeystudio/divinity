@@ -26,10 +26,10 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.hooks.Hooks;
-import su.nexmedia.engine.manager.IListener;
-import su.nexmedia.engine.utils.LocUT;
-import su.nexmedia.engine.utils.random.Rnd;
+import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.manager.IListener;
+import mc.promcteam.engine.utils.LocUT;
+import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.PartyAPI;
 import su.nightexpress.quantumrpg.api.event.RPGDamageEvent;

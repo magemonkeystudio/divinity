@@ -8,9 +8,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.actions.params.IAutoValidated;
-import su.nexmedia.engine.utils.actions.params.IParamValue;
-import su.nexmedia.engine.utils.actions.params.defaults.IParamBoolean;
+import mc.promcteam.engine.utils.actions.params.IAutoValidated;
+import mc.promcteam.engine.utils.actions.params.IParamValue;
+import mc.promcteam.engine.utils.actions.params.defaults.IParamBoolean;
 import su.nightexpress.quantumrpg.api.PartyAPI;
 import su.nightexpress.quantumrpg.modules.list.party.PartyManager;
 import su.nightexpress.quantumrpg.modules.list.party.PartyManager.Party;

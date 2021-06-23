@@ -1,7 +1,7 @@
 package su.nightexpress.quantumrpg.modules.list.activeitems;
 
 import org.jetbrains.annotations.NotNull;
-import su.nexmedia.engine.config.api.JYML;
+import mc.promcteam.engine.config.api.JYML;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.UsableItem;
 import su.nightexpress.quantumrpg.modules.api.QModuleUsage;

@@ -3,8 +3,8 @@ package su.nightexpress.quantumrpg.nms.engine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.core.Version;
-import su.nexmedia.engine.utils.Reflex;
+import mc.promcteam.engine.core.Version;
+import mc.promcteam.engine.utils.Reflex;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.nms.packets.PacketManager;

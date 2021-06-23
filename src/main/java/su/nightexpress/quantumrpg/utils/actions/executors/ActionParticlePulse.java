@@ -7,9 +7,9 @@ import java.util.Set;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.utils.actions.actions.IActionExecutor;
-import su.nexmedia.engine.utils.actions.params.IParamResult;
-import su.nexmedia.engine.utils.actions.params.IParamType;
+import mc.promcteam.engine.utils.actions.actions.IActionExecutor;
+import mc.promcteam.engine.utils.actions.params.IParamResult;
+import mc.promcteam.engine.utils.actions.params.IParamType;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.utils.ParticleUtils;
 

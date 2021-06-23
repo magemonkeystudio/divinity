@@ -9,7 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import su.nexmedia.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.NumberUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class LoreUT {

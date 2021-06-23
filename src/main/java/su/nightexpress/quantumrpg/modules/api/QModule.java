@@ -2,8 +2,8 @@ package su.nightexpress.quantumrpg.modules.api;
 
 import org.jetbrains.annotations.NotNull;
 
-import su.nexmedia.engine.commands.list.HelpCommand;
-import su.nexmedia.engine.modules.IModule;
+import mc.promcteam.engine.commands.list.HelpCommand;
+import mc.promcteam.engine.modules.IModule;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.socketing.ModuleSocket;
 import su.nightexpress.quantumrpg.modules.command.MDropCmd;
