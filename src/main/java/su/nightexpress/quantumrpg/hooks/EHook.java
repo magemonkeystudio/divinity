@@ -16,6 +16,4 @@ public class EHook {
 
     public static final String QUEST_CREATOR = "QuestCreator";
     public static final String MANGO_QUEST = "MangoQuest";
-
-    public static final String CITIZENS = "Citizens";
 }
