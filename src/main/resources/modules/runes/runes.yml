@@ -1,0 +1,14 @@
+runes:
+  strength:
+    enabled: true
+    material: 'DIAMOND:0'
+    name: '&bRune of Strength %rlevel%'
+    lore: 
+    - '&7Grants &b&lStrength %rlevel% &7effect'
+    effect: INCREASE_DAMAGE
+    min-level: 1
+    max-level: 3
+    min-success-rate: 10
+    max-success-rate: 75
+    item-types:
+    - WEAPON

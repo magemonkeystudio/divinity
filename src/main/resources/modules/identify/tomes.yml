@@ -1,0 +1,25 @@
+identify-tomes:
+  common:
+    material: 'ENCHANTED_BOOK:0'
+    name: '&fIdentify Tome'
+    lore:
+    - '&8&m               &f  「 INFO 」  &8&m               '
+    - '&f> &7Type: &fIdentify Tome'
+    - '&f> &7Tier: &fCommon'
+    - '&8&m               &f  「 LORE 」  &8&m               '
+    - '&7This tome can identify the'
+    - '&7common tier items only.'
+    - '&8&m              &f  「 USAGE 」  &8&m              '
+    - '&7Drag+Drop on item to identify.'
+  rare:
+    material: 'ENCHANTED_BOOK:0'
+    name: '&aIdentify Tome'
+    lore:
+    - '&8&m               &f  「 INFO 」  &8&m               '
+    - '&f> &7Type: &fIdentify Tome'
+    - '&f> &7Tier: &aRare'
+    - '&8&m               &f  「 LORE 」  &8&m               '
+    - '&7This tome can identify the'
+    - '&7rare tier items only.'
+    - '&8&m              &f  「 USAGE 」  &8&m              '
+    - '&7Drag+Drop on item to identify.'

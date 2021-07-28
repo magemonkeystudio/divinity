@@ -1,0 +1,3 @@
+cfg_version: 1.0
+command-aliases: 'identify,identifying'
+messages-output: ACTION_BAR

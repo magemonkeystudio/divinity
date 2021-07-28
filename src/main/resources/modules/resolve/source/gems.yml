@@ -1,0 +1,34 @@
+items:
+  default:
+    example:
+      chance: 100.0
+      item:
+        material: 'EMERALD:0:1'
+        name: '&aEmerald'
+        lore: []
+      commands:
+      - 'give %p sulphur 1'
+      preview:
+        material: 'EMERALD:0:1'
+        name: '&aEmerald &7(100%)'
+        lore: []
+        enchant: false
+    sulphur:
+      chance: 25.0
+      item:
+        material: 'SULPHUR:0:1'
+      commands: []
+      preview:
+        material: 'SULPHUR:0:1'
+        name: '&8Sulphur &7(25%)'
+        lore: []
+        enchant: false
+    nugget:
+      chance: 15.0
+      commands:
+      - eco give %p 50
+      preview:
+        material: 'GOLD_NUGGET:0:1'
+        name: '&e50$ &7(15%)'
+        lore: []
+        enchant: false

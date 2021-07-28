@@ -1,0 +1,27 @@
+cfg_version: 1.0
+command-aliases: 'magicdust,mdust'
+messages-output: ACTION_BAR
+general:
+  max-item-success-rate: 80
+  rate-inc: 1.0
+  rate-inc-per-lvl: 1.15
+  rate-inc-max: 5.0
+  effect: SPELL_WITCH
+  sound: ENTITY_EXPERIENCE_ORB_PICKUP
+item:
+  material: GLOWSTONE_DUST:0:1
+  name: '&e&lMagic Dust %rlevel%'
+  lore:
+  - '&8&m               &f  「 INFO 」  &8&m               '
+  - '&f» &7Type: &fMagic Dust'
+  - '&f» &7Level: &f%rlevel%'
+  - '&8&m              &f  「 EFFECT 」  &8&m              '
+  - '&7Increases the success rate of'
+  - '&7any socket-item by &e%rate%%&7.'
+  - '&8&m              &f  「 USAGE 」  &8&m              '
+  - '&7Drag and drop on item to apply.'
+  enchanted: true
+  item-flags:
+  - HIDE_ENCHANTS
+  min-level: 1
+  max-level: 20

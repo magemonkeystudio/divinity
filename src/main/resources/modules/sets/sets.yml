@@ -1,0 +1,39 @@
+sets:
+  wild-cat-set:
+    name: '&eWild Cat Set'
+    prefix: '&a'
+    suffix: 'of Wild Cat'
+    color:
+      have: '&a'
+      miss: '&8'
+    parts:
+      HELMET:
+        enabled: true
+        material: GOLD_HELMET
+        name: '%prefix%Helmet %suffix%'
+      CHESTPLATE:
+        enabled: true
+        material: GOLD_CHESTPLATE
+        name: '%prefix%Chestplate %suffix%'
+      LEGGINGS:
+        enabled: true
+        material: GOLD_LEGGINGS
+        name: '%prefix%Leggings %suffix%'
+      BOOTS:
+        enabled: true
+        material: GOLD_BOOTS
+        name: '%prefix%Boots %suffix%'
+    effects:
+      parts:
+        '2':
+          lore:
+          - '%c%&l&nSet Bonuses [2/4]:'
+          - '%c%» Grants +25% PvE Damage'
+          - '%c%» and Speed I effect.'
+          bonuses:
+            pve_damage:
+              type: DAMAGE
+              name: physical
+              value: 25%
+          potion-effects:
+          - 'SPEED:1'

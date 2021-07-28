@@ -1,0 +1,106 @@
+consumables:
+  burger:
+    cooldown: 10
+    item:
+      material: 'SKULL_ITEM:3:1'
+      name: '&6&lBurger on a Plate'
+      lore:
+      - '&8&m               &f  「 INFO 」  &8&m               '
+      - '&f» &7Type: &fFood'
+      - '&8&m             &f  「 EFFECTS 」  &8&m             '
+      - '&f» &7Health: &6+5❤&7.'
+      - '&f» &7Hunger: &6+5☕&7.'
+      - '&f» &7Absorption I: &645 sec&7.'
+      skull-hash: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjZkM2E3ZTA3ZjVkYWRkNDdiYWRiMTM4MmE1YjE2Mjc4MThlZTE2YTE5YTdjMGJmMjc2OGFlNjI2MjczN2I2In19fQ==\'
+      extras:
+        color: '240,240,20'
+        enchanted: false
+    effects:
+      health: 5
+      hunger: 5
+      actions:
+      - '[SOUND] ENTITY_GENERIC_EAT'
+      - '[EFFECT] ITEM_CRACK:BREAD 0.3 0.2 0.3 0.02 45 @Self'
+      - '[POTION] ABSORPTION 1 45 @Self'
+    craft:
+      workbench:
+        enabled: true
+        template:
+        - 'AIR:0 , BREAD:0 , AIR:0'
+        - 'CARROT_ITEM:0 , COOKED_BEEF:0 , POTATO_ITEM:0'
+        - 'AIR:0 , BREAD:0 , AIR:0'
+      furnace:
+        enabled: false
+        input: 'ROTTEN_FLESH'
+        experience: 1.0
+        cook-time: 4
+  strawberry:
+    cooldown: 15
+    item:
+      material: 'SKULL_ITEM:3:1'
+      name: '&c&lStrawberry'
+      lore:
+      - '&8&m               &f  「 INFO 」  &8&m               '
+      - '&f» &7Type: &fFood'
+      - '&8&m             &f  「 EFFECTS 」  &8&m             '
+      - '&f» Health: &c+1.5❤&7.'
+      - '&f» Hunger: &c+1☕&7.'
+      - '&f» Speed II: &c30 sec&7.'
+      skull-hash: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjk3MDhkODE4YmU5N2RjN2UyYzNiYjVjMzU2NjNlYjM2MjY5MjM2ZTliYzk4Mjg2ZjQyOWRmZGYzNzVhYTkifX19\'
+      extras:
+        color: '240,240,20'
+        enchanted: false
+    effects:
+      health: 1.5
+      hunger: 1
+      actions:
+      - '[SOUND] ENTITY_GENERIC_EAT'
+      - '[EFFECT] ITEM_CRACK:APPLE 0.3 0.2 0.3 0.02 45 @Self'
+      - '[POTION] SPEED 2 30 @Self'
+    craft:
+      workbench:
+        enabled: false
+        template:
+        - 'AIR:0 , BREAD:0 , AIR:0'
+        - 'CARROT_ITEM:0 , COOKED_BEEF:0 , POTATO_ITEM:0'
+        - 'AIR:0 , BREAD:0 , AIR:0'
+      furnace:
+        enabled: false
+        input: 'ROTTEN_FLESH'
+        experience: 1.0
+        cook-time: 4
+  fish:
+    cooldown: 15
+    item:
+      material: 'SKULL_ITEM:3:1'
+      name: '&9&lFish'
+      lore:
+      - '&8&m               &f  「 INFO 」  &8&m               '
+      - '&f» &7Type: &fFood'
+      - '&8&m             &f  「 EFFECTS 」  &8&m             '
+      - '&f» &7Health: &9+3.5❤&7.'
+      - '&f» &7Hunger: &9+3☕&7.'
+      - '&f» &7Strength I: &960 sec&7.'
+      skull-hash: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmVkMjljMGI0ZjE3NWI2NDBhZmNhYjQ0NWJkMTI5YzhmYjhiYTdjNDY1MTJjYTU2M2YxMDExOTU5MzJhZDdmNCJ9fX0=\'
+      extras:
+        color: '240,240,20'
+        enchanted: false
+    effects:
+      health: 3.5
+      hunger: 3
+      actions:
+      - '[SOUND] ENTITY_GENERIC_EAT'
+      - '[EFFECT] ITEM_CRACK:COD 0.3 0.2 0.3 0.02 45 @Self'
+      - '[POTION] INCREASE_DAMAGE 1 60 @Self'
+    craft:
+      workbench:
+        enabled: false
+        template:
+        - 'AIR:0 , BREAD:0 , AIR:0'
+        - 'CARROT_ITEM:0 , COOKED_BEEF:0 , POTATO_ITEM:0'
+        - 'AIR:0 , BREAD:0 , AIR:0'
+      furnace:
+        enabled: false
+        input: 'ROTTEN_FLESH'
+        experience: 1.0
+        cook-time: 4

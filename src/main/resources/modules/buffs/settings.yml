@@ -1,0 +1,6 @@
+cfg_version: 1.0
+command-aliases: 'buff,buffs'
+messages-output: ACTION_BAR
+general:
+  reset-on-death: true
+  messages-enabled: true

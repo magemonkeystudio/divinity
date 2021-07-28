@@ -1,0 +1,57 @@
+gems:
+  flawed-emerald:
+    enabled: true
+    enchanted: false
+    material: EMERALD:0
+    name: '&aFlawed Emerald'
+    socket-display: '&aFlawed Emerald &7[&fCrit. Dmg.&7]'
+    lore:
+    - '&7* &fCrit. Dmg. Mod.: &a+%var_b%%'
+    - '&7* &fCrit. Dmg. Rate: &a+%var_a%%'
+    variables:
+      a: 2.0
+      b: 1.35
+    variables-per-lvl:
+      a: 1.0
+      b: 0.65
+    variables-types:
+      a: CRITICAL_RATE
+      b: CRITICAL_DAMAGE
+    variables-percentage:
+      a: false
+      b: true
+    min-level: 1
+    max-level: 3
+    min-success-rate: 100
+    max-success-rate: 100
+    item-types:
+    - '*SWORD'
+    - '*AXE'
+  sapphire:
+    enabled: true
+    enchanted: false
+    material: INK_SACK:4
+    name: '&9Sapphire'
+    socket-display: '&9Sapphire &7[&fPvPE. Dmg.&7]'
+    lore:
+    - '&7* &fPvP Damage: &a+%var_b%%'
+    - '&7* &fPvE Damage: &a+%var_a%%'
+    variables:
+      a: 2.0
+      b: 2.5
+    variables-per-lvl:
+      a: 0.5
+      b: 0.75
+    variables-types:
+      a: PVP_DAMAGE
+      b: PVE_DAMAGE
+    variables-percentage:
+      a: true
+      b: true
+    min-level: 1
+    max-level: 3
+    min-success-rate: 100
+    max-success-rate: 100
+    item-types:
+    - '*SWORD'
+    - '*AXE'

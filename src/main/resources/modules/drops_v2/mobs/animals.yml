@@ -1,0 +1,11 @@
+chance: 10.0
+roll-once: true
+vanilla-mobs:
+- PIG
+- COW
+- SHEEP
+- CHICKEN
+mythic-mobs: []
+prevent-from: []
+drop-tables:
+- table_gems

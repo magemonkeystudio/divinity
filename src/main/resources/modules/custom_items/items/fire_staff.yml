@@ -1,0 +1,47 @@
+material: 'BLAZE_ROD:0:1'
+name: '&c&l«Fire Staff»'
+lore:
+- ''
+- '&8&m               &f  「 INFO 」  &8&m               '
+- '&f» &7Type: &fStaff'
+- '&f» &7Left-Click: &cFire Strike &7(3 sec)'
+- '&f» &7Right-Click: &cAoE Explode &7(30 sec)'
+- ''
+- '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+- '%LEVEL:1-10%'
+- '%CLASS:Sorcerer,Spiritmaster%'
+- '%SOULBOUND%'
+- ''
+- '&8&m               &f 「 STATS 」 &8&m               '
+- '%DAMAGE_TYPE:magical:5.45-9.75:12.35-15.75%'
+- '%CRITICAL_RATE:7.5-15.0%'
+- '%CRITICAL_DAMAGE:1.25-1.5%'
+- ''
+- '%DURABILITY:750-750%'
+- '&8&m             &f 「 SOCKETS 」 &8&m             '
+- '%SOCKET:GEM%'
+- '%SOCKET:GEM%'
+- '%SOCKET:ESSENCE%'
+- '%SOCKET:ESSENCE%'
+skull-hash: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjZkM2E3ZTA3ZjVkYWRkNDdiYWRiMTM4MmE1YjE2Mjc4MThlZTE2YTE5YTdjMGJmMjc2OGFlNjI2MjczN2I2In19fQ==\'
+item-flags:
+- HIDE_ATTRIBUTES
+enchants:
+  DAMAGE_ALL: '1:5'
+extras:
+  color: '240,240,20'
+usage:
+  RIGHT:
+    cooldown: 30
+    actions:
+    - '[EFFECT] EXPLOSION_LARGE 1.0 1.0 1.0 0.05 100 @Self'
+    - '[EFFECT] FLAME 1.0 1.0 1.0 0.3 200 @Self'
+    - '[THROW] @Radius-5'
+    - '[IGNITE] 5 @Radius-5'
+    - '[DAMAGE] 2 @Radius-5'
+  LEFT:
+    cooldown: 3
+    actions:
+    - '[DAMAGE] 5 @Target'
+    - '[PARTICLE_LINE] FLAME 0.01 10 @Target'
+    - '[IGNITE] 5 @Target'

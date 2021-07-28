@@ -1,0 +1,66 @@
+cfg_version: 1.0
+command-aliases: 'runes'
+messages-output: ACTION_BAR
+general:
+  stack-levels: true
+socketing:
+  destroy-type: CLEAR
+  effects:
+    enabled: true
+    failure: VILLAGER_ANGRY
+    success: VILLAGER_HAPPY
+  sounds:
+    enabled: true
+    failure: BLOCK_ANVIL_DESTROY
+    success: ENTITY_EXPERIENCE_ORB_PICKUP
+  lore-format:
+    header: '&8&m               &f  「 RUNES 」  &8&m               '
+    empty-socket: '&b◇ <Rune Socket>'
+    filled-socket: '&b◈ &f'
+item:
+  name: '%item_name%'
+  lore:
+  - '&f» &7Sucess: &a&l%s%% &8| &7Failure: &c&l%d%%'
+  - '&8&m               &f  「 INFO 」  &8&m               '
+  - '%item_lore%'
+  - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+  - '%item-level%'
+  - '%item-types%'
+  - '&8&m               &f 「 USAGE 」 &8&m               '
+  - '&7Drag+Drop on item to start socketing.'
+gui:
+  title: '&3&l<&3&nRune Socketing&3&l>'
+  size: 9
+  item-slot: 3
+  source-slot: 4
+  result-slot: 5
+  content:
+    filler:
+      material: 'STAINED_GLASS_PANE:15:1'
+      skull-hash: ''
+      enchanted: false
+      name: ''
+      lore: []
+      slots: '0,1,2,3,4,5,6,7,8'
+      type: NONE
+    accept:
+      material: 'STAINED_GLASS_PANE:5:1'
+      skull-hash: ''
+      enchanted: false
+      name: '&a&l&nAccept'
+      lore:
+      - '&7You will try to socket the rune'
+      - '&7into your item.'
+      - ''
+      - '&7In case of failure your rune'
+      - '&7will be &cdestroyed&7.'
+      slots: '8'
+      type: ACCEPT
+    exit:
+      material: 'STAINED_GLASS_PANE:14:1'
+      skull-hash: ''
+      enchanted: false
+      name: '&c&l&nCancel'
+      lore: []
+      slots: '0'
+      type: EXIT

@@ -1,0 +1,124 @@
+cfg_version: 1.0
+command-aliases: refine
+messages-output: ACTION_BAR
+refine:
+  max-level: 15
+  effects:
+    enabled: true
+    success: VILLAGER_HAPPY
+    failure: VILLAGER_ANGRY
+  sounds:
+    enabled: true
+    success: ENTITY_EXPERIENCE_ORB_PICKUP
+    failure: BLOCK_ANVIL_DESTROY
+  fail-level-downgrade:
+    '1': 1
+    '2': 1
+    '3': 1
+    '4': 1
+    '5': 1
+    '6': 1
+    '7': 1
+    '8': 1
+    '9': 1
+    '10': 1
+    '11': 1
+    '12': 2
+    '13': 3
+    '14': 4
+    '15': 5
+  stats-per-lvl:
+    DIRECT_DAMAGE: 2.0
+    AOE_DAMAGE: 2.0
+    PVP_DAMAGE: 2.0
+    PVE_DAMAGE: 2.0
+    DODGE_RATE: 2.0
+    ACCURACY_RATE: 2.0
+    BLOCK_RATE: 2.0
+    BLOCK_DAMAGE: 2.0
+    LOOT_RATE: 2.0
+    BURN_RATE: 2.0
+    PVP_DEFENSE: 2.0
+    PVE_DEFENSE: 2.0
+    CRITICAL_RATE: 2.0
+    CRITICAL_DAMAGE: 2.0
+    MOVEMENT_SPEED: 2.0
+    PENETRATION: 2.0
+    ATTACK_SPEED: 2.0
+    VAMPIRISM: 2.0
+    MAX_HEALTH: 2.0
+    BLEED_RATE: 2.0
+    DISARM_RATE: 2.0
+    RANGE: 2.0
+    SALE_PRICE: 2.0
+    THORNMAIL: 2.0
+    HEALTH_REGEN: 2.0
+    MANA_REGEN: 2.0
+  damage-per-lvl:
+    magical: 3.0
+    poison: 3.0
+    fire: 3.0
+    physical: 3.0
+    water: 3.0
+    wind: 3.0
+  defense-per-lvl:
+    magical: 6.0
+    poison: 6.0
+    fire: 6.0
+    physical: 6.0
+    water: 6.0
+    wind: 6.0
+  inc-per-level: 0.05
+format:
+  item-name:
+    as-prefix: true
+    format: +%lvl%
+  item-lore:
+    format: '&8(&7+%amount%&8)'
+item:
+  name: '%item_name% (Lv. %level%)'
+  lore:
+  - '&f» &7Sucess: &a&l%s%% &8| &7Failure: &c&l%d%%'
+  - '&8&m               &f  「 INFO 」  &8&m               '
+  - '&7This stone can increase your'
+  - '&7item stats for a bit up to 15 lvl.'
+  - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+  - '%item-level%'
+  - '%item-types%'
+  - '&8&m               &f 「 USAGE 」 &8&m               '
+  - '&7Drag & drop on item to refine.'
+gui:
+  title: '&2&l<&2&nRefining&2&l>'
+  size: 9
+  item-slot: 3
+  source-slot: 4
+  result-slot: 5
+  content:
+    filler:
+      material: STAINED_GLASS_PANE:15:1
+      skull-hash: ''
+      enchanted: false
+      name: ''
+      lore: []
+      slots: 0,1,2,3,4,5,6,7,8
+      type: NONE
+    accept:
+      material: STAINED_GLASS_PANE:5:1
+      skull-hash: ''
+      enchanted: false
+      name: '&a&l&nAccept'
+      lore:
+      - '&7You will try to refine your item.'
+      - ''
+      - '&7In case of failure your item'
+      - '&7will be &cdowngraded&7.'
+      slots: '8'
+      type: ACCEPT
+    exit:
+      material: STAINED_GLASS_PANE:14:1
+      skull-hash: ''
+      enchanted: false
+      name: '&c&l&nCancel'
+      lore: []
+      slots: '0'
+      type: EXIT

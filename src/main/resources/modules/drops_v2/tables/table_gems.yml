@@ -1,0 +1,39 @@
+name: '&dExample Gems Table'
+roll-once: true
+level-penalty:
+  enabled: false
+  variance: 10
+world-whitelist:
+- world
+- world_nether
+- world_the_end
+biome-whitelist:
+- ALL
+region-blacklist: []
+items:
+  gem-random:
+    chance: 5.0
+    item-id: 'random'
+    type: GEMS
+    min-level: '%mob_lvl% + 1'
+    max-level: '%mob_lvl% + 3'
+    additional-conditions: []
+    actions-on-drop:
+    - '[MESSAGE] &aYou have found a gem!'
+  gem-emerald:
+    chance: 4.0
+    item-id: 'flawed_emerald'
+    type: GEMS
+    min-level: '%mob_lvl% + 1'
+    max-level: '%mob_lvl% + 3'
+    additional-conditions: []
+    actions-on-drop:
+    - '[MESSAGE] &aYou have found a gem!'
+  nothing:
+    chance: 75.0
+    item-id: 'null'
+    type: GEMS
+    min-level: '0'
+    max-level: '0'
+    additional-conditions: []
+    actions-on-drop: []

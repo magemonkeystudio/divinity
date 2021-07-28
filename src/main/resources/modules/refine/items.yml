@@ -1,0 +1,31 @@
+items:
+  weapon-stone:
+    enabled: true
+    material: EMERALD:0
+    name: '&aEnchantment Stone'
+    lore: []
+    enchanted: false
+    min-level: 1
+    max-level: 20
+    min-success-rate: 30
+    max-success-rate: 80
+    item-level-requirements:
+      '1': 1-10
+      '11': 11-20
+    item-types:
+    - 'WEAPON'
+  armor-stone:
+    enabled: true
+    material: EMERALD:0
+    name: '&aEnchantment Stone'
+    lore: []
+    enchanted: false
+    min-level: 1
+    max-level: 20
+    min-success-rate: 30
+    max-success-rate: 80
+    item-level-requirements:
+      '1': 1-10
+      '11': 11-20
+    item-types:
+    - 'ARMOR'

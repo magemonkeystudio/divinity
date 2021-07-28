@@ -1,0 +1,5 @@
+command-aliases: 'customitems,ci'
+messages-output: ACTION_BAR
+general:
+  cancel-interact-event: true
+  enable-cooldown-message: true

@@ -1,0 +1,151 @@
+cfg_version: 1.0.0
+command-aliases: 'party'
+messages-output: ACTION_BAR
+# Party settings
+party:
+  # Default max party size
+  max-size: 6
+  # Auto-disband if leader leaves party
+  leader-leave-disband: false
+  # Time to accept party invite
+  invite-timeout: 60
+  # Auto-leave from party on disconnect
+  quit-auto-leave: false
+  # Time (in mins) before player will be kicked from the party while offline
+  quit-timeout: 10
+  # Teleport cooldown
+  tp-cooldown: 60
+
+# Chat settings
+chat:
+  enabled: true
+  # Chat format
+  format: '&7[&94. Group&7] &b%p: &f'
+
+# Permission is qrpg.party.size.<rank>
+# Allows to create the party with custom size.
+size-permissions:
+  vip: 8
+  premium: 10
+
+exp-balance:
+  # Decrease the exp from mobs if mob level is lower than player level.
+  decreasing:
+    enabled: true
+    # In how much percent exp will be decreased.
+    by-percent: 10
+    # How many times (in level difference) exp will be decreased.
+    # Example for 10% and 1 levels:
+    # You'll get 0 exp if your level is on 10+ higher than mob level.
+    for-each: 1
+  
+  increasing:
+    enabled: true
+    # In how much percent exp will be increased.
+    by-percent: 10
+    # How many times (in level difference) exp will be increased.
+    # Example for 10% and for each 1 levels:
+    # You'll get 100% more exp if your level is on 10+ lower than mob level.
+    for-each: 1
+
+# Quests Hook
+quests:
+  enabled: false
+  mob-kill-distance: 25
+
+sounds:
+  CREATE: ENTITY_FIREWORK_TWINKLE
+  INVITE: BLOCK_NOTE_BASS
+  JOIN: ENTITY_EXPERIENCE_ORB_PICKUP
+  LEAVE: ENTITY_EXPERIENCE_ORB_PICKUP
+  KICK: BLOCK_ANVIL_PLACE
+  DISBAND: BLOCK_GLASS_BREAK
+  QUIT: ENTITY_EXPERIENCE_ORB_PICKUP
+  BACK: ENTITY_EXPERIENCE_ORB_PICKUP
+  TP: ENTITY_ENDERMEN_TELEPORT
+
+gui:
+  title: '&4&l<&4&nParty&4&l>'
+  size: 54
+  content:
+    filler_black:
+      material: 'STAINED_GLASS_PANE:15:1'
+      skull-hash: ''
+      enchanted: false
+      name: ''
+      lore: []
+      slots: '9,10,11,12,13,14,15,16,17,45,46,47,48,49,50,51,52,53'
+      type: NONE
+    filler_gray:
+      material: 'STAINED_GLASS_PANE:0:1'
+      skull-hash: ''
+      enchanted: false
+      name: ''
+      lore: []
+      slots: '18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44'
+      type: NONE
+    party_member:
+      material: 'SKULL_ITEM:3:1'
+      skull-hash: ''
+      enchanted: false
+      name: '&eParty Member'
+      lore:
+      - '&7> &fOnline:           &e%online%'
+      - '&7> &fName:             &e%name%'
+      - '&8&m                                      '
+      - '&7This is member of your party.'
+      - ''
+      - '&8&oLeft-Click to &6&oTeleport'
+      - '&8&oRight-Click to &c&oKick'
+      slots: '18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44'
+      type: PARTY_MEMBER
+    party_disband:
+      material: 'BARRIER:0:1'
+      skull-hash: ''
+      enchanted: false
+      name: '&4Disband Party  &c[Leader only]'
+      lore: []
+      slots: '0'
+      type: PARTY_DISBAND
+    party_chat:
+      material: 'FEATHER:0:1'
+      skull-hash: ''
+      enchanted: false
+      name: '&7Toggle Party Chat'
+      lore:
+      - '&7Toggle chat channel to party chat.'
+      slots: '2'
+      type: PARTY_CHAT
+    party_info:
+      material: 'EMPTY_MAP:0:1'
+      skull-hash: ''
+      enchanted: false
+      name: '&6Party Info'
+      lore:
+      - '&7> &fName:             &6%party_name%'
+      - '&7> &fLeader:           &6%party_leader%'
+      - '&7> &fMembers:          &e%party_members%/%party_size%'
+      - '&7> &fDrop mode:        &e%party_drop%'
+      - '&8&m                                      '
+      - '&7'
+      slots: '4'
+      type: NONE
+    party_drop:
+      material: 'CHEST:0:1'
+      skull-hash: ''
+      enchanted: false
+      name: '&6Toggle Drop Mode &c[Leader only]'
+      lore:
+      - '&7> &fDrop mode:        &e%party_drop%'
+      - '&8&m                                      '
+      - '&7Toggles party drop mode.'
+      slots: '6'
+      type: PARTY_DROP
+    party_leave:
+      material: 'IRON_DOOR:0:1'
+      skull-hash: ''
+      enchanted: false
+      name: '&9Leave Party'
+      lore: []
+      slots: '8'
+      type: PARTY_LEAVE

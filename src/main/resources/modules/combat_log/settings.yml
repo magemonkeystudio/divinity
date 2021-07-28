@@ -1,0 +1,49 @@
+cfg_version: 1.0
+command-aliases: 'combatlog'
+messages-output: ACTION_BAR
+messages:
+  ignore-zero-damage: false
+  types:
+    NORMAL:
+      enabled: true
+      msg-to-damager: '&e*** You dealt &7%dmg% &edamage to &7%entity%&e. ***'
+      msg-to-receiver: '&c*** &7%entity% &cdealt &7%dmg% &cdamage to you. ***'
+      sound: 'ENTITY_ZOMBIE_ATTACK_IRON_DOOR'
+      msg-indicator: ''
+    CRITICAL:
+      enabled: true
+      msg-to-damager: '&e*** &lCritical! &eYou dealt &7%dmg% &edamage to &7%entity%&e. ***'
+      msg-to-receiver: '&d*** &lCritical! &7%entity% &ddealt &7%dmg% &ddamage to you. ***'
+      sound: 'ENTITY_GENERIC_EXPLODE'
+      msg-indicator: '&8[&c&lCritical!&8]'
+    DODGE:
+      enabled: true
+      msg-to-damager: '&6*** &7%entity% &6has dodged your attack! ***'
+      msg-to-receiver: '&6*** You has dodged &7%entity% &6attack! ***'
+      sound: 'BLOCK_SNOW_FALL'
+      msg-indicator: '&8[&b&lDodge!&8]'
+    BLOCK:
+      enabled: true
+      msg-to-damager: '&6*** &7%entity% &6has blocked &7%amount%% &6of your attack! Total damage: &7%dmg% &6***'
+      msg-to-receiver: '&6*** You blocked &7%amount%% &6of &7%entity% &6attack! Total damage: &7%dmg% &6***'
+      msg-indicator: '&8[&e&lBlocked!&8]'
+      sound: 'BLOCK_ANVIL_PLACE'
+indicators:
+  enabled: true
+  format:
+    order:
+    - '%crit%'
+    - '%block%'
+    - '%dodge%'
+    - '%dmg%'
+    damage-types:
+      physical: '&c-%dmg%❤'
+      magical: '&d-%dmg%'
+      fire: '&4-%dmg%☀'
+      poison: '&a-%dmg%☣'
+      wind: '&7-%dmg%'
+      water: '&9-%dmg%'
+    damage-sources:
+      default: '&c-%dmg%'
+      FIRE: '&4-%dmg%'
+      POISON: '&a-%dmg%'

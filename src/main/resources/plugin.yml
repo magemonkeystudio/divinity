@@ -1,0 +1,312 @@
+main: su.nightexpress.quantumrpg.QuantumRPG
+version: 4.0.7.100-BETA
+name: QuantumRPG
+author: NightExpress
+desciption: An advanced, powerful RPG plugin!
+softdepend:
+- BattleLevels
+- Citizens
+- Heroes
+- HolographicDisplays
+- mcMMO
+- MythicMobs
+- PlaceholderAPI
+- RacesOfThana
+- RPGInventory
+- RPGme
+- SkillAPI
+- Skills
+- Vault
+- WorldGuard
+commands:
+  quantumrpg:
+    aliases: [qrpg, qr, q, divineitems, di]
+    description: Base command.
+permissions:
+  qrpg.admin:
+    description: Full access
+    default: op
+    children:
+      qrpg.bypass: true
+      qrpg.module: true
+      qrpg.buffs: true
+  qrpg.user:
+    description: User access
+    default: true
+  qrpg.bypass:
+    description: Allows to bypass the restrictions and requirements.
+    default: op
+    children:
+      qrpg.bypass.owner: true
+      qrpg.bypass.class: true
+      qrpg.bypass.level: true
+      qrpg.bypass.soulbound: true
+  qrpg.module:
+    description: Access to all the plugin modules.
+    default: op
+    children:
+      qrpg.module.get: true
+      qrpg.module.give: true
+      qrpg.module.drop: true
+      qrpg.module.list: true
+      qrpg.module.help: true
+      qrpg.module.reload: true
+      qrpg.module.info: true
+      qrpg.arrows: true
+      qrpg.buffs: true
+      qrpg.drops: true
+      qrpg.activeitems: true
+      qrpg.gems: true
+      qrpg.runes: true
+      qrpg.essences: true
+      qrpg.extractor: true
+      qrpg.customitems: true
+      qrpg.combatlog: true
+      qrpg.identify: true
+      qrpg.magicdust: true
+      qrpg.notifications: true
+      qrpg.itemhints: true
+      qrpg.party: true
+      qrpg.refine: true
+      qrpg.repair: true
+      qrpg.resolve: true
+      qrpg.sell: true
+      qrpg.sets: true
+      qrpg.soulbound: true
+      qrpg.tiers: true
+# Arrows ----------------------------------------------------
+  qrpg.arrows:
+    description: Access to Arrows module. (Useless atm)
+    default: op
+    children:
+      qrpg.arrows.cmd: true
+  qrpg.arrows.cmd:
+    description: Access to Arrows commands. (Useless atm)
+    default: op
+# Buffs ----------------------------------------------------
+  qrpg.buffs:
+    description: Access to Buffs module.
+    default: op
+    children:
+      qrpg.buffs.cmd: true
+  qrpg.buffs.cmd:
+    description: Access to Buffs commands.
+    default: op
+    children:
+      qrpg.buffs.cmd.add: true
+      qrpg.buffs.cmd.reset: true
+# Drops ----------------------------------------------------
+  qrpg.drops:
+    description: Access to Drops module. (Useless atm)
+    default: op
+    children:
+      qrpg.drops.cmd: true
+  qrpg.drops.cmd:
+    description: Access to Drops commands. (Useless atm)
+    default: op
+# Active Items ----------------------------------------------------
+  qrpg.activeitems:
+    description: Access to Active Items module. (Useless atm)
+    default: op
+    children:
+      qrpg.activeitems.cmd: true
+  qrpg.activeitems.cmd:
+    description: Access to Active Items commands. (Useless atm)
+    default: op
+# Gems ----------------------------------------------------
+  qrpg.gems:
+    description: Access to Gems module. (Useless atm)
+    default: op
+    children:
+      qrpg.gems.cmd: true
+  qrpg.gems.cmd:
+    description: Access to Gems commands. (Useless atm)
+    default: op
+# Runes ----------------------------------------------------
+  qrpg.runes:
+    description: Access to Runes module. (Useless atm)
+    default: op
+    children:
+      qrpg.gems.cmd: true
+  qrpg.runes.cmd:
+    description: Access to Runes commands. (Useless atm)
+    default: op
+# Essences ----------------------------------------------------
+  qrpg.essences:
+    description: Access to Essences module. (Useless atm)
+    default: op
+    children:
+      qrpg.essences.cmd: true
+  qrpg.essences.cmd:
+    description: Access to Essences commands. (Useless atm)
+    default: op
+# Extractor ----------------------------------------------------
+  qrpg.extractor:
+    description: Access to Extractor module.
+    default: op
+    children:
+      qrpg.extractor.cmd: true
+  qrpg.extractor.cmd:
+    description: Access to Extractor commands.
+    default: op
+    children:
+      qrpg.extractor.cmd.open: true
+# Custom Items ----------------------------------------------------
+  qrpg.customitems:
+    description: Access to Custom Items module. (Useless atm)
+    default: op
+    children:
+      qrpg.customitems.cmd: true
+  qrpg.customitems.cmd:
+    description: Access to Custom Items commands. (Useless atm)
+    default: op
+# Combat Log ----------------------------------------------------
+  qrpg.combatlog:
+    description: Access to Combat Log module. (Useless atm)
+    default: op
+    children:
+      qrpg.combatlog.cmd: true
+  qrpg.combatlog.cmd:
+    description: Access to Combat Log commands. (Useless atm)
+    default: op
+# Consumables ----------------------------------------------------
+  qrpg.consumables:
+    description: Access to Consumables module. (Useless atm)
+    default: op
+    children:
+      qrpg.consumables.cmd: true
+  qrpg.consumables.cmd:
+    description: Access to Consumables commands. (Useless atm)
+    default: op
+# Identify ----------------------------------------------------
+  qrpg.identify:
+    description: Access to Identify module. (Useless atm)
+    default: op
+    children:
+      qrpg.identify.cmd: true
+  qrpg.identify.cmd:
+    description: Access to Identify commands. (Useless atm)
+    default: op
+# Magic Dust ----------------------------------------------------
+  qrpg.magicdust:
+    description: Access to Magic Dust module. (Useless atm)
+    default: op
+    children:
+      qrpg.magicdust.cmd: true
+  qrpg.magicdust.cmd:
+    description: Access to Magic Dust commands. (Useless atm)
+    default: op
+# Notifications ----------------------------------------------------
+  qrpg.notifications:
+    description: Access to Notifications module. (Useless atm)
+    default: op
+    children:
+      qrpg.notifications.cmd: true
+  qrpg.notifications.cmd:
+    description: Access to Notifications commands. (Useless atm)
+    default: op
+# Item Hints ----------------------------------------------------
+  qrpg.itemhints:
+    description: Access to Item Hints module. (Useless atm)
+    default: op
+    children:
+      qrpg.itemhints.cmd: true
+  qrpg.itemhints.cmd:
+    description: Access to Item Hints commands. (Useless atm)
+    default: op
+# Party ----------------------------------------------------
+  qrpg.party:
+    description: Access to Party module.
+    default: true
+    children:
+      qrpg.party.cmd: true
+  qrpg.party.cmd:
+    description: Access to Party commands.
+    default: true
+    children:
+      qrpg.party.cmd.chat: true
+      qrpg.party.cmd.create: true
+      qrpg.party.cmd.disband: true
+      qrpg.party.cmd.drop: true
+      qrpg.party.cmd.exp: true
+      qrpg.party.cmd.info: true
+      qrpg.party.cmd.invite: true
+      qrpg.party.cmd.join: true
+      qrpg.party.cmd.kick: true
+      qrpg.party.cmd.leave: true
+      qrpg.party.cmd.tp: true
+# Refine ----------------------------------------------------
+  qrpg.refine:
+    description: Access to Refine module.
+    default: op
+    children:
+      qrpg.refine.cmd: true
+  qrpg.refine.cmd:
+    description: Access to Refine commands.
+    default: op
+    children:
+      qrpg.refine.cmd.refine: true
+      qrpg.refine.cmd.downgrade: true
+# Repair ----------------------------------------------------
+  qrpg.repair:
+    description: Access to Repair module.
+    default: op
+    children:
+      qrpg.repair.cmd: true
+  qrpg.repair.cmd:
+    description: Access to Repair commands.
+    default: op
+    children:
+      qrpg.repair.cmd.open: true
+# Resolve ----------------------------------------------------
+  qrpg.resolve:
+    description: Access to Resolve module.
+    default: op
+    children:
+      qrpg.resolve.cmd: true
+  qrpg.resolve.cmd:
+    description: Access to Resolve commands.
+    default: op
+    children:
+      qrpg.resolve.cmd.open: true
+# Sell ----------------------------------------------------
+  qrpg.sell:
+    description: Access to Sell module.
+    default: true
+    children:
+      qrpg.sell.cmd: true
+  qrpg.sell.cmd:
+    description: Access to Sell commands.
+    default: true
+    children:
+      qrpg.sell.cmd.open: true
+# Soulbound ----------------------------------------------------
+  qrpg.soulbound:
+    description: Access to Soulbound module.
+    default: op
+    children:
+      qrpg.soulbound.cmd: true
+  qrpg.soulbound.cmd:
+    description: Access to Soulbound commands.
+    default: op
+    children:
+      qrpg.soulbound.cmd.set: true
+      qrpg.soulbound.cmd.untradeable: true
+# Sets ----------------------------------------------------
+  qrpg.sets:
+    description: Access to Sets module. (Useless atm)
+    default: op
+    children:
+      qrpg.sets.cmd: true
+  qrpg.sets.cmd:
+    description: Access to Sets commands. (Useless atm)
+    default: op
+# Tiers ----------------------------------------------------
+  qrpg.tiers:
+    description: Access to Tiers module. (Useless atm)
+    default: op
+    children:
+      qrpg.tiers.cmd: true
+  qrpg.tiers.cmd:
+    description: Access to Tiers commands. (Useless atm)
+    default: op

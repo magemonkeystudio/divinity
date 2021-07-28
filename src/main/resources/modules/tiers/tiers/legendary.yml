@@ -1,0 +1,238 @@
+name: Legendary
+color: '&6'
+broadcast-on-find: false
+equip-on-mob-spawn: true
+prefix-chance: 100.0
+suffix-chance: 100.0
+item:
+  name: '%c%%prefix_tier% %prefix_material% %prefix_type% %itemtype% %suffix_material% %suffix_type% %suffix_tier%'
+  lore:
+  - '&8&m               &f  「 INFO 」  &8&m               '
+  - '&7Type: &f%TYPE%'
+  - '&7Tier:%c% %TIER%'
+  - ''
+  - '%SOULBOUND%'
+  - '%CLASS%'
+  - '%LEVEL%'
+  - ''
+  - '%ENCHANTS%'
+  - '&8&m               &f  「 DMG/DEF 」  &8&m              '
+  - '%ARMOR_TYPES%'
+  - '%AMMO_TYPE%'
+  - '%HAND_TYPE%'
+  - '%DAMAGE_TYPES%'
+  - '&8&m               &f  「 STATS 」  &8&m               '
+  - '%DIRECT_DAMAGE%'
+  - '%AOE_DAMAGE%'
+  - '%CRITICAL_RATE%'
+  - '%CRITICAL_DAMAGE%'
+  - '%ACCURACY_RATE%'
+  - '%DODGE_RATE%'
+  - '%BLOCK_RATE%'
+  - '%BLOCK_DAMAGE%'
+  - '%LOOT_RATE%'
+  - '%MOVEMENT_SPEED%'
+  - '%ATTACK_SPEED%'
+  - '%MAX_HEALTH%'
+  - '%PENETRATION%'
+  - '%VAMPIRISM%'
+  - '%BURN_RATE%'
+  - ''
+  - '%DURABILITY%'
+  - '%SET%'
+  - '%GEM%'
+  - '%ESSENCE%'
+  - '%RUNE%'
+  color:
+    random: true
+    rgb: 255,255,255
+  materials:
+    reverse: false
+    black-list:
+    - WOOD*
+    - STONE*
+    - LEATHER*
+  material-data:
+    reverse: true
+    unbreakable: true
+    black-list:
+    - 1
+    - 2
+    - 3
+    special:
+      DIAMOND_SWORD:
+      - 10
+      - 11
+      GOLD_SWORD:
+      - 12
+      - 13
+  enchants:
+    min: 1
+    max: 7
+    safe-only: false
+    list:
+    - ARROW_KNOCKBACK:1:5
+    - ARROW_INFINITE:1:5
+    - ARROW_FIRE:1:5
+    - DAMAGE_ALL:1:5
+    - DAMAGE_ARTHROPODS:1:5
+    - DAMAGE_UNDEAD:1:5
+    - DIG_SPEED:1:5
+    - DURABILITY:1:5
+    - FIRE_ASPECT:1:5
+    - KNOCKBACK:1:5
+    - LOOT_BONUS_BLOCKS:1:5
+    - LOOT_BONUS_MOBS:1:5
+    - OXYGEN:1:5
+    - PROTECTION_ENVIRONMENTAL:1:5
+    - PROTECTION_FALL:1:5
+    - PROTECTION_FIRE:1:5
+    - PROTECTION_PROJECTILE:1:5
+    - PROTECTION_EXPLOSIONS:1:5
+    - SILK_TOUCH:1:5
+    - THORNS:1:5
+  damage-types:
+    physical:
+      chance: 100.0
+      min: 24.50
+      max: 36.35
+    fire:
+      chance: 35.0
+      min: 12.30
+      max: 16.25
+    poison:
+      chance: 35.0
+      min: 9.30
+      max: 13.55
+  armor-types:
+    physical:
+      chance: 100.0
+      min: 53.5
+      max: 71.35
+    fire:
+      chance: 35.0
+      min: 14.5
+      max: 25.6
+    poison:
+      chance: 35.0
+      min: 7.5
+      max: 17.3
+  ammo-types:
+    ARROW: 100.0
+  hand-types:
+    ONE: 100.0
+  restrictions:
+    soulbound: false
+    untradeable: true
+    levels: 25-55
+    level-scale-values: 1.021
+    level-scale-black-list:
+    - CRITICAL_DAMAGE
+    classes:
+    - Warrior
+    - Templar
+    - Cleric
+    max-item-stats: -1
+    min-damage-types: 1
+    max-damage-types: 3
+    min-defense-types: 1
+    max-defense-types: 3
+  item-stats:
+    CRITICAL_RATE:
+      default:
+        chance: 100.0
+        min: 15.5
+        max: 25.25
+    CRITICAL_DAMAGE:
+      default:
+        chance: 100.0
+        min: 1.35
+        max: 2.15
+    DODGE_RATE:
+      default:
+        chance: 100.0
+        min: 3.5
+        max: 5.0
+    ACCURACY_RATE:
+      default:
+        chance: 100.0
+        min: 14.5
+        max: 17.5
+    BLOCK_RATE:
+      default:
+        chance: 100.0
+        min: 4.5
+        max: 9.20
+    BLOCK_DAMAGE:
+      default:
+        chance: 100.0
+        min: 4.15
+        max: 9.25
+    VAMPIRISM:
+      default:
+        chance: 50.0
+        min: 3.5
+        max: 7.5
+    BURN_RATE:
+      default:
+        chance: 35.0
+        min: 4.5
+        max: 12.5
+    DURABILITY:
+      default:
+        chance: 100.0
+        min: 1650
+        max: 2500
+    PENETRATION:
+      default:
+        chance: 25.0
+        min: 4.5
+        max: 10.0
+    LOOT_RATE:
+      default:
+        chance: 17.5
+        min: 2.0
+        max: 10.0
+    MOVEMENT_SPEED:
+      default:
+        chance: 43.5
+        min: 7.5
+        max: 15.0
+    ATTACK_SPEED:
+      default:
+        chance: 54.75
+        min: 5.0
+        max: 10.0
+    MAX_HEALTH:
+      default:
+        chance: 75.0
+        min: 5.0
+        max: 10.0
+    DIRECT_DAMAGE:
+      default:
+        chance: 15.0
+        min: 5.0
+        max: 10.0
+    AOE_DAMAGE:
+      default:
+        chance: 25.0
+        min: 5.0
+        max: 10.0
+    RANGE:
+      default:
+        chance: 20.0
+        min: 5.0
+        max: 15.0
+  sockets:
+    GEM:
+      chance: 100.0
+      min: 2
+      max: 4
+    ESSENCE:
+      chance: 35.0
+      min: 1
+      max: 1
+    RUNE:
+      chance: 50.0
+      min: 1
+      max: 2

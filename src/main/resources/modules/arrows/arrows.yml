@@ -1,0 +1,87 @@
+arrows:
+  flame-arrow:
+    name: '&cFlame Arrow'
+    lore:
+    - '&f> &7Type:                          &fArrow'
+    - '&8&m                                               '
+    - '&c⚔ Fire Damage: &f+10.0'
+    - ''
+    - '&7This arrow will ignite the enemy'
+    - '&7for &c5 seconds&7 on hit.'
+    additional-stats: {}
+    additional-damage:
+      fire: 10.0
+    defense-ignoring:
+      fire: 3.0
+    on-fly-actions:
+    - '[EFFECT] FLAME 0 0 0 0 10 @Self'
+    on-hit-actions:
+    - '[IGNITE] 5 @Target'
+  poison-arrow:
+    name: '&aPoisoned Arrow'
+    lore:
+    - '&f> &7Type:                          &fArrow'
+    - '&8&m                                               '
+    - '&a⚔ Poison Damage: &f+10.0'
+    - ''
+    - '&7This arrow will poison the enemy'
+    - '&7for &a5 seconds&7 on hit.'
+    additional-stats: {}
+    additional-damage:
+      poison: 10.0
+    defense-ignoring:
+      poison: 3.0
+    on-fly-actions:
+    - '[EFFECT] SLIME 0 0 0 0 10 @Self'
+    on-hit-actions:
+    - '[POTION] POISON 2 5 @Target'
+  critical-arrow:
+    name: '&eCritical Arrow'
+    lore:
+    - '&f> &7Type:                          &fArrow'
+    - '&8&m                                               '
+    - '&e⚔ Critical Rate: &f+25.0%'
+    - ''
+    - '&7This arrow will increase the'
+    - '&7critical rate of the next hit.'
+    additional-stats:
+      CRITICAL_RATE: 25.0
+    additional-damage: {}
+    defense-ignoring: {}
+    on-fly-actions:
+    - '[EFFECT] CRIT 0 0 0 0 10 @Self'
+    on-hit-actions: []
+  explosive-arrow:
+    name: '&6Explosive Arrow'
+    lore:
+    - '&f> &7Type:                          &fArrow'
+    - '&8&m                                               '
+    - '&7This arrow creates an explosion'
+    - '&7on hit and damage all nearby entities.'
+    additional-stats: {}
+    additional-damage: {}
+    defense-ignoring: {}
+    on-fly-actions:
+    - '[EFFECT] SMOKE_NORMAL 0 0 0 0 10 @Self'
+    on-hit-actions:
+    - '[SOUND] ENTITY_GENERIC_EXPLODE'
+    - '[EFFECT] EXPLOSION_LARGE 1.0 1.0 1.0 0.05 50 @Self'
+    - '[EFFECT] FLAME 1.0 1.0 1.0 0.3 50 @Self'
+    - '[DAMAGE] 5 @Radius-5'
+  silver-arrow:
+    name: '&7Silver &fArrow'
+    lore:
+    - '&f> &7Type:                          &fArrow'
+    - '&8&m                                               '
+    - '&7⚔ Phys. Def. Ignore: &f+1000.0%'
+    - ''
+    - '&7This arrow will full ignore'
+    - '&7enemy physical defense.'
+    additional-stats: {}
+    additional-damage: {}
+    defense-ignoring:
+      physical: 9999.0
+    on-fly-actions:
+    - '[EFFECT] REDSTONE:210,210,210 0 0 0 0 10 @Self'
+    on-hit-actions:
+    - '[EFFECT] REDSTONE:210,210,210 0.5 0.5 0.5 0.4 50 @Self'

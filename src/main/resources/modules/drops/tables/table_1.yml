@@ -1,0 +1,32 @@
+module: GEMS
+chance: 10.0
+roll-once: true
+level-penalty:
+  enabled: false
+  variance: 10
+world-whitelist:
+- world
+- world_nether
+- world_the_end
+biome-whitelist:
+- ALL
+region-blacklist: []
+entity-types:
+- ALL
+mythic-mobs:
+- SkeletonKing
+prevent-from:
+- EGG
+- DISPENSE_EGG
+- SPAWNER
+- SPAWNER_EGG
+- SLIME_SPLIT
+items:
+  gem-1:
+    chance: 100.0
+    item-id: flawed-emerald
+    min-level: '%mob_lvl% + 1'
+    max-level: '%mob_lvl% + 3'
+    additional-conditions: []
+    actions-on-drop:
+    - '[MESSAGE] &aGreat!'

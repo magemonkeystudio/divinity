@@ -1,0 +1,5 @@
+command-aliases: 'consumables,consumes'
+messages-output: ACTION_BAR
+general:
+  allow-eat-on-full-health: true
+  allow-eat-on-full-hunger: true

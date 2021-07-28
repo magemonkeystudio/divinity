@@ -1,0 +1,515 @@
+lang: en
+
+general:
+  level-plugin: NONE
+  class-plugin: NONE
+  damage-formula: '%dmg% * ((1 + (%pvpe_dmg% - %pvpe_def%) / 100) * (1 - %block% / 100))'
+  damage-reduce-by-cooldown: 0.0
+  break-items: true
+  max-get-target-distance: 30
+  lore-format:
+    item-stat: '%att_prefix% %att_name%: %att_value%'
+    damage-type: '%type_prefix% %type_name%: %type_value%'
+    armor-type: '%type_prefix% %type_name%: %type_value%'
+    ammo-type: '&7Ammo Type: %type_prefix% %type_name%'
+    hand-type: '&7Hand: %type_name%'
+  item-stats-applies-to-mobs: true
+  fish-hook-can-damage: true
+  item-stats-applies-in-offhand: false
+  mobs-can-reduce-item-durability: true
+  skill-api-skills-can-reduce-item-durability: true
+  allow-bows-melee-damage: false
+  disable-vanilla-sweep-attack: false
+  combat:
+    shield-block-add-rate: 50.0
+    shield-block-damage: 50.0
+    shield-block-cooldown: 5
+
+modules: {}
+
+strings:
+  dmg-separator: ' &7- '
+  durability-separator: '&7/'
+  percent: '%'
+  negative: '&c'
+  positive: '&f+'
+  modifier: 'x'
+  separator:
+    symbol: '&7/'
+    value-color: '&f'
+  requirements:
+    level:
+      item:
+        range: '&c➛ Item Lvl required: %min%-%max%'
+        single: '&c➛ Item Lvl required: %min%+'
+      player: '%state%Player Lvl: %lvl%+'
+    class: '%state%Player Class: %class%'
+
+damage-modifiers:
+  ENTITY_ATTACK:
+    PLAYER: 1.0
+    MOB: 1.0
+  FIRE:
+    PLAYER: 1.0
+    MOB: 1.0
+  POISON:
+    PLAYER: 2.15
+    MOB: 2.0
+
+hand-types:
+  ONE:
+    enabled: true
+    name: '&fOne-handed'
+  TWO:
+    enabled: true
+    name: '&eTwo-handed'
+
+damage-types:
+  physical:
+    default: true
+    prefix: '&6⚔'
+    name: 'Physical Damage'
+    value: '&f'
+    on-hit-actions: []
+    biome-damage-modifier:
+      PLAINS: 1.0
+  magical:
+    prefix: '&d⚡'
+    name: 'Magical Damage'
+    value: '&f'
+    on-hit-actions:
+    - '[EFFECT] CRIT_MAGIC 0.5 0.5 0.5 0.05 50 @Target'
+    biome-damage-modifier:
+      PLAINS: 1.0
+  fire:
+    default: false
+    prefix: '&c☀'
+    name: 'Fire Damage'
+    value: '&f'
+    on-hit-actions:
+    - '[EFFECT] FLAME 0.5 0.5 0.5 0.05 50 @Target'
+    biome-damage-modifier:
+      PLAINS: 1.0
+      NETHER: 1.25
+  poison:
+    default: false
+    prefix: '&a☣'
+    name: 'Poison Damage'
+    value: '&f'
+    on-hit-actions:
+    - '[EFFECT] SLIME 0.5 0.5 0.5 0.05 50 @Target'
+    biome-damage-modifier:
+      PLAINS: 1.0
+      SWAMPLAND: 1.25
+  water:
+    default: false
+    prefix: '&9⚓'
+    name: 'Water Damage'
+    value: '&f'
+    on-hit-actions:
+    - '[EFFECT] DRIP_WATER 0.5 0.5 0.5 0.05 50 @Target'
+    biome-damage-modifier:
+      PLAINS: 1.0
+      OCEAN: 1.25
+  wind:
+    default: false
+    prefix: '&7⚕'
+    name: 'Wind Damage'
+    value: '&f'
+    on-hit-actions:
+    - '[EFFECT] SMOKE_NORMAL 0.5 0.5 0.5 0.05 50 @Target'
+    biome-damage-modifier:
+      PLAINS: 1.0
+
+armor-types:
+  physical:
+    prefix: '&6▸'
+    name: 'Physical Defense'
+    value: '&f'
+    percent: false 
+    block-damage-source:
+    - ENTITY_ATTACK
+    block-damage-types:
+    - physical
+    formula: '(%dmg% - (%def% / 10))'
+  magical:
+    prefix: '&d▸'
+    name: 'Magical Defense'
+    value: '&f'
+    percent: false 
+    block-damage-source:
+    - ENTITY_ATTACK
+    block-damage-types:
+    - magical
+    formula: '(%dmg% - (%def% / 10))'
+  fire:
+    prefix: '&c▸'
+    name: 'Fire Defense'
+    value: '&f'
+    percent: false 
+    block-damage-source:
+    - ENTITY_ATTACK
+    block-damage-types:
+    - fire
+    formula: '(%dmg% - (%def% / 10))'
+  poison:
+    prefix: '&a▸'
+    name: 'Poison Defense'
+    value: '&f'
+    percent: false 
+    block-damage-source:
+    - ENTITY_ATTACK
+    block-damage-types:
+    - poison
+    formula: '(%dmg% - (%def% / 10))'
+  water:
+    prefix: '&9▸'
+    name: 'Water Defense'
+    value: '&f'
+    percent: false 
+    block-damage-source:
+    - ENTITY_ATTACK
+    block-damage-types:
+    - water
+    formula: '(%dmg% - (%def% / 10))'
+  wind:
+    prefix: '&7▸'
+    name: 'Wind Defense'
+    value: '&f'
+    percent: false 
+    block-damage-source:
+    - ENTITY_ATTACK
+    block-damage-types:
+    - Wind
+    formula: '(%dmg% - (%def% / 10))'
+
+
+ammo-types:
+  ARROW:
+    enabled: true
+    prefix: '&f➶'
+    name: 'Arrow'
+  SNOWBALL:
+    enabled: true
+    prefix: '&9❄&f'
+    name: 'Snowball'
+  EGG:
+    enabled: true
+    prefix: '&6⚫&f'
+    name: 'Egg'
+  FIREBALL:
+    enabled: true
+    prefix: '&c☄&f'
+    name: 'Fireball'
+  WITHER_SKULL:
+    enabled: true
+    prefix: '&8☢&f'
+    name: 'Wither Skull'
+  SHULKER_BULLET:
+    enabled: true
+    prefix: '&d✦&f'
+    name: 'Shulker Bullet'
+  LLAMA_SPIT:
+    enabled: true
+    prefix: '&e☔&f'
+    name: 'Llama Spit'
+  ENDER_PEARL:
+    enabled: true
+    prefix: '&b◉&f'
+    name: 'Ender Pearl'
+  EXP_POTION:
+    enabled: true
+    prefix: '&e☘&f'
+    name: 'Exp Potion'
+
+item-stats-settings:
+  BLEED_RATE:
+    time: 5
+    formula: '%dmg% * 0.25'
+    effect: 'REDSTONE:RED'
+  DISARM_RATE:
+    effect: 'CRIT'
+    message:
+      damager: '&2*** &aYou disarmed &7%s%&a! &2***'
+      entity: '&4*** &cYou have been disarmed by &7%s%&c! &4***'
+
+item-stats:
+  DIRECT_DAMAGE:
+    name: Direct Damage
+    prefix: '&f▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 100.0
+  AOE_DAMAGE:
+    name: AoE Damage
+    prefix: '&3▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: -1
+  PVP_DAMAGE:
+    name: 'PvP Damage'
+    prefix: '&b▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 200.0
+  PVE_DAMAGE:
+    name: 'PvE Damage'
+    prefix: '&b▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 200.0
+  DODGE_RATE:
+    name: 'Dodge Rate'
+    prefix: '&6▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 45.0
+  ACCURACY_RATE:
+    name: 'Accuracy Rate'
+    prefix: '&6▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 30.0
+  BLOCK_RATE:
+    name: 'Block Rate'
+    prefix: '&6▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 55.0
+  BLOCK_DAMAGE:
+    name: 'Block Damage'
+    prefix: '&6▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 75.0
+  CRITICAL_RATE:
+    name: 'Crit. Strike Rate'
+    prefix: '&a▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 100.0
+  CRITICAL_DAMAGE:
+    name: 'Crit. Strike Dmg'
+    prefix: '&a▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 3.5
+  PVP_DEFENSE:
+    name: 'PvP Defense'
+    prefix: '&b▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 100.0
+  PVE_DEFENSE:
+    name: 'PvE Defense'
+    prefix: '&b▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 100.0
+  LOOT_RATE:
+    name: 'Loot Rate'
+    prefix: '&e▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 250.0
+  MOVEMENT_SPEED:
+    name: 'Movement Speed'
+    prefix: '&e▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 70.0
+  DURABILITY:
+    name: 'Durability'
+    prefix: '&7&o▸'
+    value: '&f&o'
+    bonus: '&7⁕&f'
+    capability: -1
+  PENETRATION:
+    name: 'Armor Penetration'
+    prefix: '&c▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 60.0
+  VAMPIRISM:
+    name: 'Vampirism'
+    prefix: '&c▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 35.0
+  BURN_RATE:
+    name: 'Chance to Burn'
+    prefix: '&c▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 100.0
+  ATTACK_SPEED:
+    name: 'Attack Speed'
+    prefix: '&e▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: -1
+  MAX_HEALTH:
+    name: 'Max Health'
+    prefix: '&c▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: 20
+  SALE_PRICE:
+    name: 'Sale Price'
+    prefix: '&d▸'
+    value: '&f'
+    bonus: '&7⁕&f'
+    capability: -1
+
+item-sub-types:
+  axe:
+    name: 'Axe'
+    materials:
+    - WOOD_AXE
+    - GOLD_AXE
+    - IRON_AXE
+    - DIAMOND_AXE
+    - STONE_AXE
+  sword:
+    name: 'Sword'
+    materials:
+    - WOOD_SWORD
+    - GOLD_SWORD
+    - IRON_SWORD
+    - DIAMOND_SWORD
+    - STONE_SWORD
+    - SHEARS
+  spade:
+    name: 'Spade'
+    materials:
+    - WOOD_SPADE
+    - GOLD_SPADE
+    - IRON_SPADE
+    - DIAMOND_SPADE
+    - STONE_SPADE
+  pickaxe:
+    name: 'Pickaxe'
+    materials:
+    - WOOD_PICKAXE
+    - GOLD_PICKAXE
+    - IRON_PICKAXE
+    - DIAMOND_PICKAXE
+    - STONE_PICKAXE
+  hoe:
+    name: 'Hoe'
+    materials:
+    - WOOD_HOE
+    - GOLD_HOE
+    - IRON_HOE
+    - DIAMOND_HOE
+    - STONE_HOE
+  helmet:
+    name: 'Helmet'
+    materials:
+    - GOLD_HELMET
+    - IRON_HELMET
+    - DIAMOND_HELMET
+    - CHAINMAIL_HELMET
+    - LEATHER_HELMET
+  chestplate:
+    name: 'Chestplate'
+    materials:
+    - GOLD_CHESTPLATE
+    - IRON_CHESTPLATE
+    - DIAMOND_CHESTPLATE
+    - CHAINMAIL_CHESTPLATE
+    - LEATHER_CHESTPLATE
+  leggings:
+    name: 'Leggings'
+    materials:
+    - GOLD_LEGGINGS
+    - IRON_LEGGINGS
+    - DIAMOND_LEGGINGS
+    - CHAINMAIL_LEGGINGS
+    - LEATHER_LEGGINGS
+  boots:
+    name: 'Boots'
+    materials:
+    - GOLD_BOOTS
+    - IRON_BOOTS
+    - DIAMOND_BOOTS
+    - CHAINMAIL_BOOTS
+    - LEATHER_BOOTS
+  elytra:
+    name: 'Elytra'
+    materials:
+    - ELYTRA
+  shield:
+    name: 'Shield'
+    materials:
+    - SHIELD
+
+item-groups:
+  WEAPON:
+    name: 'Weapon'
+    materials:
+    - WOOD_SWORD
+    - WOOD_AXE
+    - STONE_SWORD
+    - STONE_AXE
+    - GOLD_SWORD
+    - GOLD_AXE
+    - IRON_SWORD
+    - IRON_AXE
+    - DIAMOND_SWORD
+    - DIAMOND_AXE
+    - SHEARS
+    - FISHING_ROD
+    - BOW
+  TOOL:
+    name: 'Tool'
+    materials:
+    - WOOD_HOE
+    - WOOD_AXE
+    - WOOD_Spade
+    - WOOD_PICKAXE
+    - STONE_HOE
+    - STONE_AXE
+    - STONE_Spade
+    - STONE_PICKAXE
+    - GOLD_HOE
+    - GOLD_AXE
+    - GOLD_Spade
+    - GOLD_PICKAXE
+    - IRON_HOE
+    - IRON_AXE
+    - IRON_Spade
+    - IRON_PICKAXE
+    - DIAMOND_HOE
+    - DIAMOND_AXE
+    - DIAMOND_Spade
+    - DIAMOND_PICKAXE
+    - SHEARS
+    - FISHING_ROD
+  ARMOR:
+    name: 'Armor'
+    materials:
+    - LEATHER_HELMET
+    - LEATHER_CHESTPLATE
+    - LEATHER_LEGGINGS
+    - LEATHER_BOOTS
+    - GOLD_HELMET
+    - GOLD_CHESTPLATE
+    - GOLD_LEGGINGS
+    - GOLD_BOOTS
+    - CHAINMAIL_HELMET
+    - CHAINMAIL_CHESTPLATE
+    - CHAINMAIL_LEGGINGS
+    - CHAINMAIL_BOOTS
+    - IRON_HELMET
+    - IRON_CHESTPLATE
+    - IRON_LEGGINGS
+    - IRON_BOOTS
+    - DIAMOND_HELMET
+    - DIAMOND_CHESTPLATE
+    - DIAMOND_LEGGINGS
+    - DIAMOND_BOOTS
+    - SHIELD
+    - ELYTRA
+
+cfg_version: 4.0.0

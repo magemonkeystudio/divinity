@@ -1,0 +1,39 @@
+essences:
+  blood_essence:
+    enabled: true
+    material: 'REDSTONE:0:1'
+    name: '&cEssence of Blood'
+    lore: 
+    - '&7Creates a &cBlood Helix %rlevel%'
+    - '&7effect around you.'
+    enchanted: true
+    min-level: 1
+    max-level: 2
+    min-success-rate: 50
+    max-success-rate: 80
+    item-flags:
+    - HIDE_ENCHANTS
+    item-types:
+    - WEAPON
+    effect:
+      type: 'HELIX'
+      name: 'REDSTONE:255,0,0'
+  shadow_essence:
+    enabled: true
+    material: 'SULPHUR:0:1'
+    name: '&cEssence of Shadow'
+    lore: 
+    - '&7Creates a &cShadow Trail %rlevel%'
+    - '&7effect behind you.'
+    enchanted: true
+    min-level: 1
+    max-level: 3
+    min-success-rate: 60
+    max-success-rate: 80
+    item-flags:
+    - HIDE_ENCHANTS
+    item-types:
+    - ARMOR
+    effect:
+      type: 'FOOT'
+      name: 'REDSTONE:25,25,25'

@@ -1,0 +1,7 @@
+cfg_version: 1.0
+command-aliases: 'drops'
+messages-output: ACTION_BAR
+multipliers:
+  VIP: 1.25
+  Premium: 1.5
+  Gold: 1.75

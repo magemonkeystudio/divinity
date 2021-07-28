@@ -1,0 +1,11 @@
+cfg_version: 0.1
+command-aliases: 'sets'
+messages-output: ACTION_BAR
+general:
+  item-have: '%c%• %name% &a✓'
+  item-miss: '%c%• %name% &c✗'
+  lore:
+  - '%set%:'
+  - '%parts%'
+  - ''
+  - '%effects%'

@@ -1,0 +1,29 @@
+unidentified-items:
+  common:
+    type: TIERS
+    item-id: 'common'
+    tome: common
+    name: '&f&kUndentified Item'
+    lore:
+    - '&8&m               &f  「 INFO 」  &8&m               '
+    - '&f» &7Type: &fUnidentified Item'
+    - '&f» &7Tier: &fCommon'
+    - '&8&m               &f  「 STATS 」  &8&m               '
+    - '&7Find an &fCommon Identify Tome&7 to'
+    - '&7indentify the item!'
+    item-flags:
+    - HIDE_ATTRIBUTES
+  rare:
+    type: TIERS
+    item-id: 'rare'
+    tome: common
+    name: '&a&kUndentified Item'
+    lore:
+    - '&8&m               &f  「 INFO 」  &8&m               '
+    - '&f» &7Type: &fUnidentified Item'
+    - '&f» &7Tier: &aRare'
+    - '&8&m               &f  「 STATS 」  &8&m               '
+    - '&7Find an &aRare Identify Tome&7 to'
+    - '&7indentify the item!'
+    item-flags:
+    - HIDE_ATTRIBUTES
