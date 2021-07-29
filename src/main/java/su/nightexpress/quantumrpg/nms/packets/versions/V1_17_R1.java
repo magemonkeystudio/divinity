@@ -238,7 +238,7 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
         UserEntityNamesMode namesMode = profile.getNamesMode();
         if (namesMode == UserEntityNamesMode.DEFAULT) return;
 
-        Class pClass = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutentityMetadata");
+        Class pClass = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutEntityMetadata");
 
         Object p = pClass.cast(packet);
         @SuppressWarnings("unchecked")
