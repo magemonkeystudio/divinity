@@ -1,12 +1,5 @@
 package su.nightexpress.quantumrpg.nms.packets.versions;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.nms.packets.IPacketHandler;
@@ -14,6 +7,13 @@ import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.nms.packets.events.EngineServerPacketEvent;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.EntityEquipmentChangeEvent;
 import su.nightexpress.quantumrpg.config.EngineCfg;

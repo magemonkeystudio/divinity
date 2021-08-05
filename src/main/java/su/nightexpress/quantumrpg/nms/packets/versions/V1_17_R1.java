@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.nms.packets.versions;
 
+import com.mojang.datafixers.util.Pair;
 import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.nms.packets.IPacketHandler;
@@ -32,7 +33,6 @@ import java.util.*;
 public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
 
     private static final String PACKET_LOCATION = "net.minecraft.network.protocol.game";
-    protected QuantumRPG plugin;
 
     public V1_17_R1(@NotNull QuantumRPG plugin) {
         super(plugin);
@@ -73,47 +73,47 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
 
     @Override
     public void manageEquipmentChanges(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
-        Class playoutUpdateAttributes = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutUpdateAttributes");
-        Class craftServerClass = Reflex.getCraftClass("CraftServer");
-        Class nmsEntityClass = Reflex.getClass("net.minecraft.world.entity", "Entity");
-        Class worldServerClass = Reflex.getClass("net.minecraft.server.level", "WorldServer");
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            Class playoutUpdateAttributes = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutUpdateAttributes");
+            Class craftServerClass = Reflex.getCraftClass("CraftServer");
+            Class nmsEntityClass = Reflex.getClass("net.minecraft.world.entity", "Entity");
+            Class worldServerClass = Reflex.getClass("net.minecraft.server.level", "WorldServer");
 
-        Object equip = playoutUpdateAttributes.cast(packet);
+            Object equip = playoutUpdateAttributes.cast(packet);
 
-        Integer entityId = (Integer) Reflex.getFieldValue(equip, "a");
-        if (entityId == null) return;
+            Integer entityId = (Integer) Reflex.getFieldValue(equip, "a");
+            if (entityId == null) return;
 
-        Object server = craftServerClass.cast(Bukkit.getServer());
-        Object nmsEntity = null;
+            Object server = craftServerClass.cast(Bukkit.getServer());
+            Object nmsEntity = null;
 
-        Object dedicatedServer = Reflex.invokeMethod(
-                Reflex.getMethod(craftServerClass, "getServer"),
-                server
-        );
+            Object dedicatedServer = Reflex.invokeMethod(
+                    Reflex.getMethod(craftServerClass, "getServer"),
+                    server
+            );
 
-        Iterable<?> worlds = (Iterable<?>) Reflex.invokeMethod(
-                Reflex.getMethod(dedicatedServer.getClass(), "getWorlds"),
-                dedicatedServer
-        );
+            Iterable<?> worlds = (Iterable<?>) Reflex.invokeMethod(
+                    Reflex.getMethod(dedicatedServer.getClass(), "getWorlds"),
+                    dedicatedServer
+            );
 
-        Method getEntity = Reflex.getMethod(worldServerClass, "getEntity", int.class);
-        for (Object worldServer : worlds) {
-            nmsEntity = Reflex.invokeMethod(getEntity, worldServer, entityId.intValue());
-            if (nmsEntity != null) {
-                break;
+            Method getEntity = Reflex.getMethod(worldServerClass, "getEntity", int.class);
+            for (Object worldServer : worlds) {
+                nmsEntity = Reflex.invokeMethod(getEntity, worldServer, entityId.intValue());
+                if (nmsEntity != null) {
+                    break;
+                }
             }
-        }
 
-        if (nmsEntity == null) return;
+            if (nmsEntity == null) return;
 
 
-        Method getUniqueId = Reflex.getMethod(nmsEntityClass, "getUniqueID");
+            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "getUniqueID");
 
-        Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
-        if (!(bukkitEntity instanceof LivingEntity)) return;
-        if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)) return;
+            Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            if (!(bukkitEntity instanceof LivingEntity)) return;
+            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)) return;
 
-        plugin.getServer().getScheduler().runTask(plugin, () -> {
             EntityEquipmentChangeEvent event = new EntityEquipmentChangeEvent((LivingEntity) bukkitEntity);
             plugin.getServer().getPluginManager().callEvent(event);
         });
@@ -139,7 +139,7 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
 
     @Override
     protected void manageCustomGlow(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
-        Object oId = Reflex.getFieldValue(packet, "b"); // Entity UUID
+        Object oId = Reflex.getFieldValue(packet, "d"); // Entity UUID
         if (oId == null) return;
 
         // Do a tick delay to let entity be spawned in the world before we can get it by UUID
@@ -268,10 +268,20 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
         Object p = playOutEntityEquipment.cast(packet);
 
         @SuppressWarnings("unchecked")
-        List<Object> slots = (List<Object>) Reflex.getFieldValue(p, "b");
-        if (slots == null || !slots.contains(Reflex.getEnum(enumItemSlotClass, "f"))) return;
+        List<Pair<Object, Object>> slots = (List<Pair<Object, Object>>) Reflex.getFieldValue(p, "c");
+        boolean contains = false;
+        for (Pair<Object, Object> pair : slots) {
+            Enum head = (Enum) Reflex.invokeMethod(
+                    Reflex.getMethod(enumItemSlotClass, "fromName", String.class),
+                    null, "head");
+            if (pair.getFirst() == head) {
+                contains = true;
+                break;
+            }
+        }
+        if (slots == null || !contains) return;
 
-        Integer entityId = (Integer) Reflex.getFieldValue(p, "a");
+        Integer entityId = (Integer) Reflex.getFieldValue(p, "b");
         if (entityId == null) return;
 
         Class craftServerClass = Reflex.getCraftClass("CraftServer");
