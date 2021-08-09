@@ -32,7 +32,10 @@ import su.nightexpress.quantumrpg.nms.packets.PacketManager;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
 
@@ -205,17 +208,18 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
                 Constructor ctor = Reflex.getConstructor(chatComponentClass, String.class);
 
                 // ########### Create team
-                ScoreboardTeam team = new ScoreboardTeam(new Scoreboard(), teamId);
+                Scoreboard board = new Scoreboard();
+                ScoreboardTeam team = new ScoreboardTeam(board, teamId);
                 team.setColor(ec);
                 team.setDisplayName(IChatBaseComponent.a(teamId));
                 team.setPrefix(IChatBaseComponent.a(""));
-//                PacketPlayOutScoreboardTeam.b params = new b(team);
+                board.addPlayerToTeam(id.toString(), team);
 
                 PacketPlayOutScoreboardTeam pTeam = PacketPlayOutScoreboardTeam.a(team, newTeam);
-                Collection<String> entities = pTeam.e();
-                if (entities == null) return;
+//                Collection<String> entities = pTeam.e();
+//                if (entities == null) return;
 
-                entities.add(id.toString());
+//                entities.add(id.toString());
                 // ###########
 
                 // Get list of fake team entities to add our item into it
