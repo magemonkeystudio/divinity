@@ -8,6 +8,11 @@ import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.nms.packets.events.EngineServerPacketEvent;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
+import net.minecraft.EnumChatFormat;
+import net.minecraft.network.chat.IChatBaseComponent;
+import net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.ScoreboardTeam;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -26,7 +31,6 @@ import su.nightexpress.quantumrpg.modules.list.itemhints.ItemHintsManager;
 import su.nightexpress.quantumrpg.nms.packets.PacketManager;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -155,16 +159,6 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
             ItemHintsManager hintManager = plugin.getModuleCache().getItemHintsManager();
             if (hintManager == null || !hintManager.isGlow(item)) return;
 
-            // Get list of fake team entities to add our item into it
-            Object pTeam = Reflex.invokeConstructor(
-                    Reflex.getConstructor(Reflex.getClass(PACKET_LOCATION, "PacketPlayOutScoreboardTeam")));
-            Object oEntities = Reflex.getFieldValue(pTeam, "h"); // List of team entities
-            if (oEntities == null) return;
-
-            @SuppressWarnings("unchecked")
-            Collection<String> entities = (Collection<String>) oEntities;
-            entities.add(id.toString());
-
             // Set item custom hint via HintManager before apply glowing
             //hintManager.setItemHint(item, 0);
 
@@ -182,9 +176,10 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
             try {
                 Class<?> en = Reflex.getClass("net.minecraft", "EnumChatFormat");
                 Method b = Reflex.getMethod(en, "b", String.class);
-                Enum ec = (Enum) b.invoke(null, cc.name());
+                //TODO Uncomment this
+//                Enum ec = (Enum) b.invoke(null, cc.name());
 
-//            EnumChatFormat ec = EnumChatFormat.b(cc.name());
+                EnumChatFormat ec = EnumChatFormat.b(cc.name());
 
                 Player p = e.getReciever();
 
@@ -206,26 +201,53 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
                 String teamId = "GLOW_" + ec.name();
                 if (teamId.length() > 16) teamId = teamId.substring(0, 16);
 
-                // Set team fields
-                Reflex.setFieldValue(pTeam, "i", newTeam ? 0 : 3); // 0 = new team, 3 = add entity, 4 = remove entity
-                Reflex.setFieldValue(pTeam, "a", teamId); // Internal team name
-
-
                 Class chatComponentClass = Reflex.getClass("net.minecraft.network.chat", "ChatComponentText");
                 Constructor ctor = Reflex.getConstructor(chatComponentClass, String.class);
-                if (newTeam) {
-                    Reflex.setFieldValue(pTeam, "g", ec); // Team color
-                    Reflex.setFieldValue(pTeam, "b", Reflex.invokeConstructor(ctor, teamId)); // Team display name
-                    Reflex.setFieldValue(pTeam, "c", Reflex.invokeConstructor(ctor, "")); // Team prefix
-                }
-            } catch (IllegalAccessException | InvocationTargetException err) {
+
+                // ########### Create team
+                ScoreboardTeam team = new ScoreboardTeam(new Scoreboard(), teamId);
+                team.setColor(ec);
+                team.setDisplayName(IChatBaseComponent.a(teamId));
+                team.setPrefix(IChatBaseComponent.a(""));
+//                PacketPlayOutScoreboardTeam.b params = new b(team);
+
+                PacketPlayOutScoreboardTeam pTeam = PacketPlayOutScoreboardTeam.a(team, newTeam);
+                Collection<String> entities = pTeam.e();
+                if (entities == null) return;
+
+                entities.add(id.toString());
+                // ###########
+
+                // Get list of fake team entities to add our item into it
+                //TODO Fix this.
+//                Class scoreboardPacket = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutScoreboardTeam");
+//                //TODO Construct using PacketPlayOutScoreboardTeam.a(ScoreboardTeam, boolean);
+//                Object pTeam = Reflex.invokeConstructor(Reflex.getConstructor(scoreboardPacket));
+//                Object oEntities = Reflex.getFieldValue(pTeam, "j"); // List of team entities
+//                if (oEntities == null) return;
+//
+//                @SuppressWarnings("unchecked")
+//                Collection<String> entities = (Collection<String>) oEntities;
+//                entities.add(id.toString());
+//
+//                // Set team fields
+//                Reflex.setFieldValue(pTeam, "h", newTeam ? 0 : 3); // 0 = new team, 3 = add entity, 4 = remove entity
+//                Reflex.setFieldValue(pTeam, "i", teamId); // Internal team name
+//
+//                if (newTeam) {
+//                    //TODO Update Parameters list
+//                    Reflex.setFieldValue(pTeam, "f", ec); // Team color (Parameters, 'f')
+//                    Reflex.setFieldValue(pTeam, "a", Reflex.invokeConstructor(ctor, teamId)); // Team display name (Parameters, 'a')
+//                    Reflex.setFieldValue(pTeam, "b", Reflex.invokeConstructor(ctor, "")); // Team prefix (Parameters, 'b')
+//                }
+                // Send packet to a player
+                plugin.getPacketManager().sendPacket(e.getReciever(), pTeam);
+                // Activate colored glowing
+                entity.setGlowing(true);
+            } catch (Exception err) { //IllegalAccessException | InvocationTargetException err) {
+                System.err.println("Could not set entity glowing.");
                 err.printStackTrace();
             }
-
-            // Send packet to a player
-            plugin.getPacketManager().sendPacket(e.getReciever(), pTeam);
-            // Activate colored glowing
-            entity.setGlowing(true);
         });
     }
 
@@ -262,68 +284,70 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
 
     @Override
     protected void managePlayerHelmet(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
-        Class playOutEntityEquipment = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutEntityEquipment");
-        Class enumItemSlotClass = Reflex.getClass("net.minecraft.world.entity", "EnumItemSlot");
+        Bukkit.getScheduler().runTask(QuantumRPG.getInstance(), () -> {
+            Class playOutEntityEquipment = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutEntityEquipment");
+            Class enumItemSlotClass = Reflex.getClass("net.minecraft.world.entity", "EnumItemSlot");
 
-        Object p = playOutEntityEquipment.cast(packet);
+            Object p = playOutEntityEquipment.cast(packet);
 
-        @SuppressWarnings("unchecked")
-        List<Pair<Object, Object>> slots = (List<Pair<Object, Object>>) Reflex.getFieldValue(p, "c");
-        boolean contains = false;
-        for (Pair<Object, Object> pair : slots) {
-            Enum head = (Enum) Reflex.invokeMethod(
-                    Reflex.getMethod(enumItemSlotClass, "fromName", String.class),
-                    null, "head");
-            if (pair.getFirst() == head) {
-                contains = true;
-                break;
+            @SuppressWarnings("unchecked")
+            List<Pair<Object, Object>> slots = (List<Pair<Object, Object>>) Reflex.getFieldValue(p, "c");
+            boolean contains = false;
+            for (Pair<Object, Object> pair : slots) {
+                Enum head = (Enum) Reflex.invokeMethod(
+                        Reflex.getMethod(enumItemSlotClass, "fromName", String.class),
+                        null, "head");
+                if (pair.getFirst() == head) {
+                    contains = true;
+                    break;
+                }
             }
-        }
-        if (slots == null || !contains) return;
+            if (slots == null || !contains) return;
 
-        Integer entityId = (Integer) Reflex.getFieldValue(p, "b");
-        if (entityId == null) return;
+            Integer entityId = (Integer) Reflex.getFieldValue(p, "b");
+            if (entityId == null) return;
 
-        Class craftServerClass = Reflex.getCraftClass("CraftServer");
-        Class nmsEntityClass = Reflex.getClass("net.minecraft.world.entity", "Entity");
-        Class worldServerClass = Reflex.getClass("net.minecraft.server.level", "WorldServer");
+            Class craftServerClass = Reflex.getCraftClass("CraftServer");
+            Class nmsEntityClass = Reflex.getClass("net.minecraft.world.entity", "Entity");
+            Class worldServerClass = Reflex.getClass("net.minecraft.server.level", "WorldServer");
 
-        Object server = craftServerClass.cast(Bukkit.getServer());
-        Object nmsEntity = null;
-        Object dedicatedServer = Reflex.invokeMethod(
-                Reflex.getMethod(craftServerClass, "getServer"),
-                server
-        );
+            Object server = craftServerClass.cast(Bukkit.getServer());
+            Object nmsEntity = null;
+            Object dedicatedServer = Reflex.invokeMethod(
+                    Reflex.getMethod(craftServerClass, "getServer"),
+                    server
+            );
 
-        Iterable<?> worlds = (Iterable<?>) Reflex.invokeMethod(
-                Reflex.getMethod(dedicatedServer.getClass(), "getWorlds"),
-                dedicatedServer
-        );
+            Iterable<?> worlds = (Iterable<?>) Reflex.invokeMethod(
+                    Reflex.getMethod(dedicatedServer.getClass(), "getWorlds"),
+                    dedicatedServer
+            );
 
-        Method getEntity = Reflex.getMethod(worldServerClass, "getEntity", int.class);
-        for (Object worldServer : worlds) {
-            nmsEntity = Reflex.invokeMethod(getEntity, worldServer, entityId.intValue());
-            if (nmsEntity != null) {
-                break;
+            Method getEntity = Reflex.getMethod(worldServerClass, "getEntity", int.class);
+            for (Object worldServer : worlds) {
+                nmsEntity = Reflex.invokeMethod(getEntity, worldServer, entityId.intValue());
+                if (nmsEntity != null) {
+                    break;
+                }
             }
-        }
 
-        if (nmsEntity == null) return;
+            if (nmsEntity == null) return;
 
 
-        Method getUniqueId = Reflex.getMethod(nmsEntityClass, "getUniqueID");
+            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "getUniqueID");
 
-        Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
-        if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;
+            Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;
 
-        Player player = (Player) bukkitEntity;
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
-        if (user == null) return;
+            Player player = (Player) bukkitEntity;
+            RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+            if (user == null) return;
 
-        UserProfile profile = user.getActiveProfile();
-        if (profile.isHideHelmet()) {
-            Reflex.setFieldValue(p, "c", Reflex.getFieldValue(Reflex.getClass("net.minecraft.world.item", "ItemStack"), "a"));
-        }
+            UserProfile profile = user.getActiveProfile();
+            if (profile.isHideHelmet()) {
+                Reflex.setFieldValue(p, "c", Reflex.getFieldValue(Reflex.getClass("net.minecraft.world.item", "ItemStack"), "a"));
+            }
+        });
     }
 
     @Override

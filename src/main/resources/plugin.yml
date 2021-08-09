@@ -1,25 +1,25 @@
 main: su.nightexpress.quantumrpg.QuantumRPG
 version: %PROJECT_VERSION%
 name: ProRPGItems
-authors: [Travja, goflish]
+authors: [ Travja, goflish ]
 desciption: The most advanced, customizable and configurable RPG-Core plugin!
-depend: [ProMCCore]
-loadafter: [Magic]
+depend: [ ProMCCore ]
+loadafter: [ Magic ]
 softdepend:
-- Citizens
-- HolographicDisplays
-- LorinthsRpgMobs
-- MangoQuest
-- mcMMO
-- MythicMobs
-- PlaceholderAPI
-- PwingRaces
-- QuestCreator
-- RacesOfThana
-- SkillAPI
-- SkillsPro
-- Vault
-- WorldGuard
+  - Citizens
+  - HolographicDisplays
+  - LorinthsRpgMobs
+  - MangoQuest
+  - mcMMO
+  - MythicMobs
+  - PlaceholderAPI
+  - PwingRaces
+  - QuestCreator
+  - RacesOfThana
+  - SkillAPI
+  - SkillsPro
+  - Vault
+  - WorldGuard
 api-version: 1.14
 permissions:
   quantumrpg.admin:
@@ -31,7 +31,6 @@ permissions:
       quantumrpg.classes: true
       quantumrpg.dismantle: true
       quantumrpg.extractor: true
-      quantumrpg.classes: true
       quantumrpg.combatlog: true
       quantumrpg.identify: true
       quantumrpg.fortify: true
@@ -41,11 +40,11 @@ permissions:
       quantumrpg.repair: true
       quantumrpg.sell: true
       quantumrpg.soulbound: true
-  
+
   quantumrpg.user:
     description: User access
     default: true
-  
+
   quantumrpg.bypass:
     description: Bypass all the plugin restrictions and requirements.
     default: op
@@ -72,7 +71,7 @@ permissions:
     description: Bypass item untradeable requirement.
     default: op
 
-# Classes ----------------------------------------------------
+  # Classes ----------------------------------------------------
   quantumrpg.classes:
     description: Full access to Classes module.
     default: op
@@ -140,7 +139,7 @@ permissions:
     description: Access to all classes.
     default: op
 
-# Combat Log ----------------------------------------------------
+  # Combat Log ----------------------------------------------------
   quantumrpg.combatlog:
     description: Full access to Combat Log module.
     default: op
@@ -155,7 +154,7 @@ permissions:
     description: Access to /combatlog log command.
     default: true
 
-# Dismantle ----------------------------------------------------
+  # Dismantle ----------------------------------------------------
   quantumrpg.dismantle:
     description: Full access to the Dismantle module.
     default: op
@@ -171,14 +170,14 @@ permissions:
     description: Access to Dismantle GUI.
     default: op
 
-# Essences ----------------------------------------------------
+  # Essences ----------------------------------------------------
   quantumrpg.essences:
     description: Full access to Essences module.
     default: op
     children:
       quantumrpg.essences.cmd: true
       quantumrpg.essences.gui: true
-  
+
   quantumrpg.essences.cmd:
     description: Access to all Essences commands.
     default: op
@@ -191,7 +190,7 @@ permissions:
   quantumrpg.essences.cmd.merchant.others:
     description: Access to /essences merchant [player] command.
     default: op
-  
+
   quantumrpg.essences.gui:
     description: Access to all Essences GUIs.
     default: op
@@ -205,7 +204,7 @@ permissions:
     description: Access to Merchant Socketing GUI.
     default: op
 
-# Extractor ----------------------------------------------------
+  # Extractor ----------------------------------------------------
   quantumrpg.extractor:
     description: Full access to Extractor module.
     default: op
@@ -224,7 +223,7 @@ permissions:
     description: Access Extractor GUI.
     default: op
 
-# Fortify ----------------------------------------------------
+  # Fortify ----------------------------------------------------
   quantumrpg.fortify:
     description: Full access to Fortify module.
     default: op
@@ -243,7 +242,7 @@ permissions:
     description: Access to /fortify unfortify command.
     default: op
 
-# Gems ----------------------------------------------------
+  # Gems ----------------------------------------------------
   quantumrpg.gems:
     description: Full access to Gems module.
     default: op
@@ -275,7 +274,7 @@ permissions:
     description: Access to Merchant GUI.
     default: op
 
-# Identify ----------------------------------------------------
+  # Identify ----------------------------------------------------
   quantumrpg.identify:
     description: Full access to Identify module.
     default: op
@@ -290,7 +289,7 @@ permissions:
     description: Access to /identify identify command.
     default: op
 
-# Magic Dust ----------------------------------------------------
+  # Magic Dust ----------------------------------------------------
   quantumrpg.magicdust:
     description: Full access to Magic Dust module.
     default: op
@@ -309,7 +308,7 @@ permissions:
     description: Allows to use Magic Dust GUI.
     default: op
 
-# Party ----------------------------------------------------
+  # Party ----------------------------------------------------
   quantumrpg.party:
     description: Access to Party module.
     default: true
@@ -368,7 +367,7 @@ permissions:
     description: Access to /party tp command.
     default: true
 
-# Refine ----------------------------------------------------
+  # Refine ----------------------------------------------------
   quantumrpg.refine:
     description: Access to Refine module.
     default: op
@@ -381,7 +380,7 @@ permissions:
       quantumrpg.refine.cmd.refine: true
       quantumrpg.refine.cmd.downgrade: true
 
-# Repair ----------------------------------------------------
+  # Repair ----------------------------------------------------
   quantumrpg.repair:
     description: Access to Repair module.
     default: op
@@ -397,14 +396,14 @@ permissions:
     description: Access to Repair GUI.
     default: op
 
-# Runes ----------------------------------------------------
+  # Runes ----------------------------------------------------
   quantumrpg.runes:
     description: Full access to Runes module.
     default: op
     children:
       quantumrpg.runes.cmd: true
       quantumrpg.runes.gui: true
-  
+
   quantumrpg.runes.cmd:
     description: Access to all Runes commands.
     default: op
@@ -417,7 +416,7 @@ permissions:
   quantumrpg.runes.cmd.merchant.others:
     description: Access to /runes merchant [player] command.
     default: op
-  
+
   quantumrpg.runes.gui:
     description: Access to all Runes GUIs.
     default: op
@@ -431,7 +430,7 @@ permissions:
     description: Access to Merchant Socketing GUI.
     default: op
 
-# Sell ----------------------------------------------------
+  # Sell ----------------------------------------------------
   quantumrpg.sell:
     description: Full access to the Sell module.
     default: op
@@ -447,7 +446,7 @@ permissions:
     description: Access to Sell GUI.
     default: op
 
-# Soulbound ----------------------------------------------------
+  # Soulbound ----------------------------------------------------
   quantumrpg.soulbound:
     description: Access to Soulbound module.
     default: op
