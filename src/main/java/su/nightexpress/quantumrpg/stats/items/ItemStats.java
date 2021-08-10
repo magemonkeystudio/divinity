@@ -7,6 +7,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -260,14 +261,18 @@ public class ItemStats {
         ItemStats.addAttribute(item, NBTAttribute.maxHealth, hp);
         ItemStats.addAttribute(item, NBTAttribute.movementSpeed, move);
         ItemStats.addAttribute(item, NBTAttribute.attackSpeed, speed);
-		
-        if (ItemUtils.isWeapon(item)) {
-            addAttribute(item, NBTAttribute.attackDamage, DamageAttribute.getVanillaDamage(item) - 1); // -1 because it adds instead of set
-        }
+
+//        if (ItemUtils.isWeapon(item)) {
+        double vanilla = DamageAttribute.getVanillaDamage(item);
+        addAttribute(item, NBTAttribute.attackDamage, vanilla); // -1 because it adds instead of set
+//        }
         if (ItemUtils.isArmor(item)) {
             addAttribute(item, NBTAttribute.armor, DefenseAttribute.getVanillaArmor(item));
             addAttribute(item, NBTAttribute.armorToughness, DefenseAttribute.getVanillaToughness(item));
         }
+        ItemMeta im = item.getItemMeta();
+        im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        item.setItemMeta(im);
     }
 
     @NotNull

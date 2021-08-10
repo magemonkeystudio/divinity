@@ -1,8 +1,8 @@
-DIRECT_DAMAGE:
-  enabled: true
-  name: Direct Damage
-  format: '&f▸ %name%: &f%value%'
-  capacity: 100.0
+#DIRECT_DAMAGE:
+#  enabled: true
+#  name: Direct Damage
+#  format: '&f▸ %name%: &f%value%'
+#  capacity: 100.0
 
 AOE_DAMAGE:
   enabled: true
