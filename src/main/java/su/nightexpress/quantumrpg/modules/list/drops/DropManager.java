@@ -87,7 +87,7 @@ public class DropManager extends QModule {
 
         for (JYML cfg : JYML.loadAll(this.getFullPath() + "/mobs/", true)) {
             try {
-                DropMob npc = new DropMob(plugin, cfg);
+                DropMob npc = new DropMob(plugin, cfg, this);
                 this.dropNpc.put(npc.getId(), npc);
             } catch (Exception ex) {
                 error("Could not load Mob Table: " + cfg.getFile().getName());
