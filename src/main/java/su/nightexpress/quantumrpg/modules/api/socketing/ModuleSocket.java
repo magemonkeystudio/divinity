@@ -1,24 +1,15 @@
 package su.nightexpress.quantumrpg.modules.api.socketing;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
+import mc.promcteam.engine.utils.CollectionsUT;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.StringUT;
+import mc.promcteam.engine.utils.actions.ActionManipulator;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import mc.promcteam.engine.utils.CollectionsUT;
-import mc.promcteam.engine.utils.ItemUT;
-import mc.promcteam.engine.utils.StringUT;
-import mc.promcteam.engine.utils.actions.ActionManipulator;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.manager.interactions.api.AnimatedSuccessBar;
@@ -29,6 +20,9 @@ import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
 import su.nightexpress.quantumrpg.stats.items.requirements.item.ItemSocketRequirement;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> {
 	
@@ -366,8 +360,8 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
 			return false;
 		}
 		
-		this.startSocketing(player, target, src);
 		e.getView().setCursor(null);
+		this.startSocketing(player, target, src);
 		return true;
 	}
 }
