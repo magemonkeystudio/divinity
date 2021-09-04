@@ -21,8 +21,8 @@ import java.util.function.BiFunction;
 
 public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
 
-    protected Type statType;
-    private double cap;
+    protected Type   statType;
+    private   double cap;
 
     public AbstractStat(
             @NotNull Type statType,
@@ -78,8 +78,8 @@ public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
         if (this.isPercent() || this.getItemType() == ItemType.BOTH) return true;
 
         if (this.getItemType() == ItemType.ARMOR && ItemUtils.isArmor(item)) return true;
-		return this.getItemType() == ItemType.WEAPON && ItemUtils.isWeapon(item);
-	}
+        return this.getItemType() == ItemType.WEAPON && ItemUtils.isWeapon(item);
+    }
 
     @Nullable
     public Type getDependStat() {
@@ -103,14 +103,14 @@ public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
     }
 
     public double get(@NotNull ItemStack item) {
-        double value = 0D;
-        boolean has = false;
+        double  value = 0D;
+        boolean has   = false;
 
         List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
 
         if (this instanceof SimpleStat) {
             SimpleStat reg = (SimpleStat) this;
-            Double d = reg.getRaw(item);
+            Double     d   = reg.getRaw(item);
             if (d != null) {
                 value = d;
                 has = true;
@@ -128,7 +128,7 @@ public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
             }
         } else if (this instanceof DoubleStat) {
             DoubleStat reg = (DoubleStat) this;
-            double[] arr = reg.getRaw(item);
+            double[]   arr = reg.getRaw(item);
             if (arr != null) {
                 value = arr[0];
                 has = true;
@@ -163,11 +163,11 @@ public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
         ARMOR,
         WEAPON,
         BOTH,
-	}
+    }
 
     public enum Type {
 
-        //    	DIRECT_DAMAGE(ItemType.WEAPON, true, false, true),
+//        DIRECT_DAMAGE(ItemType.WEAPON, true, false, true),
         AOE_DAMAGE(ItemType.WEAPON, true, false, true),
         PVP_DAMAGE(ItemType.WEAPON, true, true, true),
         PVE_DAMAGE(ItemType.WEAPON, true, true, true),
@@ -196,9 +196,9 @@ public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
         ;
 
         private final ItemType type;
-        private final boolean perc;
-        private final boolean canNegate;
-        private final boolean isGlobal;
+        private final boolean  perc;
+        private final boolean  canNegate;
+        private final boolean  isGlobal;
 
         Type(@NotNull ItemType type, boolean perc, boolean nega, boolean isGlobal) {
             this.type = type;

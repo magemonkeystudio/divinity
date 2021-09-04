@@ -1,22 +1,21 @@
 package su.nightexpress.quantumrpg.modules.command;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.random.Rnd;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import mc.promcteam.engine.utils.ItemUT;
-import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MGetCmd extends MCmd<QModuleDrop<?>> {
 
@@ -88,7 +87,7 @@ public class MGetCmd extends MCmd<QModuleDrop<?>> {
 				lMin = lMax = this.getNumI(sender, args[2], -1, true);
 			}
 		}
-		if (args.length == 4) {
+		if (args.length >= 4) {
 			amount = this.getNumI(sender, args[3], 1);
 		}
 		

@@ -312,7 +312,7 @@ public class DamageManager extends IListener<QuantumRPG> {
 			pvpDamageType = AbstractStat.Type.PVP_DAMAGE;
 		}
 
-		double directPercent = /*event.getDamagerItemStat(AbstractStat.Type.DIRECT_DAMAGE)*/100D / 100D;
+		double directPercent = /*event.getDamagerItemStat(AbstractStat.Type.DIRECT_DAMAGE)*/0D / 100D;
 		double penetration = 1D - event.getDamagerItemStat(AbstractStat.Type.PENETRATION) / 100D;
 
 		double pvpeDefense = 1D + statsVictim.getItemStat(pvpDefenseType, false) / 100D;
