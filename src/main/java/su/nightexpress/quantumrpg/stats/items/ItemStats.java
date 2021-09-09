@@ -28,21 +28,25 @@ import java.util.*;
 
 public class ItemStats {
 
-    private static final Map<String, DamageAttribute> DAMAGES = new LinkedHashMap<>();
-    private static final Map<String, DefenseAttribute> DEFENSES = new LinkedHashMap<>();
-    private static final Map<AbstractStat.Type, AbstractStat<?>> STATS = new HashMap<>();
-    private static final Map<AmmoAttribute.Type, AmmoAttribute> AMMO = new HashMap<>();
-    private static final Map<HandAttribute.Type, HandAttribute> HANDS = new HashMap<>();
-    private static final Map<Type, Map<String, SocketAttribute>> SOCKETS = new HashMap<>();
-    private static final Map<String, ItemLoreStat<?>> ATTRIBUTES = new HashMap<>();
-    private static final Map<String, DuplicableItemLoreStat<?>> MULTI_ATTRIBUTES = new HashMap<>();
-    private static final QuantumRPG plugin = QuantumRPG.getInstance();
-    private static final NamespacedKey KEY_ID = new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID);
-    private static final NamespacedKey KEY_MODULE = new NamespacedKey(plugin, ItemTags.TAG_ITEM_MODULE);
-    private static final NamespacedKey KEY_LEVEL = new NamespacedKey(plugin, ItemTags.TAG_ITEM_LEVEL);
-    private static final NamespacedKey KEY_SOCKET = new NamespacedKey(plugin, ItemTags.TAG_ITEM_SOCKET_RATE);
-    private static DamageAttribute DAMAGE_DEFAULT;
-    private static DefenseAttribute DEFENSE_DEFAULT;
+    private static final Map<String, DamageAttribute>            DAMAGES          = new LinkedHashMap<>();
+    private static final Map<String, DefenseAttribute>           DEFENSES         = new LinkedHashMap<>();
+    private static final Map<AbstractStat.Type, AbstractStat<?>> STATS            = new HashMap<>();
+    private static final Map<AmmoAttribute.Type, AmmoAttribute>  AMMO             = new HashMap<>();
+    private static final Map<HandAttribute.Type, HandAttribute>  HANDS            = new HashMap<>();
+    private static final Map<Type, Map<String, SocketAttribute>> SOCKETS          = new HashMap<>();
+    private static final Map<String, ItemLoreStat<?>>            ATTRIBUTES       = new HashMap<>();
+    private static final Map<String, DuplicableItemLoreStat<?>>  MULTI_ATTRIBUTES = new HashMap<>();
+    private static final QuantumRPG                              plugin           = QuantumRPG.getInstance();
+    private static final NamespacedKey                           KEY_ID           = new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID);
+    private static final NamespacedKey                           KEY_MODULE       = new NamespacedKey(plugin, ItemTags.TAG_ITEM_MODULE);
+    private static final NamespacedKey                           KEY_LEVEL        = new NamespacedKey(plugin, ItemTags.TAG_ITEM_LEVEL);
+    private static final NamespacedKey                           KEY_SOCKET       = new NamespacedKey(plugin, ItemTags.TAG_ITEM_SOCKET_RATE);
+    private static final NamespacedKey                           KEY_ID2          = NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_ID.toLowerCase());
+    private static final NamespacedKey                           KEY_MODULE2      = NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_MODULE.toLowerCase());
+    private static final NamespacedKey                           KEY_LEVEL2       = NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_LEVEL.toLowerCase());
+    private static final NamespacedKey                           KEY_SOCKET2      = NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase());
+    private static       DamageAttribute                         DAMAGE_DEFAULT;
+    private static       DefenseAttribute                        DEFENSE_DEFAULT;
 
 
     // TODO Register logs
@@ -238,12 +242,12 @@ public class ItemStats {
 
         if (stat instanceof SimpleStat) {
             SimpleStat rs = (SimpleStat) stat;
-            Double d = rs.getRaw(item);
+            Double     d  = rs.getRaw(item);
             return d != null && d != 0D;
         }
         if (stat instanceof DoubleStat) {
-            DoubleStat rs = (DoubleStat) stat;
-            double[] arr = rs.getRaw(item);
+            DoubleStat rs  = (DoubleStat) stat;
+            double[]   arr = rs.getRaw(item);
             return arr != null && arr.length == 2;// && arr[0] != 0D;
         }
 
@@ -254,9 +258,9 @@ public class ItemStats {
 
     @NotNull
     public static void updateVanillaAttributes(@NotNull ItemStack item) {
-        double hp = ItemStats.getStat(item, AbstractStat.Type.MAX_HEALTH);
+        double hp    = ItemStats.getStat(item, AbstractStat.Type.MAX_HEALTH);
         double speed = ItemStats.getStat(item, AbstractStat.Type.ATTACK_SPEED);
-        double move = ItemStats.getStat(item, AbstractStat.Type.MOVEMENT_SPEED);
+        double move  = ItemStats.getStat(item, AbstractStat.Type.MOVEMENT_SPEED);
 
         ItemStats.addAttribute(item, NBTAttribute.maxHealth, hp);
         ItemStats.addAttribute(item, NBTAttribute.movementSpeed, move);
@@ -303,7 +307,7 @@ public class ItemStats {
         } else if (att == NBTAttribute.attackSpeed) {
             value /= 100D;
             double vanillaSpeed = AbstractStat.getDefaultAttackSpeed(item);
-            double extra = vanillaSpeed == 0D ? 4D - (4D * (1D + value)) : vanillaSpeed * value;
+            double extra        = vanillaSpeed == 0D ? 4D - (4D * (1D + value)) : vanillaSpeed * value;
             value = vanillaSpeed - extra;
         }
 
@@ -398,8 +402,8 @@ public class ItemStats {
     // ====================================================== //
 
     public static void registerSocket(@NotNull SocketAttribute socket) {
-        SocketAttribute.Type type = socket.getType();
-        Map<String, SocketAttribute> map = SOCKETS.get(type);
+        SocketAttribute.Type         type = socket.getType();
+        Map<String, SocketAttribute> map  = SOCKETS.get(type);
         if (map == null) map = new HashMap<>();
 
         map.put(socket.getId(), socket);
@@ -429,20 +433,23 @@ public class ItemStats {
 
     @Nullable
     public static String getId(@NotNull ItemStack item) {
-        return DataUT.getStringData(item, KEY_ID);
+        String data = DataUT.getStringData(item, KEY_ID2);
+        return data != null ? data : DataUT.getStringData(item, KEY_ID);
     }
 
     @NotNull
     public static void setLevel(@NotNull ItemStack item, int lvl) {
         if (lvl < 1) {
             DataUT.removeData(item, KEY_LEVEL);
+            DataUT.removeData(item, KEY_LEVEL2);
             return;
         }
         DataUT.setData(item, KEY_LEVEL, lvl);
     }
 
     public static int getLevel(@NotNull ItemStack item) {
-        return DataUT.getIntData(item, KEY_LEVEL);
+        int data = DataUT.getIntData(item, KEY_LEVEL2);
+        return data != 0 ? data : DataUT.getIntData(item, KEY_LEVEL);
     }
 
     // ======================================================== //
@@ -453,7 +460,8 @@ public class ItemStats {
 
     @Nullable
     public static QModuleDrop<?> getModule(@NotNull ItemStack item) {
-        String data = DataUT.getStringData(item, KEY_MODULE);
+        String data = DataUT.getStringData(item, KEY_MODULE2);
+        if (data == null) data = DataUT.getStringData(item, KEY_MODULE);
         if (data == null) return null;
 
         IModule<?> mod = plugin.getModuleManager().getModule(data);
@@ -468,6 +476,7 @@ public class ItemStats {
     }
 
     public static int getSocketRate(@NotNull ItemStack item) {
-        return DataUT.getIntData(item, KEY_SOCKET);
+        int data = DataUT.getIntData(item, KEY_SOCKET2);
+        return data != 0 ? data : DataUT.getIntData(item, KEY_SOCKET);
     }
 }

@@ -20,16 +20,17 @@ import java.util.List;
 
 public abstract class ItemLoreStat<Z> {
 
-    protected static QuantumRPG plugin = QuantumRPG.getInstance();
-    protected final String format;
-    protected final String placeholder;
-    protected final String metaId;
-    private final String id;
-    private final String uniqueMetaTag;
-    private final NamespacedKey key;
-    private final boolean isMulti;
-    protected String name;
-    protected PersistentDataType<?, Z> dataType;
+    protected static QuantumRPG               plugin = QuantumRPG.getInstance();
+    protected final  String                   format;
+    protected final  String                   placeholder;
+    protected final  String                   metaId;
+    private final    String                   id;
+    private final    String                   uniqueMetaTag;
+    private final    NamespacedKey            key;
+    private final    NamespacedKey            key2;
+    private final    boolean                  isMulti;
+    protected        String                   name;
+    protected        PersistentDataType<?, Z> dataType;
 
     public ItemLoreStat(
             @NotNull String id,
@@ -43,6 +44,7 @@ public abstract class ItemLoreStat<Z> {
         this.uniqueMetaTag = uniqueTag.toLowerCase();
         this.dataType = dataType;
         this.key = new NamespacedKey(plugin, this.getMetaTag() + this.getId());
+        this.key2 = NamespacedKey.fromString("quantumrpg:" + this.getMetaTag() + this.getId());
         this.metaId = this.getMetaTag() + this.getId();
 
         this.name = StringUT.color(name);
@@ -95,6 +97,13 @@ public abstract class ItemLoreStat<Z> {
     }
 
     @NotNull
+    protected final NamespacedKey getKey2() {
+        this.validateMethod();
+        return this.key2;
+    }
+
+
+    @NotNull
     protected final String getMetaTag() {
         return this.uniqueMetaTag;
     }
@@ -110,7 +119,7 @@ public abstract class ItemLoreStat<Z> {
         if (sVal.isEmpty()) return "";
 
         String[] colorFixer = this.format.split("%value%");
-        String valueColor = colorFixer.length > 0 ? ChatColor.getLastColors(colorFixer[0]) : "";
+        String   valueColor = colorFixer.length > 0 ? ChatColor.getLastColors(colorFixer[0]) : "";
 
         return StringUT.colorFix(this.format.replace("%value%", valueColor + sVal));
     }
@@ -211,6 +220,8 @@ public abstract class ItemLoreStat<Z> {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if (container.has(this.getKey(), this.dataType)) {
             return container.get(this.getKey(), this.dataType);
+        } else if (container.has(this.getKey2(), this.dataType)) {
+            return container.get(this.getKey2(), this.dataType);
         }
         return null;
     }
