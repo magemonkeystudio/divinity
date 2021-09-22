@@ -1,17 +1,5 @@
 package su.nightexpress.quantumrpg.manager.worth;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.Loadable;
 import mc.promcteam.engine.modules.IModule;
@@ -20,6 +8,12 @@ import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.NumberUT;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.random.Rnd;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.ModuleItem;
 import su.nightexpress.quantumrpg.modules.SocketItem;
@@ -32,9 +26,14 @@ import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
 public class WorthManager implements Loadable {
 
-	private QuantumRPG plugin;
+	private final QuantumRPG plugin;
 	
 	private Map<String, Double> 								priceItemMaterial;
 	private Map<AbstractStat.Type, Double>						priceItemStats;

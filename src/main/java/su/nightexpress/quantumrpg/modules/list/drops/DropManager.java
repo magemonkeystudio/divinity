@@ -37,12 +37,12 @@ import java.util.*;
 
 public class DropManager extends QModule {
 
-    private static final String META_DROP_MOB = "QRPG_NO_MOB_DROP";
-    private Map<String, Float> dropModifier;
-    private Map<String, DropMob> dropNpc;
-    private Map<String, DropTable> dropTables;
-    private MythicMobsHK mmHook;
-    private MyPetHK myPetHook;
+    private static final String                 META_DROP_MOB = "QRPG_NO_MOB_DROP";
+    private              Map<String, Float>     dropModifier;
+    private              Map<String, DropMob>   dropNpc;
+    private              Map<String, DropTable> dropTables;
+    private              MythicMobsHK           mmHook;
+    private              MyPetHK                myPetHook;
 
     public DropManager(@NotNull QuantumRPG plugin) {
         super(plugin);
@@ -124,7 +124,7 @@ public class DropManager extends QModule {
     private Set<DropMob> getDropsForEntity(@NotNull Entity entity) {
         if (!(entity instanceof LivingEntity)) return Collections.emptySet();
 
-        String mobType;
+        String  mobType;
         boolean isMythic = false;
 
         if (this.mmHook != null && this.mmHook.isMythicMob(entity)) {
@@ -164,9 +164,9 @@ public class DropManager extends QModule {
     }
 
     private float getMultiplier(@NotNull Player player, @NotNull LivingEntity dead) {
-        float mult = 0.0f;
+        float mult      = 0.0f;
         float multGroup = 0.0f;
-        float multStat = 0.0f;
+        float multStat  = 0.0f;
 
         String group = Hooks.getPermGroup(player);
         if (this.dropModifier.containsKey(group)) {
@@ -181,9 +181,9 @@ public class DropManager extends QModule {
 
     @NotNull
     private List<ItemStack> methodRoll(@NotNull Player killer, @NotNull LivingEntity dead) {
-        List<ItemStack> loot = new ArrayList<>();
-        Set<DropMob> mobs = this.getDropsForEntity(dead);
-        float modifier = this.getMultiplier(killer, dead);
+        List<ItemStack> loot     = new ArrayList<>();
+        Set<DropMob>    mobs     = this.getDropsForEntity(dead);
+        float           modifier = this.getMultiplier(killer, dead);
 
         // TODO
         // Fast implementation for Drop Conditions.
@@ -193,17 +193,17 @@ public class DropManager extends QModule {
         mapTarget.put("entity", Sets.newHashSet(dead));
 
         for (DropMob dropNpc : mobs) {
-            Set<Drop> drop = new HashSet<>();
-            int index = 0;
+            Set<Drop> drop  = new HashSet<>();
+            int       index = 0;
             index = dropNpc.dropCalculator(killer, dead, drop, index, modifier);
 
             for (Drop dropItem : drop) {
-                DropItem dropConfig = dropItem.getDropConfig();
+                DropItem     dropConfig     = dropItem.getDropConfig();
                 List<String> dropConditions = dropConfig.getConditions();
                 if (!ActionManipulator.processConditions(plugin, killer, dropConditions, mapTarget)) continue;
 
-                String itemId = dropConfig.getItemId();
-                int itemLvl = dropConfig.getLevel(killer, dead);
+                String itemId  = dropConfig.getItemId();
+                int    itemLvl = dropConfig.getLevel(killer, dead);
 
                 ItemStack dropStack = QuantumAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
                 if (dropStack == null || dropStack.getType() == Material.AIR) continue;
@@ -228,8 +228,8 @@ public class DropManager extends QModule {
             if (this.myPetHook != null) {
                 EntityDamageEvent e2 = dead.getLastDamageCause();
                 if (e2 instanceof EntityDamageByEntityEvent) {
-                    EntityDamageByEntityEvent ede = (EntityDamageByEntityEvent) e2;
-                    Entity damager = ede.getDamager();
+                    EntityDamageByEntityEvent ede     = (EntityDamageByEntityEvent) e2;
+                    Entity                    damager = ede.getDamager();
                     if (this.myPetHook.isPet(damager)) {
                         killer = this.myPetHook.getPetOwner(damager);
                     }
@@ -244,7 +244,7 @@ public class DropManager extends QModule {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onDropSpawn(CreatureSpawnEvent e) {
         LivingEntity entity = e.getEntity();
-        Set<DropMob> mobs = this.getDropsForEntity(entity);
+        Set<DropMob> mobs   = this.getDropsForEntity(entity);
         if (mobs.isEmpty()) return;
 
         String reason = e.getSpawnReason().name();

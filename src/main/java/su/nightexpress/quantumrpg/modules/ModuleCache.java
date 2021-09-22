@@ -3,11 +3,11 @@ package su.nightexpress.quantumrpg.modules;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
-import su.nightexpress.quantumrpg.modules.list.activeitems.ActiveItemManager;
 import su.nightexpress.quantumrpg.modules.list.arrows.ArrowManager;
 import su.nightexpress.quantumrpg.modules.list.classes.ClassManager;
 import su.nightexpress.quantumrpg.modules.list.combatlog.CombatLogManager;
 import su.nightexpress.quantumrpg.modules.list.consumables.ConsumablesManager;
+import su.nightexpress.quantumrpg.modules.list.customitems.CustomItemsManager;
 import su.nightexpress.quantumrpg.modules.list.dismantle.DismantleManager;
 import su.nightexpress.quantumrpg.modules.list.drops.DropManager;
 import su.nightexpress.quantumrpg.modules.list.essences.EssencesManager;
@@ -29,7 +29,7 @@ import su.nightexpress.quantumrpg.modules.list.soulbound.SoulboundManager;
 
 public class ModuleCache {
 
-    private QuantumRPG plugin;
+    private final QuantumRPG plugin;
 
     private GemManager gemsManager;
     private EssencesManager essencesManager;
@@ -38,6 +38,7 @@ public class ModuleCache {
     private ArrowManager arrowManager;
     private SetManager setManager;
     private ItemGeneratorManager itemGeneratorManager;
+    private CustomItemsManager customItemsManager;
 
     private ClassManager classManager;
 
@@ -71,6 +72,7 @@ public class ModuleCache {
         this.arrowManager = (ArrowManager) this.plugin.getModuleManager().register(new ArrowManager(plugin));
         this.setManager = (SetManager) this.plugin.getModuleManager().register(new SetManager(plugin));
         this.itemGeneratorManager = (ItemGeneratorManager) this.plugin.getModuleManager().register(new ItemGeneratorManager(plugin));
+        this.customItemsManager = (CustomItemsManager) this.plugin.getModuleManager().register(new CustomItemsManager(plugin));
 
 //		this.classManager = (ClassManager) this.plugin.getModuleManager().register(new ClassManager(plugin));
 //		classManager.loadClasses();

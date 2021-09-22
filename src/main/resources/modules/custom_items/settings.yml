@@ -1,0 +1,5 @@
+command-aliases: customitems,ci
+item-format:
+  name: '%ITEM_NAME%'
+  lore:
+  - '%ITEM_LORE%'

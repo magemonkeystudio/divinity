@@ -1,0 +1,8 @@
+name: 'Basic Item'
+lore: []
+material: IRON_INGOT
+color: -1,-1,-1
+unbreakable: true
+item-flags: []
+enchantments:
+  sharpness: 4

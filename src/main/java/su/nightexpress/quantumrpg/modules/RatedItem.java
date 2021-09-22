@@ -1,18 +1,17 @@
 package su.nightexpress.quantumrpg.modules;
 
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.random.Rnd;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.api.socketing.ModuleSocket;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 public abstract class RatedItem extends LimitedItem {
 
@@ -83,7 +82,6 @@ public abstract class RatedItem extends LimitedItem {
 		ItemStack item = super.build(lvl, uses);
 		
 		ItemStats.setSocketRate(item, suc);
-		this.replacePlaceholders(item);
 		
 		return item;
 	}

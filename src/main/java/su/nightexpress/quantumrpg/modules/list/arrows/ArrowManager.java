@@ -29,7 +29,7 @@ import mc.promcteam.engine.utils.actions.ActionManipulator;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.QuantumProjectileLaunchEvent;
 import su.nightexpress.quantumrpg.modules.EModule;
-import su.nightexpress.quantumrpg.modules.ModuleItem;
+import su.nightexpress.quantumrpg.modules.LeveledItem;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.list.arrows.ArrowManager.QArrow;
 import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
@@ -38,13 +38,11 @@ import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 
 public class ArrowManager extends QModuleDrop<QArrow> {
 
-	private Set<Map.Entry<Projectile, QArrow>> flyList;
-	private ArrowTask taskFly;
-	
-	private boolean generalAllowInfinity;
-	
 	private static final String META_ARROW_ID = "QRPG_ARROW_ID";
 	private static final String META_ARROW_LEVEL = "QRPG_ARROW_LEVEL";
+	private Set<Map.Entry<Projectile, QArrow>> flyList;
+	private ArrowTask taskFly;
+	private boolean generalAllowInfinity;
 	
 	public ArrowManager(@NotNull QuantumRPG plugin) {
 		super(plugin, QArrow.class);
@@ -199,7 +197,7 @@ public class ArrowManager extends QModuleDrop<QArrow> {
 	// -------------------------------------------------------------------- //
 	// CLASSES
 	
-	public class QArrow extends ModuleItem {
+	public class QArrow extends LeveledItem {
 		
 		private TreeMap<Integer, BonusMap> bonusMap;
 		private ActionManipulator fly;
