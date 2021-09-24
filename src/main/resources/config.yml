@@ -52,6 +52,7 @@ item-sub-types:
     - IRON_AXE
     - DIAMOND_AXE
     - STONE_AXE
+    - NETHERITE_AXE
   sword:
     name: Sword
     materials:
@@ -60,6 +61,7 @@ item-sub-types:
     - IRON_SWORD
     - DIAMOND_SWORD
     - STONE_SWORD
+    - NETHERITE_SWORD
   shears:
     name: Shears
     materials:
@@ -72,6 +74,7 @@ item-sub-types:
     - IRON_SHOVEL
     - DIAMOND_SHOVEL
     - STONE_SHOVEL
+    - NETHERITE_SHOVEL
   pickaxe:
     name: Pickaxe
     materials:
@@ -80,6 +83,7 @@ item-sub-types:
     - IRON_PICKAXE
     - DIAMOND_PICKAXE
     - STONE_PICKAXE
+    - NETHERITE_PICKAXE
   hoe:
     name: Hoe
     materials:
@@ -88,6 +92,7 @@ item-sub-types:
     - IRON_HOE
     - DIAMOND_HOE
     - STONE_HOE
+    - NETHERITE_HOE
   helmet:
     name: Helmet
     materials:
@@ -97,6 +102,7 @@ item-sub-types:
     - CHAINMAIL_HELMET
     - LEATHER_HELMET
     - TURTLE_HELMET
+    - NETHERITE_HELMET
   chestplate:
     name: Chestplate
     materials:
@@ -105,6 +111,7 @@ item-sub-types:
     - DIAMOND_CHESTPLATE
     - CHAINMAIL_CHESTPLATE
     - LEATHER_CHESTPLATE
+    - NETHERITE_CHESTPLATE
   leggings:
     name: Leggings
     materials:
@@ -113,6 +120,7 @@ item-sub-types:
     - DIAMOND_LEGGINGS
     - CHAINMAIL_LEGGINGS
     - LEATHER_LEGGINGS
+    - NETHERITE_LEGGINGS
   boots:
     name: Boots
     materials:
@@ -121,6 +129,7 @@ item-sub-types:
     - DIAMOND_BOOTS
     - CHAINMAIL_BOOTS
     - LEATHER_BOOTS
+    - NETHERITE_BOOTS
   elytra:
     name: Elytra
     materials:
@@ -138,10 +147,9 @@ item-sub-types:
     materials:
     - FISHING_ROD
   trident:
-    name: 'Trident'
+    name: Trident
     materials:
     - TRIDENT
-
 item-groups:
   WEAPON:
     name: Weapon
@@ -156,6 +164,8 @@ item-groups:
     - IRON_AXE
     - DIAMOND_SWORD
     - DIAMOND_AXE
+    - NETHERITE_SWORD
+    - NETHERITE_AXE
     - SHEARS
     - FISHING_ROD
     - BOW
@@ -184,6 +194,10 @@ item-groups:
     - DIAMOND_AXE
     - DIAMOND_SHOVEL
     - DIAMOND_PICKAXE
+    - NETHERITE_HOE
+    - NETHERITE_AXE
+    - NETHERITE_SHOVEL
+    - NETHERITE_PICKAXE
     - SHEARS
     - FISHING_ROD
   ARMOR:
@@ -209,6 +223,10 @@ item-groups:
     - DIAMOND_CHESTPLATE
     - DIAMOND_LEGGINGS
     - DIAMOND_BOOTS
+    - NETHERITE_HELMET
+    - NETHERITE_CHESTPLATE
+    - NETHERITE_LEGGINGS
+    - NETHERITE_BOOTS
     - SHIELD
     - ELYTRA
     - TURTLE_HELMET

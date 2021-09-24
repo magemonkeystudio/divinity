@@ -24,8 +24,8 @@ packets:
     reduce-damage-particles: true
 
 compatibility:
-  player-level-plugin: 'QuantumRPG'
-  player-class-plugin: 'QuantumRPG'
+  player-level-plugin: 'SkillAPI'
+  player-class-plugin: 'SkillAPI'
   mob-level-plugin: 'MythicMobs'
 
 # Performance settings.

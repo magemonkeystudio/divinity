@@ -1,0 +1,433 @@
+Command:
+  Modify:
+    List:
+    - '{message: ~prefix: false;}&8&m-----------&8&l[ &aQuantum RPG &7- &aModify &8&l]&8&m-----------'
+    - '&2> &a/qrpg modify name <Name> &7- Change display name of the item.'
+    - '&2> &a/qrpg modify lore add [text] [line] &7- Add lore line.'
+    - '&2> &a/qrpg modify lore del [line] &7- Remove lore line.'
+    - '&2> &a/qrpg modify lore clear &7- Clear item lore.'
+    - '&2> &a/qrpg modify flag add <flag> &7- Add a flag to item.'
+    - '&2> &a/qrpg modify flag del <flag> &7- Remove a flag from the item.'
+    - '&2> &a/qrpg modify enchant <enchantment> <level> &7- Enchants/Disenchants the
+      item.'
+    - '&2> &a/qrpg modify potion <effect> <level> <duration> [ambient(true/false)]
+      [particles(true/false)] [icon(true/false)] &7- Modify potion effects.'
+    - '&2> &a/qrpg modify color <r,g,b> &7- Change the color of leather armor or potion.'
+    Desc: Modify an item.
+    Done: Done!
+  Set:
+    List:
+    - '{message: ~prefix: false;}&8&m-----------&8&l[ &aQuantum RPG &7- &aSet &8&l]&8&m-----------'
+    - '&2> &a/qrpg set stat <type> <value> [position] &7- Set the attribute to item.'
+    - '&2> &a/qrpg set level <number> [position] &7- Add level requirements to item.'
+    - '&2> &a/qrpg set class <class1,class2,etc> [position] &7- Add class requirements
+      to item.'
+    - '&2> &a/qrpg set damage <type> <min> <max> [position] &7- Add the damage type
+      to item.'
+    - '&2> &a/qrpg set defense <type> <value> [position] &7- Add the defense type
+      to item.'
+    - '&2> &a/qrpg set ammo <type> [position] &7- Set the ammo type to bow.'
+    - '&2> &a/qrpg set hand <type> [position] &7- Set the hand type to item.'
+    - '&2> &a/qrpg set socket <type> [position] &7- Add an empty slot to item.'
+  Buff:
+    Desc: Temporary increases specified attribute.
+    Usage: <player> <type> <id> <amount> <duration>
+    Done: Added &a%amount% %stat%&7 buff to &a%player%&7 for &a%time%&7!
+    Get: You just got &a%amount% %stat%&7 buff for &a%time%&7!
+Module:
+  Cmd:
+    List:
+      Usage: '[page]'
+      Desc: List of module items.
+      Format:
+        List:
+        - '{message: ~prefix: false;}'
+        - '&8&m-------- &e List of %module% &8&m--------'
+        - '&6%pos%. &e%item% %button_get%'
+        - '&8&m-------- &e Page &7%page% &e of &7 %pages% &8&m--------'
+      Button:
+        Get:
+          Name: '&a&l[Get Item]'
+          Hint: '&7Gives item to your inventory.'
+    Get:
+      Done: You get &ax%amount% &7of &a%item%&7!
+      Usage: <id> [level] [amount]
+      Desc: Get an module item.
+    Give:
+      Done: You gave &ax%amount% &7of &a%item%&7 to &a%player%&7!
+      Usage: <player> <id> [level] [amount]
+      Desc: Give an module item to a player.
+    Drop:
+      Usage: <world> <x> <y> <z> <id> [level] [amount]
+      Desc: Drops the specified item in the world.
+      Done: You dropped &ax%amount% &7of &a%item%&7 in &a%w%&7, %x%&7, &a%y%&7, &a%z%&7!
+    Help:
+      Format: '&2> &a/%cmd% %label% %usage% &7- %desc%'
+    Usage: '&cUsage: &f/%cmd% %label% %usage%'
+    Reload: Module &a%module% &7reloaded!
+  Socketing:
+    Cmd:
+      Merchant:
+        Desc: Open Merchant Socketing GUI.
+        Usage: '[player] [force(true/false)]'
+  Item:
+    Usage:
+      Cooldown: '&cYou must wait &e%time%&c to use &f%item% &cagain!'
+      Broken: Your item is broken! You can not use it!
+      NoCharges: '&e%item% &cis out of charges! You must recharge it to use!'
+    Apply:
+      Error:
+        Level: '&e%source% &ccan only be applied to items with level(s) &e%value%&c!'
+        Type: '&e%source% &ccan only be applied to specified items: &e%value%&c!'
+        Module: '&e%source% &ccan only be applied to specified items: &e%value%&c!'
+        Socket: '&e%target% &cdoes not have free &e%socket%&c!'
+        Tier: '&e%source% &ccan only be applied to &e%tier% &citems!'
+    Interact:
+      Error:
+        Level: '&cYour level is not suitable for using %item%&c.'
+        Class: '&cYour class is not suitable for using %item%&c.'
+        Soulbound: '&cYou must set &eSoulbound &cto use %item%! Do &eRight-Click &con
+          &e%item%&c in opened inventory.'
+        Owner: '&e%item% &cbounds to &e%owner%&c. You can not use it.'
+        Hand: Your weapon is two-handed! You can't hold items in off hand!
+        Creative: '&cPlease exit from &eCreative &cgame mode.'
+    Socketing:
+      Merchant:
+        Error:
+          TooExpensive: '&cYou can''t afford this operation!'
+        Notify:
+          Pay: You paid &e$%amount%&7 for socketing services.
+      Error:
+        InAction: '&cYou can not socket items during active actions.'
+        AlreadyHave: '&e%item% &calready have this item socketed.'
+      Result:
+        Total:
+        - '{message: ~prefix: false;}&6&m                   &e&l[&e Socketing Result
+          &6&l]&6&m                   &r'
+        - '&7'
+        - '&6Items Used:'
+        - '&e▸ %state-target% %item-target%'
+        - '&e▸ %state-source% %item-source%'
+        - '&7'
+        State:
+          Success: '&a(Success) &f'
+          Destroyed: '&c(Destroyed) &f'
+          Wiped: '&d(Corrupted) &f'
+          Consumed: '&9(Consumed) &f'
+          Saved: '&d(Saved) &f'
+CombatLog:
+  Cmd:
+    Log:
+      Desc: View latest combat log.
+Consumables:
+  Consume:
+    Error:
+      FoodLevel: '&cYou can not consume &e%item% &cbecause your food level is full.'
+      HealthLevel: '&cYou can not consume &e%item% &cbecause your health is full.'
+Dismantle:
+  Cmd:
+    Open:
+      Desc: Open Dismantle GUI.
+      Usage: '[player] [force<true/false>]'
+      Done:
+        Others: Opened Dismantle GUI for &a%player%&7.
+  Dismantle:
+    Error:
+      TooExpensive: '&cYou can''t arrord this operation! You need: &e$%cost%, &cyou
+        have: &e$%balance%'
+    Single:
+      Free: '&a%item%&7 dismantled!'
+      Paid: '&a%item%&7 dismantled for &a$%cost%!'
+    Many:
+      Free: Items dismantled!
+      Paid: Items dismantled for &a$%cost%&7!
+Extractor:
+  Cmd:
+    Open:
+      Desc: Opens Extractor GUI.
+      Usage: '[player] [force(true/false)]'
+      Done:
+        Others: Opened Extractor for &a%player%&7.
+  Extract:
+    Complete: '[TITLES] &a&lExtraction complete!'
+    Error:
+      TooExpensive: '&cYou must have &e$%cost% &cto do the extraction! You only have
+        &e$%balance%&c.'
+  Open:
+    Error:
+      NoSockets: '&e%item% &chas nothing to extract!'
+Fortify:
+  Cmd:
+    Fortify:
+      Usage: <item> <level>
+      Desc: Fortifies the item with a specified stone.
+      Error:
+        Stone: Invalid fortified stone!
+    Unfortify:
+      Desc: Removes fortify state from the item.
+  Fortify:
+    Done: Item fortified!
+    Error:
+      Already: Item is already fortified!
+  Enchanting:
+    Failure: Fortified stone could not protect &c%item%&7.
+    Success: Fortified stone saves &a%item%&7!
+Identify:
+  Cmd:
+    Identify:
+      Desc: Force identifies item in your hand.
+      Error:
+        Item: You must hold an &cUnidentified Item&7.
+  Identify:
+    Success: 'Item identified: &a%item%&7!'
+    Error:
+      Tome: '&clOops! &7This &cIdentify Tome &7can not identify this item.'
+  Usage:
+    Error:
+      Unidentified: You can not equip/use an unidentified item!
+Loot:
+  Box:
+    Error:
+      NotOwner: You're not obtain this loot.
+      Locked: Someone's already looting this...
+    Owner:
+      None: Free
+  Party:
+    Roll:
+      Notify:
+        List:
+        - '{message: ~prefix: false;}&8&m-----------&8&l[ &e&lRoll The Dice &8&l]&8&m-----------'
+        - '              &7Item: &a%item%&7!'
+        - '                      %roll%'
+        - '&8&m-----------&8&l[ &8&m-------------&8&l ]&8&m-----------'
+        Roll:
+          Name: '&a&l[Roll!]'
+          Hint: '&aClick me to roll the dice!'
+      MemberRoll: '%player% rolled the dice: &e%value%&7.'
+      AlreadyRoll: 'You''ve already rolled the dice. Your value: &e%value%&7.'
+      RollIn: 'Roll-dice time: &e%time% seconds&7.'
+      NoRoll: No one rolled the dice.
+      Winner: '&a%player% &7obtained the right to possession &a%item%&7.'
+      NotOwner: You're not obtain this item.
+      AlreadyStarted: Your party already rolling the item.
+MagicDust:
+  Cmd:
+    Open:
+      Desc: Open Magic Dust GUI.
+      Usage: '[player] [force(true/false)]'
+      Done:
+        Others: Opened Dust GUI for &a%player%&7.
+  Apply:
+    Done: '&aSuccess! &7New &f%item% &7success rate: &a%rate-new%%&7!'
+    Error:
+      MaxRate: '&e%source% &ccould not add more than &e%max-rate%%&c!'
+  GUI:
+    Error:
+      TooExpensive: '&cYou could not pay for this operation! Required: &e$%cost%&c,
+        you have: &e$%balance%&c.'
+      InvalidItem: '&e%item% &cis not a valid item for this!'
+Party:
+  Cmd:
+    Chat:
+      Desc: Toggles party chat mode.
+    Create:
+      Desc: Create a party.
+      Usage: '[name]'
+    Disband:
+      Desc: Disband the party.
+    Drop:
+      Desc: Toggle drop mode.
+    Exp:
+      Desc: Toggle exp mode.
+    Invite:
+      Desc: Invite player to the party.
+      Usage: <player>
+    Join:
+      Desc: Join the party.
+      Usage: <party>
+    Kick:
+      Desc: Kick player from the party.
+      Usage: <player>
+    Leave:
+      Desc: Leave the party.
+    Menu:
+      Desc: Open party menu.
+    Teleport:
+      Desc: Teleport to a party member.
+      Usage: <player>
+    Roll:
+      Desc: Roll the dice.
+      Error:
+        Nothing: Nothing to roll.
+  Create:
+    Done: 'Created a new party &a%party%&7. Invite players: &a/party invite <player>&7.'
+    Error:
+      Exist: Party with such name is already created.
+  Join:
+    Done: '&7You have joined the &a%party% &7party.'
+    New: '&a%player% &7joined the party.'
+  Leader:
+    Transfer: '&7You''re the new party leader now.'
+  Invite:
+    Already: This player is already invited to your party.
+    Send: Invite sent to &e%player%&7.
+    Get: '&e%leader% &7invites you to the &e%party% &7party. Type &e/party join %party%&7.'
+    Another: You don't have invite to this party.
+  Leave:
+    Done: '&7You left the &c%party% &7party.'
+    Member: '&c%player% &7left the party.'
+    QuitGame: '&c%player% &7left the game.'
+    ComeBack: '&a%player% &7joined the game.'
+  Disband:
+    Done: 'Party disbanded: &c%party%&7.'
+    Leader: '&c%leader% &7disbands the party.'
+  Kick:
+    You: '&c%leader% &7kicked you from the party.'
+    Other: '&c%leader% &7kicked &c%player% &7from the party.'
+    Error:
+      Self: Unable to kick yourself.
+  Error:
+    MaxPlayers: There are maximum players in party.
+    Player:
+      AlreadyIn: '&c%player% &7is already in a party.'
+      NotIn: Player is not in party.
+    AlreadyIn: 'You''re already in party! Leave it: &e/party leave&7.'
+    NotInParty: You're not in the party.
+    LeaderOnly: Only party leader can do this.
+    Invalid: No such party.
+  Teleport:
+    Error:
+      Cooldown: 'Teleport cooldown: &c%time%'
+      Self: Unable teleport to self!
+    Done:
+      To: '&8*** &7Teleport to &a%player%&7. &8***'
+      From: '&8*** &a%player% &7teleported to you. &8***'
+  Chat:
+    Toggle: 'Party chat: &e%state%'
+  Drop:
+    Toggle: '&8*** &7Drop mode: &e%mode% &8***'
+  Exp:
+    Toggle: '&8*** &7Exp mode: &e%mode% &8***'
+Profiles:
+  Command:
+    Profiles:
+      Desc: Open profile menu.
+  Create:
+    Error:
+      Regex: '&cProfile name contains unacceptable symbols!'
+      Exists: '&cProfile with such name already exists!'
+      Maximum: '&cYou have reached maximum &e(%amount%) &camount of profiles!'
+      Unexpected: '&cAn unexpected error while creating profile! Please contact administrator.'
+    Tip:
+      Name:
+      - '{message: ~type: TITLES; ~fadeIn: 20; ~stay: -1; ~fadeOut: 20;}&b&lNew Profile'
+      - '&7Enter profile name...'
+      Error:
+      - '{message: ~type: TITLES; ~fadeIn: 20; ~stay: 60; ~fadeOut: 20;}&c&lError!'
+      - '&7See details in chat.'
+      Done: '{message: ~type: TITLES; ~fadeIn: 20; ~stay: 60; ~fadeOut: 20;}&a&lProfile
+        Created!'
+  Switch:
+    Done: 'Profile switched: &a%profile%'
+Refine:
+  Cmd:
+    Refine:
+      Desc: Force refines item in your hand.
+      Usage: '[ench. stone]'
+      Done: Item refined!
+      Error:
+        Stone: Invalid enchantment stone id.
+    Downgrade:
+      Desc: Force downgrades refined item in your hand.
+      Done: Item downgraded!
+  Enchanting:
+    Error:
+      MaxLevel: '&cCould not refine &e%item%&c: Maximal level.'
+      WrongStone: '&cCould not refine &e%item%&c: Wrong Enchantment Stone. You should
+        use: &e%stone%&c.'
+    Result:
+      Total:
+      - '{message: ~prefix: false;}&6&m                   &e&l[&e Refine Result &6&l]&6&m                   &r'
+      - '&7'
+      - '&e▸ %state-target% %item-target%'
+      - '&e▸ %state-source% %item-source%'
+      - '&7'
+      State:
+        Success: '&a(Success) &f'
+        Destroyed: '&c(Destroyed) &f'
+        Downgraded: '&d(Downgraded) &f'
+        Consumed: '&9(Consumed) &f'
+        Saved: '&d(Saved) &f'
+Repair:
+  Cmd:
+    Open:
+      Desc: Open custom repair anvil GUI.
+      Usage: '[player] [force(true/false)]'
+      Done:
+        Others: Opened Anvil Repair GUI for &a%player%&7.
+  Error:
+    TypeNotSelected: '&cPlease, select the repair type!'
+    NoDurability: '&c%item% &7can not be repaired.'
+    NotDamaged: '&c%item% &7is not damaged.'
+    TooExpensive: '&cYou can''t afford the repair!'
+  Done: '&a%item% &7have been successfully repaired.'
+Sell:
+  Cmd:
+    Open:
+      Desc: Open Sell GUI.
+      Usage: '[player] [force<true/false>]'
+      Done:
+        Others: Opened Sell GUI for &a%player%&7.
+  Sell:
+    Complete: Sold for &a$%cost%&7!
+Soulbound:
+  Cmd:
+    Soul:
+      Desc: Manage item soulbound requirement.
+      Usage: <add|remove> [position]
+      Done: 'Item soulbound requirement: &e%state%'
+    Untradeable:
+      Desc: Manage item trade state.
+      Usage: <add|remove> [position]
+      Done: 'Item untradeable: &e%state%'
+  Item:
+    Soulbound:
+      Apply: '&cSoulbound &eapplied to &c%item%&e!'
+    Interact:
+      Error:
+        Pickup: '&cYou can''t pickup item you don''t own.'
+        Command: '&cYou can not use that command while holding untradeable item!'
+Error:
+  InvalidItem: This action is not applicable to this item!
+  InvalidArgument: 'Invalid value: &c%arg%&7!'
+  Internal: '&cInternal error! Contact administration.'
+Other:
+  Get: 'You received: &7<%item%&7>'
+PartyDropMode:
+  FREE: Free
+  LEADER: Leader
+  AUTO: Auto
+  ROLL: Roll
+PartyExpMode:
+  PRIVATE: Private
+  SHARED: Shared
+ClickType:
+  LEFT: Left
+  RIGHT: Right
+  MIDDLE: Middle
+  SHIFT_LEFT: Shift Left
+  SHIFT_RIGHT: Shift Right
+ClassAttributeType:
+  ARMOR: Armor
+  ARMOR_TOUGHNESS: Armor Toughness
+  ATTACK_DAMAGE: Attack Damage
+  ATTACK_SPEED: Attack Speed
+  FLYING_SPEED: Flying Speed
+  KNOCKBACK_RESISTANCE: Knockback Resistance
+  LUCK: Luck
+  MAX_HEALTH: Max Health
+  MOVEMENT_SPEED: Movement Speed
+UserEntityNamesMode:
+  DEFAULT: Default
+  ALWAYS_VISIBLE: Always Visible
+  ALWAYS_HIDDEN: Always Hidden
