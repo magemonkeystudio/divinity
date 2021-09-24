@@ -11,7 +11,7 @@ public class EHook {
     public static final String MY_PET = "MyPet";
     public static final String PWING_RACES = "PwingRaces";
     public static final String RACES_OF_THANA = "RacesOfThana";
-    public static final String SKILL_API = "SkillAPI";
+    public static final String SKILL_API = "ProSkillAPI";
     public static final String SKILLS = "SkillsPro";
 
     public static final String QUEST_CREATOR = "QuestCreator";
