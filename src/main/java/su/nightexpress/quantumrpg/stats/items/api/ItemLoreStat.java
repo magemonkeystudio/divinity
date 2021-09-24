@@ -11,6 +11,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
 import su.nightexpress.quantumrpg.utils.LoreUT;
@@ -135,7 +136,7 @@ public abstract class ItemLoreStat<Z> {
         // *** PREPARE PLACEHOLDER ***
         // Add raw placeholder to item lore or
         // replace the old requirement string
-        if (!lore.contains(this.getPlaceholder())) {
+        if (!lore.contains(this.getPlaceholder()) && !this.formatValue(item, value).equals(EngineCfg.LORE_STYLE_ATT_CHARGES_FORMAT_UNLIMITED)) {
             LoreUT.addOrReplace(lore, pos, line, this.getPlaceholder());
         }
 
@@ -150,9 +151,9 @@ public abstract class ItemLoreStat<Z> {
         String format = StringUT.colorFix(this.getFormat(item, value));
         if (!format.isEmpty()) {
             container.set(this.getKey(), this.dataType, value);
-            lore.set(pos, format);
+            if (pos != -1) lore.set(pos, format);
         } else {
-            lore.remove(pos);
+            if (pos != -1) lore.remove(pos);
         }
 
         meta.setLore(lore);

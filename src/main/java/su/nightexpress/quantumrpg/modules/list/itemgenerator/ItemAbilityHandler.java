@@ -33,7 +33,7 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
 
     public static final Map<ClickType, NamespacedKey>                  ABILITY_KEYS = new HashMap<>();
     private final       ItemGeneratorManager                           itemGen;
-    private final List<UUID>                                     noSpam = new ArrayList<>();
+    private final       List<UUID>                                     noSpam       = new ArrayList<>();
     private             Map<String, Map<String, Map<ClickType, Long>>> itemCooldown;
 
     ItemAbilityHandler(@NotNull ItemGeneratorManager itemGen) {
@@ -91,12 +91,14 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         if (manipulator == null) return false;
 
         long cooldownLeft = this.getCooldownLeft(player, item, clickType);
-        if (cooldownLeft > 0L && registerSentMessage(player)) {
-            String name = ItemUT.getItemName(item);
-            String time = TimeUT.formatTime(cooldownLeft);
-            plugin.lang().Module_Item_Usage_Cooldown
-                    .replace("%time%", time).replace("%item%", name)
-                    .send(player);
+        if (cooldownLeft > 0L) {
+            if (registerSentMessage(player)) {
+                String name = ItemUT.getItemName(item);
+                String time = TimeUT.formatTime(cooldownLeft);
+                plugin.lang().Module_Item_Usage_Cooldown
+                        .replace("%time%", time).replace("%item%", name)
+                        .send(player);
+            }
 
             return false;
         }
@@ -104,10 +106,12 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         // TODO Usage Event
 
         int uses = this.itemGen.getItemCharges(item);
-        if (uses == 0 && registerSentMessage(player)) {
-            plugin.lang().Module_Item_Usage_NoCharges
-                    .replace("%item%", ItemUT.getItemName(item))
-                    .send(player);
+        if (uses == 0) {
+            if (registerSentMessage(player)) {
+                plugin.lang().Module_Item_Usage_NoCharges
+                        .replace("%item%", ItemUT.getItemName(item))
+                        .send(player);
+            }
             return false;
         }
 
