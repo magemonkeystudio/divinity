@@ -41,13 +41,13 @@ body:
       description: |
         examples:
           - **Server Software**: Paper Spigot 1.17.1
-          - **ProSkillAPI Version**: 1.1.7.3-ALPHA
+          - **ProRPGItems Version**: 1.0.3.4-ALPHA
           - **ProMCCore Version**: 1.0.3.1-ALPHA
         
         Then run `/plugins` on your server and paste that list for us.
       value: |
         - Server Software:
-        - ProSkillAPI Version:
+        - ProRPGItems Version:
         - ProMCCore Version:
         - Plugins
       render: markdown
