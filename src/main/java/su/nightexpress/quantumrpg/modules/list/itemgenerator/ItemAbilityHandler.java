@@ -1,5 +1,13 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
+import mc.promcteam.engine.manager.IListener;
+import mc.promcteam.engine.manager.api.Loadable;
+import mc.promcteam.engine.manager.types.ClickType;
+import mc.promcteam.engine.utils.DataUT;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.TimeUT;
+import mc.promcteam.engine.utils.actions.ActionManipulator;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -12,13 +20,6 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import mc.promcteam.engine.manager.IListener;
-import mc.promcteam.engine.manager.api.Loadable;
-import mc.promcteam.engine.manager.types.ClickType;
-import mc.promcteam.engine.utils.DataUT;
-import mc.promcteam.engine.utils.ItemUT;
-import mc.promcteam.engine.utils.TimeUT;
-import mc.promcteam.engine.utils.actions.ActionManipulator;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
@@ -26,15 +27,14 @@ import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadable {
 
-    public static final Map<ClickType, NamespacedKey> ABILITY_KEYS = new HashMap<>();
-    private ItemGeneratorManager itemGen;
-    private Map<String, Map<String, Map<ClickType, Long>>> itemCooldown;
+    public static final Map<ClickType, NamespacedKey>                  ABILITY_KEYS = new HashMap<>();
+    private final       ItemGeneratorManager                           itemGen;
+    private final List<UUID>                                     noSpam = new ArrayList<>();
+    private             Map<String, Map<String, Map<ClickType, Long>>> itemCooldown;
 
     ItemAbilityHandler(@NotNull ItemGeneratorManager itemGen) {
         super(itemGen.plugin);
@@ -65,6 +65,16 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         }
     }
 
+    private boolean registerSentMessage(Player player) {
+        if (noSpam.contains(player.getUniqueId())) return false;
+
+        noSpam.add(player.getUniqueId());
+        //TODO Make this cooldown configurable.
+        Bukkit.getScheduler().runTaskLater(QuantumRPG.getInstance(),
+                () -> noSpam.remove(player.getUniqueId()), 60L);
+        return true;
+    }
+
     private final boolean useItem(
             @NotNull Player player,
             @NotNull ItemStack item,
@@ -81,7 +91,7 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         if (manipulator == null) return false;
 
         long cooldownLeft = this.getCooldownLeft(player, item, clickType);
-        if (cooldownLeft > 0L) {
+        if (cooldownLeft > 0L && registerSentMessage(player)) {
             String name = ItemUT.getItemName(item);
             String time = TimeUT.formatTime(cooldownLeft);
             plugin.lang().Module_Item_Usage_Cooldown
@@ -94,7 +104,7 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         // TODO Usage Event
 
         int uses = this.itemGen.getItemCharges(item);
-        if (uses == 0) {
+        if (uses == 0 && registerSentMessage(player)) {
             plugin.lang().Module_Item_Usage_NoCharges
                     .replace("%item%", ItemUT.getItemName(item))
                     .send(player);
@@ -125,7 +135,7 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         manipulator.process(player);
 
         // Add Item Ability Cooldown
-        String uuid = player.getUniqueId().toString();
+        String uuid   = player.getUniqueId().toString();
         String itemId = uItem.getId();
 
         Map<String, Map<ClickType, Long>> mapItem = this.itemCooldown.computeIfAbsent(uuid, map -> new HashMap<>());
@@ -147,7 +157,7 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
     private final long getCooldownLeft(@NotNull Player player, @NotNull ItemStack item, @NotNull ClickType type) {
         if (!this.itemGen.isItemOfThisModule(item)) return 0L;
 
-        String uuid = player.getUniqueId().toString();
+        String uuid   = player.getUniqueId().toString();
         String itemId = this.itemGen.getItemId(item);
 
         Map<String, Map<ClickType, Long>> mapItems = this.itemCooldown.getOrDefault(uuid, Collections.emptyMap());
@@ -181,8 +191,8 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         Player player = e.getPlayer();
         Action action = e.getAction();
         if (action == Action.PHYSICAL) return;
-        boolean shift = player.isSneaking();
-        ClickType type = ClickType.from(action, shift);
+        boolean   shift = player.isSneaking();
+        ClickType type  = ClickType.from(action, shift);
 
         if (!ItemUtils.isWeapon(item) && !ItemUtils.isBow(item) && item.getType() != Material.SHIELD) {
             e.setCancelled(true);
@@ -193,12 +203,12 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onItemConsumeNatural(PlayerItemConsumeEvent e) {
 
-        ItemStack item = new ItemStack(e.getItem());
+        ItemStack     item  = new ItemStack(e.getItem());
         GeneratorItem aItem = this.itemGen.getModuleItem(item);
         if (aItem == null) return;
 
-        Player player = e.getPlayer();
-        ClickType type = ClickType.RIGHT;
+        Player    player = e.getPlayer();
+        ClickType type   = ClickType.RIGHT;
 
         e.setCancelled(true);
 

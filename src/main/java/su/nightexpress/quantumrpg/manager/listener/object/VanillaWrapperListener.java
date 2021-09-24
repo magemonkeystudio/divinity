@@ -1,13 +1,9 @@
 package su.nightexpress.quantumrpg.manager.listener.object;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.entity.EnderPearl;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Skeleton;
+import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.manager.IListener;
+import mc.promcteam.engine.utils.ItemUT;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -22,10 +18,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
-
-import mc.promcteam.engine.hooks.Hooks;
-import mc.promcteam.engine.manager.IListener;
-import mc.promcteam.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.QuantumProjectileLaunchEvent;
 import su.nightexpress.quantumrpg.api.event.RPGDamageEvent;
@@ -41,6 +33,9 @@ import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("deprecation")
 public class VanillaWrapperListener extends IListener<QuantumRPG> {
@@ -269,7 +264,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
 				damageStart = damageStart - 1D; // Deduct the 1 damage of non-weapon item/hand.
 			}
 			// Probably can't be lower than 1, but anyway xD
-			damageStart /= (double) Math.max(1D, damages.size());
+			damageStart /= Math.max(1D, damages.size());
 		}
 		else {
 			damageStart = 0D;
