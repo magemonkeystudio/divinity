@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.drops.object;
 
+import lombok.Getter;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.LoadableItem;
 import mc.promcteam.engine.utils.random.Rnd;
@@ -16,12 +17,15 @@ import java.util.Set;
 
 public class DropMob extends LoadableItem implements DropCalculator {
 
-    protected float chance;
+    protected float   chance;
     protected boolean rollOnce;
 
     protected Set<String> entityGood;
     protected Set<String> mythicGood;
     protected Set<String> reasonsBad;
+
+    @Getter
+    protected boolean vanillaDrops;
 
     protected List<DropTable> dropTables;
 
@@ -34,6 +38,8 @@ public class DropMob extends LoadableItem implements DropCalculator {
         this.entityGood = new HashSet<>(cfg.getStringList("vanilla-mobs"));
         this.mythicGood = new HashSet<>(cfg.getStringList("mythic-mobs"));
         this.reasonsBad = new HashSet<>(cfg.getStringList("prevent-from"));
+
+        this.vanillaDrops = cfg.getBoolean("vanilla-drops", true);
 
         this.dropTables = new ArrayList<>();
 //        DropManager dropManager = plugin.getModuleCache().getDropManager();

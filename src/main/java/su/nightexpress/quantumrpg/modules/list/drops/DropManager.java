@@ -120,19 +120,50 @@ public class DropManager extends QModule {
         return this.dropTables.get(id.toLowerCase());
     }
 
+    private String getMobType(Entity entity) {
+        if (this.mmHook != null && this.mmHook.isMythicMob(entity))
+            return this.mmHook.getMythicNameByEntity(entity);
+        else
+            return entity.getType().name();
+    }
+
+    @NotNull
+    private boolean isVanillaCancelled(@NotNull Entity entity) {
+        boolean cancelled = false;
+        if (!(entity instanceof LivingEntity)) return cancelled;
+
+        String  mobType  = getMobType(entity);
+        boolean isMythic = this.mmHook != null && this.mmHook.isMythicMob(entity);
+
+        for (DropMob dropNpc : this.dropNpc.values()) {
+            Set<String> mobList;
+            if (isMythic) mobList = dropNpc.getMythic();
+            else mobList = dropNpc.getEntities();
+
+            boolean contains = mobList.contains(JStrings.MASK_ANY) || mobList.contains(mobType);
+
+            if (!isMythic) {
+                MobGroup group = MobGroup.getMobGroup(entity);
+                if (mobList.contains(group.name())) {
+                    contains = true;
+                }
+            }
+
+            if (contains && !dropNpc.isVanillaDrops()) {
+                cancelled = true;
+                break;
+            }
+        }
+
+        return cancelled;
+    }
+
     @NotNull
     private Set<DropMob> getDropsForEntity(@NotNull Entity entity) {
         if (!(entity instanceof LivingEntity)) return Collections.emptySet();
 
-        String  mobType;
-        boolean isMythic = false;
-
-        if (this.mmHook != null && this.mmHook.isMythicMob(entity)) {
-            mobType = this.mmHook.getMythicNameByEntity(entity);
-            isMythic = true;
-        } else {
-            mobType = entity.getType().name();
-        }
+        String  mobType = getMobType(entity);
+        boolean isMythic = this.mmHook != null && this.mmHook.isMythicMob(entity);
 
         Set<DropMob> tables = new HashSet<>();
 
@@ -238,6 +269,8 @@ public class DropManager extends QModule {
             return;
         }
 
+        if (isVanillaCancelled(dead))
+            e.getDrops().clear();
         e.getDrops().addAll(this.methodRoll(killer, dead));
     }
 
