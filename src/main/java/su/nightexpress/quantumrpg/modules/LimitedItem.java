@@ -75,11 +75,16 @@ public class LimitedItem extends LeveledItem {
         ItemStack item = super.build(lvl);
 
         ChargesAttribute charges = ItemStats.getAttribute(ChargesAttribute.class);
-        if (charges != null/* && charges.hasPlaceholder(item)*/) { // In order for unlimited charged items to work
-            // properly, this needs to be disabled. Not sure if this will produce any other harmful side effects.
-            charges.add(item, new int[]{uses, uses}, -1);
-        }
-        LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_ITEM_CHARGES, null);
+        if (charges != null) {
+            if (uses == 1 && this instanceof SocketItem)
+                LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_ITEM_CHARGES, null);
+            else
+                //if (charges.hasPlaceholder(item)) { // In order for unlimited charged items to work
+                // properly, this needs to be disabled. Not sure if this will produce any other harmful side effects.
+                charges.add(item, new int[]{uses, uses}, -1);
+            //}
+        } else
+            LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_ITEM_CHARGES, null);
 
         return item;
     }

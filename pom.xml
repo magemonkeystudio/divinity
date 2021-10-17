@@ -6,7 +6,7 @@
 
     <groupId>mc.promcteam</groupId>
     <artifactId>ProRPGItems</artifactId>
-    <version>1.0.3.6-ALPHA</version>
+    <version>1.0.3.8-ALPHA</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>mc.promcteam</groupId>
             <artifactId>ProMCCore</artifactId>
-            <version>1.0.3.1-ALPHA</version>
+            <version>1.0.3.2-ALPHA</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

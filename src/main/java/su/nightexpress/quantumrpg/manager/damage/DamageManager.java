@@ -239,7 +239,7 @@ public class DamageManager extends IListener<QuantumRPG> {
                 if (defAtt != null && defenses.containsKey(defAtt)) {
                     double def = Math.max(0, defenses.get(defAtt) * pveDefenseMod * penetrateMod);
 
-                    double defCalced = Math.max(0, dmgType - (def * defAtt.getProtectionFactor()));
+                    double defCalced = Math.max(0, dmgType * (1 - (def * defAtt.getProtectionFactor() * 0.01)));
                     meta.setDefendedDamage(defAtt, dmgType - defCalced);
                     dmgType = defCalced;
                 }
