@@ -6,7 +6,7 @@
 
     <groupId>mc.promcteam</groupId>
     <artifactId>ProRPGItems</artifactId>
-    <version>1.0.3.5-ALPHA</version>
+    <version>1.0.3.6-ALPHA</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -50,6 +50,14 @@
                     <destDir>gh-pages/javadocs</destDir>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>16</source>
+                    <target>16</target>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -75,7 +83,7 @@
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
+            <artifactId>spigot-api</artifactId>
             <version>1.17.1-R0.1-SNAPSHOT</version>
             <!--            <classifier>remapped-mojang</classifier>-->
         </dependency>

@@ -7,6 +7,7 @@ import mc.promcteam.engine.utils.random.Rnd;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.drops.DropManager;
 
@@ -93,29 +94,28 @@ public class DropMob extends LoadableItem implements DropCalculator {
     }
 
     @Override
-    public int dropCalculator(
-            @NotNull Player killer,
+    public Set<Drop> dropCalculator(
+            @Nullable Player killer,
             @NotNull LivingEntity npc,
-            @NotNull Set<Drop> result,
-            int index,
             float dropModifier) {
+        Set<Drop> drops = new HashSet<>();
 
         float percent = this.chance;
         percent *= dropModifier;
 
         if (Rnd.get(true) >= percent) {
-            return index;
+            return drops;
         }
 
         if (this.rollOnce) {
             DropTable dg = Rnd.get(this.dropTables);
             if (dg != null) {
-                return dg.dropCalculator(killer, npc, result, index, dropModifier);
+                return dg.dropCalculator(killer, npc, dropModifier);
             }
         }
         for (DropTable dg : this.dropTables) {
-            index = dg.dropCalculator(killer, npc, result, index, dropModifier);
+            drops.addAll(dg.dropCalculator(killer, npc, dropModifier));
         }
-        return index;
+        return drops;
     }
 }

@@ -1,22 +1,9 @@
 package su.nightexpress.quantumrpg.data.api.serialize;
 
-import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.bukkit.inventory.ItemStack;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
+import com.google.gson.*;
 import mc.promcteam.engine.utils.CollectionsUT;
 import mc.promcteam.engine.utils.ItemUT;
+import org.bukkit.inventory.ItemStack;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
 import su.nightexpress.quantumrpg.data.api.UserEntityNamesMode;
@@ -26,6 +13,10 @@ import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.list.classes.ClassManager;
 import su.nightexpress.quantumrpg.modules.list.classes.api.RPGClass;
 import su.nightexpress.quantumrpg.modules.list.classes.api.UserClassData;
+
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserProfileSerializer implements JsonSerializer<UserProfile>, JsonDeserializer<UserProfile> {
 
@@ -99,7 +90,7 @@ public class UserProfileSerializer implements JsonSerializer<UserProfile>, JsonD
 		UserEntityNamesMode namesMode = namesModeRaw != null ? CollectionsUT.getEnum(namesModeRaw, UserEntityNamesMode.class) : UserEntityNamesMode.DEFAULT;
 		
 		JsonElement eHideHelmet = j.get("hideHelmet");
-		boolean hideHelmet = eHideHelmet != null ? eHideHelmet.getAsBoolean() : false;
+		boolean hideHelmet = eHideHelmet != null && eHideHelmet.getAsBoolean();
 		
 		UserClassData cData = null;
 		JsonElement jData = j.get("cData");
@@ -111,7 +102,7 @@ public class UserProfileSerializer implements JsonSerializer<UserProfile>, JsonD
 			ClassManager classManager = QuantumAPI.getModuleManager().getClassManager();
 			RPGClass clazz = classManager == null ? null : classManager.getClassById(clazzId);
 			if (clazz == null) {
-				System.out.println("[QuantumRPG] Player class '" + clazzId + "' no more exists.");
+				QuantumRPG.getInstance().getLogger().info("Player class '" + clazzId + "' no more exists.");
 				cData = null;
 			}
 			else {

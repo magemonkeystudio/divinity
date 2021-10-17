@@ -1,9 +1,9 @@
 package su.nightexpress.quantumrpg.data.api.serialize;
 
 import com.google.gson.*;
-import org.bukkit.inventory.ItemStack;
 import mc.promcteam.engine.utils.CollectionsUT;
 import mc.promcteam.engine.utils.ItemUT;
+import org.bukkit.inventory.ItemStack;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
 import su.nightexpress.quantumrpg.data.api.UserEntityNamesMode;
@@ -65,7 +65,7 @@ public class UserProfileDeserializer implements JsonDeserializer<UserProfile> {
             String clazzId = cData.getClassId();
             RPGClass clazz = QuantumAPI.getModuleManager().getClassManager().getClassById(clazzId);
             if (clazz == null) {
-                System.out.println("[QuantumRPG] Player class '" + clazzId + "' no more exists.");
+                QuantumRPG.getInstance().getLogger().info("Player class '" + clazzId + "' no more exists.");
                 cData = null;
             } else {
                 cData.setPlayerClass(clazz);

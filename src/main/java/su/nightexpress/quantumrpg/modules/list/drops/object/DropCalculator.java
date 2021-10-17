@@ -1,17 +1,16 @@
 package su.nightexpress.quantumrpg.modules.list.drops.object;
 
-import java.util.Set;
-
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
 
 public interface DropCalculator {
-	 
-	int dropCalculator(
-			@NotNull Player killer, 
-			@NotNull LivingEntity npc, 
-			@NotNull Set<Drop> result, 
-			int index, 
-			float dropModifier);
+
+    Set<Drop> dropCalculator(
+            @Nullable Player killer,
+            @NotNull LivingEntity npc,
+            float dropModifier);
 }

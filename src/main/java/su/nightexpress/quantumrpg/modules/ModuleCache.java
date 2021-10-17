@@ -89,14 +89,14 @@ public class ModuleCache {
         this.partyManager = (PartyManager) this.plugin.getModuleManager().register(new PartyManager(plugin));
         this.itemHintsManager = (ItemHintsManager) this.plugin.getModuleManager().register(new ItemHintsManager(plugin));
 
-        this.dropManager = (DropManager) this.plugin.getModuleManager().register(new DropManager(plugin));
-        this.lootManager = (LootManager) this.plugin.getModuleManager().register(new LootManager(plugin));
-
         this.sellManager = (SellManager) this.plugin.getModuleManager().register(new SellManager(plugin));
         this.combatLogManager = (CombatLogManager) this.plugin.getModuleManager().register(new CombatLogManager(plugin));
 
         this.consumablesManager = (ConsumablesManager) this.plugin.getModuleManager().register(new ConsumablesManager(plugin));
 //        this.activeItemManager = (ActiveItemManager) this.plugin.getModuleManager().register(new ActiveItemManager(plugin));
+
+        this.dropManager = (DropManager) this.plugin.getModuleManager().register(new DropManager(plugin));
+        this.lootManager = (LootManager) this.plugin.getModuleManager().register(new LootManager(plugin));
     }
 
     public void shutdown() {

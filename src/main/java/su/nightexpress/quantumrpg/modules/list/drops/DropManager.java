@@ -6,8 +6,10 @@ import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.types.MobGroup;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.constants.JStrings;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,6 +28,8 @@ import su.nightexpress.quantumrpg.hooks.external.MyPetHK;
 import su.nightexpress.quantumrpg.hooks.external.MythicMobsHK;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.api.QModule;
+import su.nightexpress.quantumrpg.modules.list.drops.commands.DropsDropCmd;
+import su.nightexpress.quantumrpg.modules.list.drops.commands.DropsGiveCmd;
 import su.nightexpress.quantumrpg.modules.list.drops.object.Drop;
 import su.nightexpress.quantumrpg.modules.list.drops.object.DropItem;
 import su.nightexpress.quantumrpg.modules.list.drops.object.DropMob;
@@ -34,6 +38,7 @@ import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DropManager extends QModule {
 
@@ -62,6 +67,9 @@ public class DropManager extends QModule {
 
     @Override
     public void setup() {
+        this.moduleCommand.addSubCommand(new DropsDropCmd(this));
+        this.moduleCommand.addSubCommand(new DropsGiveCmd(this));
+
         this.plugin.getConfigManager().extract(this.getPath() + "mobs");
         this.plugin.getConfigManager().extract(this.getPath() + "tables");
 
@@ -115,6 +123,10 @@ public class DropManager extends QModule {
         }
     }
 
+    public List<DropTable> getTables() {
+        return dropTables.values().stream().collect(Collectors.toList());
+    }
+
     @Nullable
     public DropTable getTableById(@NotNull String id) {
         return this.dropTables.get(id.toLowerCase());
@@ -162,7 +174,7 @@ public class DropManager extends QModule {
     private Set<DropMob> getDropsForEntity(@NotNull Entity entity) {
         if (!(entity instanceof LivingEntity)) return Collections.emptySet();
 
-        String  mobType = getMobType(entity);
+        String  mobType  = getMobType(entity);
         boolean isMythic = this.mmHook != null && this.mmHook.isMythicMob(entity);
 
         Set<DropMob> tables = new HashSet<>();
@@ -224,9 +236,7 @@ public class DropManager extends QModule {
         mapTarget.put("entity", Sets.newHashSet(dead));
 
         for (DropMob dropNpc : mobs) {
-            Set<Drop> drop  = new HashSet<>();
-            int       index = 0;
-            index = dropNpc.dropCalculator(killer, dead, drop, index, modifier);
+            Set<Drop> drop = dropNpc.dropCalculator(killer, dead, modifier);
 
             for (Drop dropItem : drop) {
                 DropItem     dropConfig     = dropItem.getDropConfig();
@@ -243,6 +253,62 @@ public class DropManager extends QModule {
                 loot.add(dropStack);
             }
         }
+        return loot;
+    }
+
+    public List<ItemStack> rollTable(Player target, DropTable table, int itemLvl) {
+        float           modifier = 1.0f;
+        List<ItemStack> loot     = new ArrayList<>();
+
+        LivingEntity dead = (LivingEntity) target.getWorld().spawnEntity(target.getLocation(), EntityType.BAT);
+
+        Map<String, Set<Entity>> mapTarget = new HashMap<>();
+        mapTarget.put("player", Sets.newHashSet(target));
+        mapTarget.put("entity", Sets.newHashSet(dead));
+
+        Set<Drop> drop = table.dropCalculator(target, dead, modifier);
+        for (Drop dropItem : drop) {
+            DropItem     dropConfig     = dropItem.getDropConfig();
+            List<String> dropConditions = dropConfig.getConditions();
+            if (!ActionManipulator.processConditions(plugin, target, dropConditions, mapTarget)) continue;
+
+            String    itemId    = dropConfig.getItemId();
+            ItemStack dropStack = QuantumAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
+            if (dropStack == null || dropStack.getType() == Material.AIR) continue;
+
+            dropConfig.executeActions(target, mapTarget);
+            loot.add(dropStack);
+        }
+
+        dead.remove();
+        return loot;
+    }
+
+    public List<ItemStack> rollTable(Location loc, DropTable table, int itemLvl) {
+        float           modifier = 1.0f;
+        List<ItemStack> loot     = new ArrayList<>();
+
+        LivingEntity dead = (LivingEntity) loc.getWorld().spawnEntity(loc, EntityType.BAT);
+
+//        Map<String, Set<Entity>> mapTarget = new HashMap<>();
+//        mapTarget.put("player", Sets.newHashSet(target));
+//        mapTarget.put("entity", Sets.newHashSet(dead));
+
+        Set<Drop> drop = table.dropCalculator(null, dead, modifier);
+        for (Drop dropItem : drop) {
+            DropItem dropConfig = dropItem.getDropConfig();
+//            List<String> dropConditions = dropConfig.getConditions();
+//            if (!ActionManipulator.processConditions(plugin, target, dropConditions, mapTarget)) continue;
+
+            String    itemId    = dropConfig.getItemId();
+            ItemStack dropStack = QuantumAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
+            if (dropStack == null || dropStack.getType() == Material.AIR) continue;
+
+//            dropConfig.executeActions(target, mapTarget);
+            loot.add(dropStack);
+        }
+
+        dead.remove();
         return loot;
     }
 

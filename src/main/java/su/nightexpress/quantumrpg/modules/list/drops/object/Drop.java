@@ -1,14 +1,12 @@
 package su.nightexpress.quantumrpg.modules.list.drops.object;
 
-import org.jetbrains.annotations.NotNull;
-
 import mc.promcteam.engine.utils.random.Rnd;
+import org.jetbrains.annotations.NotNull;
 
 public class Drop {
 
-	private int index = 0;
-	private int count = 0;
-	private DropItem dropConfig;
+	private final DropItem dropConfig;
+	private       int count = 0;
 	
 	public Drop(@NotNull DropItem dropTemplate) {
 		this.dropConfig = dropTemplate;
@@ -19,14 +17,6 @@ public class Drop {
 	 */
 	public void calculateCount() {
 		count = Rnd.get(this.dropConfig.getMinAmount(), this.dropConfig.getMaxAmount());
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 	public int getCount() {
