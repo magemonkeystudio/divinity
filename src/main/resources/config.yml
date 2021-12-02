@@ -142,6 +142,10 @@ item-sub-types:
     name: Bow
     materials:
     - BOW
+  crossbow:
+    name: Crossbow
+    materials:
+    - CROSSBOW
   fishing_rod:
     name: Fishing Rod
     materials:
