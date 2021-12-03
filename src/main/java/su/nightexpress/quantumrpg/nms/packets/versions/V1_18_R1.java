@@ -34,11 +34,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
+public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
 
     private static final String PACKET_LOCATION = "net.minecraft.network.protocol.game";
 
-    public V1_17_R1(@NotNull QuantumRPG plugin) {
+    public V1_18_R1(@NotNull QuantumRPG plugin) {
         super(plugin);
     }
 
@@ -97,11 +97,11 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
             );
 
             Iterable<?> worlds = (Iterable<?>) Reflex.invokeMethod(
-                    Reflex.getMethod(dedicatedServer.getClass(), "getWorlds"),
+                    Reflex.getMethod(dedicatedServer.getClass(), "F"), //Get worlds (getAllLevels)
                     dedicatedServer
             );
 
-            Method getEntity = Reflex.getMethod(worldServerClass, "getEntity", int.class);
+            Method getEntity = Reflex.getMethod(worldServerClass, "a", int.class);
             for (Object worldServer : worlds) {
                 nmsEntity = Reflex.invokeMethod(getEntity, worldServer, entityId.intValue());
                 if (nmsEntity != null) {
@@ -112,7 +112,7 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
             if (nmsEntity == null) return;
 
 
-            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "getUniqueID");
+            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cm");
 
             Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
             if (!(bukkitEntity instanceof LivingEntity)) return;
@@ -133,7 +133,7 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
         Object j = Reflex.getFieldValue(p, "j");
         if (j == null) return;
 
-        Method a = Reflex.getMethod(particleParamClass, "a");
+        Method a = Reflex.getMethod(particleParamClass, "a"); //Get the namespace key of the particle being sent
 
         String name = (String) Reflex.invokeMethod(a, j);
         if (name.contains("damage_indicator")) {
@@ -216,19 +216,17 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
 //                ScoreboardTeam team = new ScoreboardTeam(board, teamId);
 
                 Reflex.invokeMethod(teamClass.getMethod("setColor", EnumChatFormat.class), team, ec);
-//                team.setColor(ec);
+//                team.a(ec); // Set color
                 Reflex.invokeMethod(teamClass.getMethod("setDisplayName", IChatBaseComponent.class), team, IChatBaseComponent.a(teamId));
-//                team.setDisplayName(IChatBaseComponent.a(teamId));
+//                team.a(IChatBaseComponent.a(teamId)); // Set display name
                 Reflex.invokeMethod(teamClass.getMethod("setPrefix", IChatBaseComponent.class), team, IChatBaseComponent.a(""));
-//                team.setPrefix(IChatBaseComponent.a(""));
+//                team.b(IChatBaseComponent.a("")); // Set prefix
                 Reflex.invokeMethod(boardClass.getMethod("addPlayerToTeam", String.class, teamClass), board, id.toString(), team);
-//                board.addPlayerToTeam(id.toString(), team);
-
+//                board.a(id.toString(), team); // Add player to team
                 Object pTeam = Reflex.invokeMethod(playOutScoreboardTeamPacket.getMethod("a", teamClass, Boolean.class),
                         null, team, newTeam);
 //                PacketPlayOutScoreboardTeam pTeam = PacketPlayOutScoreboardTeam.a(team, newTeam);
 
-                // ==========================================
 
 //                Collection<String> entities = pTeam.e();
 //                if (entities == null) return;
@@ -313,7 +311,7 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
             boolean contains = false;
             for (Pair<Object, Object> pair : slots) {
                 Enum head = (Enum) Reflex.invokeMethod(
-                        Reflex.getMethod(enumItemSlotClass, "fromName", String.class),
+                        Reflex.getMethod(enumItemSlotClass, "a", String.class), //fromName
                         null, "head");
                 if (pair.getFirst() == head) {
                     contains = true;
@@ -324,7 +322,6 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
 
             Integer entityId = (Integer) Reflex.getFieldValue(p, "b");
             if (entityId == null) return;
-
             Class craftServerClass = Reflex.getCraftClass("CraftServer");
             Class nmsEntityClass   = Reflex.getClass("net.minecraft.world.entity", "Entity");
             Class worldServerClass = Reflex.getClass("net.minecraft.server.level", "WorldServer");
@@ -337,11 +334,11 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
             );
 
             Iterable<?> worlds = (Iterable<?>) Reflex.invokeMethod(
-                    Reflex.getMethod(dedicatedServer.getClass(), "getWorlds"),
+                    Reflex.getMethod(dedicatedServer.getClass(), "F"), //Get worlds (getAllLevels)
                     dedicatedServer
             );
 
-            Method getEntity = Reflex.getMethod(worldServerClass, "getEntity", int.class);
+            Method getEntity = Reflex.getMethod(worldServerClass, "a", int.class);
             for (Object worldServer : worlds) {
                 nmsEntity = Reflex.invokeMethod(getEntity, worldServer, entityId.intValue());
                 if (nmsEntity != null) {
@@ -352,7 +349,7 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
             if (nmsEntity == null) return;
 
 
-            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "getUniqueID");
+            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cm");
 
             Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
             if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;

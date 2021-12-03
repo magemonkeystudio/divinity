@@ -1,11 +1,10 @@
 package su.nightexpress.quantumrpg.stats.items.requirements.item;
 
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
 import mc.promcteam.engine.config.api.ILangMsg;
 import mc.promcteam.engine.utils.DataUT;
+import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.requirements.api.ItemRequirement;
@@ -36,6 +35,14 @@ public class ItemTypeRequirement extends ItemRequirement<String[]> {
 	}
 
 	@Override
+	public ILangMsg getApplyMessage(@NotNull ItemStack src, @NotNull ItemStack target) {
+		String[] arr = this.getRaw(src);
+		if (arr == null) throw new IllegalStateException("Item does not have stat!");
+
+		return plugin.lang().Module_Item_Apply_Error_Type.replace("%value%", this.formatValue(src, arr));
+	}
+
+	@Override
 	@NotNull
 	public String formatValue(@NotNull ItemStack item, @NotNull String[] values) {
 		String[] localized = new String[values.length];
@@ -44,18 +51,10 @@ public class ItemTypeRequirement extends ItemRequirement<String[]> {
     		localized[i] = name != null ? name : "";
     	}
     	if (ArrayUtils.isEmpty(localized)) return "";
-    	
+
     	String sep = EngineCfg.LORE_STYLE_REQ_ITEM_TYPE_FORMAT_SEPAR;
     	String color = EngineCfg.LORE_STYLE_REQ_ITEM_TYPE_FORMAT_COLOR;
-    	
-    	return LoreUT.getStrSeparated(localized, sep, color);
-	}
 
-	@Override
-	public ILangMsg getApplyMessage(@NotNull ItemStack src, @NotNull ItemStack target) {
-		String[] arr = this.getRaw(src);
-		if (arr == null) throw new IllegalStateException("Item does not have stat!");
-		
-		return plugin.lang().Module_Item_Apply_Error_Type.replace("%value%", this.formatValue(src, arr));
+    	return LoreUT.getStrSeparated(localized, sep, color);
 	}
 }

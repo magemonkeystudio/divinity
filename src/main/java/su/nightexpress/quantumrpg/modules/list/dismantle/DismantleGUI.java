@@ -1,10 +1,13 @@
 package su.nightexpress.quantumrpg.modules.list.dismantle;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.api.gui.ContentType;
+import mc.promcteam.engine.manager.api.gui.GuiClick;
+import mc.promcteam.engine.manager.api.gui.GuiItem;
+import mc.promcteam.engine.manager.api.gui.NGUI;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.NumberUT;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -13,19 +16,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import mc.promcteam.engine.config.api.JYML;
-import mc.promcteam.engine.manager.api.gui.ContentType;
-import mc.promcteam.engine.manager.api.gui.GuiClick;
-import mc.promcteam.engine.manager.api.gui.GuiItem;
-import mc.promcteam.engine.manager.api.gui.NGUI;
-import mc.promcteam.engine.utils.ItemUT;
-import mc.promcteam.engine.utils.NumberUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.dismantle.DismantleManager.OutputContainer;
 import su.nightexpress.quantumrpg.modules.list.dismantle.DismantleManager.OutputItem;
 import su.nightexpress.quantumrpg.modules.list.dismantle.event.PlayerDismantleItemEvent;
 import su.nightexpress.quantumrpg.modules.list.dismantle.event.PlayerPreDismantleItemEvent;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class DismantleGUI extends NGUI<QuantumRPG> {
 	
@@ -123,6 +122,51 @@ class DismantleGUI extends NGUI<QuantumRPG> {
 		super.onReady(player, inv, page);
 	}
 
+	@Override
+	protected boolean ignoreNullClick() {
+		return false;
+	}
+	
+	@Override
+	protected boolean cancelClick(int slot) {
+		return !ArrayUtils.contains(this.itemSlots, slot);
+	}
+	
+	@Override
+	protected boolean cancelPlayerClick() {
+		return false;
+	}
+
+	@Override
+	public void click(@NotNull Player player, @Nullable ItemStack item, int slot, InventoryClickEvent e) {
+		if (slot >= this.getSize()) {
+			if (item != null && !this.dismantleManager.isDismantleable(item)) {
+				e.setCancelled(true);
+				return;
+			}
+		}
+
+		if (!this.cancelClick(slot) || (slot > this.getSize() && e.isShiftClick())) {
+			plugin.getServer().getScheduler().runTask(plugin, () -> {
+				this.update(e.getInventory());
+			});
+		}
+
+		super.click(player, item, slot, e);
+	}
+
+	@Override
+	public void onClose(@NotNull Player player, InventoryCloseEvent e) {
+		Inventory inv = e.getInventory();
+
+		for (int slot : this.itemSlots) {
+			ItemStack target = inv.getItem(slot);
+			if (target != null) {
+				ItemUT.addItem(player, target);
+			}
+		}
+	}
+
 	private void update(@NotNull Inventory inv) {
 		// Calculate the dismantle cost and amount of result items.
 		double cost = 0;
@@ -130,17 +174,17 @@ class DismantleGUI extends NGUI<QuantumRPG> {
 		for (int slot : this.itemSlots) {
 			ItemStack target = inv.getItem(slot);
 			if (target == null) continue;
-			
+
 			OutputContainer oCont = dismantleManager.getResult(target);
 			if (oCont == null) continue;
-			
+
 			cost += oCont.getCost() * target.getAmount();
-			
+
 			for (int i = 0; i < target.getAmount(); i++) {
 				for (OutputItem src : oCont.getItems()) {
 					ItemStack preview = src.getPreview();
 					if (preview == null) continue;
-					
+
 					ItemStack pCopy = new ItemStack(preview);
 					int amount = pCopy.getAmount();
 					pCopy.setAmount(1);
@@ -152,100 +196,55 @@ class DismantleGUI extends NGUI<QuantumRPG> {
 			}
 		}
 		String sCost = NumberUT.format(cost);
-		
+
 		// Clear result slots
 		for (int i = 0; i < resultSlots.length; i++) {
 			inv.setItem(resultSlots[i], null);
 		}
-		
+
 		// Replace the cost placeholder on default GUI items.
 		// These items are added in the JGUI items map on GUI load,
 		// so we can just override them with .setItem method.
 		for (GuiItem guiItem : this.getContent().values()) {
 			ItemStack item = guiItem.getItem();
-			
+
 			// Clear previous 'result'
 			for (int slot : guiItem.getSlots()) {
 				if (ArrayUtils.contains(resultSlots, slot)) {
 					inv.setItem(slot, item);
 				}
 			}
-			
+
 			ItemMeta meta = item.getItemMeta();
 			if (meta == null) continue;
-			
+
 			if (meta.hasDisplayName()) {
 				meta.setDisplayName(meta.getDisplayName().replace("%cost%", sCost));
 			}
-			
+
 			List<String> lore = meta.getLore();
 			if (lore != null) {
 				lore.replaceAll(str -> str.replace("%cost%", sCost));
 				meta.setLore(lore);
 			}
 			item.setItemMeta(meta);
-			
+
 			for (int i : guiItem.getSlots()) {
 				inv.setItem(i, item);
 			}
 		}
-		
+
 		int j = 0;
 		for (Map.Entry<ItemStack, Integer> e : result.entrySet()) {
 			int amount = e.getValue();
 			int[] parts = NumberUT.splitIntoParts(amount, (int) Math.ceil(amount / 64D));
 			for (int amountPart : parts) {
 				if (j >= this.resultSlots.length) return;
-				
+
 				ItemStack preview = new ItemStack(e.getKey());
 				preview.setAmount(amountPart);
 				inv.setItem(this.resultSlots[j++], preview);
 			}
 		}
-	}
-	
-	@Override
-	public void click(@NotNull Player player, @Nullable ItemStack item, int slot, InventoryClickEvent e) {
-		if (slot >= this.getSize()) {
-			if (item != null && !this.dismantleManager.isDismantleable(item)) {
-				e.setCancelled(true);
-				return;
-			}
-		}
-		
-		if (!this.cancelClick(slot) || (slot > this.getSize() && e.isShiftClick())) {
-			plugin.getServer().getScheduler().runTask(plugin, () -> {
-				this.update(e.getInventory());
-			});
-		}
-		
-		super.click(player, item, slot, e);
-	}
-	
-	@Override
-	public void onClose(@NotNull Player player, InventoryCloseEvent e) {
-		Inventory inv = e.getInventory();
-		
-		for (int slot : this.itemSlots) {
-			ItemStack target = inv.getItem(slot);
-			if (target != null) {
-				ItemUT.addItem(player, target);
-			}
-		}
-	}
-
-	@Override
-	protected boolean cancelClick(int slot) {
-		return !ArrayUtils.contains(this.itemSlots, slot);
-	}
-
-	@Override
-	protected boolean cancelPlayerClick() {
-		return false;
-	}
-
-	@Override
-	protected boolean ignoreNullClick() {
-		return false;
 	}
 }

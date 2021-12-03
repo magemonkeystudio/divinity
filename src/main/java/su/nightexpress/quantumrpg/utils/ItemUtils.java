@@ -1,12 +1,14 @@
 package su.nightexpress.quantumrpg.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.utils.CollectionsUT;
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.StringUT;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -19,14 +21,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-
-import mc.promcteam.engine.hooks.Hooks;
-import mc.promcteam.engine.utils.CollectionsUT;
-import mc.promcteam.engine.utils.ItemUT;
-import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.Config;
 import su.nightexpress.quantumrpg.config.EngineCfg;
@@ -38,9 +32,13 @@ import su.nightexpress.quantumrpg.stats.items.requirements.api.UserRequirement;
 import su.nightexpress.quantumrpg.types.ItemGroup;
 import su.nightexpress.quantumrpg.types.ItemSubType;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 public class ItemUtils {
 	
-	private static QuantumRPG plugin = QuantumRPG.getInstance();
+	private static final QuantumRPG plugin = QuantumRPG.getInstance();
 	
 	public static boolean canUse(@NotNull ItemStack item, @NotNull Player player) {
 		return canUse(item, player, true);
@@ -102,7 +100,7 @@ public class ItemUtils {
 	
 	public static GameProfile getNonPlayerProfile(String hash) {
 	    GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-	    profile.getProperties().put("textures", new Property("textures", new String(hash)));
+	    profile.getProperties().put("textures", new Property("textures", hash));
 	    return profile;
 	}
 	
@@ -215,12 +213,8 @@ public class ItemUtils {
 		}
 		
 		Material m = Material.getMaterial(group.toUpperCase());
-		if (m != null) {
-			return true;
-		}
-		
-		return false;
-	}
+        return m != null;
+    }
 	
 	public static boolean checkEnchantConflict(@NotNull ItemStack item, @NotNull Enchantment ee) {
 		for (Enchantment e2 : item.getEnchantments().keySet()) {

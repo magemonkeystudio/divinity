@@ -1,15 +1,11 @@
 package su.nightexpress.quantumrpg.stats.items.requirements.item;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-
 import mc.promcteam.engine.config.api.ILangMsg;
 import mc.promcteam.engine.modules.IModule;
 import mc.promcteam.engine.utils.DataUT;
+import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.modules.api.QModule;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
@@ -17,6 +13,9 @@ import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.requirements.api.ItemRequirement;
 import su.nightexpress.quantumrpg.utils.LoreUT;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemModuleRequirement extends ItemRequirement<String[]> {
 

@@ -6,8 +6,8 @@ import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
 import mc.promcteam.engine.utils.eval.Evaluator;
 import mc.promcteam.engine.utils.random.Rnd;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -110,31 +110,9 @@ public abstract class LeveledItem extends ModuleItem {
         }
     }
 
-    private void updateConfig(@NotNull JYML cfg) {
-        cfg.addMissing("tier", JStrings.DEFAULT);
-
-        cfg.addMissing("level.min", 1);
-        cfg.addMissing("level.max", 1);
-
-        if (!cfg.contains("target-requirements")) {
-            cfg.addMissing("target-requirements.type", Arrays.asList(JStrings.MASK_ANY));
-            cfg.addMissing("target-requirements.level.1", 0);
-            cfg.addMissing("target-requirements.module", Arrays.asList(JStrings.MASK_ANY));
-            if (this instanceof SocketItem) {
-                cfg.addMissing("target-requirements.socket", JStrings.DEFAULT);
-            }
-        }
-        cfg.saveChanges();
-    }
-
     @Override
     protected void save(@NotNull JYML cfg) {
 
-    }
-
-    @NotNull
-    public Tier getTier() {
-        return this.tier;
     }
 
     @NotNull
@@ -155,6 +133,33 @@ public abstract class LeveledItem extends ModuleItem {
     @NotNull
     public QModuleDrop<?> getModule() {
         return this.module;
+    }
+
+    @NotNull
+    public final ItemStack create() {
+        return this.create(-1);
+    }
+
+    private void updateConfig(@NotNull JYML cfg) {
+        cfg.addMissing("tier", JStrings.DEFAULT);
+
+        cfg.addMissing("level.min", 1);
+        cfg.addMissing("level.max", 1);
+
+        if (!cfg.contains("target-requirements")) {
+            cfg.addMissing("target-requirements.type", Arrays.asList(JStrings.MASK_ANY));
+            cfg.addMissing("target-requirements.level.1", 0);
+            cfg.addMissing("target-requirements.module", Arrays.asList(JStrings.MASK_ANY));
+            if (this instanceof SocketItem) {
+                cfg.addMissing("target-requirements.socket", JStrings.DEFAULT);
+            }
+        }
+        cfg.saveChanges();
+    }
+
+    @NotNull
+    public Tier getTier() {
+        return this.tier;
     }
 
     public int getMinLevel() {
@@ -200,11 +205,6 @@ public abstract class LeveledItem extends ModuleItem {
         if (values[1] <= 0) values[1] = values[0];
 
         return values;
-    }
-
-    @NotNull
-    public final ItemStack create() {
-        return this.create(-1);
     }
 
     @NotNull

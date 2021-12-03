@@ -6,11 +6,10 @@
 
     <groupId>mc.promcteam</groupId>
     <artifactId>ProRPGItems</artifactId>
-    <version>1.0.3.8-ALPHA</version>
+    <version>1.0.3.9-ALPHA</version>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -54,8 +53,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>16</source>
-                    <target>16</target>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -68,7 +67,7 @@
         </repository>
         <repository>
             <id>elmakers-repo</id>
-            <url>http://maven.elmakers.com/repository/</url>
+            <url>https://maven.elmakers.com/repository/</url>
         </repository>
         <repository>
             <id>codemc-repo</id>
@@ -84,13 +83,13 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.18-R0.1-SNAPSHOT</version>
             <!--            <classifier>remapped-mojang</classifier>-->
         </dependency>
         <dependency>
             <groupId>mc.promcteam</groupId>
             <artifactId>ProMCCore</artifactId>
-            <version>1.0.3.2-ALPHA</version>
+            <version>1.0.3.3-ALPHA</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -117,7 +116,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.mcMMO-Dev</groupId>
+            <groupId>com.github.promcteam</groupId>
             <artifactId>mcMMO</artifactId>
             <version>master-SNAPSHOT</version>
             <scope>provided</scope>
@@ -149,6 +148,18 @@
             <version>1.01</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/MangoQuest.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.22</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.18-R0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

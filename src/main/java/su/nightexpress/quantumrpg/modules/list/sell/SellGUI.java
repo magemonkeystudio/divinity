@@ -1,19 +1,5 @@
 package su.nightexpress.quantumrpg.modules.list.sell;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.hooks.external.VaultHK;
 import mc.promcteam.engine.manager.api.gui.ContentType;
@@ -22,14 +8,27 @@ import mc.promcteam.engine.manager.api.gui.GuiItem;
 import mc.promcteam.engine.manager.api.gui.NGUI;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.NumberUT;
+import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.sell.event.PlayerPreSellItemEvent;
 import su.nightexpress.quantumrpg.modules.list.sell.event.PlayerSellItemEvent;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 class SellGUI extends NGUI<QuantumRPG> {
 	
-	private int[] itemSlots;
-	private VaultHK vault;
+	private final int[]   itemSlots;
+	private final VaultHK vault;
 	
 	public SellGUI(@NotNull SellManager sellManager) {
 		super(sellManager.plugin, sellManager.getJYML(), "gui.");
@@ -122,47 +121,6 @@ class SellGUI extends NGUI<QuantumRPG> {
 		return false;
 	}
 	
-	// Replace placeholders on default GUI items.
-	// As these items are loaded into JGUI database,
-	// we may just replace them in their slots.
-	private void update(@NotNull Inventory inv) {
-		for (GuiItem guiItem : this.getContent().values()) {
-			ItemStack item = guiItem.getItem();
-			ItemMeta meta = item.getItemMeta();
-			if (meta == null) continue;
-		
-			String cost = NumberUT.format(this.getTotalPrice(inv));
-			
-			if (meta.hasDisplayName()) {
-				meta.setDisplayName(meta.getDisplayName().replace("%cost%", cost));
-			}
-			
-			List<String> lore = meta.getLore();
-			if (lore != null) {
-				lore.replaceAll(str -> str.replace("%cost%", cost));
-				meta.setLore(lore);
-			}
-			item.setItemMeta(meta);
-			
-			for (int i : guiItem.getSlots()) {
-				inv.setItem(i, item);
-			}
-		}
-	}
-	
-	private double getTotalPrice(@NotNull Inventory inv) {
-		double cost = 0;
-		
-		for (int i : this.itemSlots) {
-			ItemStack item = inv.getItem(i);
-			if (item == null) continue;
-			
-			cost += this.plugin.getWorthManager().getItemWorth(item);
-		}
-		
-		return cost;
-	}
-	
 	@Override
 	public void click(Player player, @Nullable ItemStack item, int slot, InventoryClickEvent e) {
 		// Recalc items price only if items are being added or removed from the GUI.
@@ -170,7 +128,7 @@ class SellGUI extends NGUI<QuantumRPG> {
 		if (!this.cancelClick(slot)) {
 			plugin.getServer().getScheduler().runTask(plugin, () -> this.update(e.getInventory()));
 		}
-		
+
 		super.click(player, item, slot, e);
 	}
 	
@@ -183,5 +141,46 @@ class SellGUI extends NGUI<QuantumRPG> {
 				ItemUT.addItem(player, item);
 			}
 		}
+	}
+	
+	// Replace placeholders on default GUI items.
+	// As these items are loaded into JGUI database,
+	// we may just replace them in their slots.
+	private void update(@NotNull Inventory inv) {
+		for (GuiItem guiItem : this.getContent().values()) {
+			ItemStack item = guiItem.getItem();
+			ItemMeta meta = item.getItemMeta();
+			if (meta == null) continue;
+
+			String cost = NumberUT.format(this.getTotalPrice(inv));
+
+			if (meta.hasDisplayName()) {
+				meta.setDisplayName(meta.getDisplayName().replace("%cost%", cost));
+			}
+
+			List<String> lore = meta.getLore();
+			if (lore != null) {
+				lore.replaceAll(str -> str.replace("%cost%", cost));
+				meta.setLore(lore);
+			}
+			item.setItemMeta(meta);
+
+			for (int i : guiItem.getSlots()) {
+				inv.setItem(i, item);
+			}
+		}
+	}
+	
+	private double getTotalPrice(@NotNull Inventory inv) {
+		double cost = 0;
+
+		for (int i : this.itemSlots) {
+			ItemStack item = inv.getItem(i);
+			if (item == null) continue;
+
+			cost += this.plugin.getWorthManager().getItemWorth(item);
+		}
+
+		return cost;
 	}
 }
