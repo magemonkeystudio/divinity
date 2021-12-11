@@ -15,6 +15,7 @@ import su.nightexpress.quantumrpg.data.UserManager;
 import su.nightexpress.quantumrpg.data.api.RPGUser;
 import su.nightexpress.quantumrpg.hooks.EHook;
 import su.nightexpress.quantumrpg.hooks.external.*;
+import su.nightexpress.quantumrpg.hooks.external.mimic.MimicHook;
 import su.nightexpress.quantumrpg.manager.EntityManager;
 import su.nightexpress.quantumrpg.manager.damage.DamageManager;
 import su.nightexpress.quantumrpg.manager.interactions.InteractionManager;
@@ -65,6 +66,11 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 
     public static QuantumRPG getInstance() {
         return instance;
+    }
+
+    @Override
+    public void onLoad() {
+        MimicHook.hook(this);
     }
 
     @Override
