@@ -20,6 +20,7 @@ softdepend:
   - SkillsPro
   - Vault
   - WorldGuard
+  - Mimic
 api-version: 1.14
 permissions:
   quantumrpg.admin:
