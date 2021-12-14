@@ -171,7 +171,7 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
             return;
         }
 
-        if (this.onDragDrop(p, new ItemStack(src), new ItemStack(target), mItem, e)) {
+        if (this.onDragDrop(p, src.clone(), target.clone(), mItem, e)) {
             e.setCancelled(true);
         }
     }
