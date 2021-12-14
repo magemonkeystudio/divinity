@@ -268,7 +268,8 @@ public class ItemStats {
 
 //        if (ItemUtils.isWeapon(item)) {
         double vanilla = DamageAttribute.getVanillaDamage(item);
-        addAttribute(item, NBTAttribute.attackDamage, vanilla - 1); // -1 because it adds instead of set
+        if (vanilla > 1)
+            addAttribute(item, NBTAttribute.attackDamage, vanilla - 1); // -1 because it adds instead of set
 //        }
         if (ItemUtils.isArmor(item)) {
             addAttribute(item, NBTAttribute.armor, DefenseAttribute.getVanillaArmor(item));

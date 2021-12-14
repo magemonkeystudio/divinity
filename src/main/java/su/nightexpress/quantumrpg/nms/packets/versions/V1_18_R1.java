@@ -236,7 +236,7 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
                                 : "addPlayerToTeam",
                         String.class, teamClass), board, id.toString(), team);
 //                board.a(id.toString(), team); // Add player to team
-                Object pTeam = Reflex.invokeMethod(playOutScoreboardTeamPacket.getMethod("a", teamClass, Boolean.class),
+                Object pTeam = Reflex.invokeMethod(playOutScoreboardTeamPacket.getMethod("a", teamClass, boolean.class),
                         null, team, newTeam);
 //                PacketPlayOutScoreboardTeam pTeam = PacketPlayOutScoreboardTeam.a(team, newTeam);
 
