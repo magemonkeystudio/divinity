@@ -8,6 +8,7 @@ import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.nms.packets.events.EngineServerPacketEvent;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
+import mc.promcteam.engine.utils.reflection.ReflectionUtil;
 import net.minecraft.EnumChatFormat;
 import net.minecraft.network.chat.IChatBaseComponent;
 import org.bukkit.Bukkit;
@@ -215,13 +216,25 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
                         .newInstance(board, teamId);
 //                ScoreboardTeam team = new ScoreboardTeam(board, teamId);
 
-                Reflex.invokeMethod(teamClass.getMethod("setColor", EnumChatFormat.class), team, ec);
+                Reflex.invokeMethod(teamClass.getMethod(ReflectionUtil.MINOR_VERSION >= 18
+                                ? "a"
+                                : "setColor",
+                        EnumChatFormat.class), team, ec);
 //                team.a(ec); // Set color
-                Reflex.invokeMethod(teamClass.getMethod("setDisplayName", IChatBaseComponent.class), team, IChatBaseComponent.a(teamId));
+                Reflex.invokeMethod(teamClass.getMethod(ReflectionUtil.MINOR_VERSION >= 18
+                                ? "a"
+                                : "setDisplayName",
+                        IChatBaseComponent.class), team, IChatBaseComponent.a(teamId));
 //                team.a(IChatBaseComponent.a(teamId)); // Set display name
-                Reflex.invokeMethod(teamClass.getMethod("setPrefix", IChatBaseComponent.class), team, IChatBaseComponent.a(""));
+                Reflex.invokeMethod(teamClass.getMethod(ReflectionUtil.MINOR_VERSION >= 18
+                                ? "b"
+                                : "setPrefix",
+                        IChatBaseComponent.class), team, IChatBaseComponent.a(""));
 //                team.b(IChatBaseComponent.a("")); // Set prefix
-                Reflex.invokeMethod(boardClass.getMethod("addPlayerToTeam", String.class, teamClass), board, id.toString(), team);
+                Reflex.invokeMethod(boardClass.getMethod(ReflectionUtil.MINOR_VERSION >= 18
+                                ? "a"
+                                : "addPlayerToTeam",
+                        String.class, teamClass), board, id.toString(), team);
 //                board.a(id.toString(), team); // Add player to team
                 Object pTeam = Reflex.invokeMethod(playOutScoreboardTeamPacket.getMethod("a", teamClass, Boolean.class),
                         null, team, newTeam);
