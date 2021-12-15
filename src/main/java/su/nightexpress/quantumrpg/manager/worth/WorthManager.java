@@ -35,16 +35,15 @@ import java.util.TreeMap;
 public class WorthManager implements Loadable {
 
     private final QuantumRPG plugin;
-
-    private Map<String, Double>                                priceItemMaterial;
-    private Map<AbstractStat.Type, Double>                     priceItemStats;
-    private TreeMap<Integer, Double>                           priceRefineLvl;
-    private Map<String, Double>                                priceDefenseTypes;
-    private Map<String, Double>                                priceDamageTypes;
-    private Map<SocketAttribute.Type, Map<String, Double>>     priceSocketTypes;
-    private Map<String, TreeMap<Integer, Double>>              priceEnchants;
-    private       Map<String, Map<String, TreeMap<Integer, Double>>> priceItemModule;
     private final Map<ItemStack, Double>                             worthCache = new HashMap<>();
+    private       Map<String, Double>                                priceItemMaterial;
+    private       Map<AbstractStat.Type, Double>                     priceItemStats;
+    private       TreeMap<Integer, Double>                           priceRefineLvl;
+    private       Map<String, Double>                                priceDefenseTypes;
+    private       Map<String, Double>                                priceDamageTypes;
+    private       Map<SocketAttribute.Type, Map<String, Double>>     priceSocketTypes;
+    private       Map<String, TreeMap<Integer, Double>>              priceEnchants;
+    private       Map<String, Map<String, TreeMap<Integer, Double>>> priceItemModule;
 
     public WorthManager(@NotNull QuantumRPG plugin) {
         this.plugin = plugin;
@@ -412,8 +411,9 @@ public class WorthManager implements Loadable {
         }
 
         cost = Math.max(0, NumberUT.round(cost));
+        //Let's cache so we don't have to run these calculations all the time.
         worthCache.put(item, cost);
-        Bukkit.getScheduler().runTaskLater(QuantumRPG.getInstance(), () -> worthCache.remove(item), 10L * 20L);
+        Bukkit.getScheduler().runTaskLater(QuantumRPG.getInstance(), () -> worthCache.remove(item), 20 * 20L);
 
         return cost;
     }
