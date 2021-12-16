@@ -6,7 +6,7 @@
 
     <groupId>mc.promcteam</groupId>
     <artifactId>ProRPGItems</artifactId>
-    <version>1.0.3.10-ALPHA</version>
+    <version>1.0.3.11-ALPHA</version>
 
     <properties>
         <java.version>1.8</java.version>

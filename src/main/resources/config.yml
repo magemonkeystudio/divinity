@@ -1,7 +1,7 @@
 core:
   lang: en
-  command-aliases: quantumrpg,qrpg
-  prefix: QuantumRPG
+  command-aliases: prorpgitems,rpgitems,rpgi,quantumrpg,qrpg
+  prefix: ProRPGItems
 
 data:
   auto-save: 15

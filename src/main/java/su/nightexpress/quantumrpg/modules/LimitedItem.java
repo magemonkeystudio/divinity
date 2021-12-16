@@ -56,18 +56,18 @@ public class LimitedItem extends LeveledItem {
         return this.create(lvl, -1);
     }
 
+    @Override
+    @NotNull
+    protected final ItemStack build(int lvl) {
+        return this.build(lvl, -1);
+    }
+
     @NotNull
     public ItemStack create(int lvl, int uses) {
         lvl = this.validateLevel(lvl); // Normalize level.
         if (uses < 1) uses = this.getCharges(lvl);
 
         return this.build(lvl, uses);
-    }
-
-    @Override
-    @NotNull
-    protected final ItemStack build(int lvl) {
-        return this.build(lvl, -1);
     }
 
     @NotNull
