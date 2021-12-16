@@ -1,5 +1,7 @@
 package su.nightexpress.quantumrpg.modules.api;
 
+import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.TimeUT;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -11,11 +13,10 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import mc.promcteam.engine.utils.ItemUT;
-import mc.promcteam.engine.utils.TimeUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.QuantumPlayerItemUseEvent;
 import su.nightexpress.quantumrpg.modules.UsableItem;
+import su.nightexpress.quantumrpg.modules.list.consumables.ConsumablesManager;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 import su.nightexpress.quantumrpg.types.QClickType;
@@ -39,12 +40,20 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
         super.loadSettings();
     }
 
+    public void unload() {
+        super.unload();
+        if (this.itemCooldown != null) {
+            this.itemCooldown.clear();
+            this.itemCooldown = null;
+        }
+    }
+
     private final boolean useItem(@NotNull Player p, @NotNull ItemStack item, @NotNull UsableItem uItem, @NotNull QClickType type) {
         UsableItem.Usage aUsage = uItem.getUsage(type);
         if (aUsage == null)
             return false;
         if (isOnCooldown(p, item, type)) {
-            long left = getCooldownLeft(p, item, type);
+            long   left = getCooldownLeft(p, item, type);
             String name = ItemUT.getItemName(item);
             String time = TimeUT.formatTime(left);
             (this.plugin.lang()).Module_Item_Usage_Cooldown
@@ -56,7 +65,7 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
         this.plugin.getPluginManager().callEvent(eve);
         if (eve.isCancelled())
             return false;
-        int lvl = ItemStats.getLevel(item);
+        int lvl  = ItemStats.getLevel(item);
         int uses = getItemCharges(item);
         if (uses > 0) {
             if (item.getAmount() > 1) {
@@ -70,9 +79,13 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
                 takeItemCharge(item);
             }
         } else {
-            DurabilityStat duraStat = ItemStats.getStat(DurabilityStat.class);
-            if (duraStat != null)
-                duraStat.reduceDurability(p, item, 1);
+            if (uItem instanceof ConsumablesManager.Consume && uses == 0) {
+                item.setAmount(item.getAmount() - 1);
+            } else {
+                DurabilityStat duraStat = ItemStats.getStat(DurabilityStat.class);
+                if (duraStat != null)
+                    duraStat.reduceDurability(p, item, 1);
+            }
         }
         aUsage.use(p, lvl);
         setCooldown(p, uItem, type);
@@ -82,8 +95,8 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
     public boolean isOnCooldown(@NotNull Player p, @NotNull ItemStack item, @NotNull QClickType type) {
         if (!isItemOfThisModule(item))
             return false;
-        String uuid = p.getUniqueId().toString();
-        Map<String, Set<UsableItem.Cooldown>> map = null;
+        String                                uuid = p.getUniqueId().toString();
+        Map<String, Set<UsableItem.Cooldown>> map  = null;
         if (this.itemCooldown.containsKey(uuid))
             map = this.itemCooldown.get(uuid);
         if (map == null) {
@@ -97,8 +110,8 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
                 }
             }
         }
-        String itemId = getItemId(item);
-        Set<UsableItem.Cooldown> list = map.get(itemId);
+        String                   itemId = getItemId(item);
+        Set<UsableItem.Cooldown> list   = map.get(itemId);
         if (list == null || list.isEmpty())
             return false;
         for (UsableItem.Cooldown i : list) {
@@ -109,9 +122,9 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
     }
 
     private final long getCooldownLeft(@NotNull Player p, @NotNull ItemStack item, @NotNull QClickType type) {
-        String u = p.getUniqueId().toString();
+        String                                u   = p.getUniqueId().toString();
         Map<String, Set<UsableItem.Cooldown>> map = this.itemCooldown.get(u);
-        String id = getItemId(item);
+        String                                id  = getItemId(item);
         for (UsableItem.Cooldown i : map.get(id)) {
             if (i.getClickType() == type)
                 return i.getTimeExpire() - System.currentTimeMillis();
@@ -120,7 +133,7 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
     }
 
     private final void setCooldown(@NotNull Player p, @NotNull UsableItem aItem, @NotNull QClickType click) {
-        String uuid = p.getUniqueId().toString();
+        String                                uuid = p.getUniqueId().toString();
         Map<String, Set<UsableItem.Cooldown>> aMap = null;
         if (this.itemCooldown.containsKey(uuid))
             aMap = this.itemCooldown.get(uuid);
@@ -129,8 +142,8 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
         UsableItem.Usage aUsage = aItem.getUsage(click);
         if (aUsage == null || aUsage.getCooldown() <= 0.0D)
             return;
-        String id = aItem.getId();
-        UsableItem.Cooldown ic = new UsableItem.Cooldown(id, click, aUsage.getCooldown());
+        String                   id   = aItem.getId();
+        UsableItem.Cooldown      ic   = new UsableItem.Cooldown(id, click, aUsage.getCooldown());
         Set<UsableItem.Cooldown> list = aMap.get(id);
         if (list == null)
             list = new HashSet<>();
@@ -141,14 +154,6 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
         list.add(ic);
         aMap.put(id, list);
         this.itemCooldown.put(uuid, aMap);
-    }
-
-    public void unload() {
-        super.unload();
-        if (this.itemCooldown != null) {
-            this.itemCooldown.clear();
-            this.itemCooldown = null;
-        }
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
@@ -166,10 +171,10 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
         UsableItem aItem = getModuleItem(item);
         if (aItem == null)
             return;
-        Player p = e.getPlayer();
-        Action a = e.getAction();
-        boolean shift = p.isSneaking();
-        QClickType type = QClickType.getFromAction(a, shift);
+        Player     p     = e.getPlayer();
+        Action     a     = e.getAction();
+        boolean    shift = p.isSneaking();
+        QClickType type  = QClickType.getFromAction(a, shift);
         if (type == null)
             return;
         if (!ItemUtils.isWeapon(item) && !ItemUtils.isBow(item) && item.getType() != Material.SHIELD)
@@ -179,11 +184,11 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onItemConsumeNatural(PlayerItemConsumeEvent e) {
-        ItemStack item = new ItemStack(e.getItem());
+        ItemStack  item  = new ItemStack(e.getItem());
         UsableItem aItem = getModuleItem(item);
         if (aItem == null)
             return;
-        Player p = e.getPlayer();
+        Player     p    = e.getPlayer();
         QClickType type = QClickType.RIGHT;
         e.setCancelled(true);
         ItemStack itemMain = p.getInventory().getItemInMainHand();
