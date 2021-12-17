@@ -220,7 +220,8 @@ public abstract class LeveledItem extends ModuleItem {
         ItemStats.setModule(item, this.getModule().getId());
         ItemStats.setLevel(item, this.validateLevel(lvl));
 
-        this.replacePlaceholders(item);
+        if (!(this instanceof RatedItem))
+            this.replacePlaceholders(item);
 
         return item;
     }
@@ -235,7 +236,7 @@ public abstract class LeveledItem extends ModuleItem {
         return lvl;
     }
 
-    private void replacePlaceholders(@NotNull ItemStack item) {
+    protected void replacePlaceholders(@NotNull ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
