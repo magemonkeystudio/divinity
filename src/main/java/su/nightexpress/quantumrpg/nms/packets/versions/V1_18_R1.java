@@ -274,7 +274,7 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
                 // Activate colored glowing
                 entity.setGlowing(true);
             } catch (Exception err) { //IllegalAccessException | InvocationTargetException err) {
-                System.err.println("Could not set entity glowing.");
+                QuantumRPG.getInstance().getLogger().warning("Could not set entity glowing.");
                 err.printStackTrace();
             }
         });
