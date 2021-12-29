@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.hooks.external.mimic;
 
+import mc.promcteam.engine.modules.ModuleManager;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -111,7 +112,14 @@ public class ProRpgItemsItemsRegistry implements BukkitItemsRegistry {
     }
 
     private Stream<QModuleDrop<?>> getDropModules() {
-        return quantumRpg.getModuleManager()
+        ModuleManager<QuantumRPG> moduleManager = quantumRpg.getModuleManager();
+        Objects.requireNonNull(
+                moduleManager,
+                "It seems you're trying to access items from ProRPGItems before the plugin is loaded. " +
+                        "Try to add ProRPGItems to 'depend' or 'softpend' of your plugin."
+        );
+
+        return moduleManager
                 .getModules()
                 .stream()
                 .filter(module -> module instanceof QModuleDrop)
