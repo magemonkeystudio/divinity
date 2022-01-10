@@ -138,6 +138,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>ru.endlesscode.mimic</groupId>
+            <artifactId>mimic-bukkit-api</artifactId>
+            <version>0.6.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>de.keyle</groupId>
             <artifactId>mypet-api</artifactId>
             <version>1.0</version>
