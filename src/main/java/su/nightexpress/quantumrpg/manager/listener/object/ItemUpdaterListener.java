@@ -13,7 +13,9 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
@@ -75,7 +77,12 @@ public class ItemUpdaterListener extends IListener<QuantumRPG> {
 
         NamespacedKey key   = NamespacedKey.fromString("rpgpro.fixed_damage");
         boolean       fixed = DataUT.getBooleanData(item, key);
-        if (fixed) DataUT.removeData(item, key);
+        if (fixed) {
+            DataUT.removeData(item, key);
+            ItemMeta meta = item.getItemMeta();
+            meta.removeItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            item.setItemMeta(meta);
+        }
 
         if (ItemStats.hasDamage(item, NBTAttribute.attackDamage.getNmsName())
                 && ItemStats.getDamage(item, NBTAttribute.attackDamage.getNmsName()) <= 0) {
