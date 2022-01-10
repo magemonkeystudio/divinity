@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
+import su.nightexpress.quantumrpg.types.NBTAttribute;
 
 public class ItemUpdaterListener extends IListener<QuantumRPG> {
 
@@ -72,11 +73,16 @@ public class ItemUpdaterListener extends IListener<QuantumRPG> {
     public void update(ItemStack item) {
         if (item == null || item.getType() == Material.AIR) return;
 
-        boolean fixed = DataUT.getBooleanData(item, NamespacedKey.fromString("rpgpro.fixed_damage"));
-        if (ItemStats.getDamageByDefault().get(item) <= 0 && !fixed) {
+        NamespacedKey key   = NamespacedKey.fromString("rpgpro.fixed_damage");
+        boolean       fixed = DataUT.getBooleanData(item, key);
+        if (fixed) DataUT.removeData(item, key);
+
+        if (ItemStats.hasDamage(item, NBTAttribute.attackDamage.getNmsName())
+                && ItemStats.getDamage(item, NBTAttribute.attackDamage.getNmsName()) <= 0) {
             ItemStats.updateVanillaAttributes(item);
-            DataUT.setData(item, NamespacedKey.fromString("rpgpro.fixed_damage"), true);
+//            DataUT.setData(item, key, true);
         }
+
     }
 
 }

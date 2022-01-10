@@ -103,9 +103,7 @@ public class ItemStats {
         for (DamageAttribute dmg : ItemStats.getDamages()) {
             Optional<DefenseAttribute> opt = ItemStats.getDefenses().stream()
                     .filter(def -> def.isBlockable(dmg))
-                    .sorted((def1, def2) -> {
-                        return def2.getPriority() - def1.getPriority();
-                    })
+                    .sorted((def1, def2) -> def2.getPriority() - def1.getPriority())
                     .findFirst();
 
             if (opt.isPresent()) {

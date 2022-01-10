@@ -1,13 +1,9 @@
 package su.nightexpress.quantumrpg.modules.list.classes.command;
 
-import java.util.Arrays;
-import java.util.List;
-
+import mc.promcteam.engine.utils.PlayerUT;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import mc.promcteam.engine.utils.PlayerUT;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.data.api.RPGUser;
 import su.nightexpress.quantumrpg.data.api.UserProfile;
@@ -15,6 +11,9 @@ import su.nightexpress.quantumrpg.modules.command.MCmd;
 import su.nightexpress.quantumrpg.modules.list.classes.ClassManager;
 import su.nightexpress.quantumrpg.modules.list.classes.api.UserClassData;
 import su.nightexpress.quantumrpg.modules.list.classes.object.ExpSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class AddLevelCmd extends MCmd<ClassManager> {
 
@@ -77,7 +76,7 @@ public class AddLevelCmd extends MCmd<ClassManager> {
 				int amount = cData.getExpToUp(true);
 				if (levels < 0) amount = -amount;
 				
-				this.module.getLevelingManager().addExp(player, amount, sender.getName(), ExpSource.NONE);
+				this.module.getLevelingManager().addExp(player, amount, sender.getName(), ExpSource.INTERNAL);
 				name = player.getName();
 			}
 			else {
