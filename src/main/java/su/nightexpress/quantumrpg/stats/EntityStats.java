@@ -687,9 +687,13 @@ public class EntityStats {
 
         List<ItemStack> equip = this.getEquipment();
         double          value = 0;
+        // If we're getting the Crit Damage attribute, adjust, so we're only adding increase
+        if (type == AbstractStat.Type.CRITICAL_DAMAGE)
+            value = 1D;
 
         for (ItemStack item : equip) {
-            value += stat.get(item);
+            value += stat.get(item)
+                    - (type == AbstractStat.Type.CRITICAL_DAMAGE ? 1D : 0);
         }
 
         // Get Sets bonuses

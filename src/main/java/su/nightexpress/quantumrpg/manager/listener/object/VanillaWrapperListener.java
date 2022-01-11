@@ -270,9 +270,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         // | Add additional damage to all damager's attributes. |
         // +----------------------------------------------------+
         final double damageStart2 = damageStart;
-        damages.keySet().forEach((dmgAtt) -> {
-            damages.compute(dmgAtt, (dmgKey, dmgVal) -> dmgVal + damageStart2);
-        });
+        damages.keySet().forEach((dmgAtt) -> damages.compute(dmgAtt, (dmgKey, dmgVal) -> dmgVal + damageStart2));
 
         RPGDamageEvent.Start eventStart = new RPGDamageEvent.Start(victim, damager, projectile, damages, defenses, stats, e, meta);
         plugin.getPluginManager().callEvent(eventStart);
