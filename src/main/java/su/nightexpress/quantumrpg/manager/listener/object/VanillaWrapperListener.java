@@ -22,6 +22,8 @@ import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.QuantumProjectileLaunchEvent;
 import su.nightexpress.quantumrpg.api.event.RPGDamageEvent;
 import su.nightexpress.quantumrpg.config.EngineCfg;
+import su.nightexpress.quantumrpg.hooks.EHook;
+import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.manager.damage.DamageMeta;
 import su.nightexpress.quantumrpg.modules.list.arrows.ArrowManager;
 import su.nightexpress.quantumrpg.modules.list.arrows.ArrowManager.QArrow;
@@ -160,11 +162,15 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
                 return;
             }
 
+            SkillAPIHK skillApi = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+
             if (edeDamager instanceof LivingEntity) {
                 if (cause == DamageCause.ENTITY_SWEEP_ATTACK && EngineCfg.COMBAT_DISABLE_VANILLA_SWEEP) {
                     ede.setCancelled(true);
                     return;
                 }
+
+                if (skillApi != null && skillApi.isExempt(damager)) return;
 
                 damager = (LivingEntity) edeDamager;
                 meta.setDamager(damager);
@@ -182,6 +188,9 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
                 if (!(shooter instanceof LivingEntity)) {
                     break labelFullDamage;
                 }
+
+                if (skillApi != null && skillApi.isExempt((LivingEntity) shooter)) return;
+
                 // Fix extra damage from ender pearls
                 if (projectile instanceof EnderPearl && shooter.equals(victim)) {
                     break labelFullDamage;
