@@ -5,8 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>mc.promcteam</groupId>
-    <artifactId>ProRPGItems</artifactId>
+    <artifactId>prorpgitems</artifactId>
     <version>1.0.3.13-ALPHA</version>
+
+    <name>ProRPGItems</name>
 
     <properties>
         <java.version>1.8</java.version>
@@ -57,6 +59,33 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>readme</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>doc</directory>
+                                    <includes>
+                                        <include>README.md</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -87,6 +116,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        <repository>
+            <id>promcteam</id>
+            <url>https://maven.pkg.github.com/promcteam/promccore</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -109,10 +142,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.BigTreasureD</groupId>
-            <artifactId>SkillAPI-s</artifactId>
-            <version>1.98-rc</version>
+            <groupId>mc.promcteam</groupId>
+            <artifactId>proskillapi</artifactId>
+            <version>1.1.7.13-ALPHA</version>
         </dependency>
+
         <dependency>
             <groupId>com.elmakers.mine.bukkit</groupId>
             <artifactId>MagicAPI</artifactId>
@@ -211,5 +245,12 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>promcteam</id>
+            <name>ProMCTeam</name>
+            <url>https://maven.pkg.github.com/promcteam/promccore</url>
+        </repository>
+    </distributionManagement>
 
 </project>

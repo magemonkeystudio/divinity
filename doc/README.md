@@ -1,17 +1,17 @@
-# prorpgitems
+# ${project.artifactId}
 
-If you wish to use prorpgitems as a dependency in your projects, include the following in your `pom.xml`
+If you wish to use ${project.artifactId} as a dependency in your projects, include the following in your `pom.xml`
 
 ```xml
 <repository>
-    <id>github</id>
+    <id>promcteam</id>
     <url>https://maven.pkg.github.com/promcteam/promccore</url>
 </repository>
         ...
 <dependency>
-    <groupId>mc.promcteam</groupId>
-    <artifactId>prorpgitems</artifactId>
-    <version>1.0.3.13-ALPHA</version>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>${project.artifactId}</artifactId>
+    <version>${project.version}</version>
 </dependency>
 ```
 
