@@ -692,7 +692,11 @@ public class EntityStats {
             value = 1D;
 
         for (ItemStack item : equip) {
-            value += stat.get(item)
+            if (item == null || item.getType().isAir()) continue;
+
+            double statVal = stat.get(item);
+
+            value += statVal
                     - (type == AbstractStat.Type.CRITICAL_DAMAGE ? 1D : 0);
         }
 

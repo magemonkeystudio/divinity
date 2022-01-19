@@ -170,9 +170,10 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
                     return;
                 }
 
+                damager = (LivingEntity) edeDamager;
+
                 if (skillApi != null && skillApi.isExempt(damager)) return;
 
-                damager = (LivingEntity) edeDamager;
                 meta.setDamager(damager);
                 statsDamager = EntityStats.get(damager);
                 statsDamager.setLastDamageMeta(meta);

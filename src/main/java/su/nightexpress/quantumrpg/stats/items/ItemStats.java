@@ -256,13 +256,13 @@ public class ItemStats {
 
     @NotNull
     public static void updateVanillaAttributes(@NotNull ItemStack item) {
-        double hp    = ItemStats.getStat(item, AbstractStat.Type.MAX_HEALTH);
-        double speed = ItemStats.getStat(item, AbstractStat.Type.ATTACK_SPEED);
-        double move  = ItemStats.getStat(item, AbstractStat.Type.MOVEMENT_SPEED);
+        double hp    = getStat(item, AbstractStat.Type.MAX_HEALTH);
+        double speed = getStat(item, AbstractStat.Type.ATTACK_SPEED);
+        double move  = getStat(item, AbstractStat.Type.MOVEMENT_SPEED);
 
-        ItemStats.addAttribute(item, NBTAttribute.maxHealth, hp);
-        ItemStats.addAttribute(item, NBTAttribute.movementSpeed, move);
-        ItemStats.addAttribute(item, NBTAttribute.attackSpeed, speed);
+        addAttribute(item, NBTAttribute.maxHealth, hp);
+        addAttribute(item, NBTAttribute.movementSpeed, move);
+        addAttribute(item, NBTAttribute.attackSpeed, speed);
 
 //        if (ItemUtils.isWeapon(item)) {
         double vanilla = DamageAttribute.getVanillaDamage(item);

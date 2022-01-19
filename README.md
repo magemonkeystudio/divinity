@@ -4,7 +4,7 @@ If you wish to use prorpgitems as a dependency in your projects, include the fol
 
 ```xml
 <repository>
-    <id>github</id>
+    <id>promcteam</id>
     <url>https://maven.pkg.github.com/promcteam/promccore</url>
 </repository>
         ...
