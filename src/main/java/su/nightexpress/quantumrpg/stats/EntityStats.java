@@ -696,8 +696,9 @@ public class EntityStats {
 
             double statVal = stat.get(item);
 
-            value += statVal
-                    - (type == AbstractStat.Type.CRITICAL_DAMAGE ? 1D : 0);
+            if (statVal != 0)
+                value += statVal
+                        - (type == AbstractStat.Type.CRITICAL_DAMAGE ? 1D : 0);
         }
 
         // Get Sets bonuses
