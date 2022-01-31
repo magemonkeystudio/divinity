@@ -19,6 +19,7 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 import su.nightexpress.quantumrpg.modules.list.itemhints.ItemHintsManager;
 import su.nightexpress.quantumrpg.modules.list.loot.LootManager;
 import su.nightexpress.quantumrpg.modules.list.magicdust.MagicDustManager;
+import su.nightexpress.quantumrpg.modules.list.money.MoneyManager;
 import su.nightexpress.quantumrpg.modules.list.party.PartyManager;
 import su.nightexpress.quantumrpg.modules.list.refine.RefineManager;
 import su.nightexpress.quantumrpg.modules.list.repair.RepairManager;
@@ -36,6 +37,7 @@ public class ModuleCache {
     private RuneManager runesManager;
     private MagicDustManager magicDustManager;
     private ArrowManager arrowManager;
+    private MoneyManager moneyManager;
     private SetManager setManager;
     private ItemGeneratorManager itemGeneratorManager;
     private CustomItemsManager customItemsManager;
@@ -73,6 +75,7 @@ public class ModuleCache {
         this.setManager = (SetManager) this.plugin.getModuleManager().register(new SetManager(plugin));
         this.itemGeneratorManager = (ItemGeneratorManager) this.plugin.getModuleManager().register(new ItemGeneratorManager(plugin));
         this.customItemsManager = (CustomItemsManager) this.plugin.getModuleManager().register(new CustomItemsManager(plugin));
+        this.moneyManager = (MoneyManager) this.plugin.getModuleManager().register(new MoneyManager(plugin));
 
 //		this.classManager = (ClassManager) this.plugin.getModuleManager().register(new ClassManager(plugin));
 //		classManager.loadClasses();
@@ -226,5 +229,10 @@ public class ModuleCache {
     @Nullable
     public CombatLogManager getCombatLogManager() {
         return this.combatLogManager;
+    }
+    
+    @Nullable
+    public MoneyManager getMoneyManager() {
+    	return this.moneyManager;
     }
 }
