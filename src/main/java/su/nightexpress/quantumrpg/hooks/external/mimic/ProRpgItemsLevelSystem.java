@@ -12,8 +12,6 @@ import java.util.Objects;
 
 public class ProRpgItemsLevelSystem extends BukkitLevelSystem {
 
-    private static final String ID = "prorpgitems";
-
     private final ClassManager classManager;
 
     public ProRpgItemsLevelSystem(@NotNull Player player) {
@@ -71,18 +69,5 @@ public class ProRpgItemsLevelSystem extends BukkitLevelSystem {
 
     private UserClassData getClassData() {
         return Objects.requireNonNull(classManager.getUserData(getPlayer()));
-    }
-
-    public static class Provider extends BukkitLevelSystem.Provider {
-
-        public Provider() {
-            super(ID);
-        }
-
-        @NotNull
-        @Override
-        public BukkitLevelSystem getSystem(@NotNull Player player) {
-            return new ProRpgItemsLevelSystem(player);
-        }
     }
 }

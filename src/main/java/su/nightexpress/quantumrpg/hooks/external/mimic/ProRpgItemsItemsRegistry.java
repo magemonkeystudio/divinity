@@ -17,25 +17,12 @@ import java.util.stream.Stream;
 
 public class ProRpgItemsItemsRegistry implements BukkitItemsRegistry {
 
-    static final String ID = "prorpgitems";
-
     private static final String SEPARATOR = "/";
 
     private final QuantumRPG quantumRpg;
 
     public ProRpgItemsItemsRegistry(QuantumRPG quantumRpg) {
         this.quantumRpg = quantumRpg;
-    }
-
-    @NotNull
-    @Override
-    public String getId() {
-        return ID;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return quantumRpg.isEnabled();
     }
 
     @NotNull

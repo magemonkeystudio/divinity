@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 
 public class ProRpgItemsClassSystem extends BukkitClassSystem {
 
-    private static final String ID = "prorpgitems";
-
     private final ClassManager classManager;
 
     public ProRpgItemsClassSystem(@NotNull Player player) {
@@ -46,18 +44,5 @@ public class ProRpgItemsClassSystem extends BukkitClassSystem {
     private RPGClass getClassData() {
         return Objects.requireNonNull(classManager.getUserData(getPlayer()))
                 .getPlayerClass();
-    }
-
-    public static class Provider extends BukkitClassSystem.Provider {
-
-        public Provider() {
-            super(ID);
-        }
-
-        @NotNull
-        @Override
-        public BukkitClassSystem getSystem(@NotNull Player player) {
-            return new ProRpgItemsClassSystem(player);
-        }
     }
 }

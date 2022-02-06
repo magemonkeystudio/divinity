@@ -174,7 +174,7 @@
         <dependency>
             <groupId>ru.endlesscode.mimic</groupId>
             <artifactId>mimic-bukkit-api</artifactId>
-            <version>0.6.2</version>
+            <version>0.7</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
