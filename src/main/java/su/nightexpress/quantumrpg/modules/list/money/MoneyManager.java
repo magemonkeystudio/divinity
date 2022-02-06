@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.modules.list.money;
 
 import mc.promcteam.engine.commands.list.HelpCommand;
+import mc.promcteam.engine.utils.random.Rnd;
 import org.jetbrains.annotations.NotNull;
 
 import mc.promcteam.engine.config.api.JYML;
@@ -59,16 +60,22 @@ public class MoneyManager extends QModuleDrop<MoneyManager.QMoney> {
 	
 	public class QMoney extends ModuleItem{
 
-		private static final String MONEY = "money-amount";
-		double amount;
+		private static final String MIN_MONEY = "money.min";
+		private static final String MAX_MONEY = "money.max";
+		private static final String ALLOW_DECIMALS = "money.allow-decimals";
+		double min, max;
+		boolean allowDecimals;
 		
 		public QMoney(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
 			super(plugin, cfg, MoneyManager.this);
-			amount = cfg.getDouble(MONEY, 0.0);
+			min = cfg.getDouble(MIN_MONEY, 0.0);
+			max = cfg.getDouble(MAX_MONEY, 0.0);
+			allowDecimals = cfg.getBoolean(ALLOW_DECIMALS);
 		}
 
 		public double getAmount() {
-			return amount;
+
+			return (allowDecimals) ? Rnd.getDouble(min, max) : Rnd.get((int)min, (int)max);
 		}
 	
 	}

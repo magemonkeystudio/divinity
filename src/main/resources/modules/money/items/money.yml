@@ -5,7 +5,10 @@ name: 'Money'
 lore:
 - '&6Gives you money'
 tier: common
-money-amount: 1.0
+money:
+  min: 1
+  max: 10
+  allow-decimals: false
 level:
   min: 1
   max: 1
