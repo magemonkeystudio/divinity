@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.money;
 
+import mc.promcteam.engine.commands.list.HelpCommand;
 import org.jetbrains.annotations.NotNull;
 
 import mc.promcteam.engine.config.api.JYML;
@@ -8,9 +9,9 @@ import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.ModuleItem;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
-import su.nightexpress.quantumrpg.modules.list.money.MoneyManager.QMoney;
+import su.nightexpress.quantumrpg.modules.command.MReloadCmd;
 
-public class MoneyManager extends QModuleDrop<QMoney>{
+public class MoneyManager extends QModuleDrop<MoneyManager.QMoney> {
 	
 	public MoneyManager(@NotNull QuantumRPG plugin) {
 		super(plugin, QMoney.class);
@@ -39,8 +40,20 @@ public class MoneyManager extends QModuleDrop<QMoney>{
 	}
 
 	@Override
-	public void shutdown() {
-		
+	public void shutdown(){
+
+	}
+
+	@Override
+	public void onPostSetup(){
+
+		this.loadSettings();
+		this.loadItems();
+
+		if (this.moduleCommand != null) {
+			this.moduleCommand.addDefaultCommand(new HelpCommand<>(this.plugin));
+			this.moduleCommand.addSubCommand(new MReloadCmd(this));
+		}
 	}
 
 	
