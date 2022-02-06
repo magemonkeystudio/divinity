@@ -1,3 +1,5 @@
+# Due to how this plugin handles modules a material is required even though no
+# material will drop when giving money.
 material: GOLD_NUGGET
 name: 'Money'
 lore:
