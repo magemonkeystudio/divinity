@@ -38,11 +38,11 @@ public class UniversalPacketHandler implements IPacketHandler {
 
     @Override
     public void managePlayerPacket(@NotNull EnginePlayerPacketEvent e) {
-        Class playoutParticles = Reflex.getNMSClass("PacketPlayOutWorldParticles");
-        Class playoutSpawnEntity = Reflex.getNMSClass("PacketPlayOutSpawnEntity");
+        Class playoutParticles        = Reflex.getNMSClass("PacketPlayOutWorldParticles");
+        Class playoutSpawnEntity      = Reflex.getNMSClass("PacketPlayOutSpawnEntity");
         Class playoutUpdateAttributes = Reflex.getNMSClass("PacketPlayOutUpdateAttributes");
-        Class playoutEntityMetadata = Reflex.getNMSClass("PacketPlayOutEntityMetadata");
-        Class playOutEntityEquipment = Reflex.getNMSClass("PacketPlayOutEntityEquipment");
+        Class playoutEntityMetadata   = Reflex.getNMSClass("PacketPlayOutEntityMetadata");
+        Class playOutEntityEquipment  = Reflex.getNMSClass("PacketPlayOutEntityEquipment");
 
         Object packet = e.getPacket();
 
@@ -69,18 +69,22 @@ public class UniversalPacketHandler implements IPacketHandler {
         }
     }
 
+    @Override
+    public void manageServerPacket(@NotNull EngineServerPacketEvent e) {
+    }
+
     public void manageEquipmentChanges(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
         Class playoutUpdateAttributes = Reflex.getNMSClass("PacketPlayOutUpdateAttributes");
-        Class craftServerClass = Reflex.getCraftClass("CraftServer");
-        Class nmsEntityClass = Reflex.getNMSClass("Entity");
-        Class worldServerClass = Reflex.getNMSClass("WorldServer");
+        Class craftServerClass        = Reflex.getCraftClass("CraftServer");
+        Class nmsEntityClass          = Reflex.getNMSClass("Entity");
+        Class worldServerClass        = Reflex.getNMSClass("WorldServer");
 
         Object equip = playoutUpdateAttributes.cast(packet);
 
         Integer entityId = (Integer) Reflex.getFieldValue(equip, "a");
         if (entityId == null) return;
 
-        Object server = craftServerClass.cast(Bukkit.getServer());
+        Object server    = craftServerClass.cast(Bukkit.getServer());
         Object nmsEntity = null;
 
         Object dedicatedServer = Reflex.invokeMethod(
@@ -118,7 +122,7 @@ public class UniversalPacketHandler implements IPacketHandler {
 
     protected void manageDamageParticle(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
         Class packetParticlesClass = Reflex.getNMSClass("PacketPlayOutWorldParticles");
-        Class particleParamClass = Reflex.getNMSClass("ParticleParam");
+        Class particleParamClass   = Reflex.getNMSClass("ParticleParam");
 
         Object p = packetParticlesClass.cast(packet);
 
@@ -146,7 +150,7 @@ public class UniversalPacketHandler implements IPacketHandler {
             if (!(entity instanceof org.bukkit.entity.Item)) return;
 
             // Check if Glow setting is applicable to this item stack.
-            Item item = (Item) entity;
+            Item             item        = (Item) entity;
             ItemHintsManager hintManager = plugin.getModuleCache().getItemHintsManager();
             if (hintManager == null || !hintManager.isGlow(item)) return;
 
@@ -164,8 +168,8 @@ public class UniversalPacketHandler implements IPacketHandler {
             //hintManager.setItemHint(item, 0);
 
             // Get glowing color depends on hint color.
-            ChatColor cc = ChatColor.WHITE;
-            String name = ItemUT.getItemName(item.getItemStack());
+            ChatColor cc   = ChatColor.WHITE;
+            String    name = ItemUT.getItemName(item.getItemStack());
             if (name.length() > 2) {
                 String ss = String.valueOf(cc.getChar());
                 if (name.startsWith(String.valueOf(ChatColor.COLOR_CHAR))) {
@@ -181,8 +185,8 @@ public class UniversalPacketHandler implements IPacketHandler {
 
             // Check if team for this color is already created
             // Also Check team per player in case of logout
-            boolean newTeam = true;
-            Set<ChatColor> hash = PacketManager.COLOR_CACHE.get(p);
+            boolean        newTeam = true;
+            Set<ChatColor> hash    = PacketManager.COLOR_CACHE.get(p);
             if (hash != null) {
                 if (hash.contains(cc)) {
                     newTeam = false;
@@ -202,8 +206,8 @@ public class UniversalPacketHandler implements IPacketHandler {
             Reflex.setFieldValue(pTeam, "a", teamId); // Internal team name
 
 
-            Class chatComponentClass = Reflex.getNMSClass("ChatComponentText");
-            Constructor ctor = Reflex.getConstructor(chatComponentClass, String.class);
+            Class       chatComponentClass = Reflex.getNMSClass("ChatComponentText");
+            Constructor ctor               = Reflex.getConstructor(chatComponentClass, String.class);
             if (newTeam) {
                 Reflex.setFieldValue(pTeam, "g", ec); // Team color
                 Reflex.setFieldValue(pTeam, "b", Reflex.invokeConstructor(ctor, teamId)); // Team display name
@@ -221,7 +225,7 @@ public class UniversalPacketHandler implements IPacketHandler {
         RPGUser user = plugin.getUserManager().getOrLoadUser(e.getReciever());
         if (user == null) return;
 
-        UserProfile profile = user.getActiveProfile();
+        UserProfile         profile   = user.getActiveProfile();
         UserEntityNamesMode namesMode = profile.getNamesMode();
         if (namesMode == UserEntityNamesMode.DEFAULT) return;
 
@@ -249,7 +253,7 @@ public class UniversalPacketHandler implements IPacketHandler {
 
     protected void managePlayerHelmet(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
         Class playOutEntityEquipment = Reflex.getNMSClass("PacketPlayOutEntityEquipment");
-        Class enumItemSlotClass = Reflex.getNMSClass("EnumItemSlot");
+        Class enumItemSlotClass      = Reflex.getNMSClass("EnumItemSlot");
 
         Object p = playOutEntityEquipment.cast(packet);
 
@@ -261,10 +265,10 @@ public class UniversalPacketHandler implements IPacketHandler {
         if (entityId == null) return;
 
         Class craftServerClass = Reflex.getCraftClass("CraftServer");
-        Class nmsEntityClass = Reflex.getNMSClass("Entity");
+        Class nmsEntityClass   = Reflex.getNMSClass("Entity");
         Class worldServerClass = Reflex.getNMSClass("WorldServer");
 
-        Object server = craftServerClass.cast(Bukkit.getServer());
+        Object server    = craftServerClass.cast(Bukkit.getServer());
         Object nmsEntity = null;
         Object dedicatedServer = Reflex.invokeMethod(
                 Reflex.getMethod(craftServerClass, "getServer"),
@@ -292,17 +296,13 @@ public class UniversalPacketHandler implements IPacketHandler {
         Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
         if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;
 
-        Player player = (Player) bukkitEntity;
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        Player  player = (Player) bukkitEntity;
+        RPGUser user   = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
         UserProfile profile = user.getActiveProfile();
         if (profile.isHideHelmet()) {
             Reflex.setFieldValue(p, "c", Reflex.getFieldValue(Reflex.getNMSClass("ItemStack"), "a"));
         }
-    }
-
-    @Override
-    public void manageServerPacket(@NotNull EngineServerPacketEvent e) {
     }
 }

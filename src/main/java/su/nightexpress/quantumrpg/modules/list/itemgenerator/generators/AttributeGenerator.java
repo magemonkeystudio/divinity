@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.AbstractAttributeGenerator;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.DamageInformation;
 import su.nightexpress.quantumrpg.stats.bonus.BonusCalculator;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttributeGenerator {
 
-    protected Map<A, double[]> attributes;
+    protected Map<A, DamageInformation> attributes;
 
     public AttributeGenerator(
             @NotNull QuantumRPG plugin,
@@ -56,6 +57,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                 cfg.addMissing(path2 + "scale-by-level", 1D);
                 cfg.addMissing(path2 + "min", "0");
                 cfg.addMissing(path2 + "max", "0");
+                cfg.addMissing(path2 + "flat-range", false);
             }
 
             if (!this.loreFormat.contains(att.getPlaceholder())) {
@@ -66,10 +68,12 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
             double chance = cfg.getDouble(path2 + "chance");
             if (chance <= 0) return;
 
-            double m1    = cfg.getDouble(path2 + "min", 0D);
-            double m2    = cfg.getDouble(path2 + "max", 0D);
-            double scale = cfg.getDouble(path2 + "scale-by-level", 1D);
-            this.attributes.put(att, new double[]{chance, m1, m2, scale});
+            double            m1         = cfg.getDouble(path2 + "min", 0D);
+            double            m2         = cfg.getDouble(path2 + "max", 0D);
+            double            scale      = cfg.getDouble(path2 + "scale-by-level", 1D);
+            boolean           flatRange  = cfg.getBoolean(path2 + "flat-range", false);
+            DamageInformation damageInfo = new DamageInformation(chance, m1, m2, scale, flatRange);
+            this.attributes.put(att, damageInfo);
         });
     }
 
@@ -96,7 +100,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
             isSocket = check instanceof SocketAttribute;
         }
 
-        Map<A, double[]> stats = this.getAttributes();
+        Map<A, DamageInformation> stats = this.getAttributes();
 
         int generatorPos = lore.indexOf(this.placeholder);
         int min          = this.getMinAmount();
@@ -146,7 +150,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
 
         // Create a map with a chances for each stat
         Map<A, Double> mapChance = new HashMap<>();
-        stats.forEach((stat, values) -> mapChance.put(stat, values[0]));
+        stats.forEach((stat, values) -> mapChance.put(stat, values.getChance()));
 
         boolean noStats = true;
         for (int count = 0; count < roll; count++) {
@@ -168,14 +172,14 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
 
             // If depended stat is not persist in config,
             // then we can't add it because we don't know it values.
-            double[] values = stats.get(stat);
+            DamageInformation values = stats.get(stat);
             if (values == null) continue;
 
             // Minimal stats are added, so we can process chances
             if (count >= rollMin) {
                 //System.out.println("Check for chance 1");
                 // Check for a chance to apply on item manually.
-                if (Rnd.get(true) >= values[0]) { // isMaxUnlimited &&
+                if (Rnd.get(true) >= values.getChance()) { // isMaxUnlimited &&
                     //System.out.println("Check for chance 2");
                     // Do not remove if socket map. Sockets are duplicable stats.
                     if (!isSocket) mapChance.remove(stat);
@@ -209,10 +213,13 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                 continue;
             } else {
                 if (stat.hasPlaceholder(item)) {
-                    BiFunction<Boolean, Double, Double> vMod   = generatorItem.getMaterialModifier(item, stat);
-                    double                              vScale = generatorItem.getScaleOfLevel(values[3], itemLevel);
-                    double                              vMin   = BonusCalculator.CALC_FULL.apply(values[1], Arrays.asList(vMod)) * vScale;//(values[1]) * vScale * (1D + vMod[1] / 100D);
-                    double                              vMax   = BonusCalculator.CALC_FULL.apply(values[2], Arrays.asList(vMod)) * vScale;//(values[2]) * vScale * (1D + vMod[1] / 100D);
+                    BiFunction<Boolean, Double, Double> vMod = generatorItem.getMaterialModifier(item, stat);
+
+                    double vScale = generatorItem.getScaleOfLevel(values.getScaleByLevel(), itemLevel);
+                    double vMin   = BonusCalculator.CALC_FULL.apply(values.getMin(), Arrays.asList(vMod)) * vScale;
+                    //(values[1]) * vScale * (1D + vMod[1] / 100D);
+                    double vMax = BonusCalculator.CALC_FULL.apply(values.getMax(), Arrays.asList(vMod)) * vScale;
+                    // (values[2]) * vScale * (1D + vMod[1] / 100D);
 
                     // Skip zero stats and decrease the counter to allow other stats
                     // to be generated instead of these ones.
@@ -221,8 +228,13 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                     } else {
                         if (stat instanceof DamageAttribute) {
                             DamageAttribute dmgAtt = (DamageAttribute) stat;
-                            double          rndV1  = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                            double          rndV2  = NumberUT.round(Rnd.getDouble(vMin, vMax));
+                            double          rndV1  = vMin;
+                            double          rndV2  = vMax;
+
+                            if (!values.isFlatRange()) {
+                                rndV1 = NumberUT.round(Rnd.getDouble(vMin, vMax));
+                                rndV2 = NumberUT.round(Rnd.getDouble(vMin, vMax));
+                            }
 
                             double vFinMin = Math.min(rndV1, rndV2);
                             double vFinMax = Math.max(rndV1, rndV2);
@@ -263,7 +275,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
     }
 
     @NotNull
-    public Map<A, double[]> getAttributes() {
+    public Map<A, DamageInformation> getAttributes() {
         return attributes;
     }
 }
