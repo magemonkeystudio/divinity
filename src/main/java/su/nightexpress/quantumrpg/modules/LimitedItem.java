@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
+import su.nightexpress.quantumrpg.modules.list.identify.IdentifyManager;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.attributes.ChargesAttribute;
@@ -76,7 +77,7 @@ public class LimitedItem extends LeveledItem {
 
         ChargesAttribute charges = ItemStats.getAttribute(ChargesAttribute.class);
         if (charges != null) {
-            if (uses == 1 && this instanceof SocketItem)
+            if (uses == 1 && (this instanceof SocketItem || this instanceof IdentifyManager.IdentifyItem))
                 LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_ITEM_CHARGES, null);
             else
                 //if (charges.hasPlaceholder(item)) { // In order for unlimited charged items to work

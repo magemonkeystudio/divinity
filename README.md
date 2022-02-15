@@ -11,7 +11,7 @@ If you wish to use prorpgitems as a dependency in your projects, include the fol
 <dependency>
     <groupId>mc.promcteam</groupId>
     <artifactId>prorpgitems</artifactId>
-    <version>1.0.3.14-ALPHA</version>
+    <version>1.0.3.14</version>
 </dependency>
 ```
 

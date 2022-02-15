@@ -6,16 +6,18 @@
 
     <groupId>mc.promcteam</groupId>
     <artifactId>prorpgitems</artifactId>
-    <version>1.0.3.14-ALPHA</version>
+    <version>1.0.3.14</version>
 
     <name>ProRPGItems</name>
 
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>wwuHHmm</maven.build.timestamp.format>
     </properties>
 
     <build>
+        <finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
         <plugins>
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
