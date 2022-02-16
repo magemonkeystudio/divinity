@@ -140,7 +140,7 @@
         <dependency>
             <groupId>mc.promcteam</groupId>
             <artifactId>ProMCCore</artifactId>
-            <version>1.0.3.5-ALPHA</version>
+            <version>1.0.3.7</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

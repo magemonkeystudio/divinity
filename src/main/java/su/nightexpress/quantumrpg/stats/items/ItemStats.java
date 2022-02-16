@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.stats.items;
 
+import mc.promcteam.engine.api.meta.NBTAttribute;
 import mc.promcteam.engine.modules.IModule;
 import mc.promcteam.engine.utils.DataUT;
 import org.bukkit.NamespacedKey;
@@ -21,7 +22,6 @@ import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute.Type;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.DoubleStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
-import su.nightexpress.quantumrpg.types.NBTAttribute;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 
 import java.util.*;
@@ -260,18 +260,18 @@ public class ItemStats {
         double speed = getStat(item, AbstractStat.Type.ATTACK_SPEED);
         double move  = getStat(item, AbstractStat.Type.MOVEMENT_SPEED);
 
-        addAttribute(item, NBTAttribute.maxHealth, hp);
-        addAttribute(item, NBTAttribute.movementSpeed, move);
-        addAttribute(item, NBTAttribute.attackSpeed, speed);
+        addAttribute(item, NBTAttribute.MAX_HEALTH, hp);
+        addAttribute(item, NBTAttribute.MOVEMENT_SPEED, move);
+        addAttribute(item, NBTAttribute.ATTACK_SPEED, speed);
 
 //        if (ItemUtils.isWeapon(item)) {
         double vanilla = DamageAttribute.getVanillaDamage(item);
         if (vanilla > 1)
-            addAttribute(item, NBTAttribute.attackDamage, vanilla - 1); // -1 because it adds instead of set
+            addAttribute(item, NBTAttribute.ATTACK_DAMAGE, vanilla - 1); // -1 because it adds instead of set
 //        }
         if (ItemUtils.isArmor(item)) {
-            addAttribute(item, NBTAttribute.armor, DefenseAttribute.getVanillaArmor(item));
-            addAttribute(item, NBTAttribute.armorToughness, DefenseAttribute.getVanillaToughness(item));
+            addAttribute(item, NBTAttribute.ARMOR, DefenseAttribute.getVanillaArmor(item));
+            addAttribute(item, NBTAttribute.ARMOR_TOUGHNESS, DefenseAttribute.getVanillaToughness(item));
         }
         ItemMeta im = item.getItemMeta();
         im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -288,22 +288,22 @@ public class ItemStats {
         item.setItemMeta(meta);
 
         // Bows not needed damage tag at all.
-        if (att == NBTAttribute.attackDamage && ItemUtils.isBow(item)) {
+        if (att == NBTAttribute.ATTACK_DAMAGE && ItemUtils.isBow(item)) {
             return;
         }
 
         // Do not add attribute with zero value
         // except the weapons, they will get vanilla speed.
         if (value == 0) {
-            if (!(att == NBTAttribute.attackSpeed && ItemUtils.isWeapon(item))) {
+            if (!(att == NBTAttribute.ATTACK_SPEED && ItemUtils.isWeapon(item))) {
                 return;
             }
         }
 
         // Fine values
-        if (att == NBTAttribute.movementSpeed) {
+        if (att == NBTAttribute.MOVEMENT_SPEED) {
             value = 0.1 * (1D + value / 100D) - 0.1;
-        } else if (att == NBTAttribute.attackSpeed) {
+        } else if (att == NBTAttribute.ATTACK_SPEED) {
             value /= 100D;
             double vanillaSpeed = AbstractStat.getDefaultAttackSpeed(item);
             double extra        = vanillaSpeed == 0D ? 4D - (4D * (1D + value)) : vanillaSpeed * value;
@@ -312,7 +312,7 @@ public class ItemStats {
 
         for (EquipmentSlot slot : ItemUtils.getItemSlots(item)) {
             if (slot == EquipmentSlot.OFF_HAND
-                    && (att == NBTAttribute.attackDamage || att == NBTAttribute.attackSpeed)) continue;
+                    && (att == NBTAttribute.ATTACK_DAMAGE || att == NBTAttribute.ATTACK_SPEED)) continue;
 
             AttributeModifier am = new AttributeModifier(
                     att.getUUID(slot),

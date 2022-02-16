@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.manager.listener.object;
 
+import mc.promcteam.engine.api.meta.NBTAttribute;
 import mc.promcteam.engine.manager.IListener;
 import mc.promcteam.engine.utils.DataUT;
 import org.bukkit.Material;
@@ -19,7 +20,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.types.NBTAttribute;
 
 public class ItemUpdaterListener extends IListener<QuantumRPG> {
 
@@ -84,8 +84,8 @@ public class ItemUpdaterListener extends IListener<QuantumRPG> {
             item.setItemMeta(meta);
         }
 
-        if (ItemStats.hasDamage(item, NBTAttribute.attackDamage.getNmsName())
-                && ItemStats.getDamage(item, NBTAttribute.attackDamage.getNmsName()) <= 0) {
+        if (ItemStats.hasDamage(item, NBTAttribute.ATTACK_DAMAGE.getNmsName())
+                && ItemStats.getDamage(item, NBTAttribute.ATTACK_DAMAGE.getNmsName()) <= 0) {
             ItemStats.updateVanillaAttributes(item);
 //            DataUT.setData(item, key, true);
         }

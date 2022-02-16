@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.stats;
 
 import lombok.Getter;
+import mc.promcteam.engine.api.meta.NBTAttribute;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.utils.EntityUT;
 import mc.promcteam.engine.utils.ItemUT;
@@ -50,7 +51,6 @@ import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
-import su.nightexpress.quantumrpg.types.NBTAttribute;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 
 import java.util.*;
@@ -77,22 +77,20 @@ public class EntityStats {
                 AbstractStat.Type.MOVEMENT_SPEED
         };
         ATTRIBUTE_BONUS_NBT = new NBTAttribute[]{
-                NBTAttribute.maxHealth,
-                NBTAttribute.attackSpeed,
-                NBTAttribute.movementSpeed
+                NBTAttribute.MAX_HEALTH,
+                NBTAttribute.ATTACK_SPEED,
+                NBTAttribute.MOVEMENT_SPEED
         };
     }
 
-    private               LivingEntity entity;
     @Getter private final Player       player;
     private final         boolean      isNPC;
-
     private final EntityEquipment equipment;
     private final List<ItemStack> inventory;
-
     private final Map<PotionEffectType, PotionEffect>                             permaEffects;
     private final Map<ItemLoreStat<?>, List<BiFunction<Boolean, Double, Double>>> bonuses;
     private final Set<IEffect>                                                    effects;
+    private               LivingEntity entity;
     private       DamageMeta                                                      damageMeta;
 
     private QArrow arrowBonus;
@@ -539,9 +537,9 @@ public class EntityStats {
         AttributeInstance attInst = this.entity.getAttribute(att.getAttribute());
         if (attInst == null) return;
 
-        if (att == NBTAttribute.movementSpeed) {
+        if (att == NBTAttribute.MOVEMENT_SPEED) {
             value = 0.1 * (1D + value / 100D) - 0.1;
-        } else if (att == NBTAttribute.attackSpeed) {
+        } else if (att == NBTAttribute.ATTACK_SPEED) {
             value = value / 1000D * 4D; // 4 is Default hand attack speed
         }
 
