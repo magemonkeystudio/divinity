@@ -201,7 +201,9 @@ public class DamageManager extends IListener<QuantumRPG> {
             mythicFaction = this.mmHook.getMythicInstance(victim).getFaction();
         }
 
-        List<MetadataValue> metadata = damager != null ? damager.getMetadata("custom-cooldown") : Collections.emptyList();
+        List<MetadataValue> metadata = damager != null
+                ? damager.getMetadata("custom-cooldown")
+                : Collections.emptyList();
 
         double powerMod = metadata == null || metadata.isEmpty() ?
                 statsDamager != null ? statsDamager.getAttackPowerModifier() : 1D
@@ -220,7 +222,7 @@ public class DamageManager extends IListener<QuantumRPG> {
         for (Map.Entry<DamageAttribute, Double> en : e.getDamageMap().entrySet()) {
             DamageAttribute dmgAtt  = en.getKey();
             double          dmgType = en.getValue();
-//            System.out.println("*" + dmgAtt.getName() + ": " + dmgType);
+//            QuantumRPG.getInstance().getLogger().info("*" + dmgAtt.getName() + ": " + dmgType);
 
             dmgType *= pveDamageMod;
             dmgType *= critMod;
@@ -246,7 +248,7 @@ public class DamageManager extends IListener<QuantumRPG> {
             }
             //Should we reactivate direct damage, remove directType here and deal the damage straight.
             meta.setDamage(dmgAtt, dmgType + directType);
-//            System.out.println(dmgAtt.getName() + ": " + meta.getDamage(dmgAtt) + " (" + directType + ")");
+//            QuantumRPG.getInstance().getLogger().info(dmgAtt.getName() + ": " + meta.getDamage(dmgAtt) + " (" + directType + ")");
 
             // Actions Executor
             if (damager != null && dmgAtt != null) {
@@ -255,7 +257,7 @@ public class DamageManager extends IListener<QuantumRPG> {
         }
 
         double dmgTotal = meta.getTotalDamage();
-//        System.out.println("Damage total: " + dmgTotal);
+//        QuantumRPG.getInstance().getLogger().info("Damage total: " + dmgTotal);
         orig.setDamage(dmgTotal);
 
         if (damager != null && statsDamager != null && dmgTotal > 0) {

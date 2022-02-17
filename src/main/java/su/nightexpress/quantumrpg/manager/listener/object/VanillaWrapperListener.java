@@ -266,7 +266,13 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         if (statsDamager != null) {
             // Deduct vanilla weapon or hand damage value.
             if (weapon != null && !ItemUT.isAir(weapon)) {
-                damageStart = Math.max(0D, damageStart - DamageAttribute.getVanillaDamage(weapon));
+                double defaultDamage = DamageAttribute.getVanillaDamage(weapon);
+                // If it's a projectile, the NMS for default damage doesn't work. so we'll just assume that the
+                // event damage is the default.
+                if (projectile != null) defaultDamage = e.getDamage();
+
+//                QuantumRPG.getInstance().getLogger().info("Default damage is " + defaultDamage);
+                damageStart = Math.max(0D, damageStart - defaultDamage);
             } else {
                 damageStart = damageStart - 1D; // Deduct the 1 damage of non-weapon item/hand.
             }
@@ -303,7 +309,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
                 if (dmgModifier == DamageModifier.ABSORPTION) continue;
                 if (e.isApplicable(dmgModifier)) {
                     if (dmgModifier == DamageModifier.BASE) {
-//                        System.out.println("FINAL - " + dmgModifier.name() + ": " + e.getDamage());
+//                        QuantumRPG.getInstance().getLogger().info("FINAL - " + dmgModifier.name() + ": " + e.getDamage());
                         e.setDamage(dmgModifier, e.getDamage());
                     } else {
                         e.setDamage(dmgModifier, 0); // Fix
