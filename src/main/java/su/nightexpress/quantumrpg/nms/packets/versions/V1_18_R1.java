@@ -8,15 +8,15 @@ import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.nms.packets.events.EngineServerPacketEvent;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
-import mc.promcteam.engine.utils.reflection.ReflectionUtil;
 import net.minecraft.EnumChatFormat;
-import net.minecraft.network.chat.IChatBaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.EntityEquipmentChangeEvent;
@@ -74,6 +74,10 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
             this.managePlayerHelmet(e, packet);
             return;
         }
+    }
+
+    @Override
+    public void manageServerPacket(@NotNull EngineServerPacketEvent e) {
     }
 
     @Override
@@ -210,67 +214,20 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
                 Class teamClass  = Reflex.getClass("net.minecraft.world.scores", "ScoreboardTeam");
                 Class playOutScoreboardTeamPacket = Reflex.getClass("net.minecraft.network.protocol.game",
                         "PacketPlayOutScoreboardTeam");
-                Object board = Reflex.getConstructor(boardClass).newInstance();
-//                Scoreboard board = new Scoreboard();
-                Object team = Reflex.getConstructor(teamClass, boardClass, String.class)
-                        .newInstance(board, teamId);
-//                ScoreboardTeam team = new ScoreboardTeam(board, teamId);
+                Scoreboard board = p.getScoreboard() != null
+                        ? p.getScoreboard()
+                        : Bukkit.getScoreboardManager().getMainScoreboard();
+                if (board == null)
+                    board = Bukkit.getScoreboardManager().getNewScoreboard();
 
-                Reflex.invokeMethod(teamClass.getMethod(ReflectionUtil.MINOR_VERSION >= 18
-                                ? "a"
-                                : "setColor",
-                        EnumChatFormat.class), team, ec);
-//                team.a(ec); // Set color
-                Reflex.invokeMethod(teamClass.getMethod(ReflectionUtil.MINOR_VERSION >= 18
-                                ? "a"
-                                : "setDisplayName",
-                        IChatBaseComponent.class), team, IChatBaseComponent.a(teamId));
-//                team.a(IChatBaseComponent.a(teamId)); // Set display name
-                Reflex.invokeMethod(teamClass.getMethod(ReflectionUtil.MINOR_VERSION >= 18
-                                ? "b"
-                                : "setPrefix",
-                        IChatBaseComponent.class), team, IChatBaseComponent.a(""));
-//                team.b(IChatBaseComponent.a("")); // Set prefix
-                Reflex.invokeMethod(boardClass.getMethod(ReflectionUtil.MINOR_VERSION >= 18
-                                ? "a"
-                                : "addPlayerToTeam",
-                        String.class, teamClass), board, id.toString(), team);
-//                board.a(id.toString(), team); // Add player to team
-                Object pTeam = Reflex.invokeMethod(playOutScoreboardTeamPacket.getMethod("a", teamClass, boolean.class),
-                        null, team, newTeam);
-//                PacketPlayOutScoreboardTeam pTeam = PacketPlayOutScoreboardTeam.a(team, newTeam);
+                Team team = board.getTeam(teamId) != null ? board.getTeam(teamId) : board.registerNewTeam(teamId);
 
+                team.addEntry(id.toString());
+                team.setColor(cc);
+                team.setDisplayName(teamId);
 
-//                Collection<String> entities = pTeam.e();
-//                if (entities == null) return;
+                p.setScoreboard(board);
 
-//                entities.add(id.toString());
-                // ###########
-
-                // Get list of fake team entities to add our item into it
-                //TODO Fix this.
-//                Class scoreboardPacket = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutScoreboardTeam");
-//                //TODO Construct using PacketPlayOutScoreboardTeam.a(ScoreboardTeam, boolean);
-//                Object pTeam = Reflex.invokeConstructor(Reflex.getConstructor(scoreboardPacket));
-//                Object oEntities = Reflex.getFieldValue(pTeam, "j"); // List of team entities
-//                if (oEntities == null) return;
-//
-//                @SuppressWarnings("unchecked")
-//                Collection<String> entities = (Collection<String>) oEntities;
-//                entities.add(id.toString());
-//
-//                // Set team fields
-//                Reflex.setFieldValue(pTeam, "h", newTeam ? 0 : 3); // 0 = new team, 3 = add entity, 4 = remove entity
-//                Reflex.setFieldValue(pTeam, "i", teamId); // Internal team name
-//
-//                if (newTeam) {
-//                    //TODO Update Parameters list
-//                    Reflex.setFieldValue(pTeam, "f", ec); // Team color (Parameters, 'f')
-//                    Reflex.setFieldValue(pTeam, "a", Reflex.invokeConstructor(ctor, teamId)); // Team display name (Parameters, 'a')
-//                    Reflex.setFieldValue(pTeam, "b", Reflex.invokeConstructor(ctor, "")); // Team prefix (Parameters, 'b')
-//                }
-                // Send packet to a player
-                plugin.getPacketManager().sendPacket(e.getReciever(), pTeam);
                 // Activate colored glowing
                 entity.setGlowing(true);
             } catch (Exception err) { //IllegalAccessException | InvocationTargetException err) {
@@ -376,9 +333,5 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
                 Reflex.setFieldValue(p, "c", Reflex.getFieldValue(Reflex.getClass("net.minecraft.world.item", "ItemStack"), "a"));
             }
         });
-    }
-
-    @Override
-    public void manageServerPacket(@NotNull EngineServerPacketEvent e) {
     }
 }
