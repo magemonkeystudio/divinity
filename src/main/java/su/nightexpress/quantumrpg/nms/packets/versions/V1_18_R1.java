@@ -8,7 +8,6 @@ import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.nms.packets.events.EngineServerPacketEvent;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
-import net.minecraft.EnumChatFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -26,13 +25,9 @@ import su.nightexpress.quantumrpg.data.api.UserEntityNamesMode;
 import su.nightexpress.quantumrpg.data.api.UserProfile;
 import su.nightexpress.quantumrpg.manager.EntityManager;
 import su.nightexpress.quantumrpg.modules.list.itemhints.ItemHintsManager;
-import su.nightexpress.quantumrpg.nms.packets.PacketManager;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
@@ -179,47 +174,20 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
                 if (c2 != null && c2.isColor()) cc = c2;
             }
             try {
-                Class<?> en = Reflex.getClass("net.minecraft", "EnumChatFormat");
-                Method   b  = Reflex.getMethod(en, "b", String.class);
-                //TODO Uncomment this
-//                Enum ec = (Enum) b.invoke(null, cc.name());
-
-                EnumChatFormat ec = EnumChatFormat.b(cc.name());
-
                 Player p = e.getReciever();
 
-                // Check if team for this color is already created
-                // Also Check team per player in case of logout
-                boolean        newTeam = true;
-                Set<ChatColor> hash    = PacketManager.COLOR_CACHE.get(p);
-                if (hash != null) {
-                    if (hash.contains(cc)) {
-                        newTeam = false;
-                    }
-                } else {
-                    hash = new HashSet<>();
-                }
-                hash.add(cc);
-                PacketManager.COLOR_CACHE.put(p, hash);
-
                 // Set team name for each color
-                String teamId = "GLOW_" + ec.name();
+                String teamId = "GLOW_" + cc.name();
                 if (teamId.length() > 16) teamId = teamId.substring(0, 16);
 
-                Class       chatComponentClass = Reflex.getClass("net.minecraft.network.chat", "ChatComponentText");
-                Constructor ctor               = Reflex.getConstructor(chatComponentClass, String.class);
-
-                // ########### Create team
-                Class boardClass = Reflex.getClass("net.minecraft.world.scores", "Scoreboard");
-                Class teamClass  = Reflex.getClass("net.minecraft.world.scores", "ScoreboardTeam");
-                Class playOutScoreboardTeamPacket = Reflex.getClass("net.minecraft.network.protocol.game",
-                        "PacketPlayOutScoreboardTeam");
+                // Get the scoreboard
                 Scoreboard board = p.getScoreboard() != null
                         ? p.getScoreboard()
                         : Bukkit.getScoreboardManager().getMainScoreboard();
                 if (board == null)
                     board = Bukkit.getScoreboardManager().getNewScoreboard();
 
+                // Create team
                 Team team = board.getTeam(teamId) != null ? board.getTeam(teamId) : board.registerNewTeam(teamId);
 
                 team.addEntry(id.toString());
