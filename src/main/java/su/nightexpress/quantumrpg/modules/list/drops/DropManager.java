@@ -31,10 +31,7 @@ import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.api.QModule;
 import su.nightexpress.quantumrpg.modules.list.drops.commands.DropsDropCmd;
 import su.nightexpress.quantumrpg.modules.list.drops.commands.DropsGiveCmd;
-import su.nightexpress.quantumrpg.modules.list.drops.object.Drop;
-import su.nightexpress.quantumrpg.modules.list.drops.object.DropItem;
-import su.nightexpress.quantumrpg.modules.list.drops.object.DropMob;
-import su.nightexpress.quantumrpg.modules.list.drops.object.DropTable;
+import su.nightexpress.quantumrpg.modules.list.drops.object.*;
 import su.nightexpress.quantumrpg.modules.list.money.MoneyManager.QMoney;
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
@@ -252,15 +249,15 @@ public class DropManager extends QModule {
                 if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
                 dropConfig.executeActions(killer, mapTarget);
-                
-                if(dropConfig.getModuleId().getId().equals(EModule.MONEY)) {
-                	
-                	QMoney money = (QMoney) QuantumAPI.getModuleItem(dropConfig.getModuleId(), dropConfig.getItemId());
-                	if(money == null)continue;
-            		plugin.getVault().give(killer, money.getAmount() * dropStack.getAmount());
-                	continue;
-                }
                 loot.add(dropStack);
+            }
+
+            for(DropTable table : dropNpc.getDropTables()){
+
+                for(DropNonItem nonItemDrop : table.getNonItemDrops()){
+
+                    nonItemDrop.execute(killer);
+                }
             }
         }
         return loot;
@@ -288,14 +285,12 @@ public class DropManager extends QModule {
             if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
             dropConfig.executeActions(target, mapTarget);
-            if(dropConfig.getModuleId().getId().equals(EModule.MONEY)) {
-            	
-            	QMoney money = (QMoney) QuantumAPI.getModuleItem(dropConfig.getModuleId(), dropConfig.getItemId());
-            	if(money == null)continue;
-        		plugin.getVault().getEconomy().depositPlayer(target, money.getAmount() * dropStack.getAmount());
-            	continue;
-            }
             loot.add(dropStack);
+        }
+
+        for(DropNonItem nonItemDrops : table.getNonItemDrops()){
+
+            nonItemDrops.execute(target);
         }
 
         dead.remove();
@@ -322,7 +317,6 @@ public class DropManager extends QModule {
             ItemStack dropStack = QuantumAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
             if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
-            if(dropConfig.getModuleId().getId().equals(EModule.MONEY))continue;
 //            dropConfig.executeActions(target, mapTarget);
             loot.add(dropStack);
         }

@@ -31,6 +31,7 @@ public class DropTable extends LoadableItem implements DropCalculator {
     protected     Set<String>    biomesGood;
     protected     Set<String>    regionsBad;
     protected     List<DropItem> dropList;
+    protected     Set<DropNonItem> nonItemDrops;
 
     public DropTable(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
         super(plugin, cfg);
@@ -86,6 +87,18 @@ public class DropTable extends LoadableItem implements DropCalculator {
             );
             this.dropList.add(di);
         }
+
+        this.nonItemDrops = new HashSet<>();
+
+        for(String key : cfg.getSection("non-items")){
+
+            String path = "non-items." + key;
+
+            if(key.equalsIgnoreCase("money")){
+                nonItemDrops.add(new DropMoney(cfg.getConfigurationSection(path)));
+            }
+
+        }
     }
 
     @Override
@@ -128,6 +141,11 @@ public class DropTable extends LoadableItem implements DropCalculator {
     @NotNull
     public List<DropItem> getDrop() {
         return this.dropList;
+    }
+
+    @NotNull
+    public Set<DropNonItem> getNonItemDrops(){
+        return this.nonItemDrops;
     }
 
     /**
