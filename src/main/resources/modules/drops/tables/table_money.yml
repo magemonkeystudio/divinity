@@ -1,0 +1,17 @@
+name: '&dExample Money Table'
+roll-once: false
+level-penalty:
+  enabled: false
+  variance: 10
+world-whitelist:
+  - world
+  - world_nether
+  - world_the_end
+biome-whitelist:
+  - '*'
+region-blacklist: []
+non-items:
+  money:
+    min-amount: 1.0
+    max-amount: 50.0
+    allow-decimals: false
