@@ -6,29 +6,29 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public interface PMS {
+public class PMS {
 
-    default float getAttackCooldown(@NotNull Player p) {
+    public float getAttackCooldown(@NotNull Player p) {
         return ReflectionUtil.getAttackCooldown(p);
     }
 
-    default void changeSkull(Block b, String hash) {
+    public void changeSkull(Block b, String hash) {
         ReflectionUtil.changeSkull(b, hash);
     }
 
-    default double getDefaultDamage(@NotNull ItemStack itemStack) {
+    public double getDefaultDamage(@NotNull ItemStack itemStack) {
         return ReflectionUtil.getDefaultDamage(itemStack);
     }
 
-    default double getDefaultSpeed(@NotNull ItemStack itemStack) {
+    public double getDefaultSpeed(@NotNull ItemStack itemStack) {
         return ReflectionUtil.getDefaultSpeed(itemStack);
     }
 
-    default double getDefaultArmor(@NotNull ItemStack itemStack) {
+    public double getDefaultArmor(@NotNull ItemStack itemStack) {
         return ReflectionUtil.getDefaultArmor(itemStack);
     }
 
-    default double getDefaultToughness(@NotNull ItemStack itemStack) {
+    public double getDefaultToughness(@NotNull ItemStack itemStack) {
         return ReflectionUtil.getDefaultToughness(itemStack);
     }
 }

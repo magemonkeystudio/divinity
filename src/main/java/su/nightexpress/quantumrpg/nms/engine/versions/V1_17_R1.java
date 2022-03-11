@@ -2,7 +2,11 @@ package su.nightexpress.quantumrpg.nms.engine.versions;
 
 import su.nightexpress.quantumrpg.nms.engine.PMS;
 
-public class V1_17_R1 implements PMS {
+/**
+ * @deprecated No longer needed as PMS handles versions using the ReflectionUtil
+ */
+@Deprecated
+public class V1_17_R1 extends PMS {
 
 //    @Override
 //    public void changeSkull(Block b, String hash) {

@@ -1,6 +1,6 @@
 main: su.nightexpress.quantumrpg.QuantumRPG
-version: %PROJECT_VERSION%
-name: ProRPGItems
+version: ${project.version}
+name: ${project.name}
 authors: [ Travja, goflish ]
 desciption: The most advanced, customizable and configurable RPG-Core plugin!
 depend: [ ProMCCore ]
