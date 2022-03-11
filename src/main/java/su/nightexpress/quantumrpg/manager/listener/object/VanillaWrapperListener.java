@@ -267,9 +267,19 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
             // Deduct vanilla weapon or hand damage value.
             if (weapon != null && !ItemUT.isAir(weapon)) {
                 double defaultDamage = DamageAttribute.getVanillaDamage(weapon);
-                // If it's a projectile, the NMS for default damage doesn't work. so we'll just assume that the
-                // event damage is the default.
-                if (projectile != null) defaultDamage = e.getDamage();
+                long countCustomDamage = damages.keySet().stream()
+                        .filter(att -> {
+                            DamageAttribute def = ItemStats.getDamageByDefault();
+                            // Heh... well. If we have a damage type that's doing more than 1 damage and is not the
+                            // default damage type and is doing more than 1 damage (since 1 is sort of our hard-coded
+                            // default), then we can assume that this damage is intended to override the vanilla damage.
+                            return !att.equals(def) || (att.equals(def) && damages.get(att) != 1);
+                        }).count();
+                if (projectile != null && countCustomDamage > 0) {
+                    // If it's a projectile, the NMS for default damage doesn't work. so we'll just assume that the
+                    // event damage is the default.
+                    defaultDamage = e.getDamage();
+                }
 
 //                QuantumRPG.getInstance().getLogger().info("Default damage is " + defaultDamage);
                 damageStart = Math.max(0D, damageStart - defaultDamage);
