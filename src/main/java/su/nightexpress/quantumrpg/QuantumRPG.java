@@ -1,9 +1,9 @@
 package su.nightexpress.quantumrpg;
 
-import org.jetbrains.annotations.NotNull;
 import mc.promcteam.engine.NexDataPlugin;
 import mc.promcteam.engine.commands.api.IGeneralCommand;
 import mc.promcteam.engine.hooks.Hooks;
+import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.command.BuffCommand;
 import su.nightexpress.quantumrpg.command.ModifyCommand;
 import su.nightexpress.quantumrpg.command.SetCommand;
@@ -44,19 +44,19 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 
     public static QuantumRPG instance;
 
-    private Config config;
-    private Lang lang;
+    private Config    config;
+    private Lang      lang;
     private EngineCfg engineCfg;
 
     private RPGUserData dataHandler;
 
     private InteractionManager interactionManager;
-    private WorthManager worthManager;
-    private DamageManager dmgManager;
-    private EntityManager entityManager;
-    private ListenerManager listenerManager;
-    private ProfileManager profileManager;
-    private ModuleCache moduleCache;
+    private WorthManager       worthManager;
+    private DamageManager      dmgManager;
+    private EntityManager      entityManager;
+    private ListenerManager    listenerManager;
+    private ProfileManager     profileManager;
+    private ModuleCache        moduleCache;
 
     private PMSManager pms;
 
@@ -148,31 +148,31 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
     }
 
     @Override
-    protected boolean setupDataHandlers() {
+    public void registerHooks() {
+        this.registerHook(EHook.CRACK_SHOT, CrackShotHK.class);
+        this.registerHook(EHook.LORINTHS_RPG_MOBS, LorinthsRpgMobsHK.class);
+        this.registerHook(EHook.MAGIC, MagicHK.class);
+        this.registerHook(EHook.MCMMO, McmmoHK.class);
+
+        boolean mythic4 = true;
         try {
-            this.dataHandler = RPGUserData.getInstance(this);
-            this.dataHandler.setup();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
+            Class.forName("io.lumine.xikage.mythicmobs.MythicMobs");
+        } catch (ClassNotFoundException classNotFoundException) {
+            mythic4 = false;
         }
+        if (mythic4)
+            this.registerHook(Hooks.MYTHIC_MOBS, MythicMobsHK.class);
+        else
+            this.registerHook(Hooks.MYTHIC_MOBS, MythicMobsHKv5.class);
 
-        this.userManager = new UserManager(this);
-        this.userManager.setup();
-
-        return true;
-    }
-
-    private void addCustomActions() {
-        this.getActionsManager().registerParam(new PartyMemberParam());
-        this.getActionsManager().registerParam(new AttackableParam());
-
-        this.getActionsManager().registerCondition(new CEntityLevel(this));
-
-        this.getActionsManager().registerExecutor(new ActionDamage(this));
-        this.getActionsManager().registerExecutor(new ActionParticleLine(this));
-        this.getActionsManager().registerExecutor(new ActionParticlePulse(this));
-        this.getActionsManager().registerExecutor(new ActionTakeMana(this));
+        this.registerHook(EHook.MY_PET, MyPetHK.class);
+        if (Hooks.hasPlaceholderAPI()) {
+            this.registerHook(Hooks.PLACEHOLDER_API, PlaceholderAPIHK.class);
+        }
+        this.registerHook(EHook.PWING_RACES, PwingRacesHK.class);
+        this.registerHook(EHook.SKILL_API, SkillAPIHK.class);
+//		this.registerHook(EHook.RACES_OF_THANA, RacesOfThanaHK.class);
+//		this.registerHook(EHook.SKILLS, SkillsProHK.class);
     }
 
     @Override
@@ -188,23 +188,6 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
     }
 
     @Override
-    public void registerHooks() {
-        this.registerHook(EHook.CRACK_SHOT, CrackShotHK.class);
-        this.registerHook(EHook.LORINTHS_RPG_MOBS, LorinthsRpgMobsHK.class);
-        this.registerHook(EHook.MAGIC, MagicHK.class);
-        this.registerHook(EHook.MCMMO, McmmoHK.class);
-        this.registerHook(Hooks.MYTHIC_MOBS, MythicMobsHK.class);
-        this.registerHook(EHook.MY_PET, MyPetHK.class);
-        if (Hooks.hasPlaceholderAPI()) {
-            this.registerHook(Hooks.PLACEHOLDER_API, PlaceholderAPIHK.class);
-        }
-        this.registerHook(EHook.PWING_RACES, PwingRacesHK.class);
-        this.registerHook(EHook.SKILL_API, SkillAPIHK.class);
-//		this.registerHook(EHook.RACES_OF_THANA, RacesOfThanaHK.class);
-//		this.registerHook(EHook.SKILLS, SkillsProHK.class);
-    }
-
-    @Override
     @NotNull
     public Config cfg() {
         return this.config;
@@ -217,8 +200,36 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
     }
 
     @Override
+    protected boolean setupDataHandlers() {
+        try {
+            this.dataHandler = RPGUserData.getInstance(this);
+            this.dataHandler.setup();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+
+        this.userManager = new UserManager(this);
+        this.userManager.setup();
+
+        return true;
+    }
+
+    @Override
     public RPGUserData getData() {
         return this.dataHandler;
+    }
+
+    private void addCustomActions() {
+        this.getActionsManager().registerParam(new PartyMemberParam());
+        this.getActionsManager().registerParam(new AttackableParam());
+
+        this.getActionsManager().registerCondition(new CEntityLevel(this));
+
+        this.getActionsManager().registerExecutor(new ActionDamage(this));
+        this.getActionsManager().registerExecutor(new ActionParticleLine(this));
+        this.getActionsManager().registerExecutor(new ActionParticlePulse(this));
+        this.getActionsManager().registerExecutor(new ActionTakeMana(this));
     }
 
     @NotNull
