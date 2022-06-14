@@ -7,6 +7,7 @@ import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.nms.packets.events.EngineServerPacketEvent;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
+import mc.promcteam.engine.utils.reflection.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -206,12 +207,23 @@ public class UniversalPacketHandler implements IPacketHandler {
             Reflex.setFieldValue(pTeam, "a", teamId); // Internal team name
 
 
-            Class       chatComponentClass = Reflex.getNMSClass("ChatComponentText");
-            Constructor ctor               = Reflex.getConstructor(chatComponentClass, String.class);
+            Object team;
+            Object prefix;
+            if (ReflectionUtil.MINOR_VERSION >= 19) {
+                Class<?> baseComp   = Reflex.getClass("net.minecraft.network.chat.IChatBaseComponent");
+                Method   chatMethod = Reflex.getMethod(baseComp, "b", String.class);
+                team = Reflex.invokeMethod(chatMethod, null, teamId);
+                prefix = Reflex.invokeMethod(chatMethod, null, "");
+            } else {
+                Class       chatComponentClass = Reflex.getNMSClass("ChatComponentText");
+                Constructor ctor               = Reflex.getConstructor(chatComponentClass, String.class);
+                team = Reflex.invokeConstructor(ctor, teamId);
+                prefix = Reflex.invokeConstructor(ctor, "");
+            }
             if (newTeam) {
                 Reflex.setFieldValue(pTeam, "g", ec); // Team color
-                Reflex.setFieldValue(pTeam, "b", Reflex.invokeConstructor(ctor, teamId)); // Team display name
-                Reflex.setFieldValue(pTeam, "c", Reflex.invokeConstructor(ctor, "")); // Team prefix
+                Reflex.setFieldValue(pTeam, "b", team); // Team display name
+                Reflex.setFieldValue(pTeam, "c", prefix); // Team prefix
             }
 
             // Send packet to a player
