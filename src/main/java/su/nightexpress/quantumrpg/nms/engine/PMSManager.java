@@ -18,21 +18,6 @@ public class PMSManager {
 
     public void setup() {
         nmsEngine = new PMS() {};
-//        String cur = Version.CURRENT.name().toUpperCase();
-//        try {
-//            String   pack  = this.getClass().getPackage().getName() + ".versions";
-//            Class<?> clazz = Reflex.getClass(pack, cur);
-//            if (clazz == null) {
-//                plugin.error("Could not register Internal NMS! Plugin will be disabled.");
-//                return;
-//            }
-//
-//            this.nmsEngine = (PMS) clazz.getConstructor().newInstance();
-//        } catch (Exception e) {
-//            plugin.error("Could not register Internal NMS! Plugin will be disabled.");
-//            e.printStackTrace();
-//            return;
-//        }
 
         if (EngineCfg.PACKETS_ENABLED) {
             this.plugin.info("Packets are enabled. Setup packet manager...");

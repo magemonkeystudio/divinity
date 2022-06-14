@@ -32,7 +32,7 @@ import java.util.UUID;
 
 public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
 
-    private static final String PACKET_LOCATION = "net.minecraft.network.protocol.game";
+    protected static final String PACKET_LOCATION = "net.minecraft.network.protocol.game";
 
     public V1_18_R1(@NotNull QuantumRPG plugin) {
         super(plugin);

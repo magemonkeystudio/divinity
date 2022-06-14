@@ -229,7 +229,7 @@ public class UniversalPacketHandler implements IPacketHandler {
         UserEntityNamesMode namesMode = profile.getNamesMode();
         if (namesMode == UserEntityNamesMode.DEFAULT) return;
 
-        Class pClass = Reflex.getNMSClass("PacketPlayOutentityMetadata");
+        Class pClass = Reflex.getNMSClass("PacketPlayOutEntityMetadata");
 
         Object p = pClass.cast(packet);
         @SuppressWarnings("unchecked")
