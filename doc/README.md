@@ -1,4 +1,6 @@
-# ${project.artifactId}
+[![Build](https://github.com/promcteam/prorpgitems/actions/workflows/publish.yml/badge.svg?branch=dev)](https://github.com/promcteam/proskillapi/actions/workflows/publish.yml/badge.svg)
+
+# ${project.name}
 
 If you wish to use ${project.artifactId} as a dependency in your projects, include the following in your `pom.xml`
 
