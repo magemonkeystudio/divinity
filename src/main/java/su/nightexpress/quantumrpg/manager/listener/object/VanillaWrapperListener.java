@@ -53,7 +53,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         ItemStack bow = e.getBow();
 
         LivingEntity shooter = e.getEntity();
-        Entity       pj      = e.getProjectile();
+        Projectile   pj      = (Projectile) e.getProjectile();
         Vector       orig    = pj.getVelocity();
         double       power   = e.getForce();
 
@@ -65,8 +65,14 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         if (bow != null) {
             AmmoAttribute ammo = ItemStats.getAmmo(bow);
             if (ammo != null && ammo.getType() != AmmoAttribute.Type.ARROW) {
+                boolean bounce = pj.doesBounce(),
+                        glow = pj.isGlowing(),
+                        gravity = pj.hasGravity();
                 pj = ammo.getProjectile(shooter);
                 pj.setVelocity(orig);
+                pj.setBounce(bounce);
+                pj.setGlowing(glow);
+                pj.setGravity(gravity);
                 e.setProjectile(pj);
             }
         }
@@ -89,9 +95,9 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
             return;
         }
 
-        LivingEntity shooter = null;
-        ItemStack    bow     = null;
-        double       power   = 1D;
+        LivingEntity shooter;
+        ItemStack    bow   = null;
+        double       power = 1D;
 
         if (!(e1 instanceof Projectile)) return;
 

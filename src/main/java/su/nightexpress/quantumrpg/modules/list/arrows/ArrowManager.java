@@ -199,9 +199,9 @@ public class ArrowManager extends QModuleDrop<QArrow> {
 	
 	public class QArrow extends LeveledItem {
 		
-		private TreeMap<Integer, BonusMap> bonusMap;
-		private ActionManipulator fly;
-		private ActionManipulator hit;
+		private final TreeMap<Integer, BonusMap> bonusMap;
+		private final ActionManipulator          fly;
+		private final ActionManipulator          hit;
 		
 		public QArrow(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
 			super(plugin, cfg, ArrowManager.this);

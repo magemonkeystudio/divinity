@@ -18,7 +18,7 @@
 
     <build>
         <directory>../ProBuilds</directory>
-        <finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
+        <finalName>${project.artifactId}-${project.version}</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

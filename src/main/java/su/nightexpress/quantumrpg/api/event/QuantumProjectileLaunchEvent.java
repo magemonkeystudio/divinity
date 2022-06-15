@@ -1,35 +1,25 @@
 package su.nightexpress.quantumrpg.api.event;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.*;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.ProjectileStats;
 
 public class QuantumProjectileLaunchEvent extends Event implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
-
-    private boolean cancelled;
-
-    private Entity pj;
-
-    private Location loc;
-
-    private ItemStack bow;
-
-    private LivingEntity shooter;
-
-    private double power;
-
-    private boolean isBowEvent;
+    private static final HandlerList  handlers = new HandlerList();
+    private final        Location     loc;
+    private final        boolean      isBowEvent;
+    private              boolean      cancelled;
+    private              Entity       pj;
+    private              ItemStack    bow;
+    private              LivingEntity shooter;
+    private              double       power;
 
     public QuantumProjectileLaunchEvent(@NotNull Entity pj, @NotNull Location loc, @NotNull LivingEntity shooter, @Nullable ItemStack bow, double power, boolean isBowEvent) {
         setProjectile(pj);
@@ -81,8 +71,22 @@ public class QuantumProjectileLaunchEvent extends Event implements Cancellable {
     }
 
     public void setShooter(@NotNull LivingEntity shooter) {
-        if (this.pj instanceof Projectile)
-            ((Projectile) this.pj).setShooter((ProjectileSource) shooter);
+        if (this.pj instanceof Projectile) {
+            final Projectile fpj = (Projectile) this.pj;
+
+            AbstractArrow.PickupStatus status = fpj instanceof Arrow ? ((Arrow) fpj).getPickupStatus() : null;
+            boolean bounce = fpj.doesBounce(),
+                    gravity = fpj.hasGravity(),
+                    glow = fpj.isGlowing();
+
+            fpj.setShooter(shooter);
+            fpj.setBounce(bounce);
+            fpj.setGravity(gravity);
+            fpj.setGlowing(glow);
+
+            if (status != null)
+                ((Arrow) fpj).setPickupStatus(status);
+        }
         this.shooter = shooter;
     }
 
