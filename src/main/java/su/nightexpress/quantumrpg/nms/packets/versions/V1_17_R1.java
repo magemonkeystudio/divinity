@@ -8,8 +8,6 @@ import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.nms.packets.events.EngineServerPacketEvent;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
-import net.minecraft.EnumChatFormat;
-import net.minecraft.network.chat.IChatBaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
@@ -73,6 +71,10 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
             this.managePlayerHelmet(e, packet);
             return;
         }
+    }
+
+    @Override
+    public void manageServerPacket(@NotNull EngineServerPacketEvent e) {
     }
 
     @Override
@@ -176,10 +178,9 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
             try {
                 Class<?> en = Reflex.getClass("net.minecraft", "EnumChatFormat");
                 Method   b  = Reflex.getMethod(en, "b", String.class);
-                //TODO Uncomment this
-//                Enum ec = (Enum) b.invoke(null, cc.name());
+                Enum     ec = (Enum) Reflex.invokeMethod(b, null, cc.name());
 
-                EnumChatFormat ec = EnumChatFormat.b(cc.name());
+//                EnumChatFormat ec = EnumChatFormat.b(cc.name());
 
                 Player p = e.getReciever();
 
@@ -215,11 +216,15 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
                         .newInstance(board, teamId);
 //                ScoreboardTeam team = new ScoreboardTeam(board, teamId);
 
-                Reflex.invokeMethod(teamClass.getMethod("setColor", EnumChatFormat.class), team, ec);
+                Reflex.invokeMethod(teamClass.getMethod("setColor", Reflex.getClass("net.minecraft.EnumChatFormat")), team, ec);
 //                team.setColor(ec);
-                Reflex.invokeMethod(teamClass.getMethod("setDisplayName", IChatBaseComponent.class), team, IChatBaseComponent.a(teamId));
+                Class<?> baseComponentClass = Reflex.getClass("net.minecraft.network.chat.IChatBaseComponent");
+                Method   a                  = Reflex.getMethod(baseComponentClass, "a", String.class);
+                Reflex.invokeMethod(teamClass.getMethod("setDisplayName", baseComponentClass), team,
+                        Reflex.invokeMethod(a, null, teamId));
 //                team.setDisplayName(IChatBaseComponent.a(teamId));
-                Reflex.invokeMethod(teamClass.getMethod("setPrefix", IChatBaseComponent.class), team, IChatBaseComponent.a(""));
+                Reflex.invokeMethod(teamClass.getMethod("setPrefix", baseComponentClass), team,
+                        Reflex.invokeMethod(a, null, ""));
 //                team.setPrefix(IChatBaseComponent.a(""));
                 Reflex.invokeMethod(boardClass.getMethod("addPlayerToTeam", String.class, teamClass), board, id.toString(), team);
 //                board.addPlayerToTeam(id.toString(), team);
@@ -366,9 +371,5 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
                 Reflex.setFieldValue(p, "c", Reflex.getFieldValue(Reflex.getClass("net.minecraft.world.item", "ItemStack"), "a"));
             }
         });
-    }
-
-    @Override
-    public void manageServerPacket(@NotNull EngineServerPacketEvent e) {
     }
 }
