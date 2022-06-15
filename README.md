@@ -1,4 +1,6 @@
-# prorpgitems
+[![Build](https://github.com/promcteam/prorpgitems/actions/workflows/publish.yml/badge.svg?branch=dev)](https://github.com/promcteam/proskillapi/actions/workflows/publish.yml/badge.svg)
+
+# ProRPGItems
 
 If you wish to use prorpgitems as a dependency in your projects, include the following in your `pom.xml`
 
@@ -11,7 +13,7 @@ If you wish to use prorpgitems as a dependency in your projects, include the fol
 <dependency>
     <groupId>mc.promcteam</groupId>
     <artifactId>prorpgitems</artifactId>
-    <version>1.0.3.16</version>
+    <version>1.0.3.16-2530545</version>
 </dependency>
 ```
 
