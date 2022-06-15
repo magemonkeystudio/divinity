@@ -6,7 +6,7 @@
 
     <groupId>mc.promcteam</groupId>
     <artifactId>prorpgitems</artifactId>
-    <version>1.0.3.16</version>
+    <version>1.0.3.16-${maven.build.timestamp}</version>
 
     <name>ProRPGItems</name>
 
