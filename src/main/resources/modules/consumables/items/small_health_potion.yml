@@ -7,7 +7,7 @@ lore:
 - '%USER_LEVEL%'
 - '%USER_CLASS%'
 - ''
-- '&7Restores &f3 HP&7.'
+- '&7Restores &f5 HP&7.'
 tier: common
 skull-hash: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjZkM2E3ZTA3ZjVkYWRkNDdiYWRiMTM4MmE1YjE2Mjc4MThlZTE2YTE5YTdjMGJmMjc2OGFlNjI2MjczN2I2In19fQ==\
 color: 220,30,30
@@ -20,6 +20,7 @@ level:
 effects:
   health: 5
   hunger: 5
+  saturation: 0
 user-requirements-by-level:
   level:
     '1': 3

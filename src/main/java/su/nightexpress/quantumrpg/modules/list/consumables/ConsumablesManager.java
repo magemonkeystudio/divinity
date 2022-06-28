@@ -1,12 +1,13 @@
 package su.nightexpress.quantumrpg.modules.list.consumables;
 
+import lombok.Getter;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.utils.ItemUT;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import mc.promcteam.engine.config.api.JYML;
-import mc.promcteam.engine.utils.ItemUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.QuantumPlayerItemUseEvent;
 import su.nightexpress.quantumrpg.modules.LimitedItem;
@@ -16,7 +17,6 @@ import su.nightexpress.quantumrpg.stats.EntityStats;
 
 public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume> {
     private boolean allowConsumeFullHealth;
-
     private boolean allowConsumeFullFood;
 
     public ConsumablesManager(@NotNull QuantumRPG plugin) {
@@ -46,10 +46,10 @@ public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume>
         LimitedItem uItem = e.getItem();
         if (!(uItem instanceof Consume))
             return;
-        Player p = e.getPlayer();
-        Consume c = (Consume) uItem;
-        ItemStack i = e.getItemStack();
-        double maxHealth = EntityStats.getEntityMaxHealth(p);
+        Player    p         = e.getPlayer();
+        Consume   c         = (Consume) uItem;
+        ItemStack i         = e.getItemStack();
+        double    maxHealth = EntityStats.getEntityMaxHealth(p);
         if (c.getHealth() > 0.0D && !isConsumingAllowedOnFullHealth() && p.getHealth() >= maxHealth) {
             (this.plugin.lang()).Consumables_Consume_Error_HealthLevel.replace("%item%", ItemUT.getItemName(i)).send(p);
             e.setCancelled(true);
@@ -72,31 +72,25 @@ public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume>
     }
 
     public class Consume extends UsableItem {
-        private final double hp;
-
-        private final double hunger;
+        @Getter
+        private final double health, hunger, saturation;
 
         public Consume(@NotNull QuantumRPG plugin, JYML cfg) {
             super(plugin, cfg, ConsumablesManager.this);
-            this.hp = cfg.getDouble("effects.health");
+            this.health = cfg.getDouble("effects.health");
             this.hunger = cfg.getDouble("effects.hunger");
-        }
-
-        public double getHealth() {
-            return this.hp;
-        }
-
-        public double getHunger() {
-            return this.hunger;
+            this.saturation = cfg.getDouble("effects.saturation", 0);
         }
 
         public void applyEffects(@NotNull Player p) {
-            double max = EntityStats.getEntityMaxHealth(p);
-            int food = (int) Math.min(20.0D, p.getFoodLevel() + getHunger());
-            int saturation = 20 - food;
-            p.setHealth(Math.min(p.getHealth() + getHealth(), max));
+            double max  = EntityStats.getEntityMaxHealth(p);
+            int    food = (int) Math.min(20.0D, p.getFoodLevel() + getHunger());
+            double heal = Math.min(p.getHealth() + getHealth(), max);
+            p.setHealth(heal);
             p.setFoodLevel(food);
-            p.setSaturation(saturation);
+
+            double sat = Math.min(p.getFoodLevel(), p.getSaturation() + getSaturation());
+            p.setSaturation((float) sat);
         }
     }
 }

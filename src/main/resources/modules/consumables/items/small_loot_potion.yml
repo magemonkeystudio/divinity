@@ -21,6 +21,7 @@ level:
 effects:
   health: 0
   hunger: 0
+  saturation: 0
 user-requirements-by-level:
   level:
     '1': 10

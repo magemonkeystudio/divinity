@@ -186,20 +186,17 @@ public class DamageManager extends IListener<QuantumRPG> {
 
         // Handle damager stats
         // If false then event is cancelled, then stop calculations
-        if (damager != null && statsDamager != null) {
-            if (!this.handleDamageModifiers(e, victim, damager, statsVictim, statsDamager, projectile, orig, meta)) {
+        if (damager != null && statsDamager != null)
+            if (!this.handleDamageModifiers(e, victim, damager, statsVictim, statsDamager, projectile, orig, meta))
                 return;
-            }
-        }
 
         RPGDamageEvent.Pre eventPre = new RPGDamageEvent.Pre(victim, damager, projectile, orig, meta);
         plugin.getPluginManager().callEvent(eventPre);
         if (eventPre.isCancelled()) return;
 
-        String mythicFaction = "";
-        if (this.mmHook != null && this.mmHook.isMythicMob(victim)) {
-            mythicFaction = this.mmHook.getMythicInstance(victim).getFaction();
-        }
+        String mythicFaction = this.mmHook != null && this.mmHook.isMythicMob(victim)
+                ? this.mmHook.getMythicInstance(victim).getFaction()
+                : "";
 
         List<MetadataValue> metadata = damager != null
                 ? damager.getMetadata("custom-cooldown")
@@ -260,21 +257,15 @@ public class DamageManager extends IListener<QuantumRPG> {
 //        QuantumRPG.getInstance().getLogger().info("Damage total: " + dmgTotal);
         orig.setDamage(dmgTotal);
 
-        if (damager != null && statsDamager != null && dmgTotal > 0) {
-            if (!this.handleDamagePostEffects(e, victim, damager, statsVictim, statsDamager, projectile, orig, meta)) {
+        if (damager != null && statsDamager != null && dmgTotal > 0)
+            if (!this.handleDamagePostEffects(e, victim, damager, statsVictim, statsDamager, projectile, orig, meta))
                 return;
-            }
-        }
 
         RPGDamageEvent.Exit eventExit = new RPGDamageEvent.Exit(victim, damager, projectile, orig, meta);
         plugin.getPluginManager().callEvent(eventExit);
         if (eventExit.isCancelled()) return;
 
-        if (damager != null) {
-            if (this.mmHook != null) {
-                this.mmHook.setSkillDamage(damager, dmgTotal);
-            }
-        }
+        if (damager != null && this.mmHook != null) this.mmHook.setSkillDamage(damager, dmgTotal);
     }
 
     private boolean handleDamageModifiers(
@@ -409,16 +400,12 @@ public class DamageManager extends IListener<QuantumRPG> {
         }
 
         double burn = event.getDamagerItemStat(AbstractStat.Type.BURN_RATE);
-        if (burn > 0D && Rnd.get(true) < burn) {
-            victim.setFireTicks(100);
-        }
+        if (burn > 0D && Rnd.get(true) < burn) victim.setFireTicks(100);
 
         double bleed = event.getDamagerItemStat(AbstractStat.Type.BLEED_RATE);
         if (bleed > 0D && Rnd.get(true) < bleed) {
             BleedStat bleedStat = ItemStats.getStat(BleedStat.class);
-            if (bleedStat != null) {
-                bleedStat.bleed(victim, dmgTotal);
-            }
+            if (bleedStat != null) bleedStat.bleed(victim, dmgTotal);
         }
 
         double vamp = Math.max(0, dmgTotal * (event.getDamagerItemStat(AbstractStat.Type.VAMPIRISM) / 100D));
@@ -432,9 +419,7 @@ public class DamageManager extends IListener<QuantumRPG> {
         }
 
         double thorn = statsVictim.getItemStat(AbstractStat.Type.THORNMAIL, false) / 100D;
-        if (thorn > 0D) {
-            damager.damage(dmgTotal * thorn);
-        }
+        if (thorn > 0D) damager.damage(dmgTotal * thorn);
 
         return true;
     }

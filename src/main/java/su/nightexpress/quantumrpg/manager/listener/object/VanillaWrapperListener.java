@@ -307,7 +307,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         RPGDamageEvent.Start eventStart = new RPGDamageEvent.Start(victim, damager, projectile, damages, defenses, stats, e, meta);
         plugin.getPluginManager().callEvent(eventStart);
         if (eventStart.isCancelled() || e.isCancelled()) {
-//            System.out.println("Damage event was cancelled.");
+//            QuantumRPG.getInstance().info("Damage event was cancelled.");
             return;
         }
 
@@ -325,11 +325,9 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
                 if (dmgModifier == DamageModifier.ABSORPTION) continue;
                 if (e.isApplicable(dmgModifier)) {
                     if (dmgModifier == DamageModifier.BASE) {
-//                        QuantumRPG.getInstance().getLogger().info("FINAL - " + dmgModifier.name() + ": " + e.getDamage());
+//                        QuantumRPG.getInstance().info("FINAL - " + dmgModifier.name() + ": " + e.getDamage());
                         e.setDamage(dmgModifier, e.getDamage());
-                    } else {
-                        e.setDamage(dmgModifier, 0); // Fix
-                    }
+                    } else e.setDamage(dmgModifier, 0); // Fix
                 }
             }
         }

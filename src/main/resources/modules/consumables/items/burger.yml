@@ -8,7 +8,7 @@ lore:
 - '%USER_CLASS%'
 - ''
 - '&f• &7Health: &6+5❤&7.'
-- '&f• &7Saturation: &6+5☕&7.'
+- '&f• &7Saturation: &6+3☕&7.'
 - '&f• &7Absorption I: &6%var_potiondurationtext%&7.'
 tier: common
 skull-hash: eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNjZkM2E3ZTA3ZjVkYWRkNDdiYWRiMTM4MmE1YjE2Mjc4MThlZTE2YTE5YTdjMGJmMjc2OGFlNjI2MjczN2I2In19fQ==\
@@ -19,6 +19,7 @@ level:
 effects:
   health: 5
   hunger: 5
+  saturation: 3
 user-requirements-by-level:
   level:
     '1': 10

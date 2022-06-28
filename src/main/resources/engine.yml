@@ -24,8 +24,8 @@ packets:
     reduce-damage-particles: true
 
 compatibility:
-  player-level-plugin: 'SkillAPI'
-  player-class-plugin: 'SkillAPI'
+  player-level-plugin: 'ProSkillAPI'
+  player-class-plugin: 'ProSkillAPI'
   mob-level-plugin: 'MythicMobs'
 
 # Performance settings.
