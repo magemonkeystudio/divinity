@@ -65,7 +65,7 @@ public class MListCmd extends MCmd<QModuleDrop<?>> {
             if (line.contains("%item%")) {
                 for (ModuleItem ge : list) {
                     ClickText ct = new ClickText(line);
-                    ct.createPlaceholder("item%", ge.getId());
+                    ct.createPlaceholder("%item%", ge.getId());
                     ct.createPlaceholder("%pos%", String.valueOf(i++));
 
                     ct.createPlaceholder("%button_get%", plugin.lang().Module_Cmd_List_Button_Get_Name.getMsg())
