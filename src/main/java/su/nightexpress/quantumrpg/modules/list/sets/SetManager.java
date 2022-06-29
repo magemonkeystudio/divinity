@@ -38,16 +38,15 @@ import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SetManager extends QModule {
 
-    private String       formatElementActive;
-    private String       formatElementInactive;
-    private List<String> formatLore;
-
-    private Map<String, ItemSet> sets;
-
-    private static final String SET_LORE_TAG = "qrpg_set_cache";
+    private static final String               SET_LORE_TAG = "qrpg_set_cache";
+    private              String               formatElementActive;
+    private              String               formatElementInactive;
+    private              List<String>         formatLore;
+    private              Map<String, ItemSet> sets;
 
     public SetManager(@NotNull QuantumRPG plugin) {
         super(plugin);
@@ -102,12 +101,9 @@ public class SetManager extends QModule {
             if (have <= 0) continue;
 
             ItemSet set = e.getKey();
-            for (SetElementBonus setBonus : set.getElementBonuses()) {
-                int need = setBonus.getMinElementsAmount();
-                if (have < need) continue;
-
-                setBonus.getPotionEffects().forEach(eff -> stats.addPermaPotionEffect(eff));
-            }
+            set.getElementBonuses().stream()
+                    .filter(setBonus -> have < setBonus.getMinElementsAmount())
+                    .forEach(setBonus -> setBonus.getPotionEffects().forEach(eff -> stats.addPermaPotionEffect(eff)));
         }
     }
 
@@ -117,11 +113,8 @@ public class SetManager extends QModule {
 
         Collection<ItemSet> sets2 = this.getSets();
         for (ItemStack item : EntityStats.get(entity).getEquipment()) {
-            for (ItemSet set : sets2) {
-                if (set.isValidElement(item)) {
-                    sets.merge(set, 1, Integer::sum);
-                }
-            }
+            sets2.stream().filter(set -> set.isValidElement(item))
+                    .forEach(set -> sets.merge(set, 1, Integer::sum));
         }
 
         return sets;
@@ -136,12 +129,9 @@ public class SetManager extends QModule {
             if (have <= 0) continue;
 
             ItemSet set = e.getKey();
-            for (SetElementBonus setElement : set.getElementBonuses()) {
-                int need = setElement.getMinElementsAmount();
-                if (have < need) continue;
-
-                bonuses.add(setElement.getBonusMap());
-            }
+            set.getElementBonuses().stream()
+                    .filter(elm -> have < elm.getMinElementsAmount())
+                    .forEach(elm -> bonuses.add(elm.getBonusMap()));
         }
         return bonuses;
     }
@@ -151,14 +141,10 @@ public class SetManager extends QModule {
         String name = ItemUT.getItemName(item);
 
         RefineManager refineManager = plugin.getModuleCache().getRefineManager();
-        if (refineManager != null) {
-            name = refineManager.getNameWithoutLevel(item, name);
-        }
+        if (refineManager != null) name = refineManager.getNameWithoutLevel(item, name);
 
         FortifyManager fortifyManager = plugin.getModuleCache().getFortifyManager();
-        if (fortifyManager != null) {
-            name = fortifyManager.getNameDeformatted(item, name);
-        }
+        if (fortifyManager != null) name = fortifyManager.getNameDeformatted(item, name);
 
         return name.trim();
     }
@@ -169,21 +155,14 @@ public class SetManager extends QModule {
 
     @Nullable
     public ItemSet getItemSet(@NotNull ItemStack item) {
-        for (ItemSet set : this.getSets()) {
-            if (set.isValidElement(item)) {
-                return set;
-            }
-        }
-        return null;
+        return this.getSets().stream().filter(set -> set.isValidElement(item)).findFirst().orElse(null);
     }
 
     private void updateSets(@NotNull Player player) {
         EntityStats entityStats = EntityStats.get(player);
         entityStats.updateAll();
 
-        for (ItemStack item : entityStats.getEquipment()) {
-            this.updateItemSet(item, player);
-        }
+        entityStats.getEquipment().forEach(item -> this.updateItemSet(item, player));
         player.updateInventory();
     }
 
@@ -205,9 +184,7 @@ public class SetManager extends QModule {
                 int firstText = -1;
                 for (String stored : storedLines) {
                     firstText++;
-                    if (!StringUT.colorOff(stored).isEmpty()) {
-                        break;
-                    }
+                    if (!StringUT.colorOff(stored).isEmpty()) break;
                 }
 
                 int index = lore.indexOf(storedLines[firstText]) - firstText;
@@ -287,10 +264,9 @@ public class SetManager extends QModule {
 
     @Nullable
     public ItemSet getSetById(@NotNull String id) {
-        if (id.equalsIgnoreCase(QModuleDrop.RANDOM_ID)) {
-            return Rnd.get(new ArrayList<>(this.getSets()));
-        }
-        return this.sets.get(id.toLowerCase());
+        return id.equalsIgnoreCase(QModuleDrop.RANDOM_ID)
+                ? Rnd.get(new ArrayList<>(this.getSets()))
+                : this.sets.get(id.toLowerCase());
     }
 
     @NotNull
@@ -314,21 +290,15 @@ public class SetManager extends QModule {
 
         if (target != null && this.hasSet(target)) {
             this.updateItemSet(target, null);
-            if (e.getSlotType() == SlotType.ARMOR || e.isShiftClick()) {
-                update = true;
-            }
+            if (e.getSlotType() == SlotType.ARMOR || e.isShiftClick()) update = true;
         }
 
         if (e.getSlotType() == SlotType.ARMOR) {
             ItemStack cur = e.getCursor();
-            if (cur != null && this.hasSet(cur)) {
-                update = true;
-            }
+            if (cur != null && this.hasSet(cur)) update = true;
         }
 
-        if (update) {
-            this.plugin.getServer().getScheduler().runTask(this.plugin, () -> this.updateSets(p));
-        }
+        if (update) this.plugin.getServer().getScheduler().runTask(this.plugin, () -> this.updateSets(p));
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -337,9 +307,7 @@ public class SetManager extends QModule {
         if (p.getGameMode() == GameMode.CREATIVE) return;
 
         ItemStack target = p.getInventory().getItem(e.getNewSlot());
-        if (target != null && this.hasSet(target)) {
-            this.updateItemSet(target, null);
-        }
+        if (target != null && this.hasSet(target)) this.updateItemSet(target, null);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -367,9 +335,7 @@ public class SetManager extends QModule {
 
         if (nameBefore.equalsIgnoreCase(nameResult)) return;
 
-        if (this.hasSet(result) || this.hasSet(before)) {
-            e.setResult(null);
-        }
+        if (this.hasSet(result) || this.hasSet(before)) e.setResult(null);
     }
 
     // -------------------------------------------------------------------- //
@@ -377,12 +343,12 @@ public class SetManager extends QModule {
 
     public class ItemSet extends LoadableItem {
 
-        private final String name;
-        private final String prefix;
-        private final String suffix;
-        private final String colorHave;
-        private final String colorMiss;
-        private final Map<String, SetElement> elements;
+        private final String                            name;
+        private final String                            prefix;
+        private final String                            suffix;
+        private final String                            colorHave;
+        private final String                            colorMiss;
+        private final Map<String, SetElement>           elements;
         private final TreeMap<Integer, SetElementBonus> elementBonus;
 
         public ItemSet(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
@@ -401,9 +367,7 @@ public class SetManager extends QModule {
                 Set<Material> eMaterials = new HashSet<>();
                 for (String matName : cfg.getStringList(path2 + "materials")) {
                     Material eMat = Material.getMaterial(matName.toUpperCase());
-                    if (eMat != null) {
-                        eMaterials.add(eMat);
-                    }
+                    if (eMat != null) eMaterials.add(eMat);
                 }
                 if (eMaterials.isEmpty()) {
                     error("Invalid material for '" + eId + "' element of '" + id + "' set!");
@@ -429,10 +393,9 @@ public class SetManager extends QModule {
 
                 String path2 = "bonuses.by-elements-amount." + sAmount + ".";
 
-                List<String> bonusLore = new ArrayList<>();
-                for (String s3 : cfg.getStringList(path2 + "lore")) {
-                    bonusLore.add(StringUT.color(s3));
-                }
+                List<String> bonusLore = cfg.getStringList(path2 + "lore").stream()
+                        .map(StringUT::color)
+                        .collect(Collectors.toList());
 
                 // Setup potion effects.
                 // With good map = better performance.
@@ -444,9 +407,7 @@ public class SetManager extends QModule {
                         continue;
                     }
                     int level = cfg.getInt(path2 + "potion-effects." + potionName);
-                    if (level > 0) {
-                        potions.put(pet, level);
-                    }
+                    if (level > 0) potions.put(pet, level);
                 }
 
                 BonusMap bonusMap = new BonusMap();
@@ -500,12 +461,7 @@ public class SetManager extends QModule {
         }
 
         public boolean isValidElement(@NotNull ItemStack item) {
-            for (SetElement element : this.getElements()) {
-                if (element.isValidElement(item)) {
-                    return true;
-                }
-            }
-            return false;
+            return this.getElements().stream().anyMatch(element -> element.isValidElement(item));
         }
 
         public int getEquippedElements(@NotNull LivingEntity entity) {
@@ -551,16 +507,11 @@ public class SetManager extends QModule {
         }
 
         public void setName(@NotNull String name) {
-            this.name = name.trim(); // Removes spaces from name
+            this.name = name.trim(); // Remove spaces from name
         }
 
         public boolean isEquipped(@NotNull LivingEntity p) {
-            for (ItemStack item : EntityStats.get(p).getEquipment()) {
-                if (this.isValidElement(item)) {
-                    return true;
-                }
-            }
-            return false;
+            return EntityStats.get(p).getEquipment().stream().anyMatch(this::isValidElement);
         }
 
         public boolean isValidElement(@NotNull ItemStack item) {
@@ -574,8 +525,8 @@ public class SetManager extends QModule {
 
     public class SetElementBonus {
 
-        private final int          minAmount;
-        private final List<String> lore;
+        private final int               minAmount;
+        private final List<String>      lore;
         private final Set<PotionEffect> potions;
         private final BonusMap          bonusMap;
 
@@ -591,7 +542,8 @@ public class SetManager extends QModule {
             for (Map.Entry<PotionEffectType, Integer> e : potions.entrySet()) {
                 PotionEffectType type = e.getKey();
                 int              dur  = EntityStatsTask.POTION_DURATION;
-                if (type.equals(PotionEffectType.NIGHT_VISION) || type.getName().equalsIgnoreCase(PotionEffectType.NIGHT_VISION.getName())) {
+                if (type.equals(PotionEffectType.NIGHT_VISION)
+                        || type.getName().equalsIgnoreCase(PotionEffectType.NIGHT_VISION.getName())) {
                     dur *= 5;
                 }
 
