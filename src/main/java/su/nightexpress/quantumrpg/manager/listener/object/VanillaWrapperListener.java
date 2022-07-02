@@ -155,6 +155,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         boolean isEde        = e instanceof EntityDamageByEntityEvent;
         boolean isFullDamage = false;
 
+        SkillAPIHK skillApi = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
         // Here only check for damager
         // to be sure to use his stats or not.
         labelFullDamage:
@@ -168,8 +169,6 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
                 return;
             }
 
-            SkillAPIHK skillApi = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
-
             if (edeDamager instanceof LivingEntity) {
                 if (cause == DamageCause.ENTITY_SWEEP_ATTACK && EngineCfg.COMBAT_DISABLE_VANILLA_SWEEP) {
                     ede.setCancelled(true);
@@ -177,8 +176,6 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
                 }
 
                 damager = (LivingEntity) edeDamager;
-
-                if (skillApi != null && skillApi.isExempt(damager)) return;
 
                 meta.setDamager(damager);
                 statsDamager = EntityStats.get(damager);
@@ -195,8 +192,6 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
                 if (!(shooter instanceof LivingEntity)) {
                     break labelFullDamage;
                 }
-
-                if (skillApi != null && skillApi.isExempt((LivingEntity) shooter)) return;
 
                 // Fix extra damage from ender pearls
                 if (projectile instanceof EnderPearl && shooter.equals(victim)) {
@@ -233,11 +228,15 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
                 // projectile launch power for proper damage values.
                 double power = ProjectileStats.getPower(projectile);
                 statsDamager.setAttackPower(power);
+
+
             }
             // If label not broken, then we have to use all damager damage attributes
             isFullDamage = statsDamager != null;
         }
         meta.setWeapon(weapon);
+
+        boolean exempt = skillApi != null && damager != null && skillApi.isExempt(damager);
 
         // +----------------------------------------------------+
         // | Get all DamageAttribute values of the damager.     |
@@ -250,7 +249,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         final Map<DefenseAttribute, Double>  defenses = new HashMap<>();
 
         // Pre-cache damager damage types.
-        if (isFullDamage && statsDamager != null) {
+        if (isFullDamage && statsDamager != null && !exempt) {
             damages.putAll(statsDamager.getDamageTypes(false));
         } else {
             DamageAttribute dmgCause = ItemStats.getDamageByCause(cause);
@@ -269,7 +268,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         // | that is added to the default hand/weapon damage by |
         // | AttributeModifiers and such other things.          |
         // +----------------------------------------------------+
-        if (statsDamager != null) {
+        if (statsDamager != null && !exempt) {
             // Deduct vanilla weapon or hand damage value.
             if (weapon != null && !ItemUT.isAir(weapon)) {
                 double defaultDamage = DamageAttribute.getVanillaDamage(weapon);
@@ -304,7 +303,8 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         final double damageStart2 = damageStart;
         damages.keySet().forEach((dmgAtt) -> damages.compute(dmgAtt, (dmgKey, dmgVal) -> dmgVal + damageStart2));
 
-        RPGDamageEvent.Start eventStart = new RPGDamageEvent.Start(victim, damager, projectile, damages, defenses, stats, e, meta);
+        RPGDamageEvent.Start eventStart = new RPGDamageEvent.Start(victim, damager, projectile, damages, defenses,
+                stats, e, meta, exempt);
         plugin.getPluginManager().callEvent(eventStart);
         if (eventStart.isCancelled() || e.isCancelled()) {
 //            QuantumRPG.getInstance().info("Damage event was cancelled.");
@@ -319,7 +319,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         // +----------------------------------------------------+
         // | Fix final damage value of the vanilla damage event.|
         // +----------------------------------------------------+
-//        System.out.println("Damage Final Check: " + e.getFinalDamage() + "/" + e.getDamage());
+//        QuantumRPG.getInstance().info("Damage Final Check: " + e.getFinalDamage() + "/" + e.getDamage());
         if (e.getFinalDamage() != e.getDamage()) {
             for (DamageModifier dmgModifier : DamageModifier.values()) {
                 if (dmgModifier == DamageModifier.ABSORPTION) continue;
@@ -332,6 +332,6 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
             }
         }
 
-//        System.out.println("event took: " + (System.currentTimeMillis() - l1) + " millis");
+//        QuantumRPG.getInstance().info("event took: " + (System.currentTimeMillis() - l1) + " millis");
     }
 }

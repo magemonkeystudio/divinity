@@ -1,6 +1,9 @@
 package su.nightexpress.quantumrpg.api.event;
 
 import com.google.common.collect.Sets;
+import lombok.Getter;
+import lombok.Setter;
+import mc.promcteam.engine.manager.api.event.ICancellableEvent;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -8,7 +11,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import mc.promcteam.engine.manager.api.event.ICancellableEvent;
 import su.nightexpress.quantumrpg.manager.damage.DamageMeta;
 import su.nightexpress.quantumrpg.modules.list.arrows.ArrowManager.QArrow;
 import su.nightexpress.quantumrpg.stats.EntityStats;
@@ -35,6 +37,10 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
     protected EntityDamageEvent eventOrig;
 
     protected boolean cancelled = false;
+
+    @Getter
+    @Setter
+    protected boolean exempt = false;
 
     public RPGDamageEvent(
             @NotNull LivingEntity zertva,
@@ -198,12 +204,14 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
                 @NotNull Map<DefenseAttribute, Double> defenseMap,
                 @NotNull Map<AbstractStat.Type, Double> statsMap,
                 @NotNull EntityDamageEvent eventOrig,
-                @NotNull DamageMeta meta
+                @NotNull DamageMeta meta,
+                boolean exempt
         ) {
             super(zertva, damager, projectile, eventOrig, meta);
             this.damageMap = damageMap;
             this.defenseMap = defenseMap;
             this.damagerItemStatsMap = statsMap;
+            this.exempt = exempt;
         }
     }
 

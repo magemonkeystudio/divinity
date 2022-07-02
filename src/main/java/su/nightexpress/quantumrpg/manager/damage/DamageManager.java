@@ -198,12 +198,12 @@ public class DamageManager extends IListener<QuantumRPG> {
                 ? this.mmHook.getMythicInstance(victim).getFaction()
                 : "";
 
-        List<MetadataValue> metadata = damager != null
+        List<MetadataValue> metadata = damager != null && !e.isExempt()
                 ? damager.getMetadata("custom-cooldown")
                 : Collections.emptyList();
 
-        double powerMod = metadata == null || metadata.isEmpty() ?
-                statsDamager != null ? statsDamager.getAttackPowerModifier() : 1D
+        double powerMod = metadata == null || metadata.isEmpty()
+                ? (statsDamager != null ? statsDamager.getAttackPowerModifier() : 1D)
                 : metadata.get(0).asInt();
         double directMod        = meta.getDirectModifier();
         double critMod          = meta.getCriticalModifier();
@@ -228,7 +228,8 @@ public class DamageManager extends IListener<QuantumRPG> {
                 dmgType *= dmgAtt.getDamageModifierByMythicFaction(mythicFaction);
             }
             dmgType *= enchantFactorMod;
-            dmgType *= powerMod;
+            if (!e.isExempt())
+                dmgType *= powerMod;
             dmgType *= blockMod;
             double directType = dmgType * directMod; // Get direct value for this Damage Attribute
             dmgType = Math.max(0, dmgType - directType); // Deduct this value from damage
@@ -255,7 +256,11 @@ public class DamageManager extends IListener<QuantumRPG> {
 
         double dmgTotal = meta.getTotalDamage();
 //        QuantumRPG.getInstance().getLogger().info("Damage total: " + dmgTotal);
+//        QuantumRPG.getInstance().getLogger().info("Defended: " + meta.getDefendedDamage());
         orig.setDamage(dmgTotal);
+
+        // We want to terminate early since the post-effects could introduce RPGItems effects not intended for skills
+        if (e.isExempt()) return;
 
         if (damager != null && statsDamager != null && dmgTotal > 0)
             if (!this.handleDamagePostEffects(e, victim, damager, statsVictim, statsDamager, projectile, orig, meta))
