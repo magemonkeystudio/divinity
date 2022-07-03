@@ -63,7 +63,7 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
 
         //System.out.println("Adding new index: " + index);
         item = this.preparePlaceholder(item, index, line); // Replace current text with placeholder
-        item = this.remove(item, index, true); // Remove meta tag. Does not removes lore as it replaced above.
+        item = this.remove(item, index, true); // Remove meta tag. Does not remove lore as it replaced above.
 
         String format = this.getFormat(item, value);
 

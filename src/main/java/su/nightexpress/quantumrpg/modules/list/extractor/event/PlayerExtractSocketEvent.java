@@ -1,58 +1,41 @@
 package su.nightexpress.quantumrpg.modules.list.extractor.event;
 
+import lombok.Getter;
+import lombok.Setter;
+import mc.promcteam.engine.manager.api.event.ICancellableEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import mc.promcteam.engine.manager.api.event.ICancellableEvent;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
+
+import java.util.List;
 
 public class PlayerExtractSocketEvent extends ICancellableEvent {
 
+	@Getter
 	private Player player;
-	private ItemStack item;
-	private ItemStack result;
-	private SocketAttribute.Type sock;
-	private boolean isError;
+	@Getter
+	private ItemStack item, result;
+	@Getter
+	private List<ItemStack>      returnedSockets;
+	@Getter
+	private SocketAttribute.Type socketType;
+	@Getter
+	@Setter
+	private boolean              isFailed;
 
 	public PlayerExtractSocketEvent(
 			@NotNull Player player,
 			@NotNull ItemStack item,
 			@NotNull ItemStack result,
-			@NotNull SocketAttribute.Type sock
+			@NotNull List<ItemStack> returnedSockets,
+			@NotNull SocketAttribute.Type socketType
 			) {
 	    this.item = item;
 	    this.result = result;
-	    this.sock = sock;
+	    this.socketType = socketType;
+		this.returnedSockets = returnedSockets;
 	    this.player = player;
 	    this.setFailed(false);
-	}
-	
-	@NotNull
-	public SocketAttribute.Type getSocketType() {
-		return this.sock;
-	}
-	
-	@NotNull
-	public Player getPlayer() {
-		return this.player;
-	}
-
-	@NotNull
-	public ItemStack getItem() {
-		return this.item;
-	}
-	
-	@NotNull
-	public ItemStack getResult() {
-		return this.result;
-	}
-	
-	public boolean isFailed() {
-		return this.isError;
-	}
-	
-	public void setFailed(boolean isFailed) {
-		this.isError = isFailed;
 	}
 }

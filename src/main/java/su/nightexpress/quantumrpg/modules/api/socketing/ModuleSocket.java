@@ -319,21 +319,24 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
     }
 
     @NotNull
-    public ItemStack extractSocket(@NotNull ItemStack target, @NotNull String socketId, int index) {
+    public List<ItemStack> extractSocket(@NotNull ItemStack target, @NotNull String socketId, int index) {
         SocketAttribute socket = ItemStats.getSocket(this.getSocketType(), socketId);
         if (socket == null) {
             this.error("Attempt to extract invalid socket type: '" + socketId + "' !");
-            return target;
+            return Collections.singletonList(target);
         }
 
         // No socket at provided index or it's already empty.
         String[] value = socket.getRaw(target, index);
-        if (value == null || socket.isEmpty(value)) {
-            return target;
-        }
+        if (value == null || socket.isEmpty(value)) return Collections.singletonList(target);
+
+        List<Entry<I, Integer>> sockets     = this.getItemSockets(target);
+        List<ItemStack>         returnItems = new ArrayList<>();
+        sockets.forEach(entry -> returnItems.add(entry.getKey().create(entry.getValue(), 1)));
 
         socket.add(target, socket.getDefaultValue(), index, -1);
-        return target;
+        returnItems.add(0, target);
+        return returnItems;
     }
 
     public final void startSocketing(

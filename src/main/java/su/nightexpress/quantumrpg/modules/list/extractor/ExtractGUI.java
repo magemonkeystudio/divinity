@@ -117,9 +117,7 @@ class ExtractGUI extends NGUI<QuantumRPG> {
             @Nullable ItemStack source,
             @Nullable SocketAttribute.Type type) {
 
-        if (target == null) {
-            target = new ItemStack(Material.AIR);
-        }
+        if (target == null) target = new ItemStack(Material.AIR);
         if (source == null) {
             source = new ItemStack(Material.PLAYER_HEAD);
             SkullMeta meta = (SkullMeta) source.getItemMeta();
@@ -183,12 +181,20 @@ class ExtractGUI extends NGUI<QuantumRPG> {
                             }
 
                             ItemStack target = getItem(inv, itemSlot);
-                            ItemStack result = mod.extractSocket(new ItemStack(target), socketCategory, indexSocket);
-                            if (e.isLeftClick()) {
-                                inv.setItem(resultSlot, result);
-                            }
-                            if (e.isRightClick()) {
-                                PlayerExtractSocketEvent eve = new PlayerExtractSocketEvent(p, target, result, type);
+                            List<ItemStack> resultItems =
+                                    mod.extractSocket(new ItemStack(target), socketCategory, indexSocket);
+                            ItemStack result = resultItems.get(0);
+                            resultItems.remove(result);
+
+                            if (e.isLeftClick()) inv.setItem(resultSlot, result);
+                            else if (e.isRightClick()) {
+                                PlayerExtractSocketEvent eve = new PlayerExtractSocketEvent(
+                                        p,
+                                        target,
+                                        result,
+                                        resultItems,
+                                        type
+                                );
 
                                 VaultHK vh = plugin.getVault();
                                 if (extractPrice > 0 && vh != null) {
@@ -199,9 +205,7 @@ class ExtractGUI extends NGUI<QuantumRPG> {
                                                 .replace("%balance%", NumberUT.format(userBalance))
                                                 .send(p);
                                         eve.setFailed(true);
-                                    } else {
-                                        vh.take(p, extractPrice);
-                                    }
+                                    } else vh.take(p, extractPrice);
                                 }
 
                                 plugin.getPluginManager().callEvent(eve);
@@ -210,6 +214,10 @@ class ExtractGUI extends NGUI<QuantumRPG> {
                                 // Prevent to dupe after close
                                 inv.setItem(srcSlot, null);
                                 inv.setItem(itemSlot, result);
+                                p.getInventory().addItem(resultItems.toArray(new ItemStack[0]))
+                                        .values().forEach(itm ->
+                                                p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.5, 0), itm)
+                                        );
 
                                 if (extractorManager.isItemOfThisModule(src)) {
                                     extractorManager.takeItemCharge(src);
