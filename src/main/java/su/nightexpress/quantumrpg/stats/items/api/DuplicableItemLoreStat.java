@@ -174,8 +174,12 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
     }
 
     @Nullable
-    public final Z getRaw(@NotNull ItemStack item, int index) {
-        ItemMeta meta = item.getItemMeta();
+    public final Z getRaw(ItemStack item, int index) {
+        return getRaw(item.getItemMeta(), index);
+    }
+
+    @Nullable
+    public final Z getRaw(ItemMeta meta, int index) {
         if (meta == null) return null;
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
@@ -188,13 +192,15 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
     }
 
     public final int getAmount(@NotNull ItemStack item) {
-        int value = 0;
+        ItemMeta     meta = item.getItemMeta();
+        List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : null;
 
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) return value;
-        List<String> lore = meta.getLore();
-        if (lore == null) return value;
+        return getAmount(meta, lore);
+    }
 
+    public final int getAmount(ItemMeta meta, List<String> lore) {
+        if (meta == null || lore == null || lore.isEmpty()) return 0;
+        int                     value     = 0;
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
         for (int index = 0; index < lore.size(); index++) {

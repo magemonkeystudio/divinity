@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.Perms;
@@ -245,8 +246,11 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
     public final List<Entry<I, Integer>> getItemSockets(@NotNull ItemStack item) {
         List<Entry<I, Integer>> sockets = new ArrayList<>();
 
+        ItemMeta     meta = item.getItemMeta();
+        List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : null;
+
         for (SocketAttribute socket : ItemStats.getSockets(this.getSocketType())) {
-            for (String[] v : this.getFilledSocketKeys(item, socket.getId()).values()) {
+            for (String[] v : this.getFilledSocketKeys(meta, lore, socket.getId()).values()) {
                 String      id    = v[0];
                 @Nullable I mItem = this.getItemById(id);
                 if (mItem == null) continue;
@@ -263,8 +267,10 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
     }
 
     public final boolean hasSocketItem(@NotNull ItemStack item, @NotNull String itemId) {
+        ItemMeta     meta = item.getItemMeta();
+        List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : null;
         for (SocketAttribute socket : ItemStats.getSockets(this.getSocketType())) {
-            for (String[] values : this.getFilledSocketKeys(item, socket.getId()).values()) {
+            for (String[] values : this.getFilledSocketKeys(meta, lore, socket.getId()).values()) {
                 String id = values[0];
                 if (id.equalsIgnoreCase(itemId)) {
                     return true;
@@ -308,6 +314,24 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
         return sockets;
     }
 
+    @NotNull
+    public final Map<Integer, String[]> getFilledSocketKeys(ItemMeta meta, List<String> lore, String socketId) {
+        Map<Integer, String[]> sockets = new TreeMap<>();
+
+        SocketAttribute socket = ItemStats.getSocket(this.getSocketType(), socketId);
+        if (socket != null) {
+            int total = socket.getAmount(meta, lore); // Total amount of empty and filled
+            for (int index = 0; index < total; index++) {
+                String[] values = socket.getRaw(meta, index);
+                if (values != null && !socket.isEmpty(values)) {
+                    sockets.put(index, values); // Int key will represent valid index for filled socket
+                }
+            }
+        }
+
+        return sockets;
+    }
+
     public final int getFilledSocketsAmount(@NotNull ItemStack item, @NotNull String socketId) {
         SocketAttribute socket = ItemStats.getSocket(this.getSocketType(), socketId);
         return socket != null ? socket.getFilledAmount(item) : 0;
@@ -326,13 +350,16 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
             return Collections.singletonList(target);
         }
 
-        // No socket at provided index or it's already empty.
+        // No socket at provided index, or it's already empty.
         String[] value = socket.getRaw(target, index);
         if (value == null || socket.isEmpty(value)) return Collections.singletonList(target);
 
-        List<Entry<I, Integer>> sockets     = this.getItemSockets(target);
+        I sock = this.getItemById(value[0]);
+        ItemStack mSockItem = sock.create(Integer.valueOf(value[1]));
         List<ItemStack>         returnItems = new ArrayList<>();
-        sockets.forEach(entry -> returnItems.add(entry.getKey().create(entry.getValue(), 1)));
+//        List<Entry<I, Integer>> sockets     = this.getItemSockets(target);
+//        sockets.forEach(entry -> returnItems.add(entry.getKey().create(entry.getValue(), 1)));
+        returnItems.add(mSockItem);
 
         socket.add(target, socket.getDefaultValue(), index, -1);
         returnItems.add(0, target);
