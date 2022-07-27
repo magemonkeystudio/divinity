@@ -321,12 +321,15 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         // +----------------------------------------------------+
 //        QuantumRPG.getInstance().info("Damage Final Check: " + e.getFinalDamage() + "/" + e.getDamage());
         if (e.getFinalDamage() != e.getDamage()) {
+            double absorption = Math.min(e.getDamage(), victim.getAbsorptionAmount());
             for (DamageModifier dmgModifier : DamageModifier.values()) {
                 if (dmgModifier == DamageModifier.ABSORPTION) continue;
                 if (e.isApplicable(dmgModifier)) {
                     if (dmgModifier == DamageModifier.BASE) {
 //                        QuantumRPG.getInstance().info("FINAL - " + dmgModifier.name() + ": " + e.getDamage());
-                        e.setDamage(dmgModifier, e.getDamage());
+                        e.setDamage(dmgModifier, e.getDamage() - absorption);
+                    } else if (dmgModifier == DamageModifier.ABSORPTION) {
+                        e.setDamage(dmgModifier, absorption);
                     } else e.setDamage(dmgModifier, 0); // Fix
                 }
             }
