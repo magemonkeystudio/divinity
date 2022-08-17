@@ -7,6 +7,7 @@ import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.eval.Evaluator;
 import net.citizensnpcs.api.trait.TraitInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -181,9 +182,14 @@ public class ExtractorManager extends QModuleDrop<ExtractorTool> {
             @NotNull ItemStack target,
             @NotNull ExtractorTool mItem,
             @NotNull InventoryClickEvent e) {
-
+        ItemStack cursor = e.getView().getCursor();
         e.getView().setCursor(null);
-        return this.openExtraction(player, target, src, null, true);
+        boolean open = this.openExtraction(player, target, src, null, true);
+        if (!open)
+            e.getView().setCursor(cursor);
+
+        Bukkit.getScheduler().runTaskLater(QuantumRPG.getInstance(), () -> player.updateInventory(), 1L);
+        return open;
     }
 
     // -------------------------------------------------------------------- //
