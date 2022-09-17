@@ -61,9 +61,17 @@ public class V1_19_R1 extends V1_18_R2 {
 
             if (nmsEntity == null) return;
 
-            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cp");
+            Entity bukkitEntity;
+            Method getUniqueId;
 
-            Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            try {
+                getUniqueId = Reflex.getMethod(nmsEntityClass, "cp");
+                bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            } catch (ClassCastException ex) {
+                getUniqueId = Reflex.getMethod(nmsEntityClass, "co");
+                bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            }
+
             if (!(bukkitEntity instanceof LivingEntity)) return;
             if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)) return;
 
@@ -123,9 +131,17 @@ public class V1_19_R1 extends V1_18_R2 {
             if (nmsEntity == null) return;
 
 
-            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cp");
+            Entity bukkitEntity;
+            Method getUniqueId;
 
-            Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            try {
+                getUniqueId = Reflex.getMethod(nmsEntityClass, "cp");
+                bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            } catch (ClassCastException ex) {
+                getUniqueId = Reflex.getMethod(nmsEntityClass, "co");
+                bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            }
+
             if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;
 
             Player  player = (Player) bukkitEntity;
