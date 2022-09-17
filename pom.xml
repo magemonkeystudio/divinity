@@ -4,17 +4,147 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>mc.promcteam</groupId>
+        <artifactId>promc-parent</artifactId>
+        <version>1.19.2</version>
+    </parent>
+
     <groupId>mc.promcteam</groupId>
     <artifactId>prorpgitems</artifactId>
     <version>1.0.3.16-${maven.build.timestamp}</version>
-
     <name>ProRPGItems</name>
 
-    <properties>
-        <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.build.timestamp.format>wwuHHmm</maven.build.timestamp.format>
-    </properties>
+    <repositories>
+        <!-- ProMCTeam Repo -->
+        <repository>
+            <id>promcteam</id>
+            <url>https://maven.pkg.github.com/promcteam/promccore</url>
+        </repository>
+        <!-- Magic API -->
+        <repository>
+            <id>elmakers-repo</id>
+            <url>https://maven.elmakers.com/repository/</url>
+        </repository>
+        <!-- Holographic Displays -->
+        <repository>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>authlib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mojang</groupId>
+            <artifactId>datafixerupper</artifactId>
+            <version>4.1.27</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- ProMCTeam -->
+        <dependency>
+            <groupId>mc.promcteam</groupId>
+            <artifactId>promccore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mc.promcteam</groupId>
+            <artifactId>proskillapi</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.lumine</groupId>
+            <artifactId>Mythic-Dist</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.lumine.xikage</groupId>
+            <artifactId>MythicMobs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ru.endlesscode.mimic</groupId>
+            <artifactId>mimic-bukkit-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizens-main</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.elmakers.mine.bukkit</groupId>
+            <artifactId>MagicAPI</artifactId>
+            <version>7.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
+            <artifactId>holographicdisplays-api</artifactId>
+            <version>2.4.9</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Pwing-Minecraft</groupId>
+            <artifactId>PwingRaces-API</artifactId>
+            <version>-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.promcteam</groupId>
+            <artifactId>mcMMO</artifactId>
+            <version>master-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Legacy Dependencies -->
+        <dependency>
+            <groupId>de.keyle</groupId>
+            <artifactId>mypet-api</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/MyPet-3.10.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.shampaggon</groupId>
+            <artifactId>CrackShot</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/CrackShot.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>me.lorinth</groupId>
+            <artifactId>rpgmobs</artifactId>
+            <version>1.10.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/LorinthsRpgMobs-1.10.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>mango</groupId>
+            <artifactId>MangoQuest</artifactId>
+            <version>1.01</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/MangoQuest.jar</systemPath>
+        </dependency>
+        <!-- End Legacy Dependencies -->
+    </dependencies>
 
     <build>
         <directory>../ProBuilds</directory>
@@ -72,181 +202,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>elmakers-repo</id>
-            <url>https://maven.elmakers.com/repository/</url>
-        </repository>
-        <repository>
-            <id>codemc-repo</id>
-            <url>https://repo.codemc.io/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <!-- Mythic Mobs Repo -->
-        <repository>
-            <id>nexus</id>
-            <name>Lumine Releases</name>
-            <url>https://mvn.lumine.io/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        <repository>
-            <id>promcteam</id>
-            <url>https://maven.pkg.github.com/promcteam/promccore</url>
-        </repository>
-    </repositories>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.mojang</groupId>
-            <artifactId>authlib</artifactId>
-            <version>1.5.25</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.mojang</groupId>
-            <artifactId>datafixerupper</artifactId>
-            <version>4.1.27</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>1.19.2-R0.1-SNAPSHOT</version>
-            <!--            <classifier>remapped-mojang</classifier>-->
-        </dependency>
-        <dependency>
-            <groupId>mc.promcteam</groupId>
-            <artifactId>promccore</artifactId>
-            <version>1.0.3.8</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>mc.promcteam</groupId>
-            <artifactId>proskillapi</artifactId>
-            <version>1.1.7.16</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.elmakers.mine.bukkit</groupId>
-            <artifactId>MagicAPI</artifactId>
-            <version>7.5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gmail.filoghost.holographicdisplays</groupId>
-            <artifactId>holographicdisplays-api</artifactId>
-            <version>2.4.9</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.Pwing-Minecraft</groupId>
-            <artifactId>PwingRaces-API</artifactId>
-            <version>-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.promcteam</groupId>
-            <artifactId>mcMMO</artifactId>
-            <version>master-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>ru.endlesscode.mimic</groupId>
-            <artifactId>mimic-bukkit-api</artifactId>
-            <version>0.6.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.keyle</groupId>
-            <artifactId>mypet-api</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/MyPet-3.10.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>com.shampaggon</groupId>
-            <artifactId>CrackShot</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/CrackShot.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>me.lorinth</groupId>
-            <artifactId>rpgmobs</artifactId>
-            <version>1.10.1</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/LorinthsRpgMobs-1.10.1.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>mango</groupId>
-            <artifactId>MangoQuest</artifactId>
-            <version>1.01</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/MangoQuest.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>me.clip</groupId>
-            <artifactId>placeholderapi</artifactId>
-            <version>2.10.10</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.citizensnpcs</groupId>
-            <artifactId>citizens-main</artifactId>
-            <version>2.0.27-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.lumine</groupId>
-            <artifactId>Mythic-Dist</artifactId>
-            <version>5.0.3-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.lumine.xikage</groupId>
-            <artifactId>MythicMobs</artifactId>
-            <version>4.12.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.MilkBowl</groupId>
-            <artifactId>VaultAPI</artifactId>
-            <version>1.7</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bukkit</groupId>
-                    <artifactId>bukkit</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>promcteam</id>
-            <name>ProMCTeam</name>
-            <url>https://maven.pkg.github.com/promcteam/promccore</url>
-        </repository>
-    </distributionManagement>
-
 </project>

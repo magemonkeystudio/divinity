@@ -73,12 +73,7 @@ public class ProRpgItemsLevelSystem extends BukkitLevelSystem {
         return Objects.requireNonNull(classManager.getUserData(getPlayer()));
     }
 
-    public static class Provider extends BukkitLevelSystem.Provider {
-
-        public Provider() {
-            super(ID);
-        }
-
+    public static class Provider implements BukkitLevelSystem.Provider {
         @NotNull
         @Override
         public BukkitLevelSystem getSystem(@NotNull Player player) {

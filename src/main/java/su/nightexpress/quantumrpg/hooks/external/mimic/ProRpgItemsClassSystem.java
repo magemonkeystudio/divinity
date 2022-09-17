@@ -48,12 +48,7 @@ public class ProRpgItemsClassSystem extends BukkitClassSystem {
                 .getPlayerClass();
     }
 
-    public static class Provider extends BukkitClassSystem.Provider {
-
-        public Provider() {
-            super(ID);
-        }
-
+    public static class Provider implements BukkitClassSystem.Provider {
         @NotNull
         @Override
         public BukkitClassSystem getSystem(@NotNull Player player) {
