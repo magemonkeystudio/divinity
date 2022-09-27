@@ -29,7 +29,6 @@ public abstract class ItemLoreStat<Z> {
     private final    String                   uniqueMetaTag;
     private final    NamespacedKey            key;
     private final    NamespacedKey            key2;
-    private final    boolean                  isMulti;
     protected        String                   name;
     protected        PersistentDataType<?, Z> dataType;
 
@@ -51,8 +50,6 @@ public abstract class ItemLoreStat<Z> {
         this.name = StringUT.color(name);
         this.format = StringUT.color(format.replace("%name%", this.getName()));
         this.placeholder = placeholder.toUpperCase();
-
-        this.isMulti = this instanceof DuplicableItemLoreStat;
     }
 
     @NotNull
@@ -67,7 +64,7 @@ public abstract class ItemLoreStat<Z> {
 
     public final String getMetaId(@NotNull ItemStack item) {
         String id = this.metaId;
-        if (this.isMulti) {
+        if (this instanceof DuplicableItemLoreStat) {
             DuplicableItemLoreStat<?> duplic = (DuplicableItemLoreStat<?>) this;
             id += duplic.getAmount(item);
         }
@@ -75,7 +72,7 @@ public abstract class ItemLoreStat<Z> {
     }
 
     public final String getMetaId(@NotNull ItemStack item, int index) {
-        if (!this.isMulti) {
+        if (!(this instanceof DuplicableItemLoreStat)) {
             return this.getMetaId(item);
         }
         return this.metaId + index;
@@ -148,12 +145,18 @@ public abstract class ItemLoreStat<Z> {
             container.remove(this.getKey());
         }
 
-        String format = StringUT.colorFix(this.getFormat(item, value));
-        if (!format.isEmpty()) {
-            container.set(this.getKey(), this.dataType, value);
-            if (pos != -1) lore.set(pos, format);
-        } else {
+        String[] format = StringUT.colorFix(this.getFormat(item, value)).split("\n");
+        boolean isEmpty = format.length == 1 && format[0].isEmpty();
+        if (isEmpty) {
             if (pos != -1) lore.remove(pos);
+        } else {
+            container.set(this.getKey(), this.dataType, value);
+            if (pos != -1) {
+                lore.set(pos, format[0]);
+                for (int i = 1; i < format.length; i++) {
+                    lore.add(pos+i, format[i]);
+                }
+            }
         }
 
         meta.setLore(lore);
@@ -161,14 +164,16 @@ public abstract class ItemLoreStat<Z> {
 
         ItemUT.delLoreTag(item, this.getMetaId(item));
 
-        if (!format.isEmpty()) {
-            ItemUT.addLoreTag(item, this.getMetaId(item), format);
+        if (!isEmpty) {
+            for (int i = 0; i < format.length; i++) {
+                ItemUT.addLoreTag(item, this.getMetaId(item)+i, format[i]);
+            }
         }
 
 //		if (this instanceof SimpleStat) {
         ItemStats.updateVanillaAttributes(item);
 //		}
-        return !format.isEmpty();
+        return !isEmpty;
     }
 
     @NotNull
@@ -275,7 +280,7 @@ public abstract class ItemLoreStat<Z> {
     public abstract String formatValue(@NotNull ItemStack item, @NotNull Z value);
 
     private final void validateMethod() {
-        if (this.isMulti) {
+        if (this instanceof DuplicableItemLoreStat) {
             throw new UnsupportedOperationException("Attempt to manage duplicable stat at NULL index. Index must be provided.");
         }
     }

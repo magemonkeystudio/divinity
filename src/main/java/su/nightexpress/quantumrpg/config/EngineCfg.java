@@ -95,6 +95,7 @@ public class EngineCfg {
 	
 	public static String LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR;
 	public static String LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR;
+	public static int    LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX;
 	
 	public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_SINGLE;
 	public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_RANGE;
@@ -279,6 +280,7 @@ public class EngineCfg {
     		
         	EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
         	EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR = StringUT.color(cfg.getString(path + "format.value.color", "&f"));
+			EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX   = cfg.getInt(path+"format.max-classes-per-line", 4);
     		
     		ClassRequirement reqClass = new ClassRequirement(rName, rFormat);
         	ItemRequirements.registerUserRequirement(reqClass);
