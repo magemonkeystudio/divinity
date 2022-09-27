@@ -54,43 +54,25 @@ public class LoreUT {
 		}
 		return pos + 1;
 	}
-
-	@NotNull
-	public static String getStrSeparated(
-			@NotNull Set<String> values, @NotNull String sep, @NotNull String color, int maxPerLine) {
-		return LoreUT.getStrSeparated(values.toArray(new String[values.size()]), sep, color, maxPerLine);
-	}
-
 	
 	@NotNull
     public static String getStrSeparated(
     		@NotNull Set<String> values, @NotNull String sep, @NotNull String color) {
-		return LoreUT.getStrSeparated(values.toArray(new String[values.size()]), sep, color, -1);
-	}
-
-	@NotNull
-	public static String getStrSeparated(
-			@NotNull String[] values, @NotNull String sep, @NotNull String color) {
-		return getStrSeparated(values, sep, color, -1);
+		return LoreUT.getStrSeparated(values.toArray(new String[values.size()]), sep, color);
 	}
 	
 	@NotNull
     public static String getStrSeparated(
-    		@NotNull String[] values, @NotNull String sep, @NotNull String color, int maxPerLine) {
+    		@NotNull String[] values, @NotNull String sep, @NotNull String color) {
 		
     	StringBuilder builder = new StringBuilder("");
-		int lineCount = 0;
     	for (String clazz : values) {
     		if (clazz.isEmpty()) continue;
     		if (builder.length() > 0) {
     			builder.append(sep);
     		}
-			if (maxPerLine > 0 && lineCount == maxPerLine) {
-				builder.append("\n");
-			}
     		builder.append(color);
     		builder.append(clazz);
-			lineCount++;
     	}
     	
     	return builder.toString();

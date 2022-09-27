@@ -171,7 +171,6 @@ lore:
             name: 'Player Class'
             format:
               main: '&c%state%%name%: %value%'
-              max-classes-per-line: 4
               value:
                 separator: '&7/'
                 color: '&f'
