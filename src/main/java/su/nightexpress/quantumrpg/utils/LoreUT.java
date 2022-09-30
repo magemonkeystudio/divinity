@@ -57,26 +57,26 @@ public class LoreUT {
 
 	@NotNull
 	public static String getStrSeparated(
-			@NotNull Set<String> values, @NotNull String sep, @NotNull String color, int maxPerLine) {
-		return LoreUT.getStrSeparated(values.toArray(new String[values.size()]), sep, color, maxPerLine);
+			@NotNull Set<String> values, @NotNull String sep, @NotNull String color, int maxPerLine, String newline) {
+		return LoreUT.getStrSeparated(values.toArray(new String[values.size()]), sep, color, maxPerLine, "");
 	}
 
 	
 	@NotNull
     public static String getStrSeparated(
     		@NotNull Set<String> values, @NotNull String sep, @NotNull String color) {
-		return LoreUT.getStrSeparated(values.toArray(new String[values.size()]), sep, color, -1);
+		return LoreUT.getStrSeparated(values.toArray(new String[values.size()]), sep, color, -1, "");
 	}
 
 	@NotNull
 	public static String getStrSeparated(
 			@NotNull String[] values, @NotNull String sep, @NotNull String color) {
-		return getStrSeparated(values, sep, color, -1);
+		return getStrSeparated(values, sep, color, -1, "");
 	}
 	
 	@NotNull
     public static String getStrSeparated(
-    		@NotNull String[] values, @NotNull String sep, @NotNull String color, int maxPerLine) {
+    		@NotNull String[] values, @NotNull String sep, @NotNull String color, int maxPerLine, String newline) {
 		
     	StringBuilder builder = new StringBuilder("");
 		int lineCount = 0;
@@ -86,7 +86,7 @@ public class LoreUT {
     			builder.append(sep);
     		}
 			if (maxPerLine > 0 && lineCount == maxPerLine) {
-				builder.append("\n");
+				builder.append("\n").append(newline);
 			}
     		builder.append(color);
     		builder.append(clazz);

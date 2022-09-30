@@ -145,6 +145,8 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.lang.setup();
 
         this.cfg().setupAttributes();
+
+        this.cfg().save();
     }
 
     @Override

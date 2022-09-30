@@ -96,6 +96,7 @@ public class EngineCfg {
 	public static String LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR;
 	public static String LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR;
 	public static int    LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX;
+	public static String LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE;
 	
 	public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_SINGLE;
 	public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_RANGE;
@@ -278,9 +279,12 @@ public class EngineCfg {
     		String rName = StringUT.color(cfg.getString(path + "name", "Player Class"));
     		String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
     		
-        	EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
-        	EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR = StringUT.color(cfg.getString(path + "format.value.color", "&f"));
-			EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX   = cfg.getInt(path+"format.max-classes-per-line", 4);
+        	EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR   = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
+        	EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR   = StringUT.color(cfg.getString(path + "format.value.color", "&f"));
+			EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX     = cfg.getInt(path+"format.max-classes-per-line", 4);
+			cfg.addMissing(path+"format.max-classes-per-line", EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX);
+			EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE = StringUT.color(cfg.getString(path+"format.value.newline", "&7  "));
+			cfg.addMissing(path+"format.value.newline", EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE);
     		
     		ClassRequirement reqClass = new ClassRequirement(rName, rFormat);
         	ItemRequirements.registerUserRequirement(reqClass);
