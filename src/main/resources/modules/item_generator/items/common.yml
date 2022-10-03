@@ -7,6 +7,7 @@ lore:
 - '%ENCHANTS%'
 - ''
 - '%USER_CLASS%'
+- '%USER_BANNED_CLASS'
 - '%USER_LEVEL%'
 - ''
 - '%ITEM_SET%'
@@ -70,6 +71,8 @@ generator:
       '21': '0 + %ITEM_LEVEL%'
     class:
       '1': Warrior,Cleric
+    banned-class:
+      '1': Gunner,Archer
   enchantments:
     minimum: 1
     maximum: 2

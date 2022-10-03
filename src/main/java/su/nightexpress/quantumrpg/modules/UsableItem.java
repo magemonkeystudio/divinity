@@ -16,7 +16,9 @@ import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModuleUsage;
+import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
 import su.nightexpress.quantumrpg.types.QClickType;
@@ -32,6 +34,7 @@ import java.util.Map.Entry;
 public class UsableItem extends LimitedItem {
     protected TreeMap<Integer, String[]> reqUserLvl;
     protected TreeMap<Integer, String[]> reqUserClass;
+    protected TreeMap<Integer, String[]> reqBannedUserClass;
     protected TreeMap<Integer, Map<String, Object>> varsLvl;
     protected Map<QClickType, UsableItem.Usage> usageMap;
 
@@ -68,6 +71,22 @@ public class UsableItem extends LimitedItem {
                     reqRaw = cfg.getString("user-requirements-by-level.class." + sLvl);
                     if (reqRaw != null && !reqRaw.isEmpty()) {
                         this.reqUserClass.put(lvl, reqRaw.split(","));
+                    }
+                }
+            }
+        }
+
+        if (ItemRequirements.isRegisteredUser(BannedClassRequirement.class)) {
+            this.reqBannedUserClass = new TreeMap();
+            var5 = cfg.getSection("user-requirements-by-level.banned-class").iterator();
+
+            while (var5.hasNext()) {
+                sLvl = (String) var5.next();
+                lvl = StringUT.getInteger(sLvl, -1);
+                if (lvl > 0) {
+                    reqRaw = cfg.getString("user-requirements-by-level.banned-class." + sLvl);
+                    if (reqRaw != null && !reqRaw.isEmpty()) {
+                        this.reqBannedUserClass.put(lvl, reqRaw.split(","));
                     }
                 }
             }
@@ -124,6 +143,12 @@ public class UsableItem extends LimitedItem {
         return e == null ? null : (String[]) e.getValue();
     }
 
+    @Nullable
+    protected final String[] getBannedUserClassRequirement(int itemLvl) {
+        Entry<Integer, String[]> e = this.reqBannedUserClass.floorEntry(itemLvl);
+        return e == null ? null : (String[]) e.getValue();
+    }
+
     @NotNull
     public Map<Integer, Map<String, Object>> getVariables() {
         return this.varsLvl;
@@ -173,8 +198,17 @@ public class UsableItem extends LimitedItem {
             }
         }
 
-        LoreUT.replacePlaceholder(item, "%USER_LEVEL%", (String) null);
-        LoreUT.replacePlaceholder(item, "%USER_CLASS%", (String) null);
+        String[] bannedUserClass = this.getBannedUserClassRequirement(lvl);
+        if (bannedUserClass != null) {
+            BannedClassRequirement reqBannedClass = ItemRequirements.getUserRequirement(BannedClassRequirement.class);
+            if (reqBannedClass != null) {
+                reqBannedClass.add(item, bannedUserClass, -1);
+            }
+        }
+
+        LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_LEVEL, (String) null);
+        LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_CLASS, (String) null);
+        LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS, (String) null);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return item;

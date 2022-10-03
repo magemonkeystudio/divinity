@@ -46,6 +46,7 @@ import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.SoulboundRequirement;
@@ -123,6 +124,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 		
 		private TreeMap<Integer, String[]> reqUserLvl;
 		private TreeMap<Integer, String[]> reqUserClass;
+		private TreeMap<Integer, String[]> reqBannedUserClass;
 		
 		private int enchantsMinAmount;
 		private int enchantsMaxAmount;
@@ -217,6 +219,18 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 					this.reqUserClass.put(itemLvl, reqRaw.split(","));
 				}
 			}
+			if (ItemRequirements.isRegisteredUser(BannedClassRequirement.class)) {
+				this.reqBannedUserClass = new TreeMap<>();
+				for (String sLvl : cfg.getSection(path + "banned-class")) {
+					int itemLvl = StringUT.getInteger(sLvl, -1);
+					if (itemLvl <= 0) continue;
+
+					String reqRaw = cfg.getString(path + "banned-class." + sLvl);
+					if (reqRaw == null || reqRaw.isEmpty()) continue;
+
+					this.reqBannedUserClass.put(itemLvl, reqRaw.split(","));
+				}
+			}
 			
 			// Pre-cache enchantments.
 			path = "generator.enchantments.";
@@ -278,6 +292,16 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 			Map.Entry<Integer, String[]> e = this.reqUserClass.floorEntry(itemLvl);
 			if (e == null) return null;
 			
+			return e.getValue();
+		}
+
+		@Nullable
+		protected final String[] getBannedUserClassRequirement(int itemLvl) {
+			if (this.reqBannedUserClass == null) return null;
+
+			Map.Entry<Integer, String[]> e = this.reqBannedUserClass.floorEntry(itemLvl);
+			if (e == null) return null;
+
 			return e.getValue();
 		}
 		
@@ -506,8 +530,17 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 					reqClass.add(item, userClass, -1);
 				}
 			}
+
+			String[] bannedUserClass = this.getBannedUserClassRequirement(itemLvl);
+			if (bannedUserClass != null) {
+				BannedClassRequirement reqBannedClass = ItemRequirements.getUserRequirement(BannedClassRequirement.class);
+				if (reqBannedClass != null) {
+					reqBannedClass.add(item, bannedUserClass, -1);
+				}
+			}
 			LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_LEVEL, null);
 			LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_CLASS, null);
+			LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS, null);
 			
 			// Replace %SOULBOUND% placeholder.
 			SoulboundRequirement reqSoul = ItemRequirements.getUserRequirement(SoulboundRequirement.class);

@@ -26,6 +26,7 @@ import su.nightexpress.quantumrpg.stats.items.requirements.item.ItemModuleRequir
 import su.nightexpress.quantumrpg.stats.items.requirements.item.ItemSocketRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.item.ItemTierRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.item.ItemTypeRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
 
@@ -97,6 +98,11 @@ public class EngineCfg {
 	public static String LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR;
 	public static int    LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX;
 	public static String LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE;
+
+	public static String LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_SEPAR;
+	public static String LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_COLOR;
+	public static int    LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_MAX;
+	public static String LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_NEWLINE;
 	
 	public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_SINGLE;
 	public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_RANGE;
@@ -275,20 +281,41 @@ public class EngineCfg {
     	}
     	
     	path = "lore.stats.style.requirements.user.class.";
+		cfg.addMissing(path + "format.max-classes-per-line", -1);
+		cfg.addMissing(path + "format.value.newline", "&7  ");
     	if (cfg.getBoolean(path + "enabled")) {
     		String rName = StringUT.color(cfg.getString(path + "name", "Player Class"));
     		String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
     		
         	EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR   = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
         	EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR   = StringUT.color(cfg.getString(path + "format.value.color", "&f"));
-			EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX     = cfg.getInt(path+"format.max-classes-per-line", 4);
-			cfg.addMissing(path+"format.max-classes-per-line", EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX);
+			EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX     = cfg.getInt(path+"format.max-classes-per-line", -1);
 			EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE = StringUT.color(cfg.getString(path+"format.value.newline", "&7  "));
-			cfg.addMissing(path+"format.value.newline", EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE);
     		
     		ClassRequirement reqClass = new ClassRequirement(rName, rFormat);
         	ItemRequirements.registerUserRequirement(reqClass);
     	}
+
+		path = "lore.stats.style.requirements.user.banned-class.";
+		cfg.addMissing(path + "enabled", true);
+		cfg.addMissing(path + "name", "Banned Player Class");
+		cfg.addMissing(path + "format.main", "%state%%name%: %value%");
+		cfg.addMissing(path + "format.value.separator", "&7/");
+		cfg.addMissing(path + "format.value.color", "&f");
+		cfg.addMissing(path + "format.max-classes-per-line", -1);
+		cfg.addMissing(path + "format.value.newline", "&7  ");
+		if (cfg.getBoolean(path + "enabled")) {
+			String rName = StringUT.color(cfg.getString(path + "name", "Banned Player Class"));
+			String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
+
+			EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_SEPAR   = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
+			EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_COLOR   = StringUT.color(cfg.getString(path + "format.value.color", "&f"));
+			EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_MAX     = cfg.getInt(path+"format.max-classes-per-line", 4);
+			EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_NEWLINE = StringUT.color(cfg.getString(path+"format.value.newline", "&7  "));
+
+			BannedClassRequirement bannedClass = new BannedClassRequirement(rName, rFormat);
+			ItemRequirements.registerUserRequirement(bannedClass);
+		}
     	
     	path = "lore.stats.style.requirements.item.level.";
     	if (cfg.getBoolean(path + "enabled")) {
