@@ -20,6 +20,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -353,16 +354,22 @@ public class DropManager extends QModule {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onDropSpawn(CreatureSpawnEvent e) {
-        LivingEntity entity = e.getEntity();
-        Set<DropMob> mobs   = this.getDropsForEntity(entity);
-        if (mobs.isEmpty()) return;
+        // Run after event call, so that MythicMobs are properly detected
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                LivingEntity entity = e.getEntity();
+                Set<DropMob> mobs   = DropManager.this.getDropsForEntity(entity);
+                if (mobs.isEmpty()) return;
 
-        String reason = e.getSpawnReason().name();
-        for (DropMob dropNpc : mobs) {
-            if (dropNpc.getReasons().contains(reason)) {
-                entity.setMetadata(META_DROP_MOB, new FixedMetadataValue(plugin, "yes"));
-                break;
+                String reason = e.getSpawnReason().name();
+                for (DropMob dropNpc : mobs) {
+                    if (dropNpc.getReasons().contains(reason)) {
+                        entity.setMetadata(META_DROP_MOB, new FixedMetadataValue(plugin, "yes"));
+                        break;
+                    }
+                }
             }
-        }
+        }.runTask(plugin);
     }
 }
