@@ -6,7 +6,6 @@ import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.types.MobGroup;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.constants.JStrings;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -25,14 +24,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
+import su.nightexpress.quantumrpg.hooks.external.AbstractMythicMobsHK;
 import su.nightexpress.quantumrpg.hooks.external.MyPetHK;
-import su.nightexpress.quantumrpg.hooks.external.MythicMobsHK;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.api.QModule;
 import su.nightexpress.quantumrpg.modules.list.drops.commands.DropsDropCmd;
 import su.nightexpress.quantumrpg.modules.list.drops.commands.DropsGiveCmd;
 import su.nightexpress.quantumrpg.modules.list.drops.object.*;
-import su.nightexpress.quantumrpg.modules.list.money.MoneyManager.QMoney;
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 
@@ -45,7 +43,7 @@ public class DropManager extends QModule {
     private              Map<String, Float>     dropModifier;
     private              Map<String, DropMob>   dropNpc;
     private              Map<String, DropTable> dropTables;
-    private              MythicMobsHK           mmHook;
+    private              AbstractMythicMobsHK   mmHook;
     private              MyPetHK                myPetHook;
 
     public DropManager(@NotNull QuantumRPG plugin) {
@@ -102,7 +100,7 @@ public class DropManager extends QModule {
             }
         }
 
-        this.mmHook = plugin.getHook(MythicMobsHK.class);
+        this.mmHook = plugin.getHook(AbstractMythicMobsHK.class);
         this.myPetHook = plugin.getHook(MyPetHK.class);
     }
 

@@ -25,7 +25,9 @@ import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.PartyAPI;
 import su.nightexpress.quantumrpg.api.event.RPGDamageEvent;
 import su.nightexpress.quantumrpg.config.EngineCfg;
+import su.nightexpress.quantumrpg.hooks.external.AbstractMythicMobsHK;
 import su.nightexpress.quantumrpg.hooks.external.MythicMobsHK;
+import su.nightexpress.quantumrpg.hooks.external.MythicMobsHKv5;
 import su.nightexpress.quantumrpg.manager.effects.main.AdjustStatEffect;
 import su.nightexpress.quantumrpg.manager.effects.main.DisarmEffect;
 import su.nightexpress.quantumrpg.modules.list.party.PartyManager.Party;
@@ -49,7 +51,7 @@ public class DamageManager extends IListener<QuantumRPG> {
     }
     //private CrackShotHK csHook;
 
-    private MythicMobsHK mmHook;
+    private AbstractMythicMobsHK mmHook;
 
     public DamageManager() {
         super(plugin);
@@ -150,7 +152,7 @@ public class DamageManager extends IListener<QuantumRPG> {
     }
 
     public void setup() {
-        this.mmHook = plugin.getHook(MythicMobsHK.class);
+        this.mmHook = plugin.getHook(AbstractMythicMobsHK.class);
         //this.csHook = plugin.getHook(CrackShotHK.class);
 
         this.registerListeners();
@@ -194,9 +196,14 @@ public class DamageManager extends IListener<QuantumRPG> {
         plugin.getPluginManager().callEvent(eventPre);
         if (eventPre.isCancelled()) return;
 
-        String mythicFaction = this.mmHook != null && this.mmHook.isMythicMob(victim)
-                ? this.mmHook.getMythicInstance(victim).getFaction()
-                : "";
+        String mythicFaction = "";
+        if (this.mmHook != null && this.mmHook.isMythicMob(victim)) {
+            if (this.mmHook instanceof MythicMobsHKv5) {
+                mythicFaction = ((MythicMobsHKv5) this.mmHook).getMythicInstance(victim).getFaction();
+            } else {
+                mythicFaction = ((MythicMobsHK) this.mmHook).getMythicInstance(victim).getFaction();
+            }
+        }
 
         List<MetadataValue> metadata = damager != null && !e.isExempt()
                 ? damager.getMetadata("custom-cooldown")

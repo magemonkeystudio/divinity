@@ -27,7 +27,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
-import su.nightexpress.quantumrpg.hooks.external.MythicMobsHK;
+import su.nightexpress.quantumrpg.hooks.external.AbstractMythicMobsHK;
 import su.nightexpress.quantumrpg.modules.list.classes.api.RPGClass;
 import su.nightexpress.quantumrpg.modules.list.classes.api.UserClassData;
 import su.nightexpress.quantumrpg.modules.list.classes.event.PlayerClassExpGainEvent;
@@ -76,7 +76,7 @@ public class LevelingManager extends IListener<QuantumRPG> implements Loadable {
     private int     expBalIncMaxTimes;
     private int     expBalIncPercent;
 
-    private MythicMobsHK mmHook;
+    private AbstractMythicMobsHK mmHook;
 
     private static final String ENTITY_NO_EXP_SPAWN = "QRPG_NO_DROP_EXP";
 
@@ -88,7 +88,7 @@ public class LevelingManager extends IListener<QuantumRPG> implements Loadable {
     @Override
     public void setup() {
         this.cfg = JYML.loadOrExtract(this.plugin, this.classManager.getPath() + "leveling.yml");
-        this.mmHook = plugin.getHook(MythicMobsHK.class);
+        this.mmHook = plugin.getHook(AbstractMythicMobsHK.class);
 
         this.lvlWorlds = new HashMap<>();
         for (String wName : cfg.getSection("world-levels")) {

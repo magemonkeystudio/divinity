@@ -1,12 +1,13 @@
 package su.nightexpress.quantumrpg.modules.list.loot;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.hooks.external.WorldGuardHK;
+import mc.promcteam.engine.manager.api.task.ITask;
+import mc.promcteam.engine.utils.EffectUT;
+import mc.promcteam.engine.utils.LocUT;
+import mc.promcteam.engine.utils.StringUT;
+import mc.promcteam.engine.utils.constants.JStrings;
+import mc.promcteam.engine.utils.random.Rnd;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -19,12 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockExplodeEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -35,18 +31,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import mc.promcteam.engine.hooks.Hooks;
-import mc.promcteam.engine.hooks.external.WorldGuardHK;
-import mc.promcteam.engine.manager.api.task.ITask;
-import mc.promcteam.engine.utils.EffectUT;
-import mc.promcteam.engine.utils.LocUT;
-import mc.promcteam.engine.utils.StringUT;
-import mc.promcteam.engine.utils.constants.JStrings;
-import mc.promcteam.engine.utils.random.Rnd;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.EHook;
-import su.nightexpress.quantumrpg.hooks.external.MythicMobsHK;
+import su.nightexpress.quantumrpg.hooks.external.AbstractMythicMobsHK;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.api.QModule;
 import su.nightexpress.quantumrpg.modules.list.loot.LootHolder.RollTask;
@@ -54,6 +41,8 @@ import su.nightexpress.quantumrpg.modules.list.party.PartyManager;
 import su.nightexpress.quantumrpg.modules.list.party.PartyManager.Party;
 import su.nightexpress.quantumrpg.modules.list.party.PartyManager.PartyMember;
 import su.nightexpress.quantumrpg.modules.list.party.event.PlayerLeavePartyEvent;
+
+import java.util.*;
 
 public class LootManager extends QModule {
 
@@ -78,7 +67,7 @@ public class LootManager extends QModule {
 	
 	private LootTask taskLoot;
 	
-	private MythicMobsHK mmHook;
+	private AbstractMythicMobsHK mmHook;
 	
 	private static final String META_SPAWN_REASON = "QRPG_META_SPAWN_REASON";
 	
@@ -128,7 +117,7 @@ public class LootManager extends QModule {
 		this.taskLoot = new LootTask(plugin);
 		this.taskLoot.start();
 		
-		this.mmHook = plugin.isHooked(MythicMobsHK.class) ? plugin.getHook(MythicMobsHK.class) : null;
+		this.mmHook = plugin.getHook(AbstractMythicMobsHK.class);
 		
 		this.cfg.saveChanges();
 	}

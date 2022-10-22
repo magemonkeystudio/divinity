@@ -4,13 +4,11 @@ import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import mc.promcteam.engine.hooks.HookState;
-import mc.promcteam.engine.hooks.NHook;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
-import su.nightexpress.quantumrpg.hooks.HookMobLevel;
 
-public class MythicMobsHK extends NHook<QuantumRPG> implements HookMobLevel {
+public class MythicMobsHK extends AbstractMythicMobsHK {
 
     private MythicMobs mm;
 
@@ -30,10 +28,12 @@ public class MythicMobsHK extends NHook<QuantumRPG> implements HookMobLevel {
 
     }
 
+    @Override
     public boolean isMythicMob(@NotNull Entity entity) {
         return mm.getAPIHelper().isMythicMob(entity);
     }
 
+    @Override
     @NotNull
     public String getMythicNameByEntity(@NotNull Entity entity) {
         return mm.getAPIHelper().getMythicMobInstance(entity).getType().getInternalName();
@@ -51,6 +51,7 @@ public class MythicMobsHK extends NHook<QuantumRPG> implements HookMobLevel {
         return Math.max(1, activeMob.getLevel());
     }
 
+    @Override
     public void setSkillDamage(@NotNull Entity entity, double amount) {
         if (!isMythicMob(entity)) return;
         ActiveMob activeMob = mm.getMobManager().getMythicMobInstance(entity);
