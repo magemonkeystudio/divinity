@@ -3,9 +3,7 @@ package su.nightexpress.quantumrpg.hooks.external.mimic;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import ru.endlesscode.mimic.MimicApiLevel;
-import ru.endlesscode.mimic.classes.BukkitClassSystem;
 import ru.endlesscode.mimic.items.BukkitItemsRegistry;
-import ru.endlesscode.mimic.level.BukkitLevelSystem;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class MimicHook {
@@ -31,8 +29,8 @@ public class MimicHook {
     }
 
     private static void registerMimicServices() {
-        registerService(BukkitLevelSystem.Provider.class, new ProRpgItemsLevelSystem.Provider());
-        registerService(BukkitClassSystem.Provider.class, new ProRpgItemsClassSystem.Provider());
+        //registerService(BukkitLevelSystem.Provider.class, new ProRpgItemsLevelSystem.Provider());
+        //registerService(BukkitClassSystem.Provider.class, new ProRpgItemsClassSystem.Provider());
         registerService(BukkitItemsRegistry.class, new ProRpgItemsItemsRegistry(quantumRpg));
     }
 
