@@ -12,8 +12,8 @@ or snapshots through Sonatype.
 </repository>
         ...
 <dependency>
-<groupId>${project.groupId}</groupId>
-<artifactId>${project.artifactId}</artifactId>
-<version>${project.version}</version>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>${project.artifactId}</artifactId>
+    <version>${project.version}</version>
 </dependency>
 ```
