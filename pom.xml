@@ -5,21 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>mc.promcteam</groupId>
+        <groupId>com.promcteam</groupId>
         <artifactId>promc-parent</artifactId>
-        <version>1.19.2</version>
+        <version>1.19.2-SNAPSHOT</version>
     </parent>
 
-    <groupId>mc.promcteam</groupId>
+    <groupId>com.promcteam</groupId>
     <artifactId>prorpgitems</artifactId>
-    <version>1.0.3.16-${maven.build.timestamp}</version>
+    <version>1.0.3.17-SNAPSHOT</version>
     <name>ProRPGItems</name>
 
     <repositories>
-        <!-- ProMCTeam Repo -->
         <repository>
-            <id>promcteam</id>
-            <url>https://maven.pkg.github.com/promcteam/promccore</url>
+            <id>sonatype</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
         <!-- Magic API -->
         <repository>
@@ -51,11 +50,11 @@
 
         <!-- ProMCTeam -->
         <dependency>
-            <groupId>mc.promcteam</groupId>
+            <groupId>com.promcteam</groupId>
             <artifactId>promccore</artifactId>
         </dependency>
         <dependency>
-            <groupId>mc.promcteam</groupId>
+            <groupId>com.promcteam</groupId>
             <artifactId>proskillapi</artifactId>
         </dependency>
 
@@ -202,4 +201,25 @@
             </plugin>
         </plugins>
     </build>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>ProMCTeam</name>
+            <organization>ProMCTeam</organization>
+            <organizationUrl>https://promcteam.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/promcteam/${artifactId}.git</connection>
+        <developerConnection>scm:git:ssh://github.com:promcteam/${artifactId}.git</developerConnection>
+        <url>https://github.com/promcteam/${artifactId}</url>
+    </scm>
 </project>
