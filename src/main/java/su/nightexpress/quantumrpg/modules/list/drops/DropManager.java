@@ -28,8 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
-import su.nightexpress.quantumrpg.hooks.external.mythicmobs.AbstractMythicMobsHK;
 import su.nightexpress.quantumrpg.hooks.external.MyPetHK;
+import su.nightexpress.quantumrpg.hooks.external.mythicmobs.AbstractMythicMobsHK;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.api.QModule;
 import su.nightexpress.quantumrpg.modules.list.drops.commands.DropsDropCmd;
@@ -203,10 +203,8 @@ public class DropManager extends QModule {
                 tables.add(dropNpc);
             }
         }
-        log.info("Is mythic mob? " + isMythic + " -- Mob type: " + mobType);
         List<String> tableNames = new ArrayList<>();
         tables.forEach(table -> table.getDropTables().forEach(t -> tableNames.add(t.getGroupName())));
-        log.info("Tables: " + StringUtils.join(tableNames, ", "));
 
         return tables;
     }
@@ -333,7 +331,7 @@ public class DropManager extends QModule {
 
     // ---------------------------------------------------- //
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDropDeath(EntityDeathEvent e) {
         LivingEntity dead = e.getEntity();
         if (dead.hasMetadata(META_DROP_MOB)) return;
@@ -351,7 +349,7 @@ public class DropManager extends QModule {
                     }
                 }
             }
-            return;
+            if (killer == null) return;
         }
 
         if (isVanillaCancelled(dead))
@@ -366,7 +364,7 @@ public class DropManager extends QModule {
             @Override
             public void run() {
                 LivingEntity entity = e.getEntity();
-                Set<DropMob> mobs   = DropManager.this.getDropsForEntity(entity);
+                Set<DropMob> mobs   = getDropsForEntity(entity);
                 if (mobs.isEmpty()) return;
 
                 String reason = e.getSpawnReason().name();

@@ -339,7 +339,7 @@ public class LootManager extends QModule {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onLootDeath(EntityDeathEvent e) {
 		List<ItemStack> loot = e.getDrops();
 		if (loot.isEmpty()) return;
