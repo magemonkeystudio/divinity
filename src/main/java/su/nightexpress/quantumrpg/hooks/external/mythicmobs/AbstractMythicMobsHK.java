@@ -1,4 +1,4 @@
-package su.nightexpress.quantumrpg.hooks.external;
+package su.nightexpress.quantumrpg.hooks.external.mythicmobs;
 
 import mc.promcteam.engine.hooks.NHook;
 import org.bukkit.entity.Entity;
@@ -20,4 +20,7 @@ public abstract class AbstractMythicMobsHK extends NHook<QuantumRPG> implements 
     public abstract double getMobLevel(@NotNull Entity entity);
 
     public abstract void setSkillDamage(@NotNull Entity entity, double amount);
+
+    public abstract AbstractMythicEntity getMythicInstance(@NotNull Entity entity);
+    public abstract int getMythicVersion();
 }

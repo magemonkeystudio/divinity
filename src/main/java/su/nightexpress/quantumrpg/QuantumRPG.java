@@ -16,6 +16,8 @@ import su.nightexpress.quantumrpg.data.api.RPGUser;
 import su.nightexpress.quantumrpg.hooks.EHook;
 import su.nightexpress.quantumrpg.hooks.external.*;
 import su.nightexpress.quantumrpg.hooks.external.mimic.MimicHook;
+import su.nightexpress.quantumrpg.hooks.external.mythicmobs.MythicMobsHK;
+import su.nightexpress.quantumrpg.hooks.external.mythicmobs.MythicMobsHKv5;
 import su.nightexpress.quantumrpg.manager.EntityManager;
 import su.nightexpress.quantumrpg.manager.damage.DamageManager;
 import su.nightexpress.quantumrpg.manager.interactions.InteractionManager;

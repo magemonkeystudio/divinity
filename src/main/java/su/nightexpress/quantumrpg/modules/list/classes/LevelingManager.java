@@ -27,7 +27,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
-import su.nightexpress.quantumrpg.hooks.external.AbstractMythicMobsHK;
+import su.nightexpress.quantumrpg.hooks.external.mythicmobs.AbstractMythicMobsHK;
 import su.nightexpress.quantumrpg.modules.list.classes.api.RPGClass;
 import su.nightexpress.quantumrpg.modules.list.classes.api.UserClassData;
 import su.nightexpress.quantumrpg.modules.list.classes.event.PlayerClassExpGainEvent;

@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.EHook;
-import su.nightexpress.quantumrpg.hooks.external.AbstractMythicMobsHK;
+import su.nightexpress.quantumrpg.hooks.external.mythicmobs.AbstractMythicMobsHK;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.api.QModule;
 import su.nightexpress.quantumrpg.modules.list.loot.LootHolder.RollTask;

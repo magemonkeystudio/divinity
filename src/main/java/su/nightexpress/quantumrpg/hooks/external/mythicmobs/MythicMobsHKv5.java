@@ -1,8 +1,6 @@
-package su.nightexpress.quantumrpg.hooks.external;
+package su.nightexpress.quantumrpg.hooks.external.mythicmobs;
 
-import io.lumine.mythic.api.MythicPlugin;
-import io.lumine.mythic.api.MythicProvider;
-import io.lumine.mythic.api.mobs.MythicMob;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
 import mc.promcteam.engine.hooks.HookState;
 import org.bukkit.entity.Entity;
@@ -13,7 +11,7 @@ import java.util.Optional;
 
 public class MythicMobsHKv5 extends AbstractMythicMobsHK {
 
-    private MythicPlugin mm;
+    private MythicBukkit mm;
 
     public MythicMobsHKv5(@NotNull QuantumRPG plugin) {
         super(plugin);
@@ -22,7 +20,7 @@ public class MythicMobsHKv5 extends AbstractMythicMobsHK {
     @Override
     @NotNull
     public HookState setup() {
-        this.mm = MythicProvider.get();
+        this.mm = MythicBukkit.inst();
         return HookState.SUCCESS;
     }
 
@@ -33,22 +31,26 @@ public class MythicMobsHKv5 extends AbstractMythicMobsHK {
 
     @Override
     public boolean isMythicMob(@NotNull Entity entity) {
-        return mm.getMobManager().getActiveMobs().stream()
-                .filter(a -> a.getUniqueId().equals(entity.getUniqueId())).findFirst().isPresent();
+        return getMythicInstance(entity) != null;
     }
 
     @Override
     @NotNull
     public String getMythicNameByEntity(@NotNull Entity entity) {
-        MythicMob mob = getMythicInstance(entity);
+        AbstractMythicEntity mob = getMythicInstance(entity);
         return mob == null ? null : mob.getInternalName();
     }
 
-    public MythicMob getMythicInstance(@NotNull Entity entity) {
-        Optional<ActiveMob> mob = mm.getMobManager().getActiveMobs().stream()
-                .filter(a -> a.getUniqueId().equals(entity.getUniqueId())).findFirst();
+    @Override
+    public AbstractMythicEntity getMythicInstance(@NotNull Entity entity) {
+        ActiveMob mob = getActiveMythicInstance(entity);
 
-        return mob.isPresent() ? mob.get().getType() : null;
+        return mob != null ? new MythicEntity5(mob.getType()) : null;
+    }
+
+    @Override
+    public int getMythicVersion() {
+        return 5;
     }
 
     @Override
@@ -65,9 +67,8 @@ public class MythicMobsHKv5 extends AbstractMythicMobsHK {
         am1.setLastDamageSkillAmount(amount);
     }
 
-    public ActiveMob getActiveMythicInstance(@NotNull Entity e) {
-        Optional<ActiveMob> mob = mm.getMobManager().getActiveMobs().stream()
-                .filter(a -> a.getUniqueId().equals(e.getUniqueId())).findFirst();
+    public ActiveMob getActiveMythicInstance(@NotNull Entity entity) {
+        Optional<ActiveMob> mob = mm.getMobManager().getActiveMob(entity.getUniqueId());
 
         return mob.isPresent() ? mob.get() : null;
     }

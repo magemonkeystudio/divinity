@@ -6,6 +6,7 @@ import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.types.MobGroup;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.constants.JStrings;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -23,9 +24,11 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
-import su.nightexpress.quantumrpg.hooks.external.AbstractMythicMobsHK;
+import su.nightexpress.quantumrpg.hooks.external.mythicmobs.AbstractMythicMobsHK;
 import su.nightexpress.quantumrpg.hooks.external.MyPetHK;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.api.QModule;
@@ -41,6 +44,7 @@ import java.util.stream.Collectors;
 public class DropManager extends QModule {
 
     private static final String                 META_DROP_MOB = "QRPG_NO_MOB_DROP";
+    private final        Logger                 log           = LoggerFactory.getLogger(DropManager.class);
     private              Map<String, Float>     dropModifier;
     private              Map<String, DropMob>   dropNpc;
     private              Map<String, DropTable> dropTables;
@@ -197,9 +201,12 @@ public class DropManager extends QModule {
 
             if (mobList.contains(mobType)) {
                 tables.add(dropNpc);
-                continue;
             }
         }
+        log.info("Is mythic mob? " + isMythic + " -- Mob type: " + mobType);
+        List<String> tableNames = new ArrayList<>();
+        tables.forEach(table -> table.getDropTables().forEach(t -> tableNames.add(t.getGroupName())));
+        log.info("Tables: " + StringUtils.join(tableNames, ", "));
 
         return tables;
     }
@@ -251,9 +258,9 @@ public class DropManager extends QModule {
                 loot.add(dropStack);
             }
 
-            for(DropTable table : dropNpc.getDropTables()){
+            for (DropTable table : dropNpc.getDropTables()) {
 
-                for(DropNonItem nonItemDrop : table.getNonItemDrops()){
+                for (DropNonItem nonItemDrop : table.getNonItemDrops()) {
 
                     nonItemDrop.execute(killer);
                 }
@@ -278,8 +285,8 @@ public class DropManager extends QModule {
             List<String> dropConditions = dropConfig.getConditions();
             if (!ActionManipulator.processConditions(plugin, target, dropConditions, mapTarget)) continue;
 
-            String    itemId    = dropConfig.getItemId();
-            
+            String itemId = dropConfig.getItemId();
+
             ItemStack dropStack = QuantumAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
             if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
@@ -287,7 +294,7 @@ public class DropManager extends QModule {
             loot.add(dropStack);
         }
 
-        for(DropNonItem nonItemDrops : table.getNonItemDrops()){
+        for (DropNonItem nonItemDrops : table.getNonItemDrops()) {
 
             nonItemDrops.execute(target);
         }

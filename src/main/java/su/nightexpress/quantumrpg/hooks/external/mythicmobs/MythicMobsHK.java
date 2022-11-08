@@ -1,4 +1,4 @@
-package su.nightexpress.quantumrpg.hooks.external;
+package su.nightexpress.quantumrpg.hooks.external.mythicmobs;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
@@ -39,8 +39,13 @@ public class MythicMobsHK extends AbstractMythicMobsHK {
         return mm.getAPIHelper().getMythicMobInstance(entity).getType().getInternalName();
     }
 
-    public MythicMob getMythicInstance(@NotNull Entity entity) {
-        return mm.getAPIHelper().getMythicMobInstance(entity).getType();
+    public AbstractMythicEntity getMythicInstance(@NotNull Entity entity) {
+        return new MythicEntity4(mm.getAPIHelper().getMythicMobInstance(entity).getType());
+    }
+
+    @Override
+    public int getMythicVersion() {
+        return 4;
     }
 
     @Override
