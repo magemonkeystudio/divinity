@@ -6,7 +6,6 @@ import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.types.MobGroup;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.constants.JStrings;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -24,8 +23,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
 import su.nightexpress.quantumrpg.hooks.external.MyPetHK;
@@ -44,7 +41,6 @@ import java.util.stream.Collectors;
 public class DropManager extends QModule {
 
     private static final String                 META_DROP_MOB = "QRPG_NO_MOB_DROP";
-    private final        Logger                 log           = LoggerFactory.getLogger(DropManager.class);
     private              Map<String, Float>     dropModifier;
     private              Map<String, DropMob>   dropNpc;
     private              Map<String, DropTable> dropTables;
