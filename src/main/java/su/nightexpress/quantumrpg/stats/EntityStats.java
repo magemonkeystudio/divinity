@@ -134,9 +134,7 @@ public class EntityStats {
 
     @NotNull
     public synchronized static Collection<EntityStats> getAll() {
-        STATS.values().removeIf(stats -> {
-            return !stats.entity.isValid() || stats.entity.isDead();
-        });
+        STATS.values().removeIf(stats -> !stats.entity.isValid() || stats.entity.isDead());
         return STATS.values();
     }
 

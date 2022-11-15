@@ -102,7 +102,7 @@ public class SetManager extends QModule {
 
             ItemSet set = e.getKey();
             set.getElementBonuses().stream()
-                    .filter(setBonus -> have < setBonus.getMinElementsAmount())
+                    .filter(setBonus -> have >= setBonus.getMinElementsAmount())
                     .forEach(setBonus -> setBonus.getPotionEffects().forEach(eff -> stats.addPermaPotionEffect(eff)));
         }
     }
@@ -130,7 +130,7 @@ public class SetManager extends QModule {
 
             ItemSet set = e.getKey();
             set.getElementBonuses().stream()
-                    .filter(elm -> have < elm.getMinElementsAmount())
+                    .filter(elm -> have >= elm.getMinElementsAmount())
                     .forEach(elm -> bonuses.add(elm.getBonusMap()));
         }
         return bonuses;
