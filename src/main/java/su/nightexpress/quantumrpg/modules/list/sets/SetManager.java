@@ -519,7 +519,7 @@ public class SetManager extends QModule {
 
             String itemName = StringUT.colorOff(getClearName(item));
             String elemName = StringUT.colorOff(this.getName());
-            return elemName.equalsIgnoreCase(itemName);
+            return itemName.toLowerCase().contains(elemName.toLowerCase());
         }
     }
 
