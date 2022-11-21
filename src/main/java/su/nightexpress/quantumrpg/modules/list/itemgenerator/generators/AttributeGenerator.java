@@ -55,8 +55,8 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
             cfg.addMissing(path2 + "chance", 0D);
             if (!isSocket) {
                 cfg.addMissing(path2 + "scale-by-level", 1D);
-                cfg.addMissing(path2 + "min", "0");
-                cfg.addMissing(path2 + "max", "0");
+                cfg.addMissing(path2 + "min", 0);
+                cfg.addMissing(path2 + "max", 0);
                 cfg.addMissing(path2 + "flat-range", false);
             }
 

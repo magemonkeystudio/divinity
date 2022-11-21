@@ -305,9 +305,9 @@ public class ItemStats {
             value = 0.1 * (1D + value / 100D) - 0.1;
         } else if (att == NBTAttribute.ATTACK_SPEED) {
             value /= 100D;
-            double vanillaSpeed = AbstractStat.getDefaultAttackSpeed(item);
-            double extra        = vanillaSpeed == 0D ? 4D - (4D * (1D + value)) : vanillaSpeed * value;
-            value = vanillaSpeed - extra;
+            double baseSpeed = getStat(item, AbstractStat.Type.BASE_ATTACK_SPEED) + AbstractStat.getDefaultAttackSpeed(item);
+            double extra     = baseSpeed * value;
+            value            = baseSpeed + extra - 4;
         }
 
         for (EquipmentSlot slot : ItemUtils.getItemSlots(item)) {

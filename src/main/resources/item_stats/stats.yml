@@ -106,6 +106,12 @@ BURN_RATE:
   format: '&c▸ %name%: &f%value%'
   capacity: 100.0
 
+BASE_ATTACK_SPEED:
+  enabled: true
+  name: Base Attack Speed
+  format: '&e▸ %name%: &f%value%'
+  capacity: -1
+
 ATTACK_SPEED:
   enabled: true
   name: Attack Speed

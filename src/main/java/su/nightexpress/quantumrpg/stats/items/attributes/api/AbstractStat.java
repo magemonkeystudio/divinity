@@ -184,6 +184,7 @@ public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
         DURABILITY(ItemType.BOTH, false, true, false),
         MOVEMENT_SPEED(ItemType.ARMOR, true, true, true),
         PENETRATION(ItemType.WEAPON, true, true, true),
+        BASE_ATTACK_SPEED(ItemType.BOTH, false, true, true),
         ATTACK_SPEED(ItemType.BOTH, true, true, true),
         VAMPIRISM(ItemType.WEAPON, true, true, true),
         MAX_HEALTH(ItemType.BOTH, false, true, true),
