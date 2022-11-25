@@ -185,6 +185,14 @@ Identify:
   Usage:
     Error:
       Unidentified: You can not equip/use an unidentified item!
+ItemGenerator:
+  Cmd:
+    Editor:
+      Desc: 'Opens the ItemGenerator in-game editor.'
+      Error:
+        InvalidItem: '&cNo such item generator!'
+        AlreadyOpen: '&cAn editor for this item generator is already open by %player%'
+
 Loot:
   Box:
     Error:

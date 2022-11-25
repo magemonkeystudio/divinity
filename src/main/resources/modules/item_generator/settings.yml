@@ -3,3 +3,7 @@ item-format:
   name: '%TIER_COLOR%%ITEM_NAME%'
   lore:
   - '%ITEM_LORE%'
+editor-gui:
+  title: '[&d%id%&r] editor'
+  size: 54
+  content: {}

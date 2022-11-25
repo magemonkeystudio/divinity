@@ -1,13 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.BiFunction;
 
 import org.bukkit.DyeColor;
@@ -17,6 +10,7 @@ import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -36,6 +30,7 @@ import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ResourceManager.ResourceCategory;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.IAttributeGenerator;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.EditorCommand;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.SingleAttributeGenerator;
@@ -57,6 +52,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
 	private ResourceManager resourceManager;
 	private ItemAbilityHandler abilityHandler;
+	private Map<String,EditorGUI> openEditors;
 	
 	private static final String PLACE_GEN_DAMAGE = "%GENERATOR_DAMAGE%";
 	private static final String PLACE_GEN_DEFENSE = "%GENERATOR_DEFENSE%";
@@ -82,10 +78,21 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 	
 	@Override
 	public void setup() {
+		cfg.addMissing("editor-gui.title", "%id% editor");
+		cfg.addMissing("editor-gui.size", 54);
+		cfg.saveChanges();
 		this.resourceManager = new ResourceManager(this);
 		
 		this.abilityHandler = new ItemAbilityHandler(this);
 		this.abilityHandler.setup();
+
+		this.openEditors = new HashMap<>();
+	}
+
+	@Override
+	protected void onPostSetup() {
+		super.onPostSetup();
+		this.moduleCommand.addSubCommand(new EditorCommand(this));
 	}
 
 	@Override
@@ -99,6 +106,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 			this.resourceManager.shutdown();
 			this.resourceManager = null;
 		}
+
+		this.openEditors = null;
 	}
 	
 	// loadItems is PostSetup method.
@@ -108,7 +117,25 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 		
 		this.resourceManager.setup();
 	}
-	
+
+	public void openEditor(String id, Player player) {
+		GeneratorItem itemGenerator = items.get(id);
+		if (itemGenerator == null) {
+			plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidItem.send(player);
+			return;
+		}
+		EditorGUI gui = openEditors.get(id);
+		if (gui != null) {
+			gui.getViewers().stream().findAny().ifPresent(
+					value -> plugin.lang().ItemGenerator_Cmd_Editor_Error_AlreadyOpen.replace("%player%", value.getName()));
+			return;
+		}
+
+		gui = new EditorGUI(this, cfg, itemGenerator);
+		gui.open(player, 1);
+		openEditors.put(id, gui);
+	}
+
 	public class GeneratorItem extends LimitedItem {
 
 		private double prefixChance;
