@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
+import java.io.InputStream;
 import java.util.*;
 import java.util.function.BiFunction;
 
@@ -9,6 +10,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -78,9 +80,13 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 	
 	@Override
 	public void setup() {
-		cfg.addMissing("editor-gui.title", "%id% editor");
-		cfg.addMissing("editor-gui.size", 54);
-		cfg.saveChanges();
+		try (InputStream in = plugin.getClass().getResourceAsStream(this.getPath()+"settings.yml")) {
+			YamlConfiguration configuration = new YamlConfiguration();
+			configuration.loadFromString(new String(in.readAllBytes()));
+			cfg.addMissing("editor-gui", configuration.get("editor-gui"));
+			cfg.saveChanges();
+		} catch (Exception e) { e.printStackTrace(); }
+
 		this.resourceManager = new ResourceManager(this);
 		
 		this.abilityHandler = new ItemAbilityHandler(this);
@@ -119,6 +125,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 	}
 
 	public void openEditor(String id, Player player) {
+		if (!this.isEnabled()) { throw new IllegalStateException("Module is disabled!"); }
 		GeneratorItem itemGenerator = items.get(id);
 		if (itemGenerator == null) {
 			plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidItem.send(player);
@@ -126,14 +133,23 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 		}
 		EditorGUI gui = openEditors.get(id);
 		if (gui != null) {
-			gui.getViewers().stream().findAny().ifPresent(
-					value -> plugin.lang().ItemGenerator_Cmd_Editor_Error_AlreadyOpen.replace("%player%", value.getName()));
-			return;
+			for (Player viewer : gui.getViewers()) {
+				if (viewer.isOnline()) {
+					plugin.lang().ItemGenerator_Cmd_Editor_Error_AlreadyOpen.replace("%player%", viewer.getName());
+					return;
+				}
+			}
+			openEditors.remove(id);
 		}
 
 		gui = new EditorGUI(this, cfg, itemGenerator);
 		gui.open(player, 1);
 		openEditors.put(id, gui);
+	}
+
+	void onEditorClose(EditorGUI editorGUI) {
+		if (this.openEditors == null) { return; }
+		openEditors.remove(editorGUI.getItemGenerator().getId());
 	}
 
 	public class GeneratorItem extends LimitedItem {

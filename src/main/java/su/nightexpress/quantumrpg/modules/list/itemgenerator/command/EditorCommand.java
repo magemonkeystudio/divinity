@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.Perms;
+import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.command.MCmd;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 
@@ -30,7 +31,9 @@ public class EditorCommand extends MCmd<ItemGeneratorManager> {
     @NotNull
     public List<String> getTab(@NotNull Player player, int i, @NotNull String[] args) {
         if (i == 1) {
-            return this.module.getItemIds();
+            List<String> ids = this.module.getItemIds();
+            ids.remove(QModuleDrop.RANDOM_ID);
+            return ids;
         }
         return super.getTab(player, i, args);
     }
