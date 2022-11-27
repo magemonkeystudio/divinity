@@ -27,7 +27,8 @@ import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ResourceManager.ResourceCategory;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.IAttributeGenerator;
-import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.EditorCommand;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.CreateCommand;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.EditCommand;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.SingleAttributeGenerator;
@@ -95,7 +96,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 	@Override
 	protected void onPostSetup() {
 		super.onPostSetup();
-		this.moduleCommand.addSubCommand(new EditorCommand(this));
+		this.moduleCommand.addSubCommand(new CreateCommand(this));
+		this.moduleCommand.addSubCommand(new EditCommand(this));
 	}
 
 	@Override
@@ -121,12 +123,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 		this.resourceManager.setup();
 	}
 
-	public boolean reload(String id) {
-		GeneratorItem itemGenerator = items.get(id);
-		if (id == null) { return false; }
-		items.put(id, new GeneratorItem(plugin, itemGenerator.getConfig()));
-		return true;
-	}
+	public void load(String id, JYML cfg) { items.put(id, new GeneratorItem(plugin, cfg)); }
 
 	public EditorGUI openEditor(String id, Player player) {
 		if (!this.isEnabled()) { throw new IllegalStateException("Module is disabled!"); }

@@ -10,15 +10,15 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 
 import java.util.List;
 
-public class EditorCommand extends MCmd<ItemGeneratorManager> {
+public class EditCommand extends MCmd<ItemGeneratorManager> {
 
-    public EditorCommand(@NotNull ItemGeneratorManager module) {
+    public EditCommand(@NotNull ItemGeneratorManager module) {
         super(module, new String[] {"edit"}, Perms.ADMIN);
     }
 
     @NotNull
     @Override
-    public String usage() { return "<item generator id>"; }
+    public String usage() { return "<id>"; }
 
     @NotNull
     @Override

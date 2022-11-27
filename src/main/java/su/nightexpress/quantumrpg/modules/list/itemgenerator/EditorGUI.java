@@ -219,7 +219,7 @@ public class EditorGUI extends NGUI<QuantumRPG> {
     private void reload(JYML cfg, @Nullable Consumer<EditorGUI> consumer) {
         cfg.saveChanges();
         Player player = this.player;
-        itemGeneratorManager.reload(EditorGUI.this.itemGenerator.getId());
+        itemGeneratorManager.load(EditorGUI.this.itemGenerator.getId(), cfg);
         new BukkitRunnable() {
             @Override
             public void run() {

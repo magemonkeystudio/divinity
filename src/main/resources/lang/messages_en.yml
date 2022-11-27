@@ -187,6 +187,12 @@ Identify:
       Unidentified: You can not equip/use an unidentified item!
 ItemGenerator:
   Cmd:
+    Create:
+      Desc: 'Creates a new item generator.'
+      Done: '&aCreated %id%.yml item generator!'
+      Error:
+        ExistingId: '&cAn item generator with that id already exists.'
+        ExistingFile: '&cA file with that name already exists.'
     Editor:
       Desc: 'Opens the ItemGenerator in-game editor.'
       Error:
