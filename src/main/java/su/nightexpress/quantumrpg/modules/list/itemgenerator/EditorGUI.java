@@ -192,10 +192,11 @@ public class EditorGUI extends NGUI<QuantumRPG> {
 
     private void reload(JYML cfg) {
         cfg.saveChanges();
-        itemGeneratorManager.reload(itemGenerator.getId());
+        Player player = this.player;
+        itemGeneratorManager.reload(EditorGUI.this.itemGenerator.getId());
         new BukkitRunnable() {
             @Override
-            public void run() { itemGeneratorManager.openEditor(itemGenerator.getId(), player); }
+            public void run() { itemGeneratorManager.openEditor(EditorGUI.this.itemGenerator.getId(), player); }
         }.runTask(plugin);
     }
 

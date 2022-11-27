@@ -137,7 +137,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 		}
 		if (activeEditor != null) {
 			for (Player viewer : activeEditor.getViewers()) {
-				if (viewer.isOnline()) {
+				if (viewer.isOnline() && !viewer.equals(player)) {
 					plugin.lang().ItemGenerator_Cmd_Editor_Error_AlreadyOpen.replace("%player%", viewer.getName());
 					return;
 				}
