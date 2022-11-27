@@ -37,7 +37,7 @@ editor-gui:
       lore:
       - '&bCurrent:'
       - '----------'
-      - '%current%'
+      - '&r%current%'
       - '----------'
       - '&6Left-Click: &eSet'
       type: LORE
@@ -63,7 +63,7 @@ editor-gui:
       name: '&eItemFlags'
       lore:
       - '&bCurrent:'
-      - '%current%'
+      - '&a%current%'
       - '&6Left-Click: &eSet'
       type: ITEM_FLAGS
       slots: 6
@@ -107,7 +107,7 @@ editor-gui:
       name: '&eAmmo Types'
       lore:
       - '&bCurrent:'
-      - '%current%'
+      - '&r%current%'
       - '&6Left-Click: &eSet'
       type: AMMO_TYPES
       slots: 14
@@ -116,7 +116,7 @@ editor-gui:
       name: '&eHand Types'
       lore:
       - '&bCurrent:'
-      - '%current%'
+      - '&r%current%'
       - '&6Left-Click: &eSet'
       type: HAND_TYPES
       slots: 15

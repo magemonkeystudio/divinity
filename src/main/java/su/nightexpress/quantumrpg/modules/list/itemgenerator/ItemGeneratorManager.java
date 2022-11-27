@@ -128,23 +128,24 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 		return true;
 	}
 
-	public void openEditor(String id, Player player) {
+	public EditorGUI openEditor(String id, Player player) {
 		if (!this.isEnabled()) { throw new IllegalStateException("Module is disabled!"); }
 		GeneratorItem itemGenerator = items.get(id);
 		if (itemGenerator == null) {
 			plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidItem.send(player);
-			return;
+			return null;
 		}
 		if (activeEditor != null) {
 			for (Player viewer : activeEditor.getViewers()) {
 				if (viewer.isOnline() && !viewer.equals(player)) {
 					plugin.lang().ItemGenerator_Cmd_Editor_Error_AlreadyOpen.replace("%player%", viewer.getName());
-					return;
+					return null;
 				}
 			}
 		}
 
 		(activeEditor = new EditorGUI(this, cfg, itemGenerator)).open(player, 1);
+		return activeEditor;
 	}
 
 	void onEditorClose(EditorGUI editorGUI) {
