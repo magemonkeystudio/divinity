@@ -121,6 +121,13 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 		this.resourceManager.setup();
 	}
 
+	public boolean reload(String id) {
+		GeneratorItem itemGenerator = items.get(id);
+		if (id == null) { return false; }
+		items.put(id, new GeneratorItem(plugin, itemGenerator.getConfig()));
+		return true;
+	}
+
 	public void openEditor(String id, Player player) {
 		if (!this.isEnabled()) { throw new IllegalStateException("Module is disabled!"); }
 		GeneratorItem itemGenerator = items.get(id);
