@@ -162,6 +162,10 @@ public abstract class ModuleItem extends LoadableItem {
         return this.lore;
     }
 
+    public int[] getColor() { return Arrays.copyOf(color, 3); }
+
+    public boolean isUnbreakable() { return isUnbreakable; }
+
     @NotNull
     public QModuleDrop<?> getModule() {
         return this.module;

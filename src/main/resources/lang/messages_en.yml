@@ -192,6 +192,7 @@ ItemGenerator:
       Error:
         InvalidItem: '&cNo such item generator!'
         AlreadyOpen: '&cAn editor for this item generator is already open by %player%'
+        InvalidInput: '%input% &cis not a valid %value%'
 
 Loot:
   Box:

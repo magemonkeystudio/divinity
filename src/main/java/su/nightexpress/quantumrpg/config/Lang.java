@@ -234,6 +234,7 @@ public class Lang extends CoreLang {
     public ILangMsg ItemGenerator_Cmd_Editor_Desc                     = new ILangMsg(this, "Opens the ItemGenerator in-game editor.");
     public ILangMsg ItemGenerator_Cmd_Editor_Error_InvalidItem        = new ILangMsg(this, "&cNo such item generator!");
     public ILangMsg ItemGenerator_Cmd_Editor_Error_AlreadyOpen        = new ILangMsg(this, "&cAn editor for this item generator is already open by %player%");
+    public ILangMsg ItemGenerator_Cmd_Editor_Error_InvalidInput       = new ILangMsg(this, "%input% &cis not a valid %value%");
     public ILangMsg Loot_Box_Error_NotOwner                           = new ILangMsg(this, "You're not obtain this loot.");
     public ILangMsg Loot_Box_Error_Locked                             = new ILangMsg(this, "Someone's already looting this...");
     public ILangMsg Loot_Box_Owner_None                               = new ILangMsg(this, "Free");
