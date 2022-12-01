@@ -1,4 +1,4 @@
-package su.nightexpress.quantumrpg.modules.list.itemgenerator;
+package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor;
 
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.ContentType;
@@ -6,17 +6,17 @@ import mc.promcteam.engine.manager.api.gui.GuiClick;
 import mc.promcteam.engine.manager.api.gui.GuiItem;
 import mc.promcteam.engine.manager.api.gui.NGUI;
 import mc.promcteam.engine.utils.StringUT;
-import mc.promcteam.engine.utils.constants.JStrings;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.Material;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -28,22 +28,31 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.Consumer;
 
 public class EditorGUI extends NGUI<QuantumRPG> {
-    private static final String CURRENT_PLACEHOLDER = "%current%";
+    static final String CURRENT_PLACEHOLDER = "%current%";
+    static YamlConfiguration commonItemGenerator;
     
-    private final ItemGeneratorManager itemGeneratorManager;
-    private final ItemGeneratorManager.GeneratorItem itemGenerator;
-    private Player player;
-    private ItemType listening;
+    final ItemGeneratorManager itemGeneratorManager;
+    final ItemGeneratorManager.GeneratorItem itemGenerator;
+    Player player;
+    ItemType listening;
 
-    EditorGUI(@NotNull ItemGeneratorManager itemGeneratorManager, @NotNull JYML cfg, ItemGeneratorManager.GeneratorItem itemGenerator) {
+    public EditorGUI(@NotNull ItemGeneratorManager itemGeneratorManager, @NotNull JYML cfg, ItemGeneratorManager.GeneratorItem itemGenerator) {
         super(itemGeneratorManager.plugin, cfg, "editor-gui.");
         this.itemGeneratorManager = itemGeneratorManager;
         this.itemGenerator = itemGenerator;
+        if (EditorGUI.commonItemGenerator == null) {
+            try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(plugin.getClass().getResourceAsStream(this.itemGeneratorManager.getPath()+"items/common.yml")))) {
+                EditorGUI.commonItemGenerator = YamlConfiguration.loadConfiguration(in);
+            } catch (IOException exception) { throw new RuntimeException(exception); }
+        }
         this.setTitle(this.getTitle().replace("%id%", itemGenerator.getId()));
         GuiClick guiClick = new GuiClick() {
             @Override
@@ -64,35 +73,90 @@ public class EditorGUI extends NGUI<QuantumRPG> {
 
                 if (clazz.equals(ItemType.class)) {
                     ItemType type2 = (ItemType) type;
+                    ClickType clickType = clickEvent.getClick();
                     switch (type2) {
                         case NAME: {
-                            sendSetMessage(type2, EditorGUI.this.itemGenerator.getName().substring("§r§f".length()).replace('§', '&'));
+                            switch (clickType) {
+                                case DROP: case CONTROL_DROP: {
+                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    break;
+                                }
+                                default: {
+                                    sendSetMessage(type2, EditorGUI.this.itemGenerator.getName().substring("§r§f".length()).replace('§', '&'));
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case PREFIX_CHANCE: {
-                            sendSetMessage(type2, String.valueOf(EditorGUI.this.itemGenerator.getPrefixChance()));
+                            switch (clickType) {
+                                case DROP: case CONTROL_DROP: {
+                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    break;
+                                }
+                                default: {
+                                    sendSetMessage(type2, String.valueOf(EditorGUI.this.itemGenerator.getPrefixChance()));
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case SUFFIX_CHANCE: {
-                            sendSetMessage(type2, String.valueOf(EditorGUI.this.itemGenerator.getSuffixChance()));
+                            switch (clickType) {
+                                case DROP: case CONTROL_DROP: {
+                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    break;
+                                }
+                                default: {
+                                    sendSetMessage(type2, String.valueOf(EditorGUI.this.itemGenerator.getSuffixChance()));
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case LORE: {
                             break;
                         }
                         case COLOR: {
-                            int[] color = EditorGUI.this.itemGenerator.getColor();
-                            sendSetMessage(type2, color[0]+","+color[1]+","+color[2]);
+                            switch (clickType) {
+                                case DROP: case CONTROL_DROP: {
+                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    break;
+                                }
+                                default: {
+                                    int[] color = EditorGUI.this.itemGenerator.getColor();
+                                    sendSetMessage(type2, color[0]+","+color[1]+","+color[2]);
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case UNBREAKABLE: {
-                            JYML cfg = EditorGUI.this.itemGenerator.getConfig();
-                            cfg.set("unbreakable", !EditorGUI.this.itemGenerator.isUnbreakable());
-                            reload(cfg);
+                            switch (clickType) {
+                                case DROP: case CONTROL_DROP: {
+                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    break;
+                                }
+                                default: {
+                                    JYML cfg = EditorGUI.this.itemGenerator.getConfig();
+                                    cfg.set(type2.getPath(), !EditorGUI.this.itemGenerator.isUnbreakable());
+                                    reload(cfg);
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case ITEM_FLAGS: {
-                            open(new ItemFlagsGUI(plugin, EditorGUI.this.getTitle()+"/Item Flags"), type2);
+                            switch (clickType) {
+                                case DROP: case CONTROL_DROP: {
+                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    break;
+                                }
+                                default: {
+                                    open(new ItemFlagsGUI(EditorGUI.this, plugin, EditorGUI.this.getTitle()+'/'+type2.getTitle()), type2);
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case TIER: {
@@ -209,32 +273,43 @@ public class EditorGUI extends NGUI<QuantumRPG> {
         this.player = player;
     }
 
-    private void open(NGUI<QuantumRPG> childMenu, ItemType itemType) {
+    void open(NGUI<QuantumRPG> childMenu, ItemType itemType) {
         this.listening = itemType;
         childMenu.open(player, 1);
     }
 
     private void reload(JYML cfg) { reload(cfg, null); }
 
-    private void reload(JYML cfg, @Nullable Consumer<EditorGUI> consumer) {
-        cfg.saveChanges();
-        Player player = this.player;
-        itemGeneratorManager.load(EditorGUI.this.itemGenerator.getId(), cfg);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                EditorGUI editorGUI = itemGeneratorManager.openEditor(EditorGUI.this.itemGenerator.getId(), player);
-                if (consumer != null) {
-                    consumer.accept(editorGUI);
+    void reload(JYML cfg, @Nullable Consumer<EditorGUI> consumer) {
+        if (cfg.saveChanges()) {
+            Player player = this.player;
+            itemGeneratorManager.load(EditorGUI.this.itemGenerator.getId(), cfg);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    EditorGUI editorGUI = itemGeneratorManager.openEditor(EditorGUI.this.itemGenerator.getId(), player);
+                    if (consumer != null) {
+                        consumer.accept(editorGUI);
+                    }
                 }
-            }
-        }.runTask(plugin);
+            }.runTask(plugin);
+        } else if (consumer != null) {
+            new BukkitRunnable() {
+                @Override
+                public void run() { consumer.accept(EditorGUI.this); }
+            }.runTask(plugin);
+        }
+    }
+
+    void setDefault(ItemType itemType, JYML cfg) {
+        cfg.set(itemType.getPath(), commonItemGenerator.get(itemType.getPath()));
+        reload(cfg);
     }
 
     private void sendSetMessage(ItemType itemType, String currentValue) {
         EditorGUI.this.listening = itemType;
         player.closeInventory();
-        String name = itemType.name().toLowerCase().replace('_', ' ');
+        String name = itemType.getTitle();
         player.sendMessage("▸ Enter the desired "+name);
         BaseComponent component = new TextComponent("[Current "+name+"]");
         component.setColor(ChatColor.GOLD);
@@ -325,12 +400,13 @@ public class EditorGUI extends NGUI<QuantumRPG> {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent event) {
         if (this.listening == null) { return; }
+        ItemType itemType = this.listening;
         Player player = event.getPlayer();
         if (!player.equals(this.player)) { return; }
         event.setCancelled(true);
         JYML cfg = itemGenerator.getConfig();
         String message = event.getMessage().strip();
-        switch (this.listening) {
+        switch (itemType) {
             case NAME: {
                 cfg.set("name", message);
                 break;
@@ -360,7 +436,6 @@ public class EditorGUI extends NGUI<QuantumRPG> {
                     } catch (NumberFormatException ignored) { }
                 }
                 if (newColor == null) {
-                    plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", "color").send(player);
                     this.listening = null;
                 } else { cfg.set("color", newColor); }
                 break;
@@ -370,7 +445,11 @@ public class EditorGUI extends NGUI<QuantumRPG> {
                 break;
             }
         }
-        if (listening == null) { return; } // Nothing changed
+        if (listening == null) {
+            // Nothing changed
+            plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", itemType.getTitle()).send(player);
+            return;
+        }
         this.listening = null;
         reload(cfg);
     }
@@ -383,7 +462,7 @@ public class EditorGUI extends NGUI<QuantumRPG> {
         if (this.listening != null) { return; }
         this.player = null;
         super.onClose(player, e);
-        this.itemGeneratorManager.onEditorClose(this);
+        // TODO fix for children editors
     }
 
     @Override
@@ -396,150 +475,37 @@ public class EditorGUI extends NGUI<QuantumRPG> {
     protected boolean cancelPlayerClick() { return true; }
 
     public enum ItemType {
-        NAME,
-        PREFIX_CHANCE,
-        SUFFIX_CHANCE,
-        LORE,
-        COLOR,
-        UNBREAKABLE,
-        ITEM_FLAGS,
-        TIER,
-        MIN_LEVEL,
-        MAX_LEVEL,
-        MATERIALS,
-        REQUIREMENTS,
-        AMMO_TYPES,
-        HAND_TYPES,
-        ENCHANTMENTS,
-        DAMAGE_TYPES,
-        DEFENSE_TYPES,
-        ITEM_STATS,
-        SOCKETS,
-        ABILITIES,
-        SAMPLE,
-    }
+        NAME("name"),
+        PREFIX_CHANCE("generator.prefix-chance"),
+        SUFFIX_CHANCE("generator.suffix-chance"),
+        LORE("lore"),
+        COLOR("color"),
+        UNBREAKABLE("unbreakable"),
+        ITEM_FLAGS("item-flags"),
+        TIER("tier"),
+        MIN_LEVEL("level.min"),
+        MAX_LEVEL("level.max"),
+        MATERIALS("generator.materials"),
+        REQUIREMENTS("user-requirements-by-level"),
+        AMMO_TYPES("ammo-types"),
+        HAND_TYPES("hand-types"),
+        ENCHANTMENTS("enchantments"),
+        DAMAGE_TYPES("damage-types"),
+        DEFENSE_TYPES("defense-types"),
+        ITEM_STATS("item-stats"),
+        SOCKETS("sockets"),
+        ABILITIES("abilities"),
+        SAMPLE(null),
+        ;
 
-    public class ItemFlagsGUI extends NGUI<QuantumRPG> {
+        private final String path;
 
-        public ItemFlagsGUI(@NotNull QuantumRPG plugin, @NotNull String title) {
-            super(plugin, title, ((int) Math.ceil((ItemFlag.values().length+1)*1.0/9))*9);
-            GuiClick guiClick = (player, type, inventoryClickEvent) -> {
-                if (type == null) { return; }
-                Class<?> clazz = type.getClass();
-                if (clazz.equals(ContentType.class)) {
-                    ContentType type2 = (ContentType) type;
-                    switch (type2) {
-                        case BACK:
-                        case RETURN:
-                            EditorGUI.this.listening = null;
-                            EditorGUI.this.open(player, 1);
-                            break;
-                        case EXIT: {
-                            player.closeInventory();
-                            break;
-                        }
-                    }
-                    return;
-                }
+        ItemType(String path) { this.path = path; }
 
-                String flag = type.name().toLowerCase();
-                JYML cfg = EditorGUI.this.itemGenerator.getConfig();
-                List<String> itemFlags = cfg.getStringList("item-flags");
-                if (itemFlags.contains(JStrings.MASK_ANY)) {
-                    itemFlags.remove(JStrings.MASK_ANY);
-                    for (ItemFlag itemFlag : ItemFlag.values()) {
-                        itemFlags.add(itemFlag.name().toLowerCase());
-                    }
-                }
-                if (itemFlags.contains(flag)) { itemFlags.remove(flag); } else { itemFlags.add(flag); }
-                boolean all = true;
-                for (ItemFlag itemFlag : ItemFlag.values()) {
-                    if (!itemFlags.contains(itemFlag.name().toLowerCase())) {
-                        all = false;
-                        break;
-                    }
-                }
-                if (all) {
-                    itemFlags.clear();
-                    itemFlags.add(JStrings.MASK_ANY);
-                }
-                cfg.set("item-flags", itemFlags);
-                EditorGUI.this.reload(cfg, (gui) -> gui.open(gui.new ItemFlagsGUI(plugin, title), ItemType.ITEM_FLAGS));
-            };
-            Set<ItemFlag> flags = EditorGUI.this.itemGenerator.getFlags();
-            for (ItemFlag itemFlag : ItemFlag.values()) {
-                Material material;
-                switch (itemFlag) {
-                    case HIDE_ENCHANTS: {
-                        material = Material.ENCHANTED_BOOK;
-                        break;
-                    }
-                    case HIDE_ATTRIBUTES: {
-                        material = Material.OAK_SIGN;
-                        break;
-                    }
-                    case HIDE_UNBREAKABLE: {
-                        material = Material.ANVIL;
-                        break;
-                    }
-                    case HIDE_DESTROYS: {
-                        material = Material.DIAMOND_PICKAXE;
-                        break;
-                    }
-                    case HIDE_PLACED_ON: {
-                        material = Material.OAK_PLANKS;
-                        break;
-                    }
-                    case HIDE_POTION_EFFECTS: {
-                        material = Material.POTION;
-                        break;
-                    }
-                    case HIDE_DYE: {
-                        material = Material.MAGENTA_DYE;
-                        break;
-                    }
-                    default: {
-                        material = Material.STONE;
-                        break;
-                    }
-                }
-                ItemStack itemStack = new ItemStack(material);
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                if (itemMeta != null) {
-                    itemMeta.setDisplayName(ChatColor.YELLOW+itemFlag.name().toLowerCase());
-                    itemMeta.setLore(List.of(ChatColor.AQUA+"Current: "+ChatColor.GREEN+flags.contains(itemFlag), ChatColor.GOLD+"Left-Click: "+ChatColor.YELLOW+"Set"));
-                    itemStack.setItemMeta(itemMeta);
-                }
-                GuiItem guiItem = new GuiItem(itemFlag.name().toLowerCase(), itemFlag, itemStack, false, 0, new TreeMap<>(), Collections.emptyMap(), null, new int[] {itemFlag.ordinal()});
-                guiItem.setClick(guiClick);
-                this.addButton(guiItem);
-            }
-            ItemStack itemStack = new ItemStack(Material.BARRIER);
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            if (itemMeta != null) {
-                itemMeta.setDisplayName(ChatColor.YELLOW.toString()+ChatColor.BOLD+"Return");
-                itemStack.setItemMeta(itemMeta);
-            }
-            GuiItem guiItem = new GuiItem("return", ContentType.RETURN, itemStack, false, 0, new TreeMap<>(), Collections.emptyMap(), null, new int[] {ItemFlag.values().length});
-            guiItem.setClick(guiClick);
-            this.addButton(guiItem);
-        }
+        public String getPath() { return path; }
 
-        @Override
-        protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int i) { }
-
-        @Override
-        protected boolean ignoreNullClick() { return true; }
-
-        @Override
-        protected boolean cancelClick(int i) { return true; }
-
-        @Override
-        protected boolean cancelPlayerClick() { return true; }
-
-        @Override
-        protected void onClose(@NotNull Player player, @NotNull InventoryCloseEvent e) {
-            EditorGUI.this.listening = null;
+        public String getTitle() {
+            return this.name().replace('_', ' ').toLowerCase();
         }
     }
 }

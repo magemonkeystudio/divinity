@@ -29,6 +29,7 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ResourceManager.Res
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.IAttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.CreateCommand;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.EditCommand;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.SingleAttributeGenerator;
@@ -143,10 +144,6 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
 		(activeEditor = new EditorGUI(this, cfg, itemGenerator)).open(player, 1);
 		return activeEditor;
-	}
-
-	void onEditorClose(EditorGUI editorGUI) {
-		if (this.activeEditor == editorGUI) { this.activeEditor = null; }
 	}
 
 	public class GeneratorItem extends LimitedItem {

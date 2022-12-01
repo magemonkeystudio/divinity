@@ -13,6 +13,7 @@ editor-gui:
       lore:
       - '&bCurrent: &a%current%'
       - '&6Left-Click: &eSet'
+      - '&6Drop: &eSet to default value'
       type: NAME
       slots: 0
     prefix-chance:
@@ -21,6 +22,7 @@ editor-gui:
       lore:
       - '&bCurrent: &a%current%'
       - '&6Left-Click: &eSet'
+      - '&6Drop: &eSet to default value'
       type: PREFIX_CHANCE
       slots: 1
     suffix-chance:
@@ -29,6 +31,7 @@ editor-gui:
       lore:
       - '&bCurrent: &a%current%'
       - '&6Left-Click: &eSet'
+      - '&6Drop: &eSet to default value'
       type: SUFFIX_CHANCE
       slots: 2
     lore:
@@ -48,6 +51,7 @@ editor-gui:
       lore:
         - '&bCurrent: &a%current%'
         - '&6Left-Click: &eSet'
+        - '&6Drop: &eSet to default value'
       type: COLOR
       slots: 4
     unbreakable:
@@ -56,6 +60,7 @@ editor-gui:
       lore:
         - '&bCurrent: &a%current%'
         - '&6Left-Click: &eToggle'
+        - '&6Drop: &eSet to default value'
       type: UNBREAKABLE
       slots: 5
     item-flags:
@@ -65,6 +70,7 @@ editor-gui:
       - '&bCurrent:'
       - '&a%current%'
       - '&6Left-Click: &eSet'
+      - '&6Drop: &eSet to default value'
       type: ITEM_FLAGS
       slots: 6
     tier:
