@@ -5,15 +5,15 @@
 
 package su.nightexpress.quantumrpg.modules;
 
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.StringUT;
+import mc.promcteam.engine.utils.actions.ActionManipulator;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import mc.promcteam.engine.config.api.JYML;
-import mc.promcteam.engine.utils.NumberUT;
-import mc.promcteam.engine.utils.StringUT;
-import mc.promcteam.engine.utils.actions.ActionManipulator;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModuleUsage;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
@@ -32,18 +32,18 @@ import java.util.Map.Entry;
  */
 @Deprecated
 public class UsableItem extends LimitedItem {
-    protected TreeMap<Integer, String[]> reqUserLvl;
-    protected TreeMap<Integer, String[]> reqUserClass;
-    protected TreeMap<Integer, String[]> reqBannedUserClass;
+    protected TreeMap<Integer, String[]>            reqUserLvl;
+    protected TreeMap<Integer, String[]>            reqUserClass;
+    protected TreeMap<Integer, String[]>            reqBannedUserClass;
     protected TreeMap<Integer, Map<String, Object>> varsLvl;
-    protected Map<QClickType, UsableItem.Usage> usageMap;
+    protected Map<QClickType, UsableItem.Usage>     usageMap;
 
     public UsableItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg, @NotNull QModuleUsage<?> module) {
         super(plugin, cfg, module);
-        String sLvl;
+        String   sLvl;
         Iterator var5;
-        int lvl;
-        String reqRaw;
+        int      lvl;
+        String   reqRaw;
         if (ItemRequirements.isRegisteredUser(LevelRequirement.class)) {
             this.reqUserLvl = new TreeMap();
             var5 = cfg.getSection("user-requirements-by-level.level").iterator();
@@ -105,9 +105,9 @@ public class UsableItem extends LimitedItem {
                         sLvl = (String) var5.next();
                         QClickType qClick = QClickType.valueOf(sLvl.toUpperCase());
                         reqRaw = "usage." + sLvl + ".";
-                        double usageCd = cfg.getDouble(reqRaw + "cooldown");
+                        double            usageCd     = cfg.getDouble(reqRaw + "cooldown");
                         ActionManipulator usageEngine = new ActionManipulator(plugin, cfg, reqRaw + "actions");
-                        UsableItem.Usage iu = new UsableItem.Usage(usageCd, usageEngine);
+                        UsableItem.Usage  iu          = new UsableItem.Usage(usageCd, usageEngine);
                         this.usageMap.put(qClick, iu);
                     }
 
@@ -119,11 +119,11 @@ public class UsableItem extends LimitedItem {
             } while (lvl <= 0);
 
             Map<String, Object> vars = new HashMap();
-            Iterator var9 = cfg.getSection("variables-by-level." + sLvl).iterator();
+            Iterator            var9 = cfg.getSection("variables-by-level." + sLvl).iterator();
 
             while (var9.hasNext()) {
-                String var = (String) var9.next();
-                String path = "variables-by-level." + sLvl + "." + var;
+                String var    = (String) var9.next();
+                String path   = "variables-by-level." + sLvl + "." + var;
                 Object varVal = cfg.get(path);
                 vars.put(var.toLowerCase(), varVal);
             }
@@ -162,7 +162,7 @@ public class UsableItem extends LimitedItem {
         } else {
             Map<String, Object> vars = (Map) e.getValue();
 
-            Entry eVar;
+            Entry  eVar;
             String valueFormat;
             for (Iterator var6 = vars.entrySet().iterator(); var6.hasNext(); str = str.replace("%var_" + (String) eVar.getKey() + "%", valueFormat)) {
                 eVar = (Entry) var6.next();
@@ -184,7 +184,7 @@ public class UsableItem extends LimitedItem {
 
     @NotNull
     protected ItemStack build(int lvl, int uses) {
-        ItemStack item = super.build(lvl, uses);
+        ItemStack        item     = super.build(lvl, uses);
         LevelRequirement reqLevel = (LevelRequirement) ItemRequirements.getUserRequirement(LevelRequirement.class);
         if (reqLevel != null) {
             reqLevel.add(item, this.getUserLevelRequirement(lvl), -1);
@@ -243,9 +243,9 @@ public class UsableItem extends LimitedItem {
      */
     @Deprecated
     public static class Cooldown {
-        private String itemId;
+        private String     itemId;
         private QClickType click;
-        private long time;
+        private long       time;
 
         public Cooldown(@NotNull String itemId, @NotNull QClickType click, double cd) {
             this.itemId = itemId;
@@ -273,7 +273,7 @@ public class UsableItem extends LimitedItem {
     }
 
     public class Usage {
-        private double cd;
+        private double            cd;
         private ActionManipulator actionManipulator;
 
         public Usage(double cd, @NotNull ActionManipulator actionManipulator) {

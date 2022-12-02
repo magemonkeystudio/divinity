@@ -15,8 +15,8 @@ import java.util.WeakHashMap;
 public class PacketManager {
 
     public static final Map<Player, Set<ChatColor>> COLOR_CACHE = new WeakHashMap<>();
-    private QuantumRPG plugin;
-    private IPacketHandler packetHandler;
+    private             QuantumRPG                  plugin;
+    private             IPacketHandler              packetHandler;
 
     public PacketManager(@NotNull QuantumRPG plugin) {
         this.plugin = plugin;
@@ -25,7 +25,7 @@ public class PacketManager {
     public void setup() {
         String cur = Version.CURRENT.name().toUpperCase();
         try {
-            String pack = this.getClass().getPackage().getName() + ".versions";
+            String   pack  = this.getClass().getPackage().getName() + ".versions";
             Class<?> clazz = Reflex.getClass(pack, cur);
             if (clazz == null) return;
 

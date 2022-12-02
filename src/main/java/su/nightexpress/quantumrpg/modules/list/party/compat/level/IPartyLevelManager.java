@@ -36,7 +36,7 @@ public abstract class IPartyLevelManager extends IListener<QuantumRPG> {
         if (party.getExpMode() != PartyExpMode.SHARED) return 0;
 
         int              expDistance = this.partyManager.getSettings().getMaxLevelExpBalanceDistance();
-        Set<PartyMember> expGetters   = party.getMembersByDistance(member, expDistance);
+        Set<PartyMember> expGetters  = party.getMembersByDistance(member, expDistance);
 
         int   size = expGetters.size() + 1; // +1 For Executor
         int[] each = splitIntoParts(amount, size);

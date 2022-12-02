@@ -18,12 +18,12 @@ import java.util.Set;
 
 public class UserProfileDeserializer implements JsonDeserializer<UserProfile> {
     public UserProfile deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
-        JsonObject j = json.getAsJsonObject();
-        String id = j.get("name").getAsString();
-        boolean isDefault = j.get("isDefault").getAsBoolean();
+        JsonObject     j          = json.getAsJsonObject();
+        String         id         = j.get("name").getAsString();
+        boolean        isDefault  = j.get("isDefault").getAsBoolean();
         Set<SavedBuff> buffDamage = new HashSet<>();
-        JsonElement jBuffsElem = j.get("buffDamage");
-        JsonArray jBuffs = null;
+        JsonElement    jBuffsElem = j.get("buffDamage");
+        JsonArray      jBuffs     = null;
         if (jBuffsElem != null) {
             jBuffs = jBuffsElem.getAsJsonArray();
             for (JsonElement e : jBuffs)
@@ -46,24 +46,24 @@ public class UserProfileDeserializer implements JsonDeserializer<UserProfile> {
                 buffStats.add(context.deserialize(e, SavedBuff.class));
         }
         JsonElement eInventory = j.get("inventory");
-        ItemStack[] inventory = new ItemStack[41];
+        ItemStack[] inventory  = new ItemStack[41];
         if (eInventory != null) {
             int count = 0;
             for (JsonElement item : eInventory.getAsJsonArray())
                 inventory[count++] = ItemUT.fromBase64(item.getAsString());
         }
-        JsonElement eNames = j.get("namesMode");
-        String namesModeRaw = (eNames != null) ? eNames.getAsString() : null;
-        UserEntityNamesMode namesMode = (namesModeRaw != null) ? CollectionsUT.getEnum(namesModeRaw, UserEntityNamesMode.class) : UserEntityNamesMode.DEFAULT;
-        JsonElement eHideHelmet = j.get("hideHelmet");
-        boolean hideHelmet = eHideHelmet != null && eHideHelmet.getAsBoolean();
-        UserClassData cData = null;
-        JsonElement jData = j.get("cData");
+        JsonElement         eNames       = j.get("namesMode");
+        String              namesModeRaw = (eNames != null) ? eNames.getAsString() : null;
+        UserEntityNamesMode namesMode    = (namesModeRaw != null) ? CollectionsUT.getEnum(namesModeRaw, UserEntityNamesMode.class) : UserEntityNamesMode.DEFAULT;
+        JsonElement         eHideHelmet  = j.get("hideHelmet");
+        boolean             hideHelmet   = eHideHelmet != null && eHideHelmet.getAsBoolean();
+        UserClassData       cData        = null;
+        JsonElement         jData        = j.get("cData");
         if (jData != null && QuantumRPG.getInstance().cfg().isModuleEnabled("classes")) {
             JsonObject jClass = jData.getAsJsonObject();
             cData = context.deserialize(jClass, UserClassData.class);
-            String clazzId = cData.getClassId();
-            RPGClass clazz = QuantumAPI.getModuleManager().getClassManager().getClassById(clazzId);
+            String   clazzId = cData.getClassId();
+            RPGClass clazz   = QuantumAPI.getModuleManager().getClassManager().getClassById(clazzId);
             if (clazz == null) {
                 QuantumRPG.getInstance().getLogger().info("Player class '" + clazzId + "' no more exists.");
                 cData = null;
@@ -72,7 +72,7 @@ public class UserProfileDeserializer implements JsonDeserializer<UserProfile> {
             }
         }
         JsonElement jCooldown = j.get("cCooldown");
-        long cCooldown = 0L;
+        long        cCooldown = 0L;
         if (jCooldown != null)
             cCooldown = jCooldown.getAsLong();
         return new UserProfile(

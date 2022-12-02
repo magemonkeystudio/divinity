@@ -23,14 +23,14 @@ import java.util.Set;
 
 public class DropTable extends LoadableItem implements DropCalculator {
 
-    private final boolean        penaltyLevelEnabled;
-    private final int            penaltyLevelVariance;
-    protected     String         name;
-    protected     boolean        rollOnce = true;
-    protected     Set<String>    worldsGood;
-    protected     Set<String>    biomesGood;
-    protected     Set<String>    regionsBad;
-    protected     List<DropItem> dropList;
+    private final boolean          penaltyLevelEnabled;
+    private final int              penaltyLevelVariance;
+    protected     String           name;
+    protected     boolean          rollOnce = true;
+    protected     Set<String>      worldsGood;
+    protected     Set<String>      biomesGood;
+    protected     Set<String>      regionsBad;
+    protected     List<DropItem>   dropList;
     protected     Set<DropNonItem> nonItemDrops;
 
     public DropTable(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
@@ -90,11 +90,11 @@ public class DropTable extends LoadableItem implements DropCalculator {
 
         this.nonItemDrops = new HashSet<>();
 
-        for(String key : cfg.getSection("non-items")){
+        for (String key : cfg.getSection("non-items")) {
 
             String path = "non-items." + key;
 
-            if(key.equalsIgnoreCase("money")){
+            if (key.equalsIgnoreCase("money")) {
                 nonItemDrops.add(new DropMoney(cfg.getConfigurationSection(path)));
             }
 
@@ -144,7 +144,7 @@ public class DropTable extends LoadableItem implements DropCalculator {
     }
 
     @NotNull
-    public Set<DropNonItem> getNonItemDrops(){
+    public Set<DropNonItem> getNonItemDrops() {
         return this.nonItemDrops;
     }
 

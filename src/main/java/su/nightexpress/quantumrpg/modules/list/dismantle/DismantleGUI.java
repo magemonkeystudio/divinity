@@ -27,224 +27,222 @@ import java.util.List;
 import java.util.Map;
 
 class DismantleGUI extends NGUI<QuantumRPG> {
-	
-	protected DismantleManager dismantleManager;
-	
-	protected int[] itemSlots;
-	protected int[] resultSlots;
-	
-	public DismantleGUI(@NotNull DismantleManager dismantleManager) {
-		super(dismantleManager.plugin, dismantleManager.getJYML(), "gui.");
-		this.dismantleManager = dismantleManager;
-		
-		JYML cfg = dismantleManager.getJYML();
-		String path = "gui.";
-		
-		this.itemSlots = cfg.getIntArray(path + "item-slots");
-		this.resultSlots = cfg.getIntArray(path + "result-slots");
-		
-		GuiClick click = (p, type, e) -> {
-			if (type == ContentType.ACCEPT) {
-				Inventory inv = e.getInventory();
-				Map<ItemStack, OutputContainer> result = new HashMap<>();
-				
-				double cost = 0;
-				for (int slot : itemSlots) {
-					ItemStack target = inv.getItem(slot);
-					if (target == null) continue;
-					
-					OutputContainer oCont = dismantleManager.getResult(target);
-					if (oCont == null) continue;
-					
-					cost += oCont.getCost() * target.getAmount();
-					result.put(target, oCont);
-				}
-				if (result.isEmpty()) return;
-				
-				PlayerPreDismantleItemEvent event = new PlayerPreDismantleItemEvent(p, cost, result);
-				plugin.getPluginManager().callEvent(event);
 
-				cost = event.getCost();
-				if (!dismantleManager.payForDismantle(p, cost)) {
-					event.setCancelled(true);
-				}
-				if (event.isCancelled()) {
-					dismantleManager.actionsError.process(p);
-					return;
-				}
-				
-				for (Map.Entry<ItemStack, OutputContainer> entry : result.entrySet()) {
-					ItemStack target = entry.getKey();
-					OutputContainer c = entry.getValue();
-					for (int i = 0; i < target.getAmount(); i++) {
-						for (OutputItem src : c.getItems()) {
-							src.give(p);
-						}
-					}
-				}
-				for (int slot : itemSlots) {
-					inv.setItem(slot, null);
-				}
-				
-				PlayerDismantleItemEvent event2 = new PlayerDismantleItemEvent(p, cost, result);
-				plugin.getPluginManager().callEvent(event2);
-				
-				p.closeInventory();
-			}
-			else if (type == ContentType.EXIT) {
-				p.closeInventory();
-			}
-		};
-		
-		for (String itemId : cfg.getSection(path + "content")) {
-			GuiItem guiItem = cfg.getGuiItem(path + "content." + itemId, ContentType.class);
-			if (guiItem == null) continue;
-			
-			if (guiItem.getType() != null) {
-				guiItem.setClick(click);
-			}
-			
-			this.addButton(guiItem);
-		}
-	}
-	
-	@Override
-	protected void onCreate(@NotNull Player player, @NotNull Inventory inv, int page) {
-		
-	}
+    protected DismantleManager dismantleManager;
 
-	
-	
-	@Override
-	protected void onReady(@NotNull Player player, @NotNull Inventory inv, int page) {
-		// Update placeholders
-		this.update(inv);
-		super.onReady(player, inv, page);
-	}
+    protected int[] itemSlots;
+    protected int[] resultSlots;
 
-	@Override
-	protected boolean ignoreNullClick() {
-		return false;
-	}
-	
-	@Override
-	protected boolean cancelClick(int slot) {
-		return !ArrayUtils.contains(this.itemSlots, slot);
-	}
-	
-	@Override
-	protected boolean cancelPlayerClick() {
-		return false;
-	}
+    public DismantleGUI(@NotNull DismantleManager dismantleManager) {
+        super(dismantleManager.plugin, dismantleManager.getJYML(), "gui.");
+        this.dismantleManager = dismantleManager;
 
-	@Override
-	public void click(@NotNull Player player, @Nullable ItemStack item, int slot, InventoryClickEvent e) {
-		if (slot >= this.getSize()) {
-			if (item != null && !this.dismantleManager.isDismantleable(item)) {
-				e.setCancelled(true);
-				return;
-			}
-		}
+        JYML   cfg  = dismantleManager.getJYML();
+        String path = "gui.";
 
-		if (!this.cancelClick(slot) || (slot > this.getSize() && e.isShiftClick())) {
-			plugin.getServer().getScheduler().runTask(plugin, () -> {
-				this.update(e.getInventory());
-			});
-		}
+        this.itemSlots = cfg.getIntArray(path + "item-slots");
+        this.resultSlots = cfg.getIntArray(path + "result-slots");
 
-		super.click(player, item, slot, e);
-	}
+        GuiClick click = (p, type, e) -> {
+            if (type == ContentType.ACCEPT) {
+                Inventory                       inv    = e.getInventory();
+                Map<ItemStack, OutputContainer> result = new HashMap<>();
 
-	@Override
-	public void onClose(@NotNull Player player, InventoryCloseEvent e) {
-		Inventory inv = e.getInventory();
+                double cost = 0;
+                for (int slot : itemSlots) {
+                    ItemStack target = inv.getItem(slot);
+                    if (target == null) continue;
 
-		for (int slot : this.itemSlots) {
-			ItemStack target = inv.getItem(slot);
-			if (target != null) {
-				ItemUT.addItem(player, target);
-			}
-		}
-	}
+                    OutputContainer oCont = dismantleManager.getResult(target);
+                    if (oCont == null) continue;
 
-	private void update(@NotNull Inventory inv) {
-		// Calculate the dismantle cost and amount of result items.
-		double cost = 0;
-		Map<ItemStack, Integer> result = new HashMap<>();
-		for (int slot : this.itemSlots) {
-			ItemStack target = inv.getItem(slot);
-			if (target == null) continue;
+                    cost += oCont.getCost() * target.getAmount();
+                    result.put(target, oCont);
+                }
+                if (result.isEmpty()) return;
 
-			OutputContainer oCont = dismantleManager.getResult(target);
-			if (oCont == null) continue;
+                PlayerPreDismantleItemEvent event = new PlayerPreDismantleItemEvent(p, cost, result);
+                plugin.getPluginManager().callEvent(event);
 
-			cost += oCont.getCost() * target.getAmount();
+                cost = event.getCost();
+                if (!dismantleManager.payForDismantle(p, cost)) {
+                    event.setCancelled(true);
+                }
+                if (event.isCancelled()) {
+                    dismantleManager.actionsError.process(p);
+                    return;
+                }
 
-			for (int i = 0; i < target.getAmount(); i++) {
-				for (OutputItem src : oCont.getItems()) {
-					ItemStack preview = src.getPreview();
-					if (preview == null) continue;
+                for (Map.Entry<ItemStack, OutputContainer> entry : result.entrySet()) {
+                    ItemStack       target = entry.getKey();
+                    OutputContainer c      = entry.getValue();
+                    for (int i = 0; i < target.getAmount(); i++) {
+                        for (OutputItem src : c.getItems()) {
+                            src.give(p);
+                        }
+                    }
+                }
+                for (int slot : itemSlots) {
+                    inv.setItem(slot, null);
+                }
 
-					ItemStack pCopy = new ItemStack(preview);
-					int amount = pCopy.getAmount();
-					pCopy.setAmount(1);
-					if (result.containsKey(pCopy)) {
-						amount += result.get(pCopy);
-					}
-					result.put(pCopy, amount);
-				}
-			}
-		}
-		String sCost = NumberUT.format(cost);
+                PlayerDismantleItemEvent event2 = new PlayerDismantleItemEvent(p, cost, result);
+                plugin.getPluginManager().callEvent(event2);
 
-		// Clear result slots
-		for (int i = 0; i < resultSlots.length; i++) {
-			inv.setItem(resultSlots[i], null);
-		}
+                p.closeInventory();
+            } else if (type == ContentType.EXIT) {
+                p.closeInventory();
+            }
+        };
 
-		// Replace the cost placeholder on default GUI items.
-		// These items are added in the JGUI items map on GUI load,
-		// so we can just override them with .setItem method.
-		for (GuiItem guiItem : this.getContent().values()) {
-			ItemStack item = guiItem.getItem();
+        for (String itemId : cfg.getSection(path + "content")) {
+            GuiItem guiItem = cfg.getGuiItem(path + "content." + itemId, ContentType.class);
+            if (guiItem == null) continue;
 
-			// Clear previous 'result'
-			for (int slot : guiItem.getSlots()) {
-				if (ArrayUtils.contains(resultSlots, slot)) {
-					inv.setItem(slot, item);
-				}
-			}
+            if (guiItem.getType() != null) {
+                guiItem.setClick(click);
+            }
 
-			ItemMeta meta = item.getItemMeta();
-			if (meta == null) continue;
+            this.addButton(guiItem);
+        }
+    }
 
-			if (meta.hasDisplayName()) {
-				meta.setDisplayName(meta.getDisplayName().replace("%cost%", sCost));
-			}
+    @Override
+    protected void onCreate(@NotNull Player player, @NotNull Inventory inv, int page) {
 
-			List<String> lore = meta.getLore();
-			if (lore != null) {
-				lore.replaceAll(str -> str.replace("%cost%", sCost));
-				meta.setLore(lore);
-			}
-			item.setItemMeta(meta);
+    }
 
-			for (int i : guiItem.getSlots()) {
-				inv.setItem(i, item);
-			}
-		}
 
-		int j = 0;
-		for (Map.Entry<ItemStack, Integer> e : result.entrySet()) {
-			int amount = e.getValue();
-			int[] parts = NumberUT.splitIntoParts(amount, (int) Math.ceil(amount / 64D));
-			for (int amountPart : parts) {
-				if (j >= this.resultSlots.length) return;
+    @Override
+    protected void onReady(@NotNull Player player, @NotNull Inventory inv, int page) {
+        // Update placeholders
+        this.update(inv);
+        super.onReady(player, inv, page);
+    }
 
-				ItemStack preview = new ItemStack(e.getKey());
-				preview.setAmount(amountPart);
-				inv.setItem(this.resultSlots[j++], preview);
-			}
-		}
-	}
+    @Override
+    protected boolean ignoreNullClick() {
+        return false;
+    }
+
+    @Override
+    protected boolean cancelClick(int slot) {
+        return !ArrayUtils.contains(this.itemSlots, slot);
+    }
+
+    @Override
+    protected boolean cancelPlayerClick() {
+        return false;
+    }
+
+    @Override
+    public void click(@NotNull Player player, @Nullable ItemStack item, int slot, InventoryClickEvent e) {
+        if (slot >= this.getSize()) {
+            if (item != null && !this.dismantleManager.isDismantleable(item)) {
+                e.setCancelled(true);
+                return;
+            }
+        }
+
+        if (!this.cancelClick(slot) || (slot > this.getSize() && e.isShiftClick())) {
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                this.update(e.getInventory());
+            });
+        }
+
+        super.click(player, item, slot, e);
+    }
+
+    @Override
+    public void onClose(@NotNull Player player, InventoryCloseEvent e) {
+        Inventory inv = e.getInventory();
+
+        for (int slot : this.itemSlots) {
+            ItemStack target = inv.getItem(slot);
+            if (target != null) {
+                ItemUT.addItem(player, target);
+            }
+        }
+    }
+
+    private void update(@NotNull Inventory inv) {
+        // Calculate the dismantle cost and amount of result items.
+        double                  cost   = 0;
+        Map<ItemStack, Integer> result = new HashMap<>();
+        for (int slot : this.itemSlots) {
+            ItemStack target = inv.getItem(slot);
+            if (target == null) continue;
+
+            OutputContainer oCont = dismantleManager.getResult(target);
+            if (oCont == null) continue;
+
+            cost += oCont.getCost() * target.getAmount();
+
+            for (int i = 0; i < target.getAmount(); i++) {
+                for (OutputItem src : oCont.getItems()) {
+                    ItemStack preview = src.getPreview();
+                    if (preview == null) continue;
+
+                    ItemStack pCopy  = new ItemStack(preview);
+                    int       amount = pCopy.getAmount();
+                    pCopy.setAmount(1);
+                    if (result.containsKey(pCopy)) {
+                        amount += result.get(pCopy);
+                    }
+                    result.put(pCopy, amount);
+                }
+            }
+        }
+        String sCost = NumberUT.format(cost);
+
+        // Clear result slots
+        for (int i = 0; i < resultSlots.length; i++) {
+            inv.setItem(resultSlots[i], null);
+        }
+
+        // Replace the cost placeholder on default GUI items.
+        // These items are added in the JGUI items map on GUI load,
+        // so we can just override them with .setItem method.
+        for (GuiItem guiItem : this.getContent().values()) {
+            ItemStack item = guiItem.getItem();
+
+            // Clear previous 'result'
+            for (int slot : guiItem.getSlots()) {
+                if (ArrayUtils.contains(resultSlots, slot)) {
+                    inv.setItem(slot, item);
+                }
+            }
+
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) continue;
+
+            if (meta.hasDisplayName()) {
+                meta.setDisplayName(meta.getDisplayName().replace("%cost%", sCost));
+            }
+
+            List<String> lore = meta.getLore();
+            if (lore != null) {
+                lore.replaceAll(str -> str.replace("%cost%", sCost));
+                meta.setLore(lore);
+            }
+            item.setItemMeta(meta);
+
+            for (int i : guiItem.getSlots()) {
+                inv.setItem(i, item);
+            }
+        }
+
+        int j = 0;
+        for (Map.Entry<ItemStack, Integer> e : result.entrySet()) {
+            int   amount = e.getValue();
+            int[] parts  = NumberUT.splitIntoParts(amount, (int) Math.ceil(amount / 64D));
+            for (int amountPart : parts) {
+                if (j >= this.resultSlots.length) return;
+
+                ItemStack preview = new ItemStack(e.getKey());
+                preview.setAmount(amountPart);
+                inv.setItem(this.resultSlots[j++], preview);
+            }
+        }
+    }
 }

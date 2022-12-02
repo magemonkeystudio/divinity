@@ -12,30 +12,30 @@ import java.util.List;
 
 public class PlayerExtractSocketEvent extends ICancellableEvent {
 
-	@Getter
-	private Player player;
-	@Getter
-	private ItemStack item, result;
-	@Getter
-	private List<ItemStack>      returnedSockets;
-	@Getter
-	private SocketAttribute.Type socketType;
-	@Getter
-	@Setter
-	private boolean              isFailed;
+    @Getter
+    private Player    player;
+    @Getter
+    private ItemStack item, result;
+    @Getter
+    private List<ItemStack>      returnedSockets;
+    @Getter
+    private SocketAttribute.Type socketType;
+    @Getter
+    @Setter
+    private boolean              isFailed;
 
-	public PlayerExtractSocketEvent(
-			@NotNull Player player,
-			@NotNull ItemStack item,
-			@NotNull ItemStack result,
-			@NotNull List<ItemStack> returnedSockets,
-			@NotNull SocketAttribute.Type socketType
-			) {
-	    this.item = item;
-	    this.result = result;
-	    this.socketType = socketType;
-		this.returnedSockets = returnedSockets;
-	    this.player = player;
-	    this.setFailed(false);
-	}
+    public PlayerExtractSocketEvent(
+            @NotNull Player player,
+            @NotNull ItemStack item,
+            @NotNull ItemStack result,
+            @NotNull List<ItemStack> returnedSockets,
+            @NotNull SocketAttribute.Type socketType
+    ) {
+        this.item = item;
+        this.result = result;
+        this.socketType = socketType;
+        this.returnedSockets = returnedSockets;
+        this.player = player;
+        this.setFailed(false);
+    }
 }
