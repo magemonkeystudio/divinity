@@ -3,29 +3,28 @@ package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.ContentType;
 import mc.promcteam.engine.manager.api.gui.GuiClick;
-import mc.promcteam.engine.manager.api.gui.GuiItem;
-import mc.promcteam.engine.manager.api.gui.NGUI;
 import mc.promcteam.engine.utils.constants.JStrings;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class ItemFlagsGUI extends NGUI<QuantumRPG> { // TODO extend EditorGUI
+public class ItemFlagsGUI extends AbstractEditorGUI {
     private static final String PATH = EditorGUI.ItemType.ITEM_FLAGS.getPath();
-    private final EditorGUI parentGUI;
 
-    public ItemFlagsGUI(EditorGUI parentGUI, @NotNull QuantumRPG plugin, @NotNull String title) {
-        super(plugin, title, ((int) Math.ceil((ItemFlag.values().length+1)*1.0/9))*9);
-        this.parentGUI = parentGUI;
+    public ItemFlagsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String title) {
+        super(itemGeneratorManager, itemGenerator, title+'/'+EditorGUI.ItemType.ITEM_FLAGS.getTitle(), ((int) Math.ceil((ItemFlag.values().length+1)*1.0/9))*9);
+    }
+
+    @Override
+    protected void onLoad(ItemGeneratorManager.GeneratorItem itemGenerator) {
         GuiClick guiClick = (player, type, inventoryClickEvent) -> {
             if (type == null) { return; }
             Class<?> clazz = type.getClass();
@@ -34,8 +33,7 @@ public class ItemFlagsGUI extends NGUI<QuantumRPG> { // TODO extend EditorGUI
                 switch (type2) {
                     case BACK:
                     case RETURN:
-                        parentGUI.listening = null;
-                        parentGUI.open(player, 1);
+                        new EditorGUI(itemGeneratorManager, itemGenerator).open(player, 1);
                         break;
                     case EXIT: {
                         player.closeInventory();
@@ -45,8 +43,9 @@ public class ItemFlagsGUI extends NGUI<QuantumRPG> { // TODO extend EditorGUI
                 return;
             }
 
+            if (!(type instanceof ItemFlag)) { return; }
             String flag = type.name().toLowerCase();
-            JYML cfg = parentGUI.itemGenerator.getConfig();
+            JYML cfg = itemGenerator.getConfig();
             Set<String> itemFlags = new HashSet<>(cfg.getStringList(PATH));
             if (itemFlags.contains(JStrings.MASK_ANY)) {
                 itemFlags.remove(JStrings.MASK_ANY);
@@ -81,9 +80,9 @@ public class ItemFlagsGUI extends NGUI<QuantumRPG> { // TODO extend EditorGUI
                 itemFlags.add(JStrings.MASK_ANY);
             }
             cfg.set(PATH, new ArrayList<>(itemFlags));
-            parentGUI.reload(cfg, (gui) -> gui.open(new ItemFlagsGUI(gui, plugin, title), EditorGUI.ItemType.ITEM_FLAGS));
+            saveAndReopen(cfg);
         };
-        Set<ItemFlag> flags = parentGUI.itemGenerator.getFlags();
+        Set<ItemFlag> flags = this.itemGenerator.getFlags();
         for (ItemFlag itemFlag : ItemFlag.values()) {
             Material material;
             switch (itemFlag) {
@@ -120,28 +119,15 @@ public class ItemFlagsGUI extends NGUI<QuantumRPG> { // TODO extend EditorGUI
                     break;
                 }
             }
-            ItemStack itemStack = new ItemStack(material);
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            if (itemMeta != null) {
-                itemMeta.setDisplayName(ChatColor.YELLOW+itemFlag.name().toLowerCase());
-                itemMeta.setLore(List.of(ChatColor.AQUA+"Current: "+ChatColor.GREEN+flags.contains(itemFlag),
-                                         ChatColor.GOLD+"Left-Click: "+ChatColor.YELLOW+"Set",
-                                         ChatColor.GOLD+"Drop: "+ChatColor.YELLOW+"Set to default value"));
-                itemStack.setItemMeta(itemMeta);
-            }
-            GuiItem guiItem = new GuiItem(itemFlag.name().toLowerCase(), itemFlag, itemStack, false, 0, new TreeMap<>(), Collections.emptyMap(), null, new int[]{itemFlag.ordinal()});
-            guiItem.setClick(guiClick);
-            this.addButton(guiItem);
+            String name = itemFlag.name().toLowerCase();
+            this.addButton(this.createButton(name, itemFlag, material,
+                                             "&e"+name, color(
+                                                     "&bCurrent: &a"+flags.contains(itemFlag),
+                                                     "&6Left-Click: &eSet",
+                                                     "&6Drop: &eSet to default value"), itemFlag.ordinal(), guiClick));
         }
-        ItemStack itemStack = new ItemStack(Material.BARRIER);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        if (itemMeta != null) {
-            itemMeta.setDisplayName(ChatColor.YELLOW.toString()+ChatColor.BOLD+"Return");
-            itemStack.setItemMeta(itemMeta);
-        }
-        GuiItem guiItem = new GuiItem("return", ContentType.RETURN, itemStack, false, 0, new TreeMap<>(), Collections.emptyMap(), null, new int[]{ItemFlag.values().length});
-        guiItem.setClick(guiClick);
-        this.addButton(guiItem);
+        this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER,
+                                         "&e&lReturn", List.of(), ItemFlag.values().length, guiClick));
     }
 
     @Override
@@ -155,9 +141,4 @@ public class ItemFlagsGUI extends NGUI<QuantumRPG> { // TODO extend EditorGUI
 
     @Override
     protected boolean cancelPlayerClick() { return true; }
-
-    @Override
-    protected void onClose(@NotNull Player player, @NotNull InventoryCloseEvent e) {
-        parentGUI.listening = null;
-    }
 }

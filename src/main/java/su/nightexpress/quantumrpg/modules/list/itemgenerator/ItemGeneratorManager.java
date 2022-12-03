@@ -13,7 +13,8 @@ import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -29,6 +30,7 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ResourceManager.Res
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.IAttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.CreateCommand;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.EditCommand;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AttributeGenerator;
@@ -55,7 +57,6 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
 	private ResourceManager resourceManager;
 	private ItemAbilityHandler abilityHandler;
-	private EditorGUI activeEditor;
 	
 	private static final String PLACE_GEN_DAMAGE = "%GENERATOR_DAMAGE%";
 	private static final String PLACE_GEN_DEFENSE = "%GENERATOR_DEFENSE%";
@@ -92,6 +93,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 		
 		this.abilityHandler = new ItemAbilityHandler(this);
 		this.abilityHandler.setup();
+		this.registerListeners();
 	}
 
 	@Override
@@ -103,6 +105,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
 	@Override
 	public void shutdown() {
+		this.unregisterListeners();
 		if (this.abilityHandler != null) {
 			this.abilityHandler.shutdown();
 			this.abilityHandler = null;
@@ -112,8 +115,6 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 			this.resourceManager.shutdown();
 			this.resourceManager = null;
 		}
-
-		this.activeEditor = null;
 	}
 	
 	// loadItems is PostSetup method.
@@ -124,26 +125,11 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 		this.resourceManager.setup();
 	}
 
-	public void load(String id, JYML cfg) { items.put(id, new GeneratorItem(plugin, cfg)); }
-
-	public EditorGUI openEditor(String id, Player player) {
-		if (!this.isEnabled()) { throw new IllegalStateException("Module is disabled!"); }
-		GeneratorItem itemGenerator = items.get(id);
-		if (itemGenerator == null) {
-			plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidItem.send(player);
-			return null;
-		}
-		if (activeEditor != null) {
-			for (Player viewer : activeEditor.getViewers()) {
-				if (viewer.isOnline() && !viewer.equals(player)) {
-					plugin.lang().ItemGenerator_Cmd_Editor_Error_AlreadyOpen.replace("%player%", viewer.getName());
-					return null;
-				}
-			}
-		}
-
-		(activeEditor = new EditorGUI(this, cfg, itemGenerator)).open(player, 1);
-		return activeEditor;
+	@NotNull
+	public GeneratorItem load(String id, JYML cfg) {
+		GeneratorItem itemGenerator = new GeneratorItem(plugin, cfg);
+		items.put(id, itemGenerator);
+		return itemGenerator;
 	}
 
 	public class GeneratorItem extends LimitedItem {
@@ -620,5 +606,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 			
 			return item;
 		}
+	}
+
+	@EventHandler
+	public void onChat(AsyncPlayerChatEvent event) {
+		AbstractEditorGUI editorInstance = AbstractEditorGUI.getInstance();
+		if (editorInstance == null || !editorInstance.getPlayer().equals(event.getPlayer())) { return; }
+		editorInstance.onChat(event);
 	}
 }

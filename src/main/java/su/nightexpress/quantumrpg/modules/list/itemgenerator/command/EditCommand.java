@@ -7,6 +7,7 @@ import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.command.MCmd;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 
 import java.util.List;
 
@@ -44,6 +45,15 @@ public class EditCommand extends MCmd<ItemGeneratorManager> {
             this.printUsage(commandSender);
             return;
         }
-        module.openEditor(strings[1], (Player) commandSender);
+        ItemGeneratorManager.GeneratorItem itemGenerator = module.getItemById(strings[1]);
+        if (itemGenerator == null) {
+            plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidItem.send(commandSender);
+            return;
+        }
+        try {
+            new EditorGUI(module, itemGenerator).open((Player) commandSender, 1);
+        } catch (IllegalStateException e) {
+            plugin.lang().ItemGenerator_Cmd_Editor_Error_AlreadyOpen.replace("%player%", commandSender.getName()).send(commandSender);
+        }
     }
 }
