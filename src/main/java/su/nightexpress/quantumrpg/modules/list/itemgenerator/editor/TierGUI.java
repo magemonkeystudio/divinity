@@ -17,7 +17,8 @@ import java.util.List;
 public class TierGUI extends AbstractEditorGUI {
 
     public TierGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String title) {
-        super(itemGeneratorManager, itemGenerator, title+'/'+EditorGUI.ItemType.ITEM_FLAGS.getTitle(), 54);
+        super(itemGeneratorManager, itemGenerator, 54);
+        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.TIER.getTitle());
     }
 
     @Override
@@ -41,11 +42,11 @@ public class TierGUI extends AbstractEditorGUI {
                         break;
                     }
                     case NEXT: {
-                        saveAndReopen(itemGenerator.getConfig(), currentPage+1);
+                        saveAndReopen(currentPage+1);
                         break;
                     }
                     case BACK: {
-                        saveAndReopen(itemGenerator.getConfig(), currentPage-1);
+                        saveAndReopen(currentPage-1);
                         break;
                     }
                 }
@@ -56,7 +57,7 @@ public class TierGUI extends AbstractEditorGUI {
             if (guiItem == null) { return; }
             JYML cfg = this.itemGenerator.getConfig();
             cfg.set(EditorGUI.ItemType.TIER.getPath(), guiItem.getId());
-            saveAndReopen(cfg, currentPage);
+            saveAndReopen(currentPage);
         };
         for (int tierIndex = (currentPage-1)*42, last = Math.min(tiers.length, tierIndex+42), invIndex = 1;
              tierIndex < last; tierIndex++, invIndex++) {

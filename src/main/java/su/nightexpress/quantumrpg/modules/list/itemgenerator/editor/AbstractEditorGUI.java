@@ -28,12 +28,12 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
     static YamlConfiguration commonItemGenerator;
     static AbstractEditorGUI instance;
 
-    final ItemGeneratorManager itemGeneratorManager;
-    ItemGeneratorManager.GeneratorItem itemGenerator;
-    Player player;
+    protected final ItemGeneratorManager itemGeneratorManager;
+    protected ItemGeneratorManager.GeneratorItem itemGenerator;
+    protected Player player;
 
-    public AbstractEditorGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String title, int size) {
-        super(itemGeneratorManager.plugin, title, size);
+    public AbstractEditorGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, int size) {
+        super(itemGeneratorManager.plugin, "[&d"+itemGenerator.getId()+"&r] editor", size);
         this.itemGeneratorManager = itemGeneratorManager;
         this.itemGenerator = itemGenerator;
         load(itemGenerator);
@@ -175,10 +175,11 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
         return lore;
     }
 
-    protected void saveAndReopen(JYML cfg) { saveAndReopen(cfg, 1); }
+    protected void saveAndReopen() { saveAndReopen(1); }
 
-    protected void saveAndReopen(JYML cfg, int page) {
+    protected void saveAndReopen(int page) {
         final Player player = this.player;
+        JYML cfg = this.itemGenerator.getConfig();
         cfg.saveChanges();
         this.load(itemGeneratorManager.load(this.itemGenerator.getId(), cfg));
         new BukkitRunnable() {
@@ -190,4 +191,8 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
     }
 
     public void onChat(AsyncPlayerChatEvent event) { }
+
+    public enum ItemType {
+        NEW,
+    }
 }

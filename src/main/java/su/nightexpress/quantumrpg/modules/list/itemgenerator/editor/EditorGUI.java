@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.requirements.MainRequirementsGUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class EditorGUI extends AbstractEditorGUI {
     private ItemType listening;
 
     public EditorGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
-        super(itemGeneratorManager, itemGenerator, "[&d"+itemGenerator.getId()+"&r] editor", 45);
+        super(itemGeneratorManager, itemGenerator, 45);
     }
 
     @Override
@@ -41,10 +42,10 @@ public class EditorGUI extends AbstractEditorGUI {
                 if (clazz.equals(ContentType.class)) {
                     ContentType type2 = (ContentType) type;
                     switch (type2) {
-                        case EXIT:
-                        case RETURN:
+                        case EXIT: case RETURN: {
                             player.closeInventory();
                             break;
+                        }
                     }
                     return;
                 }
@@ -56,7 +57,7 @@ public class EditorGUI extends AbstractEditorGUI {
                         case NAME: {
                             switch (clickType) {
                                 case DROP: case CONTROL_DROP: {
-                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    setDefault(type2);
                                     break;
                                 }
                                 default: {
@@ -69,7 +70,7 @@ public class EditorGUI extends AbstractEditorGUI {
                         case PREFIX_CHANCE: {
                             switch (clickType) {
                                 case DROP: case CONTROL_DROP: {
-                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    setDefault(type2);
                                     break;
                                 }
                                 default: {
@@ -82,7 +83,7 @@ public class EditorGUI extends AbstractEditorGUI {
                         case SUFFIX_CHANCE: {
                             switch (clickType) {
                                 case DROP: case CONTROL_DROP: {
-                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    setDefault(type2);
                                     break;
                                 }
                                 default: {
@@ -98,7 +99,7 @@ public class EditorGUI extends AbstractEditorGUI {
                         case COLOR: {
                             switch (clickType) {
                                 case DROP: case CONTROL_DROP: {
-                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    setDefault(type2);
                                     break;
                                 }
                                 default: {
@@ -112,13 +113,12 @@ public class EditorGUI extends AbstractEditorGUI {
                         case UNBREAKABLE: {
                             switch (clickType) {
                                 case DROP: case CONTROL_DROP: {
-                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    setDefault(type2);
                                     break;
                                 }
                                 default: {
-                                    JYML cfg = EditorGUI.this.itemGenerator.getConfig();
-                                    cfg.set(type2.getPath(), !EditorGUI.this.itemGenerator.isUnbreakable());
-                                    saveAndReopen(cfg);
+                                    EditorGUI.this.itemGenerator.getConfig().set(type2.getPath(), !EditorGUI.this.itemGenerator.isUnbreakable());
+                                    saveAndReopen();
                                     break;
                                 }
                             }
@@ -127,7 +127,7 @@ public class EditorGUI extends AbstractEditorGUI {
                         case ITEM_FLAGS: {
                             switch (clickType) {
                                 case DROP: case CONTROL_DROP: {
-                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    setDefault(type2);
                                     break;
                                 }
                                 default: {
@@ -140,7 +140,7 @@ public class EditorGUI extends AbstractEditorGUI {
                         case TIER: {
                             switch (clickType) {
                                 case DROP: case CONTROL_DROP: {
-                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    setDefault(type2);
                                     break;
                                 }
                                 default: {
@@ -160,19 +160,17 @@ public class EditorGUI extends AbstractEditorGUI {
                                     break;
                                 }
                                 case LEFT: {
-                                    JYML cfg = EditorGUI.this.itemGenerator.getConfig();
-                                    cfg.set(type2.getPath(), EditorGUI.this.itemGenerator.getMinLevel()-1);
-                                    saveAndReopen(cfg);
+                                    EditorGUI.this.itemGenerator.getConfig().set(type2.getPath(), EditorGUI.this.itemGenerator.getMinLevel()-1);
+                                    saveAndReopen();
                                     break;
                                 }
                                 case RIGHT: {
-                                    JYML cfg = EditorGUI.this.itemGenerator.getConfig();
-                                    cfg.set(type2.getPath(), EditorGUI.this.itemGenerator.getMinLevel()+1);
-                                    saveAndReopen(cfg);
+                                    EditorGUI.this.itemGenerator.getConfig().set(type2.getPath(), EditorGUI.this.itemGenerator.getMinLevel()+1);
+                                    saveAndReopen();
                                     break;
                                 }
                                 case DROP: case CONTROL_DROP: {
-                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    setDefault(type2);
                                     break;
                                 }
                             }
@@ -185,19 +183,17 @@ public class EditorGUI extends AbstractEditorGUI {
                                     break;
                                 }
                                 case LEFT: {
-                                    JYML cfg = EditorGUI.this.itemGenerator.getConfig();
-                                    cfg.set(type2.getPath(), EditorGUI.this.itemGenerator.getMaxLevel()-1);
-                                    saveAndReopen(cfg);
+                                    EditorGUI.this.itemGenerator.getConfig().set(type2.getPath(), EditorGUI.this.itemGenerator.getMaxLevel()-1);
+                                    saveAndReopen();
                                     break;
                                 }
                                 case RIGHT: {
-                                    JYML cfg = EditorGUI.this.itemGenerator.getConfig();
-                                    cfg.set(type2.getPath(), EditorGUI.this.itemGenerator.getMaxLevel()+1);
-                                    saveAndReopen(cfg);
+                                    EditorGUI.this.itemGenerator.getConfig().set(type2.getPath(), EditorGUI.this.itemGenerator.getMaxLevel()+1);
+                                    saveAndReopen();
                                     break;
                                 }
                                 case DROP: case CONTROL_DROP: {
-                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    setDefault(type2);
                                     break;
                                 }
                             }
@@ -222,6 +218,7 @@ public class EditorGUI extends AbstractEditorGUI {
                             break;
                         }
                         case REQUIREMENTS: {
+                            new MainRequirementsGUI(itemGeneratorManager, itemGenerator).open(player, 1);
                             break;
                         }
                         case ENCHANTMENTS: {
@@ -332,11 +329,12 @@ public class EditorGUI extends AbstractEditorGUI {
                                          "&eAbilities", List.of(
                                                  "&6Left-Click: &eSet"), 33, guiClick));
         this.addButton(this.createButton("sample", ItemType.SAMPLE, this.itemGenerator.create(-1, -1, null), 40, guiClick));
+        this.addButton(this.createButton("exit", ContentType.EXIT, Material.BARRIER, "&c&lExit", List.of(), 44, guiClick));
     }
 
-    private void setDefault(ItemType itemType, JYML cfg) {
-        cfg.set(itemType.getPath(), commonItemGenerator.get(itemType.getPath()));
-        saveAndReopen(cfg);
+    private void setDefault(ItemType itemType) {
+        this.itemGenerator.getConfig().set(itemType.getPath(), commonItemGenerator.get(itemType.getPath()));
+        saveAndReopen();
     }
 
     private void sendSetMessage(ItemType itemType, String currentValue) {
@@ -403,7 +401,7 @@ public class EditorGUI extends AbstractEditorGUI {
             plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", itemType.getTitle()).send(player);
         }
         this.listening = null;
-        saveAndReopen(cfg);
+        saveAndReopen();
     }
 
     @Override

@@ -20,7 +20,8 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
     private static final String PATH = EditorGUI.ItemType.ITEM_FLAGS.getPath();
 
     public ItemFlagsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String title) {
-        super(itemGeneratorManager, itemGenerator, title+'/'+EditorGUI.ItemType.ITEM_FLAGS.getTitle(), 54);
+        super(itemGeneratorManager, itemGenerator, 54);
+        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.ITEM_FLAGS.getTitle());
     }
 
     @Override
@@ -44,11 +45,11 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
                         break;
                     }
                     case NEXT: {
-                        saveAndReopen(itemGenerator.getConfig(), currentPage+1);
+                        saveAndReopen(currentPage+1);
                         break;
                     }
                     case BACK: {
-                        saveAndReopen(itemGenerator.getConfig(), currentPage-1);
+                        saveAndReopen(currentPage-1);
                         break;
                     }
                 }
@@ -92,7 +93,7 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
                 itemFlags.add(JStrings.MASK_ANY);
             }
             cfg.set(PATH, new ArrayList<>(itemFlags));
-            saveAndReopen(cfg);
+            saveAndReopen();
         };
         Set<ItemFlag> flags = this.itemGenerator.getFlags();
         for (int tierIndex = (currentPage-1)*42, last = Math.min(allFlags.length, tierIndex+42), invIndex = 1;
