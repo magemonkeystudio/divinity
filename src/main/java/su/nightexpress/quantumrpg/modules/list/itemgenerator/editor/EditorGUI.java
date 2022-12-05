@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,11 +28,11 @@ public class EditorGUI extends AbstractEditorGUI {
     private ItemType listening;
 
     public EditorGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
-        super(itemGeneratorManager, itemGenerator, '['+ChatColor.LIGHT_PURPLE.toString()+itemGenerator.getId()+ChatColor.RESET+"] editor", 45);
+        super(itemGeneratorManager, itemGenerator, "[&d"+itemGenerator.getId()+"&r] editor", 45);
     }
 
     @Override
-    protected void onLoad(ItemGeneratorManager.GeneratorItem itemGenerator) {
+    protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int page) {
         GuiClick guiClick = new GuiClick() {
             @Override
             public void click(@NotNull Player player, @Nullable Enum<?> type, @NotNull InventoryClickEvent clickEvent) {
@@ -40,7 +41,6 @@ public class EditorGUI extends AbstractEditorGUI {
                 if (clazz.equals(ContentType.class)) {
                     ContentType type2 = (ContentType) type;
                     switch (type2) {
-                        case BACK:
                         case EXIT:
                         case RETURN:
                             player.closeInventory();
@@ -138,15 +138,69 @@ public class EditorGUI extends AbstractEditorGUI {
                             break;
                         }
                         case TIER: {
+                            switch (clickType) {
+                                case DROP: case CONTROL_DROP: {
+                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    break;
+                                }
+                                default: {
+                                    new TierGUI(itemGeneratorManager, itemGenerator, EditorGUI.this.getTitle()).open(player, 1);
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case MATERIALS: {
                             break;
                         }
                         case MIN_LEVEL: {
+                            switch (clickType) {
+                                case MIDDLE: {
+                                    sendSetMessage(type2, String.valueOf(EditorGUI.this.itemGenerator.getMinLevel()));
+                                    break;
+                                }
+                                case LEFT: {
+                                    JYML cfg = EditorGUI.this.itemGenerator.getConfig();
+                                    cfg.set(type2.getPath(), EditorGUI.this.itemGenerator.getMinLevel()-1);
+                                    saveAndReopen(cfg);
+                                    break;
+                                }
+                                case RIGHT: {
+                                    JYML cfg = EditorGUI.this.itemGenerator.getConfig();
+                                    cfg.set(type2.getPath(), EditorGUI.this.itemGenerator.getMinLevel()+1);
+                                    saveAndReopen(cfg);
+                                    break;
+                                }
+                                case DROP: case CONTROL_DROP: {
+                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case MAX_LEVEL: {
+                            switch (clickType) {
+                                case MIDDLE: {
+                                    sendSetMessage(type2, String.valueOf(EditorGUI.this.itemGenerator.getMaxLevel()));
+                                    break;
+                                }
+                                case LEFT: {
+                                    JYML cfg = EditorGUI.this.itemGenerator.getConfig();
+                                    cfg.set(type2.getPath(), EditorGUI.this.itemGenerator.getMaxLevel()-1);
+                                    saveAndReopen(cfg);
+                                    break;
+                                }
+                                case RIGHT: {
+                                    JYML cfg = EditorGUI.this.itemGenerator.getConfig();
+                                    cfg.set(type2.getPath(), EditorGUI.this.itemGenerator.getMaxLevel()+1);
+                                    saveAndReopen(cfg);
+                                    break;
+                                }
+                                case DROP: case CONTROL_DROP: {
+                                    setDefault(type2, EditorGUI.this.itemGenerator.getConfig());
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case AMMO_TYPES: {
@@ -228,24 +282,26 @@ public class EditorGUI extends AbstractEditorGUI {
                                                  "&6Left-Click: &eSet",
                                                  "&6Drop: &eSet to default value"), itemFlags), 6, guiClick));
         this.addButton(this.createButton("tier", ItemType.TIER, Material.DIAMOND,
-                                         "&eTier", color(
+                                         "&eTier", replaceLore(List.of(
                                                  "&bCurrent: &a%current%",
-                                                 "&6Left-Click: &eSet"), 7, guiClick));
+                                                 "&6Left-Click: &eSet"), this.itemGenerator.getTier().getName(), 30), 7, guiClick));
         this.addButton(this.createButton("materials", ItemType.MATERIALS, Material.IRON_INGOT,
                                          "&eMaterials", List.of(
                                                  "&6Left-Click: &eSet"), 8, guiClick));
         this.addButton(this.createButton("min-level", ItemType.MIN_LEVEL, Material.EXPERIENCE_BOTTLE,
                                          "&eMinimum Level", List.of(
-                                                 "&bCurrent: &a%current%",
+                                                 "&bCurrent: &a"+this.itemGenerator.getMinLevel(),
                                                  "&6Middle-Click: &eSet",
                                                  "&6Left-Click: &eIncrease",
-                                                 "&6Right-Click: &eDecrease"), 11, guiClick));
+                                                 "&6Right-Click: &eDecrease",
+                                                 "&6Drop: &eSet to default value"), 11, guiClick));
         this.addButton(this.createButton("max-level", ItemType.MAX_LEVEL, Material.EXPERIENCE_BOTTLE,
                                          "&eMaximum Level", List.of(
-                                                 "&bCurrent: &a%current%",
+                                                 "&bCurrent: &a"+this.itemGenerator.getMaxLevel(),
                                                  "&6Middle-Click: &eSet",
                                                  "&6Left-Click: &eIncrease",
-                                                 "&6Right-Click: &eDecrease"), 12, guiClick));
+                                                 "&6Right-Click: &eDecrease",
+                                                 "&6Drop: &eSet to default value"), 12, guiClick));
         this.addButton(this.createButton("ammo-types", ItemType.AMMO_TYPES, Material.ARROW,
                                          "&eAmmo Types", List.of(
                                                  "&bCurrent:",
@@ -305,18 +361,12 @@ public class EditorGUI extends AbstractEditorGUI {
         String message = event.getMessage().strip();
         switch (itemType) {
             case NAME: {
-                cfg.set("name", message);
+                cfg.set(itemType.getPath(), message);
                 break;
             }
-            case PREFIX_CHANCE: {
+            case PREFIX_CHANCE: case SUFFIX_CHANCE: {
                 try {
-                    cfg.set("generator.prefix-chance", Double.parseDouble(message));
-                } catch (NumberFormatException e) { this.listening = null; }
-                break;
-            }
-            case SUFFIX_CHANCE: {
-                try {
-                    cfg.set("generator.suffix-chance", Double.parseDouble(message));
+                    cfg.set(itemType.getPath(), Double.parseDouble(message));
                 } catch (NumberFormatException e) { this.listening = null; }
                 break;
             }
@@ -334,7 +384,13 @@ public class EditorGUI extends AbstractEditorGUI {
                 }
                 if (newColor == null) {
                     this.listening = null;
-                } else { cfg.set("color", newColor); }
+                } else { cfg.set(itemType.getPath(), newColor); }
+                break;
+            }
+            case MIN_LEVEL: case MAX_LEVEL: {
+                try {
+                    cfg.set(itemType.getPath(), Integer.parseInt(message));
+                } catch (NumberFormatException e) { this.listening = null; }
                 break;
             }
             default: {

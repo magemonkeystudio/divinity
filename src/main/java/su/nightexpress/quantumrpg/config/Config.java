@@ -1,29 +1,17 @@
 package su.nightexpress.quantumrpg.config;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import mc.promcteam.engine.config.api.IConfigTemplate;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.constants.JStrings;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.AmmoAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.HandAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.*;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.BleedStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
@@ -31,6 +19,8 @@ import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
 import su.nightexpress.quantumrpg.stats.tiers.Tier;
 import su.nightexpress.quantumrpg.types.ItemGroup;
 import su.nightexpress.quantumrpg.types.ItemSubType;
+
+import java.util.*;
 
 public class Config extends IConfigTemplate {
 	
@@ -44,7 +34,7 @@ public class Config extends IConfigTemplate {
 	@Override
     public void load() {
     	String path = "tiers.";
-    	Config.TIERS_MAP = new HashMap<>();
+    	Config.TIERS_MAP = new LinkedHashMap<>();
     	for (String tierId : cfg.getSection("tiers")) {
     		String path2 = "tiers." + tierId + ".";
     		String tierColor = cfg.getString(path2 + "color", "&f");

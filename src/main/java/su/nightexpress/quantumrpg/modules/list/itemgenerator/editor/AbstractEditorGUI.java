@@ -10,7 +10,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -36,6 +35,7 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
     public AbstractEditorGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String title, int size) {
         super(itemGeneratorManager.plugin, title, size);
         this.itemGeneratorManager = itemGeneratorManager;
+        this.itemGenerator = itemGenerator;
         load(itemGenerator);
         init();
         this.setTitle(this.getTitle().replace("%id%", itemGenerator.getId()));
@@ -55,9 +55,6 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
     public Player getPlayer() { return player; }
 
     public ItemGeneratorManager.GeneratorItem getItemGenerator() { return itemGenerator; }
-
-    @Override
-    protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int i) { }
 
     @Override
     protected boolean ignoreNullClick() { return true; }
@@ -88,15 +85,18 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
         return guiItem;
     }
 
-
     private void load(ItemGeneratorManager.GeneratorItem itemGenerator) {
-        this.clear();
+        if (this.player == null) {
+            this.clear();
+        } else {
+            int page = this.getUserPage(this.player, 0);
+            int pages = this.getUserPage(this.player, 1);
+            this.clear();
+            this.setUserPage(this.player, page, pages);
+        }
         this.registerListeners();
         this.itemGenerator = itemGenerator;
-        onLoad(itemGenerator);
     }
-
-    protected abstract void onLoad(ItemGeneratorManager.GeneratorItem itemGenerator);
 
     @Override
     public void open(@NotNull Player player, int page) {
@@ -111,6 +111,9 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
         AbstractEditorGUI.instance = this;
         this.player = player;
     }
+
+    @Override
+    public void shutdown() { AbstractEditorGUI.instance = null; }
 
     protected List<String> color(List<String> list) {
         List<String> coloredList = new ArrayList<>(list.size());
@@ -172,14 +175,16 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
         return lore;
     }
 
-    protected void saveAndReopen(JYML cfg) {
+    protected void saveAndReopen(JYML cfg) { saveAndReopen(cfg, 1); }
+
+    protected void saveAndReopen(JYML cfg, int page) {
         final Player player = this.player;
         cfg.saveChanges();
         this.load(itemGeneratorManager.load(this.itemGenerator.getId(), cfg));
         new BukkitRunnable() {
             @Override
             public void run() {
-                AbstractEditorGUI.this.open(player, 1);
+                AbstractEditorGUI.this.open(player, page);
             }
         }.runTask(plugin);
     }

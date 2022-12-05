@@ -24,19 +24,18 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
     }
 
     @Override
-    protected void onLoad(ItemGeneratorManager.GeneratorItem itemGenerator) {
-        GuiClick guiClick = (player, type, inventoryClickEvent) -> {
+    protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int page) {
+        GuiClick guiClick = (player1, type, inventoryClickEvent) -> {
             if (type == null) { return; }
             Class<?> clazz = type.getClass();
             if (clazz.equals(ContentType.class)) {
                 ContentType type2 = (ContentType) type;
                 switch (type2) {
-                    case BACK:
                     case RETURN:
-                        new EditorGUI(itemGeneratorManager, itemGenerator).open(player, 1);
+                        new EditorGUI(itemGeneratorManager, itemGenerator).open(player1, 1);
                         break;
                     case EXIT: {
-                        player.closeInventory();
+                        player1.closeInventory();
                         break;
                     }
                 }
@@ -129,16 +128,4 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER,
                                          "&e&lReturn", List.of(), ItemFlag.values().length, guiClick));
     }
-
-    @Override
-    protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int i) { }
-
-    @Override
-    protected boolean ignoreNullClick() { return true; }
-
-    @Override
-    protected boolean cancelClick(int i) { return true; }
-
-    @Override
-    protected boolean cancelPlayerClick() { return true; }
 }
