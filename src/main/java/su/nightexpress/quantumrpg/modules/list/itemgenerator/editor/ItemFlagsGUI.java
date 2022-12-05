@@ -20,12 +20,17 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
     private static final String PATH = EditorGUI.ItemType.ITEM_FLAGS.getPath();
 
     public ItemFlagsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String title) {
-        super(itemGeneratorManager, itemGenerator, title+'/'+EditorGUI.ItemType.ITEM_FLAGS.getTitle(), ((int) Math.ceil((ItemFlag.values().length+1)*1.0/9))*9);
+        super(itemGeneratorManager, itemGenerator, title+'/'+EditorGUI.ItemType.ITEM_FLAGS.getTitle(), 54);
     }
 
     @Override
     protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int page) {
+        ItemFlag[] allFlags = ItemFlag.values();
+        int totalPages = Math.max((int) Math.ceil(allFlags.length*1.0/42), 1);
+        final int currentPage = page < 1 ? totalPages : Math.min(page, totalPages);
+        this.setUserPage(player, currentPage, totalPages);
         GuiClick guiClick = (player1, type, inventoryClickEvent) -> {
+            this.setUserPage(player, currentPage, totalPages);
             if (type == null) { return; }
             Class<?> clazz = type.getClass();
             if (clazz.equals(ContentType.class)) {
@@ -36,6 +41,14 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
                         break;
                     case EXIT: {
                         player1.closeInventory();
+                        break;
+                    }
+                    case NEXT: {
+                        saveAndReopen(itemGenerator.getConfig(), currentPage+1);
+                        break;
+                    }
+                    case BACK: {
+                        saveAndReopen(itemGenerator.getConfig(), currentPage-1);
                         break;
                     }
                 }
@@ -82,7 +95,10 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
             saveAndReopen(cfg);
         };
         Set<ItemFlag> flags = this.itemGenerator.getFlags();
-        for (ItemFlag itemFlag : ItemFlag.values()) {
+        for (int tierIndex = (currentPage-1)*42, last = Math.min(allFlags.length, tierIndex+42), invIndex = 1;
+             tierIndex < last; tierIndex++, invIndex++) {
+            if ((invIndex)%9 == 8) { invIndex += 2; }
+            ItemFlag itemFlag = allFlags[tierIndex];
             Material material;
             switch (itemFlag) {
                 case HIDE_ENCHANTS: {
@@ -123,9 +139,10 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
                                              "&e"+name, color(
                                                      "&bCurrent: &a"+flags.contains(itemFlag),
                                                      "&6Left-Click: &eSet",
-                                                     "&6Drop: &eSet to default value"), itemFlag.ordinal(), guiClick));
+                                                     "&6Drop: &eSet to default value"), invIndex, guiClick));
         }
-        this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER,
-                                         "&e&lReturn", List.of(), ItemFlag.values().length, guiClick));
+        this.addButton(this.createButton("prev-page", ContentType.BACK, Material.ENDER_PEARL, "&dPrevious Page", List.of(), 0, guiClick));
+        this.addButton(this.createButton("next-page", ContentType.NEXT, Material.ENDER_PEARL, "&dNext Page", List.of(), 8, guiClick));
+        this.addButton(this.createButton("exit", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 53, guiClick));
     }
 }
