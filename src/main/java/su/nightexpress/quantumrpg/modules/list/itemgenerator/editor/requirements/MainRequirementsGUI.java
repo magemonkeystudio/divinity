@@ -43,15 +43,15 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
                 ItemType type2 = (ItemType) type;
                 switch (type2) {
                     case LEVEL: {
-                        new LevelRequirementsGUI(itemGeneratorManager, itemGenerator).open(player1, 1);
+                        new RequirementsGUI(itemGeneratorManager, itemGenerator, MainRequirementsGUI.ItemType.LEVEL.getPath(), Material.EXPERIENCE_BOTTLE).open(player1, 1);
                         break;
                     }
                     case CLASS: {
-                        new ClassRequirementsGUI(itemGeneratorManager, itemGenerator).open(player1, 1);
+                        new RequirementsGUI(itemGeneratorManager, itemGenerator, MainRequirementsGUI.ItemType.CLASS.getPath(), Material.BOW).open(player1, 1);
                         break;
                     }
                     case BANNED_CLASS: {
-                        new BannedClassRequirementGUI(itemGeneratorManager, itemGenerator).open(player1, 1);
+                        new RequirementsGUI(itemGeneratorManager, itemGenerator, MainRequirementsGUI.ItemType.BANNED_CLASS.getPath(), Material.BOW).open(player1, 1);
                         break;
                     }
                 }

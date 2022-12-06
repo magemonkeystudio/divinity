@@ -27,12 +27,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class RequirementsGUI extends AbstractEditorGUI {
+public class RequirementsGUI extends AbstractEditorGUI {
+    private final String path;
+    private final Material material;
     private boolean listening = false;
     private Integer levelListening;
 
-    public RequirementsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
-        super(itemGeneratorManager, itemGenerator, 54);
+    public RequirementsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String path, Material material) {
+        super(itemGeneratorManager, itemGenerator, 54);;
+        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.REQUIREMENTS.getTitle());
+        this.path = path;
+        this.material = material;
     }
 
     @Override
@@ -94,7 +99,7 @@ public abstract class RequirementsGUI extends AbstractEditorGUI {
             Integer level = levels.get(levelIndex);
             this.addButton(level == null ?
                                    this.createButton("new", ItemType.NEW, Material.REDSTONE, "&eAdd new requirement", List.of(), invIndex, guiClick) :
-                                   this.createButton(String.valueOf(level), EditorGUI.ItemType.REQUIREMENTS, getButtonMaterial(),
+                                   this.createButton(String.valueOf(level), EditorGUI.ItemType.REQUIREMENTS, this.material,
                                                      "&e"+level, List.of(
                                                              "&bCurrent: &a"+requirements.get(level),
                                                              "&6Left-Click: &eSet",
@@ -104,10 +109,6 @@ public abstract class RequirementsGUI extends AbstractEditorGUI {
         this.addButton(this.createButton("next-page", ContentType.NEXT, Material.ENDER_PEARL, "&dNext Page", List.of(), 8, guiClick));
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 53, guiClick));
     }
-
-    protected abstract String getPath();
-
-    protected abstract Material getButtonMaterial();
 
     private void sendSetMessage(int level, String currentValue) {
         this.listening = true;
@@ -160,7 +161,7 @@ public abstract class RequirementsGUI extends AbstractEditorGUI {
     }
 
     protected TreeMap<Integer,String> getRequirements() {
-        ConfigurationSection requirementsSection = this.itemGenerator.getConfig().getConfigurationSection(getPath());
+        ConfigurationSection requirementsSection = this.itemGenerator.getConfig().getConfigurationSection(this.path);
         TreeMap<Integer,String> requirements = new TreeMap<>();
         if (requirementsSection != null) {
             for (String key : requirementsSection.getKeys(false)) {
@@ -178,9 +179,9 @@ public abstract class RequirementsGUI extends AbstractEditorGUI {
 
     protected void setRequirements(TreeMap<Integer,String> requirements)  {
         JYML cfg = this.itemGenerator.getConfig();
-        cfg.remove(getPath());
+        cfg.remove(this.path);
         for (Map.Entry<Integer,String> entry : requirements.entrySet()) {
-            cfg.set(getPath()+'.'+entry.getKey(), entry.getValue());
+            cfg.set(this.path+'.'+entry.getKey(), entry.getValue());
         }
     }
 }
