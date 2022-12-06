@@ -114,7 +114,7 @@ public class RequirementsGUI extends AbstractEditorGUI {
         this.listening = true;
         this.levelListening = level;
         this.player.closeInventory();
-        player.sendMessage("▸ Enter the desired requirement for level "+level);
+        player.sendMessage("▸ Enter the desired requirement for level "+level+", or \"cancel\" to go back");
         if (currentValue != null) {
             BaseComponent component = new TextComponent("[Current requirement]");
             component.setColor(ChatColor.GOLD);
@@ -127,7 +127,7 @@ public class RequirementsGUI extends AbstractEditorGUI {
     private void sendCreateMessage() {
         this.listening = true;
         this.player.closeInventory();
-        player.sendMessage("▸ Enter the desired level for the new requirement");
+        player.sendMessage("▸ Enter the desired level for the new requirement, or \"cancel\" to go back");
     }
 
     @Override
@@ -138,6 +138,10 @@ public class RequirementsGUI extends AbstractEditorGUI {
         Integer levelListening = this.levelListening;
         this.levelListening = null;
         String message = event.getMessage().strip();
+        if (message.equalsIgnoreCase("cancel")) {
+            saveAndReopen(getUserPage(this.player, 0));
+            return;
+        }
         if (levelListening == null) {
             // Creating new requirement
             int level;

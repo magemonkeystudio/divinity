@@ -341,7 +341,7 @@ public class EditorGUI extends AbstractEditorGUI {
         EditorGUI.this.listening = itemType;
         player.closeInventory();
         String name = itemType.getTitle();
-        player.sendMessage("▸ Enter the desired "+name);
+        player.sendMessage("▸ Enter the desired "+name+", or \"cancel\" to go back");
         BaseComponent component = new TextComponent("[Current "+name+"]");
         component.setColor(ChatColor.GOLD);
         component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, currentValue));
@@ -352,53 +352,55 @@ public class EditorGUI extends AbstractEditorGUI {
     @Override
     public void onChat(AsyncPlayerChatEvent event) {
         if (this.listening == null) { return; }
-        ItemType itemType = this.listening;
-        Player player = event.getPlayer();
         event.setCancelled(true);
-        JYML cfg = itemGenerator.getConfig();
         String message = event.getMessage().strip();
-        switch (itemType) {
-            case NAME: {
-                cfg.set(itemType.getPath(), message);
-                break;
-            }
-            case PREFIX_CHANCE: case SUFFIX_CHANCE: {
-                try {
-                    cfg.set(itemType.getPath(), Double.parseDouble(message));
-                } catch (NumberFormatException e) { this.listening = null; }
-                break;
-            }
-            case COLOR: {
-                String newColor = null;
-                String[] splitString = message.split(",");
-                if (splitString.length == 3) {
-                    int[] rgb  = new int[3];
-                    try {
-                        for (int i = 0; i < 3; i++) {
-                            rgb[i] = Integer.parseInt(splitString[i].strip());
-                        }
-                        newColor = rgb[0]+","+rgb[1]+","+rgb[2];
-                    } catch (NumberFormatException ignored) { }
+        if (!message.equalsIgnoreCase("cancel")) {
+            ItemType itemType = this.listening;
+            Player player = event.getPlayer();
+            JYML cfg = itemGenerator.getConfig();
+            switch (itemType) {
+                case NAME: {
+                    cfg.set(itemType.getPath(), message);
+                    break;
                 }
-                if (newColor == null) {
+                case PREFIX_CHANCE: case SUFFIX_CHANCE: {
+                    try {
+                        cfg.set(itemType.getPath(), Double.parseDouble(message));
+                    } catch (NumberFormatException e) { this.listening = null; }
+                    break;
+                }
+                case COLOR: {
+                    String newColor = null;
+                    String[] splitString = message.split(",");
+                    if (splitString.length == 3) {
+                        int[] rgb  = new int[3];
+                        try {
+                            for (int i = 0; i < 3; i++) {
+                                rgb[i] = Integer.parseInt(splitString[i].strip());
+                            }
+                            newColor = rgb[0]+","+rgb[1]+","+rgb[2];
+                        } catch (NumberFormatException ignored) { }
+                    }
+                    if (newColor == null) {
+                        this.listening = null;
+                    } else { cfg.set(itemType.getPath(), newColor); }
+                    break;
+                }
+                case MIN_LEVEL: case MAX_LEVEL: {
+                    try {
+                        cfg.set(itemType.getPath(), Integer.parseInt(message));
+                    } catch (NumberFormatException e) { this.listening = null; }
+                    break;
+                }
+                default: {
                     this.listening = null;
-                } else { cfg.set(itemType.getPath(), newColor); }
-                break;
+                    break;
+                }
             }
-            case MIN_LEVEL: case MAX_LEVEL: {
-                try {
-                    cfg.set(itemType.getPath(), Integer.parseInt(message));
-                } catch (NumberFormatException e) { this.listening = null; }
-                break;
+            if (listening == null) {
+                // Nothing changed
+                plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", itemType.getTitle()).send(player);
             }
-            default: {
-                this.listening = null;
-                break;
-            }
-        }
-        if (listening == null) {
-            // Nothing changed
-            plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", itemType.getTitle()).send(player);
         }
         this.listening = null;
         saveAndReopen();
