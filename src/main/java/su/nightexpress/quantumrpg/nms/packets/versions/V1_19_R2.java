@@ -2,12 +2,10 @@ package su.nightexpress.quantumrpg.nms.packets.versions;
 
 import com.mojang.datafixers.util.Pair;
 import mc.promcteam.engine.NexEngine;
-import mc.promcteam.engine.core.Version;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.utils.Reflex;
 import mc.promcteam.engine.utils.reflection.ReflectionUtil;
-import net.minecraft.network.protocol.game.PacketPlayOutEntityEquipment;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -69,7 +67,6 @@ public class V1_19_R2 extends V1_19_R1 {
             Entity bukkitEntity;
             Method getUniqueId;
 
-            net.minecraft.world.entity.Entity et = null;
             try {
                 getUniqueId = Reflex.getMethod(nmsEntityClass, "cs");
                 bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
