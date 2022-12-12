@@ -23,6 +23,7 @@ public class PacketManager {
     }
 
     public void setup() {
+        if (Version.TEST.isCurrent()) return;
         String cur = Version.CURRENT.name().toUpperCase();
         try {
             String   pack  = this.getClass().getPackage().getName() + ".versions";

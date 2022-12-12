@@ -2,11 +2,14 @@ package su.nightexpress.quantumrpg.data.api;
 
 import mc.promcteam.engine.data.users.IAbstractUser;
 import mc.promcteam.engine.utils.constants.JStrings;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -87,6 +90,13 @@ public class RPGUser extends IAbstractUser<QuantumRPG> {
 			profile.applyEquipment(player);
 		}
 		*/
+
+        // Set default profile contents to all air
+        if (Arrays.stream(profile.getInventory()).allMatch(i -> i == null)) {
+            ItemStack[] inv = new ItemStack[41];
+            Arrays.fill(inv, new ItemStack(Material.AIR));
+            profile.setInventory(inv);
+        }
         this.activeProfile = profile;
     }
 

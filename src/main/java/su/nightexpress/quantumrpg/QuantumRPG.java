@@ -3,6 +3,8 @@ package su.nightexpress.quantumrpg;
 import mc.promcteam.engine.NexDataPlugin;
 import mc.promcteam.engine.commands.api.IGeneralCommand;
 import mc.promcteam.engine.hooks.Hooks;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.command.BuffCommand;
 import su.nightexpress.quantumrpg.command.ModifyCommand;
@@ -37,6 +39,7 @@ import su.nightexpress.quantumrpg.utils.actions.executors.ActionTakeMana;
 import su.nightexpress.quantumrpg.utils.actions.params.AttackableParam;
 import su.nightexpress.quantumrpg.utils.actions.params.PartyMemberParam;
 
+import java.io.File;
 import java.sql.SQLException;
 
 /**
@@ -63,6 +66,11 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
     private PMSManager pms;
 
     public QuantumRPG() {
+        instance = this;
+    }
+
+    public QuantumRPG(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+        super(loader, description, dataFolder, file);
         instance = this;
     }
 
