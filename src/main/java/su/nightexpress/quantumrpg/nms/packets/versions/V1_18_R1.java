@@ -8,7 +8,6 @@ import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.nms.packets.events.EngineServerPacketEvent;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
-import mc.promcteam.engine.utils.reflection.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -303,7 +302,7 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
             if (profile.isHideHelmet()) {
                 ItemStack air = new ItemStack(Material.AIR);
                 slots.remove(helmet);
-                slots.add(new Pair<>(helmet.getFirst(), ReflectionUtil.getNMSCopy(air)));
+                slots.add(new Pair<>(helmet.getFirst(), reflectionUtil.getNMSCopy(air)));
             }
         });
     }

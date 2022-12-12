@@ -5,7 +5,6 @@ import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.utils.Reflex;
-import mc.promcteam.engine.utils.reflection.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -155,7 +154,7 @@ public class V1_19_R1 extends V1_18_R2 {
             if (profile.isHideHelmet()) {
                 ItemStack air = new ItemStack(Material.AIR);
                 slots.remove(helmet);
-                slots.add(new Pair<>(helmet.getFirst(), ReflectionUtil.getNMSCopy(air)));
+                slots.add(new Pair<>(helmet.getFirst(), reflectionUtil.getNMSCopy(air)));
             }
         });
     }
