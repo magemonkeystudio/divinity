@@ -60,13 +60,13 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
 
         this.addButton(this.createButton("level", ItemType.LEVEL, Material.EXPERIENCE_BOTTLE,
                                          "&eLevel requirements", List.of(
-                                                "&6Left-Click: &eSet"), 2, guiClick));
+                                                "&6Left-Click: &eModify"), 2, guiClick));
         this.addButton(this.createButton("class", ItemType.CLASS, Material.BOW,
                                          "&eClass requirements", List.of(
-                                                "&6Left-Click: &eSet"), 4, guiClick));
+                                                "&6Left-Click: &eModify"), 4, guiClick));
         this.addButton(this.createButton("banned-class", ItemType.BANNED_CLASS, Material.BARRIER,
                                          "&eBanned Class requirements", List.of(
-                                                "&6Left-Click: &eSet"), 6, guiClick));
+                                                "&6Left-Click: &eModify"), 6, guiClick));
         this.addButton(this.createButton("exit", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 8, guiClick));
     }
 

@@ -19,7 +19,7 @@ import java.util.Set;
 public class ItemFlagsGUI extends AbstractEditorGUI {
     private static final String PATH = EditorGUI.ItemType.ITEM_FLAGS.getPath();
 
-    public ItemFlagsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String title) {
+    public ItemFlagsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
         super(itemGeneratorManager, itemGenerator, 54);
         setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.ITEM_FLAGS.getTitle());
     }
@@ -139,7 +139,7 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
             this.addButton(this.createButton(name, itemFlag, material,
                                              "&e"+name, color(
                                                      "&bCurrent: &a"+flags.contains(itemFlag),
-                                                     "&6Left-Click: &eSet",
+                                                     "&6Left-Click: &eToggle",
                                                      "&6Drop: &eSet to default value"), invIndex, guiClick));
         }
         this.addButton(this.createButton("prev-page", ContentType.BACK, Material.ENDER_PEARL, "&dPrevious Page", List.of(), 0, guiClick));

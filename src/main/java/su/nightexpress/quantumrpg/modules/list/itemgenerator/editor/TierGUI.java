@@ -16,7 +16,7 @@ import java.util.List;
 
 public class TierGUI extends AbstractEditorGUI {
 
-    public TierGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String title) {
+    public TierGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
         super(itemGeneratorManager, itemGenerator, 54);
         setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.TIER.getTitle());
     }

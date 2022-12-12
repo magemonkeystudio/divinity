@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials.MainMaterialsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.requirements.MainRequirementsGUI;
 
 import java.util.ArrayList;
@@ -131,7 +132,7 @@ public class EditorGUI extends AbstractEditorGUI {
                                     break;
                                 }
                                 default: {
-                                    new ItemFlagsGUI(itemGeneratorManager, itemGenerator, EditorGUI.this.getTitle()).open(player, 1);
+                                    new ItemFlagsGUI(itemGeneratorManager, itemGenerator).open(player, 1);
                                     break;
                                 }
                             }
@@ -144,13 +145,14 @@ public class EditorGUI extends AbstractEditorGUI {
                                     break;
                                 }
                                 default: {
-                                    new TierGUI(itemGeneratorManager, itemGenerator, EditorGUI.this.getTitle()).open(player, 1);
+                                    new TierGUI(itemGeneratorManager, itemGenerator).open(player, 1);
                                     break;
                                 }
                             }
                             break;
                         }
                         case MATERIALS: {
+                            new MainMaterialsGUI(itemGeneratorManager, itemGenerator).open(player, 1);
                             break;
                         }
                         case MIN_LEVEL: {
@@ -228,9 +230,7 @@ public class EditorGUI extends AbstractEditorGUI {
                             break;
                         }
                         case SAMPLE: {
-                            EditorGUI.this.addButton(EditorGUI.this.createButton("sample", ItemType.SAMPLE, EditorGUI.this.itemGenerator.create(-1, -1, null), 40, this));
-                            player.closeInventory();
-                            EditorGUI.this.open(player, 1);
+                            saveAndReopen();
                             break;
                         }
                     }
@@ -276,7 +276,7 @@ public class EditorGUI extends AbstractEditorGUI {
                                          "&eItemFlags", replaceLore(List.of(
                                                  "&bCurrent:",
                                                  "&a%current%",
-                                                 "&6Left-Click: &eSet",
+                                                 "&6Left-Click: &eModify",
                                                  "&6Drop: &eSet to default value"), itemFlags), 6, guiClick));
         this.addButton(this.createButton("tier", ItemType.TIER, Material.DIAMOND,
                                          "&eTier", replaceLore(List.of(
@@ -284,7 +284,7 @@ public class EditorGUI extends AbstractEditorGUI {
                                                  "&6Left-Click: &eSet"), this.itemGenerator.getTier().getName(), 30), 7, guiClick));
         this.addButton(this.createButton("materials", ItemType.MATERIALS, Material.IRON_INGOT,
                                          "&eMaterials", List.of(
-                                                 "&6Left-Click: &eSet"), 8, guiClick));
+                                                 "&6Left-Click: &eModify"), 8, guiClick));
         this.addButton(this.createButton("min-level", ItemType.MIN_LEVEL, Material.EXPERIENCE_BOTTLE,
                                          "&eMinimum Level", List.of(
                                                  "&bCurrent: &a"+this.itemGenerator.getMinLevel(),
@@ -324,7 +324,7 @@ public class EditorGUI extends AbstractEditorGUI {
                                                 "&6Left-Click: &eSet"), 24, guiClick));
         this.addButton(this.createButton("requirements", ItemType.REQUIREMENTS, Material.REDSTONE,
                                          "&eRequirements", List.of(
-                                                 "&6Left-Click: &eSet"), 29, guiClick));
+                                                 "&6Left-Click: &eModify"), 29, guiClick));
         this.addButton(this.createButton("enchantments", ItemType.ENCHANTMENTS, Material.FIRE_CHARGE,
                                          "&eAbilities", List.of(
                                                  "&6Left-Click: &eSet"), 33, guiClick));

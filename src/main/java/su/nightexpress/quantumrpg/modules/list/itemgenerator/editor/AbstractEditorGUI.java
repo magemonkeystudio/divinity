@@ -159,7 +159,7 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
     }
 
     protected List<String> replaceLore(List<String> lore, List<String> value) {
-        if (value.isEmpty()) { return lore; }
+        if (value.isEmpty()) { value = List.of("[]"); }
         lore = color(lore);
         for (int i = 0, loreSize = lore.size(); i < loreSize; i++) {
             String line = lore.get(i);
@@ -181,7 +181,7 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
         final Player player = this.player;
         JYML cfg = this.itemGenerator.getConfig();
         cfg.saveChanges();
-        this.load(itemGeneratorManager.load(this.itemGenerator.getId(), cfg));
+        this.load(this.itemGeneratorManager.load(this.itemGenerator.getId(), cfg));
         new BukkitRunnable() {
             @Override
             public void run() {
