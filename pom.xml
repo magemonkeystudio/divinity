@@ -16,10 +16,6 @@
     <name>ProRPGItems</name>
 
     <repositories>
-        <repository>
-            <id>sonatype</id>
-            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-        </repository>
         <!-- Magic API -->
         <repository>
             <id>elmakers-repo</id>
