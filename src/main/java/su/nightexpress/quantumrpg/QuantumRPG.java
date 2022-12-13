@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg;
 
 import mc.promcteam.engine.NexDataPlugin;
+import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.commands.api.IGeneralCommand;
 import mc.promcteam.engine.hooks.Hooks;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -89,7 +90,15 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 
         this.pms = new PMSManager(this);
         this.pms.setup();
-        if (this.pms.get() == null) {
+
+        String  coreVersion       = NexEngine.getEngine().getDescription().getVersion();
+        boolean minCoreVersionMet = coreVersion.compareTo(DependencyRequirement.MIN_CORE_VERSION) >= 0;
+
+        if (this.pms.get() == null || !minCoreVersionMet) {
+            if (!minCoreVersionMet) {
+                warn("Missing required ProMCCore version. " + coreVersion + " installed. "
+                        + DependencyRequirement.MIN_CORE_VERSION + " required. Disabling.");
+            }
             this.getPluginManager().disablePlugin(this);
             return;
         }
