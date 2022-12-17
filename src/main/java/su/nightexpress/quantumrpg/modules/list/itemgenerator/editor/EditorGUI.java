@@ -95,6 +95,16 @@ public class EditorGUI extends AbstractEditorGUI {
                             break;
                         }
                         case LORE: {
+                            switch (clickType) {
+                                case DROP: case CONTROL_DROP: {
+                                    setDefault(type2);
+                                    break;
+                                }
+                                default: {
+                                    new LoreGUI(itemGeneratorManager, itemGenerator, EditorGUI.ItemType.LORE.getPath(), "[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.LORE.getTitle()).open(player, 1);
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case COLOR: {
@@ -253,12 +263,12 @@ public class EditorGUI extends AbstractEditorGUI {
                                                  "&6Left-Click: &eSet",
                                                  "&6Drop: &eSet to default value"), 2, guiClick));
         this.addButton(this.createButton("lore", ItemType.LORE, Material.BOOK,
-                                         "&eLore format", List.of(
+                                         "&eLore format", replaceLore(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",
-                                                 "&r%current%",
+                                                 "%current%",
                                                  "&a----------",
-                                                 "&6Left-Click: &eSet"), 3, guiClick));
+                                                 "&6Left-Click: &eModify"), itemGenerator.getConfig().getStringList(ItemType.LORE.getPath())), 3, guiClick));
         int[] color = itemGenerator.getColor();
         this.addButton(this.createButton("color", ItemType.COLOR, Material.MAGENTA_DYE,
                                          "&eColor", List.of(
