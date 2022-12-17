@@ -133,20 +133,23 @@ public class UsableItem extends LimitedItem {
     }
 
     protected final int[] getUserLevelRequirement(int itemLvl) {
+        if (this.reqUserLvl != null) return null;
         Entry<Integer, String[]> e = this.reqUserLvl.floorEntry(itemLvl);
-        return e == null ? new int[1] : this.doMathExpression(itemLvl, (String[]) e.getValue());
+        return e == null ? new int[1] : this.doMathExpression(itemLvl, e.getValue());
     }
 
     @Nullable
     protected final String[] getUserClassRequirement(int itemLvl) {
+        if (this.reqBannedUserClass == null) return null;
         Entry<Integer, String[]> e = this.reqUserClass.floorEntry(itemLvl);
-        return e == null ? null : (String[]) e.getValue();
+        return e == null ? null : e.getValue();
     }
 
     @Nullable
     protected final String[] getBannedUserClassRequirement(int itemLvl) {
+        if (this.reqBannedUserClass == null) return null;
         Entry<Integer, String[]> e = this.reqBannedUserClass.floorEntry(itemLvl);
-        return e == null ? null : (String[]) e.getValue();
+        return e == null ? null : e.getValue();
     }
 
     @NotNull
@@ -160,11 +163,11 @@ public class UsableItem extends LimitedItem {
         if (e == null) {
             return str;
         } else {
-            Map<String, Object> vars = (Map) e.getValue();
+            Map<String, Object> vars = e.getValue();
 
             Entry  eVar;
             String valueFormat;
-            for (Iterator var6 = vars.entrySet().iterator(); var6.hasNext(); str = str.replace("%var_" + (String) eVar.getKey() + "%", valueFormat)) {
+            for (Iterator var6 = vars.entrySet().iterator(); var6.hasNext(); str = str.replace("%var_" + eVar.getKey() + "%", valueFormat)) {
                 eVar = (Entry) var6.next();
                 Object value = eVar.getValue();
                 valueFormat = value.toString();
@@ -184,31 +187,31 @@ public class UsableItem extends LimitedItem {
 
     @NotNull
     protected ItemStack build(int lvl, int uses) {
-        ItemStack        item     = super.build(lvl, uses);
-        LevelRequirement reqLevel = (LevelRequirement) ItemRequirements.getUserRequirement(LevelRequirement.class);
-        if (reqLevel != null) {
-            reqLevel.add(item, this.getUserLevelRequirement(lvl), -1);
+        ItemStack item     = super.build(lvl, uses);
+        int[]     levelReq = this.getUserLevelRequirement(lvl);
+        if (levelReq != null) {
+            LevelRequirement reqLevel = ItemRequirements.getUserRequirement(LevelRequirement.class);
+            if (reqLevel != null)
+                reqLevel.add(item, levelReq, -1);
         }
 
         String[] userClass = this.getUserClassRequirement(lvl);
         if (userClass != null) {
-            ClassRequirement reqClass = (ClassRequirement) ItemRequirements.getUserRequirement(ClassRequirement.class);
-            if (reqClass != null) {
+            ClassRequirement reqClass = ItemRequirements.getUserRequirement(ClassRequirement.class);
+            if (reqClass != null)
                 reqClass.add(item, userClass, -1);
-            }
         }
 
         String[] bannedUserClass = this.getBannedUserClassRequirement(lvl);
         if (bannedUserClass != null) {
             BannedClassRequirement reqBannedClass = ItemRequirements.getUserRequirement(BannedClassRequirement.class);
-            if (reqBannedClass != null) {
+            if (reqBannedClass != null)
                 reqBannedClass.add(item, bannedUserClass, -1);
-            }
         }
 
-        LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_LEVEL, (String) null);
-        LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_CLASS, (String) null);
-        LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS, (String) null);
+        LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_LEVEL, null);
+        LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_CLASS, null);
+        LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS, null);
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return item;
@@ -218,7 +221,7 @@ public class UsableItem extends LimitedItem {
                 return item;
             } else {
                 for (int i = 0; i < lore.size(); ++i) {
-                    lore.set(i, StringUT.color(this.replaceVars((String) lore.get(i), lvl)));
+                    lore.set(i, StringUT.color(this.replaceVars(lore.get(i), lvl)));
                 }
 
                 meta.setLore(lore);
@@ -235,7 +238,7 @@ public class UsableItem extends LimitedItem {
 
     @Nullable
     public UsableItem.Usage getUsage(@NotNull QClickType type) {
-        return (UsableItem.Usage) this.usageMap.get(type);
+        return this.usageMap.get(type);
     }
 
     /**
@@ -243,9 +246,9 @@ public class UsableItem extends LimitedItem {
      */
     @Deprecated
     public static class Cooldown {
-        private String     itemId;
-        private QClickType click;
-        private long       time;
+        private final String     itemId;
+        private final QClickType click;
+        private final long       time;
 
         public Cooldown(@NotNull String itemId, @NotNull QClickType click, double cd) {
             this.itemId = itemId;
@@ -273,8 +276,8 @@ public class UsableItem extends LimitedItem {
     }
 
     public class Usage {
-        private double            cd;
-        private ActionManipulator actionManipulator;
+        private final double            cd;
+        private final ActionManipulator actionManipulator;
 
         public Usage(double cd, @NotNull ActionManipulator actionManipulator) {
             this.cd = cd;

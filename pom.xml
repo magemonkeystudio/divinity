@@ -61,6 +61,8 @@
         <dependency>
             <groupId>com.promcteam</groupId>
             <artifactId>promccore</artifactId>
+            <version>1.0.4-R0.2-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.promcteam</groupId>
