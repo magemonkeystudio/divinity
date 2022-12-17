@@ -171,8 +171,10 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
             return;
         }
 
-        if (this.onDragDrop(p, src.clone(), target.clone(), mItem, e)) {
+        ItemStack current = src.clone();
+        if (this.onDragDrop(p, current, target.clone(), mItem, e)) {
             e.setCancelled(true);
+            e.getView().setCursor(current);
         }
     }
 
@@ -208,17 +210,20 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
         ItemStack toSave;
 
         if (src.getAmount() > 1) {
-            toModify = new ItemStack(src);
-            toModify.setAmount(1);
-
             toSave = new ItemStack(src);
             toSave.setAmount(src.getAmount() - 1);
+
+            toModify = src;
+            toModify.setAmount(1);
         } else {
             toModify = src;
             toSave = null;
         }
 
-        this.takeItemCharge(toModify);
+        if (uses == 0)
+            toModify.setAmount(0);
+        else
+            this.takeItemCharge(toModify);
 
         if (!ItemUT.isAir(toModify)) {
             e.getView().setCursor(toModify);
