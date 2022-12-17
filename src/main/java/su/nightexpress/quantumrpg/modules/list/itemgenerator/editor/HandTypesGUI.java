@@ -27,6 +27,7 @@ public class HandTypesGUI extends AbstractEditorGUI {
 
     public HandTypesGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
         super(itemGeneratorManager, itemGenerator, 54);
+        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.HAND_TYPES.getTitle());
     }
 
     @Override

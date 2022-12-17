@@ -27,6 +27,7 @@ public class AmmoTypesGUI extends AbstractEditorGUI {
 
     public AmmoTypesGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
         super(itemGeneratorManager, itemGenerator, 54);
+        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.AMMO_TYPES.getTitle());
     }
 
     @Override

@@ -190,6 +190,10 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
         }.runTask(plugin);
     }
 
+    protected void setDefault(String path) {
+        this.itemGenerator.getConfig().set(path, commonItemGenerator.get(path));
+    }
+
     public void onChat(AsyncPlayerChatEvent event) { }
 
     public enum ItemType {

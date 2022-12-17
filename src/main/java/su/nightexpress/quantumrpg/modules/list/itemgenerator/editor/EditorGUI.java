@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.enchantments.EnchantmentsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials.MainMaterialsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.requirements.MainRequirementsGUI;
 
@@ -237,6 +238,7 @@ public class EditorGUI extends AbstractEditorGUI {
                             break;
                         }
                         case ENCHANTMENTS: {
+                            new EnchantmentsGUI(itemGeneratorManager, itemGenerator).open(player, 1);
                             break;
                         }
                         case ABILITIES: {
@@ -302,15 +304,15 @@ public class EditorGUI extends AbstractEditorGUI {
                                          "&eMinimum Level", List.of(
                                                  "&bCurrent: &a"+this.itemGenerator.getMinLevel(),
                                                  "&6Middle-Click: &eSet",
-                                                 "&6Left-Click: &eIncrease",
-                                                 "&6Right-Click: &eDecrease",
+                                                 "&6Left-Click: &eDecrease",
+                                                 "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 11, guiClick));
         this.addButton(this.createButton("max-level", ItemType.MAX_LEVEL, Material.EXPERIENCE_BOTTLE,
                                          "&eMaximum Level", List.of(
                                                  "&bCurrent: &a"+this.itemGenerator.getMaxLevel(),
                                                  "&6Middle-Click: &eSet",
-                                                 "&6Left-Click: &eIncrease",
-                                                 "&6Right-Click: &eDecrease",
+                                                 "&6Left-Click: &eDecrease",
+                                                 "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 12, guiClick));
         List<String> ammoTypes = new ArrayList<>();
         ConfigurationSection ammoSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.AMMO_TYPES.getPath());
@@ -351,15 +353,18 @@ public class EditorGUI extends AbstractEditorGUI {
         this.addButton(this.createButton("requirements", ItemType.REQUIREMENTS, Material.REDSTONE,
                                          "&eRequirements", List.of(
                                                  "&6Left-Click: &eModify"), 29, guiClick));
-        this.addButton(this.createButton("enchantments", ItemType.ENCHANTMENTS, Material.FIRE_CHARGE,
+        this.addButton(this.createButton("enchantments", ItemType.ENCHANTMENTS, Material.ENCHANTED_BOOK,
+                                         "&eEnchantments", List.of(
+                                                 "&6Left-Click: &eModify"), 31, guiClick));
+        this.addButton(this.createButton("abilities", ItemType.ABILITIES, Material.FIRE_CHARGE,
                                          "&eAbilities", List.of(
-                                                 "&6Left-Click: &eSet"), 33, guiClick));
+                                                 "&6Left-Click: &eModify"), 33, guiClick));
         this.addButton(this.createButton("sample", ItemType.SAMPLE, this.itemGenerator.create(-1, -1, null), 40, guiClick));
         this.addButton(this.createButton("exit", ContentType.EXIT, Material.BARRIER, "&c&lExit", List.of(), 44, guiClick));
     }
 
     private void setDefault(ItemType itemType) {
-        this.itemGenerator.getConfig().set(itemType.getPath(), commonItemGenerator.get(itemType.getPath()));
+        setDefault(itemType.getPath());
         saveAndReopen();
     }
 
