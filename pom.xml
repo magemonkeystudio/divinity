@@ -10,6 +10,10 @@
         <version>1.19.3-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <promccore.version>1.0.4-R0.2-SNAPSHOT</promccore.version>
+    </properties>
+
     <groupId>com.promcteam</groupId>
     <artifactId>prorpgitems</artifactId>
     <version>1.0.4-R0.2-SNAPSHOT</version>
@@ -61,8 +65,6 @@
         <dependency>
             <groupId>com.promcteam</groupId>
             <artifactId>promccore</artifactId>
-            <version>1.0.4-R0.2-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.promcteam</groupId>
