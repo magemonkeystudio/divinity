@@ -16,27 +16,24 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
+import su.nightexpress.quantumrpg.stats.items.ItemStats;
+import su.nightexpress.quantumrpg.stats.items.attributes.AmmoAttribute;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoreGUI extends AbstractEditorGUI {
-    private final String path;
-    private List<String> lore;
-    private Integer listening = null;
+public class AmmoTypesGUI extends AbstractEditorGUI {
+    private String listening = null;
 
-    public LoreGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String path, String title) {
+    public AmmoTypesGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
         super(itemGeneratorManager, itemGenerator, 54);
-        this.path = path;
-        setTitle(title);
     }
 
     @Override
     protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int page) {
         JYML cfg = this.itemGenerator.getConfig();
-        this.lore = new ArrayList<>(cfg.getStringList(path));
-        this.lore.add(null);
-        int totalPages = Math.max((int) Math.ceil(this.lore.size()*1.0/42), 1);
+        List<AmmoAttribute> list = new ArrayList<>(ItemStats.getAmmos());
+        int totalPages = Math.max((int) Math.ceil(list.size()*1.0/42), 1);
         final int currentPage = page < 1 ? totalPages : Math.min(page, totalPages);
         this.setUserPage(player, currentPage, totalPages);
         GuiClick guiClick = (player1, type, clickEvent) -> {
@@ -64,64 +61,81 @@ public class LoreGUI extends AbstractEditorGUI {
                 }
                 return;
             }
-            if (type == EditorGUI.ItemType.LORE) {
+            if (type == EditorGUI.ItemType.AMMO_TYPES) {
                 GuiItem guiItem = this.getButton(player1, clickEvent.getSlot());
                 if (guiItem == null) { return; }
-                int loreIndex = Integer.parseInt(guiItem.getId());
                 switch (clickEvent.getClick()) {
                     case DROP: case CONTROL_DROP: {
-                        this.lore.remove(loreIndex);
-                        setLore();
+                        this.itemGenerator.getConfig().remove(EditorGUI.ItemType.AMMO_TYPES.getPath()+'.'+guiItem.getId());
                         saveAndReopen(currentPage);
                         break;
                     }
-                    case LEFT: {
-                        this.lore.add(loreIndex, "");
-                        sendSetMessage(loreIndex, null);
-                        break;
-                    }
-                    case RIGHT: {
-                        this.lore.add(loreIndex+1, "");
-                        sendSetMessage(loreIndex+1, null);
-                        break;
-                    }
                     default: {
-                        sendSetMessage(loreIndex, this.lore.get(loreIndex));
+                        sendSetMessage(guiItem.getId(), String.valueOf(cfg.getDouble(EditorGUI.ItemType.AMMO_TYPES.getPath()+'.'+guiItem.getId(), 0)));
                         break;
                     }
                 }
-            } else if (type == ItemType.NEW) {
-                this.lore.add("");
-                sendSetMessage(this.lore.size()-1, null);
             }
         };
-        for (int loreIndex = (currentPage-1)*42, last = Math.min(lore.size(), loreIndex+42), invIndex = 1;
-             loreIndex < last; loreIndex++, invIndex++) {
+        for (int ammoIndex = (currentPage-1)*42, last = Math.min(list.size(), ammoIndex+42), invIndex = 1;
+             ammoIndex < last; ammoIndex++, invIndex++) {
             if ((invIndex)%9 == 8) { invIndex += 2; }
-            String loreLine = lore.get(loreIndex);
-            this.addButton(loreLine == null ?
-                                   this.createButton("new", ItemType.NEW, Material.REDSTONE, "&eAdd new lore line", List.of(), invIndex, guiClick) :
-                                   this.createButton(String.valueOf(loreIndex), EditorGUI.ItemType.LORE, Material.BOOK,
-                                                     "".equals(loreLine) ? "''" : loreLine, List.of(
-                                                   "&6Left-Click: &eAdd to left",
-                                                   "&6Right-Click: &eAdd to right",
-                                                   "&6Middle-Click: &eSet",
-                                                   "&6Drop: &eRemove"), invIndex, guiClick));
+            AmmoAttribute ammoAttribute = list.get(ammoIndex);
+            Material material;
+            switch (ammoAttribute.getType()) {
+                case SNOWBALL: {
+                    material = Material.SNOWBALL;
+                    break;
+                }
+                case EGG: {
+                    material = Material.EGG;
+                    break;
+                }
+                case FIREBALL: {
+                    material = Material.FIRE_CHARGE;
+                    break;
+                }
+                case WITHER_SKULL: {
+                    material = Material.WITHER_SKELETON_SKULL;
+                    break;
+                }
+                case SHULKER_BULLET: {
+                    material = Material.SHULKER_SHELL;
+                    break;
+                }
+                case LLAMA_SPIT: {
+                    material = Material.LLAMA_SPAWN_EGG;
+                    break;
+                }
+                case ENDER_PEARL: {
+                    material = Material.ENDER_PEARL;
+                    break;
+                }
+                case EXP_POTION: {
+                    material = Material.EXPERIENCE_BOTTLE;
+                    break;
+                }
+                default: {
+                    material = Material.ARROW;
+                    break;
+                }
+            }
+            String id = ammoAttribute.getId().toUpperCase();
+            this.addButton(this.createButton(id, EditorGUI.ItemType.AMMO_TYPES, material,
+                                             "&e"+ammoAttribute.getName(), List.of(
+                                                     "&bCurrent: &a"+cfg.getDouble(EditorGUI.ItemType.AMMO_TYPES.getPath()+'.'+id, 0),
+                                                     "&6Left-Click: &eSet",
+                                                     "&6Drop: &eRemove"), invIndex, guiClick));
         }
-        lore.remove(lore.size()-1);
         this.addButton(this.createButton("prev-page", ContentType.BACK, Material.ENDER_PEARL, "&dPrevious Page", List.of(), 0, guiClick));
         this.addButton(this.createButton("next-page", ContentType.NEXT, Material.ENDER_PEARL, "&dNext Page", List.of(), 8, guiClick));
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 53, guiClick));
     }
 
-    private void setLore() {
-        this.itemGenerator.getConfig().set(path, this.lore);
-    }
-
-    private void sendSetMessage(int index, String currentValue) {
-        this.listening = index;
+    private void sendSetMessage(String ammoType, String currentValue) {
+        this.listening = ammoType;
         this.player.closeInventory();
-        player.sendMessage("▸ Enter the desired value for lore line "+index+", or \"cancel\" to go back");
+        player.sendMessage("▸ Enter the desired chance for "+ammoType+" ammo type, or \"cancel\" to go back");
         if (currentValue != null) {
             BaseComponent component = new TextComponent("[Current value]");
             component.setColor(ChatColor.GOLD);
@@ -135,15 +149,26 @@ public class LoreGUI extends AbstractEditorGUI {
     public void onChat(AsyncPlayerChatEvent event) {
         if (this.listening == null) { return; }
         event.setCancelled(true);
-        int index = this.listening;
+        String ammoType = this.listening;
         this.listening = null;
-        String message = event.getMessage();
-        if (message.strip().equalsIgnoreCase("cancel")) {
+        String message = event.getMessage().strip();
+        if (message.equalsIgnoreCase("cancel")) {
             saveAndReopen(getUserPage(this.player, 0));
             return;
         }
-        lore.set(index, message);
-        setLore();
+        double chance;
+        try {
+            chance = Double.parseDouble(message);
+        } catch (NumberFormatException e) {
+            plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", "chance").send(player);
+            saveAndReopen(getUserPage(this.player, 0));
+            return;
+        }
+        if (chance == 0) {
+            this.itemGenerator.getConfig().remove(EditorGUI.ItemType.AMMO_TYPES.getPath()+'.'+ammoType);
+        } else {
+            this.itemGenerator.getConfig().set(EditorGUI.ItemType.AMMO_TYPES.getPath()+'.'+ammoType, chance);
+        }
         saveAndReopen(getUserPage(this.player, 0));
     }
 }

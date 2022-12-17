@@ -10,6 +10,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -212,9 +213,11 @@ public class EditorGUI extends AbstractEditorGUI {
                             break;
                         }
                         case AMMO_TYPES: {
+                            new AmmoTypesGUI(itemGeneratorManager, itemGenerator).open(player, 1);
                             break;
                         }
                         case HAND_TYPES: {
+                            new HandTypesGUI(itemGeneratorManager, itemGenerator).open(player, 1);
                             break;
                         }
                         case DAMAGE_TYPES: {
@@ -309,17 +312,30 @@ public class EditorGUI extends AbstractEditorGUI {
                                                  "&6Left-Click: &eIncrease",
                                                  "&6Right-Click: &eDecrease",
                                                  "&6Drop: &eSet to default value"), 12, guiClick));
+        List<String> ammoTypes = new ArrayList<>();
+        ConfigurationSection ammoSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.AMMO_TYPES.getPath());
+        if (ammoSection != null) {
+            for (String ammoType : ammoSection.getKeys(false)) {
+                ammoTypes.add("&a"+ammoType+": &f"+ammoSection.getDouble(ammoType));
+            }
+        }
         this.addButton(this.createButton("ammo-types", ItemType.AMMO_TYPES, Material.ARROW,
-                                         "&eAmmo Types", List.of(
+                                         "&eAmmo Types", replaceLore(List.of(
                                                  "&bCurrent:",
-                                                 "&r%current%",
-                                                 "&6Left-Click: &eIncrease",
-                                                 "&6Right-Click: &eDecrease"), 14, guiClick));
+                                                 "%current%",
+                                                 "&6Left-Click: &eModify"), ammoTypes), 14, guiClick));
+        List<String> handTypes = new ArrayList<>();
+        ConfigurationSection handSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.HAND_TYPES.getPath());
+        if (handSection != null) {
+            for (String handType : handSection.getKeys(false)) {
+                handTypes.add("&a"+handType+": &f"+handSection.getDouble(handType));
+            }
+        }
         this.addButton(this.createButton("hand-types", ItemType.HAND_TYPES, Material.STICK,
-                                         "&eHand Types", List.of(
+                                         "&eHand Types", replaceLore(List.of(
                                                  "&bCurrent:",
-                                                 "&r%current%",
-                                                 "&6Left-Click: &eSet"), 15, guiClick));
+                                                 "%current%",
+                                                 "&6Left-Click: &eModify"), handTypes), 15, guiClick));
         this.addButton(this.createButton("damage-types", ItemType.DAMAGE_TYPES, Material.IRON_SWORD,
                                          "&eDamage Types", List.of(
                                                  "&6Left-Click: &eSet"), 20, guiClick));
@@ -434,14 +450,14 @@ public class EditorGUI extends AbstractEditorGUI {
         MAX_LEVEL("level.max"),
         MATERIALS("generator.materials"),
         REQUIREMENTS("user-requirements-by-level"),
-        AMMO_TYPES("ammo-types"),
-        HAND_TYPES("hand-types"),
-        ENCHANTMENTS("enchantments"),
-        DAMAGE_TYPES("damage-types"),
-        DEFENSE_TYPES("defense-types"),
-        ITEM_STATS("item-stats"),
-        SOCKETS("sockets"),
-        ABILITIES("abilities"),
+        AMMO_TYPES("generator.ammo-types"),
+        HAND_TYPES("generator.hand-types"),
+        ENCHANTMENTS("generator.enchantments"),
+        DAMAGE_TYPES("generator.damage-types"),
+        DEFENSE_TYPES("generator.defense-types"),
+        ITEM_STATS("generator.item-stats"),
+        SOCKETS("generator.sockets"),
+        ABILITIES("generator.abilities"),
         SAMPLE(null),
         ;
 
