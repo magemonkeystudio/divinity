@@ -16,6 +16,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
@@ -351,7 +353,7 @@ public class DamageManager extends IListener<QuantumRPG> {
                 meta.setBlockModifier(1D - blockModifier / 100D);
 
                 if (isVanillaBlocked && player != null) {
-                    player.setCooldown(Material.SHIELD, 20 * EngineCfg.COMBAT_SHIELD_BLOCK_COOLDOWN);
+                    applyShieldDamage(player);
                 }
             }
             // Fix/Disable vanilla shield block
@@ -361,6 +363,23 @@ public class DamageManager extends IListener<QuantumRPG> {
         }
 
         return true;
+    }
+
+    private void applyShieldDamage(Player player) {
+        if (!player.isBlocking()) return;
+        player.setCooldown(Material.SHIELD, 20 * EngineCfg.COMBAT_SHIELD_BLOCK_COOLDOWN);
+
+        ItemStack offHand  = player.getInventory().getItemInOffHand();
+        ItemStack mainHand = player.getInventory().getItemInMainHand();
+        ItemStack shield   = offHand.getType() == Material.SHIELD ? offHand : mainHand.getType() == Material.SHIELD ? mainHand : null;
+        if (shield == null) return;
+
+        Damageable shieldMeta = (Damageable) shield.getItemMeta();
+        int        level      = shieldMeta.getEnchantLevel(Enchantment.DURABILITY);
+        if (Rnd.get(true) <= (100d / (level + 1))) {
+            shieldMeta.setDamage(shieldMeta.getDamage() + 1);
+            shield.setItemMeta(shieldMeta);
+        }
     }
 
     private boolean handleDamagePostEffects(
