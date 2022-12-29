@@ -243,13 +243,15 @@ public class DropManager extends QModule {
                 if (!ActionManipulator.processConditions(plugin, killer, dropConditions, mapTarget)) continue;
 
                 String itemId  = dropConfig.getItemId();
-                int    itemLvl = dropConfig.getLevel(killer, dead);
+                for (int i = 0; i < dropItem.getCount(); i++) {
+                    int itemLvl = dropConfig.getLevel(killer, dead);
 
-                ItemStack dropStack = QuantumAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
-                if (dropStack == null || dropStack.getType() == Material.AIR) continue;
+                    ItemStack dropStack = QuantumAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
+                    if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
-                dropConfig.executeActions(killer, mapTarget);
-                loot.add(dropStack);
+                    dropConfig.executeActions(killer, mapTarget);
+                    loot.add(dropStack);
+                }
             }
 
             for (DropTable table : dropNpc.getDropTables()) {
