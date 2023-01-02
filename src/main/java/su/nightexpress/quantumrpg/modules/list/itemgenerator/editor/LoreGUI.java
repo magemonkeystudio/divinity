@@ -24,10 +24,12 @@ public class LoreGUI extends AbstractEditorGUI {
     private final String path;
     private List<String> lore;
     private Integer listening = null;
+    private final Runnable onReturn;
 
-    public LoreGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String path, String title) {
+    public LoreGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String path, String title, Runnable onReturn) {
         super(itemGeneratorManager, itemGenerator, 54);
         this.path = path;
+        this.onReturn = onReturn;
         setTitle(title);
     }
 
@@ -47,7 +49,11 @@ public class LoreGUI extends AbstractEditorGUI {
                 ContentType type2 = (ContentType) type;
                 switch (type2) {
                     case RETURN:
-                        new EditorGUI(itemGeneratorManager, itemGenerator).open(player1, 1);
+                        if (this.onReturn == null) {
+                            player1.closeInventory();
+                        } else {
+                            this.onReturn.run();
+                        }
                         break;
                     case EXIT: {
                         player1.closeInventory();

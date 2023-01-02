@@ -24,6 +24,7 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.enchantments.EnchantmentsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials.MainMaterialsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.requirements.MainRequirementsGUI;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.stats.MainStatsGUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +104,7 @@ public class EditorGUI extends AbstractEditorGUI {
                                     break;
                                 }
                                 default: {
-                                    new LoreGUI(itemGeneratorManager, itemGenerator, EditorGUI.ItemType.LORE.getPath(), "[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.LORE.getTitle()).open(player, 1);
+                                    new LoreGUI(itemGeneratorManager, itemGenerator, EditorGUI.ItemType.LORE.getPath(), "[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.LORE.getTitle(), () -> new EditorGUI(itemGeneratorManager, itemGenerator).open(player, 1)).open(player, 1);
                                     break;
                                 }
                             }
@@ -221,13 +222,8 @@ public class EditorGUI extends AbstractEditorGUI {
                             new HandTypesGUI(itemGeneratorManager, itemGenerator).open(player, 1);
                             break;
                         }
-                        case DAMAGE_TYPES: {
-                            break;
-                        }
-                        case DEFENSE_TYPES: {
-                            break;
-                        }
-                        case ITEM_STATS: {
+                        case DAMAGE_TYPES: case DEFENSE_TYPES: case ITEM_STATS: {
+                            new MainStatsGUI(itemGeneratorManager, itemGenerator, type2).open(player, 1);
                             break;
                         }
                         case SOCKETS: {
@@ -271,7 +267,7 @@ public class EditorGUI extends AbstractEditorGUI {
                                          "&eLore format", replaceLore(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",
-                                                 "%current%",
+                                                 "&f%current%",
                                                  "&a----------",
                                                  "&6Left-Click: &eModify"), itemGenerator.getConfig().getStringList(ItemType.LORE.getPath())), 3, guiClick));
         int[] color = itemGenerator.getColor();

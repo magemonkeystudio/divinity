@@ -142,7 +142,7 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
 
         this.addButton(this.createButton("list", ItemType.LIST, Material.ENCHANTED_BOOK,
                                          "&eList of enchantments", List.of(
-                                                 "&6Left-Click: &eToggle",
+                                                 "&6Left-Click: &eModify",
                                                  "&6Drop: &eSet to default value"), 4, guiClick));
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 8, guiClick));
     }
