@@ -24,6 +24,7 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.enchantments.EnchantmentsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials.MainMaterialsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.requirements.MainRequirementsGUI;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.sockets.MainSocketsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.stats.MainStatsGUI;
 
 import java.util.ArrayList;
@@ -227,6 +228,7 @@ public class EditorGUI extends AbstractEditorGUI {
                             break;
                         }
                         case SOCKETS: {
+                            new MainSocketsGUI(itemGeneratorManager, itemGenerator).open(player, 1);
                             break;
                         }
                         case REQUIREMENTS: {
@@ -314,7 +316,7 @@ public class EditorGUI extends AbstractEditorGUI {
         ConfigurationSection ammoSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.AMMO_TYPES.getPath());
         if (ammoSection != null) {
             for (String ammoType : ammoSection.getKeys(false)) {
-                ammoTypes.add("&a"+ammoType+": &f"+ammoSection.getDouble(ammoType));
+                ammoTypes.add("&a- "+ammoType+": &f"+ammoSection.getDouble(ammoType));
             }
         }
         this.addButton(this.createButton("ammo-types", ItemType.AMMO_TYPES, Material.ARROW,
@@ -326,7 +328,7 @@ public class EditorGUI extends AbstractEditorGUI {
         ConfigurationSection handSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.HAND_TYPES.getPath());
         if (handSection != null) {
             for (String handType : handSection.getKeys(false)) {
-                handTypes.add("&a"+handType+": &f"+handSection.getDouble(handType));
+                handTypes.add("&a- "+handType+": &f"+handSection.getDouble(handType));
             }
         }
         this.addButton(this.createButton("hand-types", ItemType.HAND_TYPES, Material.STICK,

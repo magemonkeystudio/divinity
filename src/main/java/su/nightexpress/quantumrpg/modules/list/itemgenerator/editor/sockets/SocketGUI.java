@@ -1,4 +1,4 @@
-package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.stats;
+package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.sockets;
 
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.ContentType;
@@ -10,6 +10,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
@@ -18,27 +19,24 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.LoreGUI;
-import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.stats.MainStatsGUI;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-public class MainStatsGUI extends AbstractEditorGUI {
-    private final EditorGUI.ItemType itemType;
-    private ItemType listening;
+public class SocketGUI extends AbstractEditorGUI {
+    private final String name;
+    private MainStatsGUI.ItemType listening;
 
-    public MainStatsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, EditorGUI.ItemType itemType) {
+    public SocketGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String name) {
         super(itemGeneratorManager, itemGenerator, 9);
-        this.itemType = itemType;
-        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+this.itemType.getTitle());
+        this.name = name;
+        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.SOCKETS.getTitle());
     }
 
     @Override
-    protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int page) {
+    protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int i) {
+        JYML cfg = this.itemGenerator.getConfig();
         GuiClick guiClick = (player1, type, clickEvent) -> {
             if (type == null) { return; }
             Class<?> clazz = type.getClass();
@@ -50,38 +48,36 @@ public class MainStatsGUI extends AbstractEditorGUI {
                         break;
                     }
                     case RETURN: {
-                        new EditorGUI(itemGeneratorManager, itemGenerator).open(player1, 1);
+                        new MainSocketsGUI(itemGeneratorManager, itemGenerator).open(player1, 1);
                         break;
                     }
                 }
                 return;
             }
 
-            if (clazz.equals(ItemType.class)) {
-                ItemType type2 = (ItemType) type;
-                JYML cfg = this.itemGenerator.getConfig();
+            if (clazz.equals(MainStatsGUI.ItemType.class)) {
+                MainStatsGUI.ItemType type2 = (MainStatsGUI.ItemType) type;
+                String path = EditorGUI.ItemType.SOCKETS.getPath()+'.'+this.name+'.'+type2.getPath();
                 switch (type2) {
                     case MINIMUM: {
                         switch (clickEvent.getClick()) {
                             case LEFT: {
-                                String path = type2.getPath(this.itemType);
                                 cfg.set(path, Math.max(0, cfg.getInt(path)-1));
                                 saveAndReopen();
                                 break;
                             }
                             case RIGHT: {
-                                String path = type2.getPath(this.itemType);
                                 cfg.set(path, cfg.getInt(path)+1);
                                 saveAndReopen();
                                 break;
                             }
                             case DROP: case CONTROL_DROP: {
-                                cfg.set(type2.getPath(this.itemType), 0);
+                                cfg.set(path, 0);
                                 saveAndReopen();
                                 break;
                             }
                             default: {
-                                sendSetMessage(type2, String.valueOf(cfg.getInt(type2.getPath(this.itemType))));
+                                sendSetMessage(type2, String.valueOf(cfg.getInt(path)));
                                 break;
                             }
                         }
@@ -90,24 +86,23 @@ public class MainStatsGUI extends AbstractEditorGUI {
                     case MAXIMUM: {
                         switch (clickEvent.getClick()) {
                             case LEFT: {
-                                String path = type2.getPath(this.itemType);
                                 cfg.set(path, Math.max(0, cfg.getInt(path)-1));
                                 saveAndReopen();
                                 break;
                             }
                             case RIGHT: {
-                                String path = type2.getPath(this.itemType);
                                 cfg.set(path, cfg.getInt(path)+1);
                                 saveAndReopen();
                                 break;
                             }
                             case DROP: case CONTROL_DROP: {
-                                cfg.set(type2.getPath(this.itemType), 2);
+                                cfg.set(path, 2);
                                 saveAndReopen();
                                 break;
                             }
                             default: {
-                                sendSetMessage(type2, String.valueOf(cfg.getInt(type2.getPath(this.itemType))));
+                                sendSetMessage(type2, String.valueOf(cfg.getInt(path)));
+                                break;
                             }
                         }
                         break;
@@ -115,89 +110,67 @@ public class MainStatsGUI extends AbstractEditorGUI {
                     case LORE: {
                         switch (clickEvent.getClick()) {
                             case DROP: case CONTROL_DROP: {
-                                setDefault(type2.getPath(this.itemType));
+                                cfg.set(path, replaceLore(List.of("&8&m               &f  「 %current%S 」  &8&m               ",
+                                                                  "%SOCKET_%current%_DEFAULT%"), List.of(this.name)));
                                 break;
                             }
                             default: {
-                                new LoreGUI(itemGeneratorManager, itemGenerator, type2.getPath(this.itemType), this.getTitle()+" lore", () -> new MainStatsGUI(this.itemGeneratorManager, this.itemGenerator, this.itemType).open(player1, 1)).open(player1, 1);
+                                new LoreGUI(this.itemGeneratorManager, this.itemGenerator, path, this.getTitle()+" lore", () -> new SocketGUI(this.itemGeneratorManager, this.itemGenerator, this.name).open(player1, 1)).open(player1, 1);
                                 break;
                             }
                         }
                         break;
                     }
                     case LIST: {
-                        Set<String> statIDs = new HashSet<>();
-                        switch (this.itemType) {
-                            case DAMAGE_TYPES: {
-                                for (DamageAttribute damageAttribute : ItemStats.getDamages()) {
-                                    statIDs.add(damageAttribute.getId());
-                                }
-                                break;
-                            }
-                            case DEFENSE_TYPES: {
-                                for (DefenseAttribute defenseAttribute : ItemStats.getDefenses()) {
-                                    statIDs.add(defenseAttribute.getId());
-                                }
-                                break;
-                            }
-                            case ITEM_STATS: {
-                                for (AbstractStat<?> stat : ItemStats.getStats()) {
-                                    statIDs.add(stat.getId());
-                                }
-                                break;
-                            }
-                        }
-                        new StatListGUI(itemGeneratorManager, itemGenerator, itemType, statIDs, () -> new MainStatsGUI(itemGeneratorManager, itemGenerator, itemType).open(player, page)).open(player1, 1);
+                        new SocketListGUI(this.itemGeneratorManager, this.itemGenerator, this.name).open(player1, 1);
                         break;
                     }
                 }
             }
         };
-        JYML cfg = this.itemGenerator.getConfig();
-        this.addButton(this.createButton("minimum", ItemType.MINIMUM, Material.BROWN_MUSHROOM,
-                                         "&eMinimum "+this.itemType.getTitle(), List.of(
-                                                 "&bCurrent: &a"+cfg.getInt(ItemType.MINIMUM.getPath(this.itemType)),
+        String path = EditorGUI.ItemType.SOCKETS.getPath()+'.'+this.name+'.';
+        this.addButton(this.createButton("minimum", MainStatsGUI.ItemType.MINIMUM, Material.BROWN_MUSHROOM,
+                                         "&eMinimum "+this.name+" sockets", List.of(
+                                                 "&bCurrent: &a"+cfg.getInt(path+MainStatsGUI.ItemType.MINIMUM.getPath()),
                                                  "&6Middle-Click: &eSet",
                                                  "&6Left-Click: &eDecrease",
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 0, guiClick));
-        this.addButton(this.createButton("maximum", ItemType.MAXIMUM, Material.RED_MUSHROOM,
-                                         "&eMaximum "+this.itemType.getTitle(), List.of(
-                                                 "&bCurrent: &a"+cfg.getInt(ItemType.MAXIMUM.getPath(this.itemType)),
+        this.addButton(this.createButton("maximum", MainStatsGUI.ItemType.MAXIMUM, Material.RED_MUSHROOM,
+                                         "&eMaximum "+this.name+" sockets", List.of(
+                                                 "&bCurrent: &a"+cfg.getInt(path+MainStatsGUI.ItemType.MAXIMUM.getPath()),
                                                  "&6Middle-Click: &eSet",
                                                  "&6Left-Click: &eDecrease",
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 1, guiClick));
-        this.addButton(this.createButton("lore", ItemType.LORE, Material.BOOK,
+        this.addButton(this.createButton("lore", MainStatsGUI.ItemType.LORE, Material.BOOK,
                                          "&eLore format", replaceLore(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",
                                                  "&f%current%",
                                                  "&a----------",
-                                                 "&6Left-Click: &eModify"), cfg.getStringList(ItemType.LORE.getPath(this.itemType))), 2, guiClick));
-        this.addButton(this.createButton("list", ItemType.LIST, Material.IRON_SWORD,
-                                         "&eList of "+this.itemType.getTitle(), List.of(
-                                                 "&6Left-Click: &eModify"), 3, guiClick));
+                                                 "&6Left-Click: &eModify"), cfg.getStringList(path+MainStatsGUI.ItemType.LORE.getPath())), 2, guiClick));
+        List<String> lore = new ArrayList<>();
+        ConfigurationSection listSection = cfg.getConfigurationSection(EditorGUI.ItemType.SOCKETS.getPath()+'.'+this.name+".list");
+        if (listSection != null) {
+            for (String key : listSection.getKeys(false)) {
+                lore.add("&a- "+key+": &f"+listSection.getDouble(key+".chance", 0));
+            }
+        }
+        this.addButton(this.createButton("list", MainStatsGUI.ItemType.LIST, Material.IRON_SWORD,
+                                         "&eList of chances per tier", replaceLore(List.of(
+                                                 "&bCurrent:",
+                                                 "%current%",
+                                                 "&6Left-Click: &eModify",
+                                                 "&6Drop: &eSet to default value"), lore) , 3, guiClick));
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 8, guiClick));
     }
 
-    private void sendSetMessage(ItemType itemType, String currentValue) {
+
+    private void sendSetMessage(MainStatsGUI.ItemType itemType, String currentValue) {
         this.listening = itemType;
         player.closeInventory();
-        String name;
-        switch (itemType) {
-            case MINIMUM: {
-                name = "minimum "+this.itemType.getTitle();
-                break;
-            }
-            case MAXIMUM: {
-                name = "maximum "+this.itemType.getTitle();
-                break;
-            }
-            default: {
-                throw new IllegalArgumentException();
-            }
-        }
+        String name = itemType.name().toLowerCase()+' '+this.name+" sockets";
         player.sendMessage("▸ Enter the desired "+name+", or \"cancel\" to go back");
         BaseComponent component = new TextComponent("[Current "+name+"]");
         component.setColor(ChatColor.GOLD);
@@ -210,7 +183,7 @@ public class MainStatsGUI extends AbstractEditorGUI {
     public void onChat(AsyncPlayerChatEvent event) {
         if (this.listening == null) { return; }
         event.setCancelled(true);
-        ItemType itemType = this.listening;
+        MainStatsGUI.ItemType itemType = this.listening;
         this.listening = null;
         String message = event.getMessage().strip();
         int value;
@@ -221,23 +194,7 @@ public class MainStatsGUI extends AbstractEditorGUI {
             saveAndReopen();
             return;
         }
-        this.itemGenerator.getConfig().set(itemType.getPath(this.itemType), value);
+        this.itemGenerator.getConfig().set(EditorGUI.ItemType.SOCKETS.getPath()+'.'+this.name+'.'+itemType.getPath(), value);
         saveAndReopen();
-    }
-
-    public enum ItemType {
-        MINIMUM("minimum"),
-        MAXIMUM("maximum"),
-        LORE("lore-format"),
-        LIST("list"),
-        ;
-
-        private final String path;
-
-        ItemType(String path) { this.path = path; }
-
-        public String getPath() { return path; }
-
-        public String getPath(EditorGUI.ItemType itemType) { return itemType.getPath() + '.' +path; }
     }
 }
