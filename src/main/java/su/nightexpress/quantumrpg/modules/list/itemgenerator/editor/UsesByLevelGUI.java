@@ -1,10 +1,9 @@
-package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.requirements;
+package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor;
 
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.ContentType;
 import mc.promcteam.engine.manager.api.gui.GuiClick;
 import mc.promcteam.engine.manager.api.gui.GuiItem;
-import mc.promcteam.engine.utils.StringUT;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -19,33 +18,40 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
-import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
-import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class RequirementsGUI extends AbstractEditorGUI {
-    private final String path;
-    private final Material material;
+public class UsesByLevelGUI extends AbstractEditorGUI {
     private boolean listening = false;
     private Integer levelListening;
 
-    public RequirementsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String path, Material material) {
+    public UsesByLevelGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
         super(itemGeneratorManager, itemGenerator, 54);
-        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.REQUIREMENTS.getTitle());
-        this.path = path;
-        this.material = material;
+        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.USES_BY_LEVEL.getTitle());
+    }
+
+    public static Map<Integer,Integer> getUsesByLevel(JYML cfg) {
+        Map<Integer,Integer> map = new TreeMap<>();
+        ConfigurationSection configurationSection = cfg.getConfigurationSection(EditorGUI.ItemType.USES_BY_LEVEL.getPath());
+        if (configurationSection != null) {
+            for (String key : configurationSection.getKeys(false)) {
+                try {
+                    map.put(Integer.parseInt(key), configurationSection.getInt(key));
+                } catch (NumberFormatException ignored) { }
+            }
+        }
+        return map;
     }
 
     @Override
     protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int page) {
-        TreeMap<Integer,String> requirements = getRequirements();
-        List<Integer> levels = new ArrayList<>(requirements.keySet());
-        levels.add(null);
-        int totalPages = Math.max((int) Math.ceil(levels.size()*1.0/42), 1);
+        Map<Integer,Integer> map = getUsesByLevel(this.itemGenerator.getConfig());
+        List<Integer> list = new ArrayList<>(map.keySet());
+        list.add(null);
+        int totalPages = Math.max((int) Math.ceil(list.size()*1.0/42), 1);
         final int currentPage = page < 1 ? totalPages : Math.min(page, totalPages);
         this.setUserPage(player, currentPage, totalPages);
         GuiClick guiClick = (player1, type, clickEvent) -> {
@@ -56,7 +62,7 @@ public class RequirementsGUI extends AbstractEditorGUI {
                 ContentType type2 = (ContentType) type;
                 switch (type2) {
                     case RETURN:
-                        new MainRequirementsGUI(itemGeneratorManager, itemGenerator).open(player1, 1);
+                        new EditorGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
                         break;
                     case EXIT: {
                         player1.closeInventory();
@@ -73,19 +79,19 @@ public class RequirementsGUI extends AbstractEditorGUI {
                 }
                 return;
             }
-            if (type == EditorGUI.ItemType.REQUIREMENTS) {
+            if (type == EditorGUI.ItemType.USES_BY_LEVEL) {
                 GuiItem guiItem = this.getButton(player, clickEvent.getSlot());
                 if (guiItem == null) { return; }
                 int level = Integer.parseInt(guiItem.getId());
                 switch (clickEvent.getClick()) {
                     case DROP: case CONTROL_DROP: {
-                        requirements.remove(level);
-                        setRequirements(requirements);
+                        map.remove(level);
+                        setUsesByLevel(map);
                         saveAndReopen(currentPage);
                         break;
                     }
                     default: {
-                        sendSetMessage(level, requirements.get(level));
+                        sendSetMessage(level, String.valueOf(map.get(level)));
                         break;
                     }
                 }
@@ -93,15 +99,15 @@ public class RequirementsGUI extends AbstractEditorGUI {
                 sendCreateMessage();
             }
         };
-        for (int levelIndex = (currentPage-1)*42, last = Math.min(levels.size(), levelIndex+42), invIndex = 1;
+        for (int levelIndex = (currentPage-1)*42, last = Math.min(list.size(), levelIndex+42), invIndex = 1;
              levelIndex < last; levelIndex++, invIndex++) {
             if ((invIndex)%9 == 8) { invIndex += 2; }
-            Integer level = levels.get(levelIndex);
+            Integer level = list.get(levelIndex);
             this.addButton(level == null ?
-                                   this.createButton("new", ItemType.NEW, Material.REDSTONE, "&eAdd new requirement", List.of(), invIndex, guiClick) :
-                                   this.createButton(String.valueOf(level), EditorGUI.ItemType.REQUIREMENTS, this.material,
+                                   this.createButton("new", ItemType.NEW, Material.REDSTONE, "&eAdd new level", List.of(), invIndex, guiClick) :
+                                   this.createButton(String.valueOf(level), EditorGUI.ItemType.USES_BY_LEVEL, Material.CAULDRON,
                                                      "&e"+level, List.of(
-                                                             "&bCurrent: &a"+requirements.get(level),
+                                                             "&bCurrent: &a"+map.get(level),
                                                              "&6Left-Click: &eSet",
                                                              "&6Drop: &eRemove"), invIndex, guiClick));
         }
@@ -114,12 +120,12 @@ public class RequirementsGUI extends AbstractEditorGUI {
         this.listening = true;
         this.levelListening = level;
         this.player.closeInventory();
-        player.sendMessage("▸ Enter the desired requirement for level "+level+", or \"cancel\" to go back");
+        player.sendMessage("▸ Enter the desired uses for level "+level+", or \"cancel\" to go back");
         if (currentValue != null) {
-            BaseComponent component = new TextComponent("[Current requirement]");
+            BaseComponent component = new TextComponent("[Current uses]");
             component.setColor(ChatColor.GOLD);
             component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, currentValue));
-            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Enter the current requirement to chat")));
+            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Enter the current uses to chat")));
             player.spigot().sendMessage(component);
         }
     }
@@ -127,7 +133,7 @@ public class RequirementsGUI extends AbstractEditorGUI {
     private void sendCreateMessage() {
         this.listening = true;
         this.player.closeInventory();
-        player.sendMessage("▸ Enter the desired level for the new requirement, or \"cancel\" to go back");
+        player.sendMessage("▸ Enter the desired level, or \"cancel\" to go back");
     }
 
     @Override
@@ -142,50 +148,35 @@ public class RequirementsGUI extends AbstractEditorGUI {
             saveAndReopen(getUserPage(this.player, 0));
             return;
         }
+        int integer;
+        try {
+            integer = Integer.parseInt(message);
+        } catch (NumberFormatException e) {
+            plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", "integer").send(player);
+            saveAndReopen(getUserPage(this.player, 0));
+            return;
+        }
         if (levelListening == null) {
             // Creating new requirement
-            int level;
-            try {
-                level = Integer.parseInt(message);
-            } catch (NumberFormatException e) {
-                plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", "level").send(player);
-                saveAndReopen(getUserPage(this.player, 0));
-                return;
-            }
             new BukkitRunnable() {
                 @Override
-                public void run() { sendSetMessage(level, null); }
+                public void run() { sendSetMessage(integer, null); }
             }.runTask(plugin);
         } else {
-            TreeMap<Integer,String> requirements = getRequirements();
-            requirements.put(levelListening, message);
-            setRequirements(requirements);
+            Map<Integer,Integer> usesByLevel = getUsesByLevel(this.itemGenerator.getConfig());
+            usesByLevel.put(levelListening, integer);
+            setUsesByLevel(usesByLevel);
             saveAndReopen(getUserPage(this.player, 0));
         }
     }
 
-    protected TreeMap<Integer,String> getRequirements() {
-        ConfigurationSection requirementsSection = this.itemGenerator.getConfig().getConfigurationSection(this.path);
-        TreeMap<Integer,String> requirements = new TreeMap<>();
-        if (requirementsSection != null) {
-            for (String key : requirementsSection.getKeys(false)) {
-                int itemLvl = StringUT.getInteger(key, -1);
-                if (itemLvl <= 0) { continue; }
-
-                String requirement = requirementsSection.getString(key);
-                if (requirement == null || requirement.isEmpty()) { continue; }
-
-                requirements.put(itemLvl, requirement);
-            }
-        }
-        return requirements;
-    }
-
-    protected void setRequirements(TreeMap<Integer,String> requirements)  {
+    protected void setUsesByLevel(Map<Integer,Integer> usesByLevel)  {
         JYML cfg = this.itemGenerator.getConfig();
-        cfg.remove(this.path);
-        for (Map.Entry<Integer,String> entry : requirements.entrySet()) {
-            cfg.set(this.path+'.'+entry.getKey(), entry.getValue());
+        String path = EditorGUI.ItemType.USES_BY_LEVEL.getPath();
+        cfg.remove(EditorGUI.ItemType.USES_BY_LEVEL.getPath());
+        path = path+'.';
+        for (Map.Entry<Integer,Integer> entry : usesByLevel.entrySet()) {
+            cfg.set(path+entry.getKey(), entry.getValue());
         }
     }
 }
