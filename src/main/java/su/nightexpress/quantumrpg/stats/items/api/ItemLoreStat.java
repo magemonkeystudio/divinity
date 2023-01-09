@@ -112,6 +112,9 @@ public abstract class ItemLoreStat<Z> {
     }
 
     @NotNull
+    public String getFormat() { return this.format; }
+
+    @NotNull
     public String getFormat(@NotNull ItemStack item, @NotNull Z value) {
         String sVal = this.formatValue(item, value);
         if (sVal.isEmpty()) return "";

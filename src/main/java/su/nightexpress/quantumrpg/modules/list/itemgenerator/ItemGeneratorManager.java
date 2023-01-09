@@ -11,7 +11,10 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -25,6 +28,9 @@ import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ResourceManager.ResourceCategory;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.IAttributeGenerator;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.CreateCommand;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.EditCommand;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.SingleAttributeGenerator;
@@ -42,6 +48,7 @@ import su.nightexpress.quantumrpg.stats.items.requirements.user.SoulboundRequire
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
+import java.io.InputStream;
 import java.util.*;
 import java.util.function.BiFunction;
 
@@ -74,14 +81,32 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
     @Override
     public void setup() {
+        try (InputStream in = plugin.getClass().getResourceAsStream(this.getPath()+"settings.yml")) {
+            YamlConfiguration configuration = new YamlConfiguration();
+            configuration.loadFromString(new String(in.readAllBytes()));
+            cfg.addMissing("editor-gui", configuration.get("editor-gui"));
+            cfg.saveChanges();
+        } catch (Exception e) { e.printStackTrace(); }
+
         this.resourceManager = new ResourceManager(this);
 
         this.abilityHandler = new ItemAbilityHandler(this);
         this.abilityHandler.setup();
+        this.registerListeners();
+    }
+
+    @Override
+    protected void onPostSetup() {
+        super.onPostSetup();
+        this.moduleCommand.addSubCommand(new CreateCommand(this));
+        this.moduleCommand.addSubCommand(new EditCommand(this));
     }
 
     @Override
     public void shutdown() {
+        AbstractEditorGUI editorGUI = AbstractEditorGUI.getInstance();
+        if (editorGUI != null) { editorGUI.shutdown(); }
+        this.unregisterListeners();
         if (this.abilityHandler != null) {
             this.abilityHandler.shutdown();
             this.abilityHandler = null;
@@ -99,6 +124,13 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         super.loadItems();
 
         this.resourceManager.setup();
+    }
+
+    @NotNull
+    public GeneratorItem load(String id, JYML cfg) {
+        GeneratorItem itemGenerator = new GeneratorItem(plugin, cfg);
+        items.put(id, itemGenerator);
+        return itemGenerator;
     }
 
     public class GeneratorItem extends LimitedItem {
@@ -434,15 +466,15 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             // Replace prefix and suffix
             if (meta.hasDisplayName()) {
                 String metaName = meta.getDisplayName()
-                        .replace("%item_type%", itemGroupName)
-                        .replace("%suffix_tier%", suffixTier != null ? suffixTier : "")
-                        .replace("%prefix_tier%", prefixTier != null ? prefixTier : "")
+                                      .replace("%item_type%", itemGroupName)
+                                      .replace("%suffix_tier%", suffixTier != null ? suffixTier : "")
+                                      .replace("%prefix_tier%", prefixTier != null ? prefixTier : "")
 
-                        .replace("%prefix_type%", prefixItemType != null ? prefixItemType : "")
-                        .replace("%suffix_type%", suffixItemType != null ? suffixItemType : "")
+                                      .replace("%prefix_type%", prefixItemType != null ? prefixItemType : "")
+                                      .replace("%suffix_type%", suffixItemType != null ? suffixItemType : "")
 
-                        .replace("%prefix_material%", prefixMaterial != null ? prefixMaterial : "")
-                        .replace("%suffix_material%", suffixMaterial != null ? suffixMaterial : "");
+                                      .replace("%prefix_material%", prefixMaterial != null ? prefixMaterial : "")
+                                      .replace("%suffix_material%", suffixMaterial != null ? suffixMaterial : "");
                 metaName = StringUT.oneSpace(metaName);
                 meta.setDisplayName(metaName);
             }
@@ -576,5 +608,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             return item;
         }
+    }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event) {
+        AbstractEditorGUI editorInstance = AbstractEditorGUI.getInstance();
+        if (editorInstance == null || !editorInstance.getPlayer().equals(event.getPlayer())) { return; }
+        editorInstance.onChat(event);
     }
 }

@@ -34,7 +34,7 @@ public class Config extends IConfigTemplate {
     @Override
     public void load() {
         String path = "tiers.";
-        Config.TIERS_MAP = new HashMap<>();
+        Config.TIERS_MAP = new LinkedHashMap<>();
         for (String tierId : cfg.getSection("tiers")) {
             String path2     = "tiers." + tierId + ".";
             String tierColor = cfg.getString(path2 + "color", "&f");
@@ -286,7 +286,7 @@ public class Config extends IConfigTemplate {
     @Nullable
     public static ItemSubType getItemSubType(@NotNull String mat) {
         Optional<ItemSubType> opt = ITEM_SUB_TYPES.values().stream().filter(type -> type.isItemOfThis(mat))
-                .findFirst();
+                                                  .findFirst();
         return opt.isPresent() ? opt.get() : null;
     }
 
