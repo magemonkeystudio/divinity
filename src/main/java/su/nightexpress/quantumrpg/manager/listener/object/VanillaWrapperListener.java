@@ -162,7 +162,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         if (isEde) {
             EntityDamageByEntityEvent ede = (EntityDamageByEntityEvent) e;
 
-            // Check if damager can fight victim
+            // Check if can fights.
             Entity edeDamager = ede.getDamager();
             if (!Hooks.canFights(edeDamager, victim)) {
                 ede.setCancelled(true);
@@ -289,7 +289,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
 //                QuantumRPG.getInstance().getLogger().info("Default damage is " + defaultDamage);
                 damageStart = Math.max(0D, damageStart - defaultDamage);
             } else {
-                damageStart = damageStart - 1D; // Reduce the damage by 1 for non-weapon item/hand.
+                damageStart = damageStart - 1D; // Deduct the 1 damage of non-weapon item/hand.
             }
             // Probably can't be lower than 1, but anyway xD
             damageStart /= Math.max(1D, damages.size());

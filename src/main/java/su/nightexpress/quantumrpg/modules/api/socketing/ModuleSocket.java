@@ -354,9 +354,9 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
         String[] value = socket.getRaw(target, index);
         if (value == null || socket.isEmpty(value)) return Collections.singletonList(target);
 
-        I               sock        = this.getItemById(value[0]);
-        ItemStack       mSockItem   = sock.create(Integer.valueOf(value[1]));
-        List<ItemStack> returnItems = new ArrayList<>();
+        I sock = this.getItemById(value[0]);
+        ItemStack mSockItem = sock.create(Integer.valueOf(value[1]));
+        List<ItemStack>         returnItems = new ArrayList<>();
 //        List<Entry<I, Integer>> sockets     = this.getItemSockets(target);
 //        sockets.forEach(entry -> returnItems.add(entry.getKey().create(entry.getValue(), 1)));
         returnItems.add(mSockItem);

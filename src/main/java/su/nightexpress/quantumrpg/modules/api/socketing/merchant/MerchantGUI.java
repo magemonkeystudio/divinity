@@ -21,8 +21,8 @@ import java.util.List;
 
 public class MerchantGUI extends ISocketGUI {
 
-    private final MerchantSocket merchant;
-    private final VaultHK        vaultHook;
+    private final MerchantSocket      merchant;
+    private final VaultHK             vaultHook;
 
     MerchantGUI(@NotNull ModuleSocket<?> module, @NotNull MerchantSocket merchant) {
         super(module, merchant.getConfig());

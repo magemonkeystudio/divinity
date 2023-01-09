@@ -5,7 +5,7 @@ import mc.promcteam.engine.utils.random.Rnd;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-public class DropMoney extends DropNonItem {
+public class DropMoney extends DropNonItem{
 
     private double min, max;
     private boolean allowDecimals;
@@ -20,6 +20,6 @@ public class DropMoney extends DropNonItem {
 
     @Override
     public void execute(Player target) {
-        NexEngine.get().getVault().getEconomy().depositPlayer(target, ((allowDecimals) ? Rnd.getDouble(min, max) : Rnd.get((int) min, (int) max)));
+        NexEngine.get().getVault().getEconomy().depositPlayer(target, ((allowDecimals) ? Rnd.getDouble(min, max) : Rnd.get((int)min, (int)max)));
     }
 }

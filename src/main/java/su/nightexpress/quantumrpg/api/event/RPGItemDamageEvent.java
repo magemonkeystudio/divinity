@@ -1,13 +1,13 @@
 package su.nightexpress.quantumrpg.api.event;
 
-import mc.promcteam.engine.manager.api.event.ICancellableEvent;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import mc.promcteam.engine.manager.api.event.ICancellableEvent;
 
 public class RPGItemDamageEvent extends ICancellableEvent {
 
-    private ItemStack    item;
+    private ItemStack item;
     private LivingEntity entity;
 
     public RPGItemDamageEvent(

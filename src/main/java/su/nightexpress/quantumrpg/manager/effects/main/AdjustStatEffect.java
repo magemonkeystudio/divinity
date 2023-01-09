@@ -15,8 +15,8 @@ import java.util.function.DoubleUnaryOperator;
 
 public class AdjustStatEffect extends IExpirableEffect {
 
-    private final Map<ItemLoreStat<?>, Integer>                       count;
-    private       Map<? extends ItemLoreStat<?>, DoubleUnaryOperator> functions;
+    private final Map<ItemLoreStat<?>, Integer> count;
+    private Map<? extends ItemLoreStat<?>, DoubleUnaryOperator> functions;
 
     private AdjustStatEffect(@NotNull Builder builder) {
         super(builder);

@@ -17,8 +17,7 @@ public class PMSManager {
     }
 
     public void setup() {
-        nmsEngine = new PMS() {
-        };
+        nmsEngine = new PMS() {};
 
         if (EngineCfg.PACKETS_ENABLED) {
             this.plugin.info("Packets are enabled. Setup packet manager...");

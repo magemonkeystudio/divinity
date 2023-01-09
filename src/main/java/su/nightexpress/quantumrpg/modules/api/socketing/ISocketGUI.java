@@ -22,11 +22,11 @@ import java.util.function.Function;
 
 public abstract class ISocketGUI extends NGUI<QuantumRPG> {
 
-    //    private final List<UUID> open = new ArrayList<>();
+//    private final List<UUID> open = new ArrayList<>();
     protected ModuleSocket<?> module;
-    protected int             itemSlot;
-    protected int             sourceSlot;
-    protected int             resultSlot;
+    protected int itemSlot;
+    protected int sourceSlot;
+    protected int resultSlot;
 
     protected ISocketGUI(@NotNull ModuleSocket<?> module, @NotNull JYML cfg) {
         super(module.plugin, cfg, "gui.");

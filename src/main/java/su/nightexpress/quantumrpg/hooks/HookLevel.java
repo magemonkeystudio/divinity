@@ -5,5 +5,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface HookLevel {
 
-    int getLevel(@NotNull Player player);
+	int getLevel(@NotNull Player player);
 }

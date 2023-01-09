@@ -3,13 +3,6 @@ package su.nightexpress.quantumrpg.modules.list.classes;
 import com.elmakers.mine.bukkit.api.magic.Mage;
 import com.elmakers.mine.bukkit.api.magic.MageController;
 import com.elmakers.mine.bukkit.api.spell.MageSpell;
-import mc.promcteam.engine.config.api.JYML;
-import mc.promcteam.engine.hooks.Hooks;
-import mc.promcteam.engine.manager.api.task.ITask;
-import mc.promcteam.engine.utils.FileUT;
-import mc.promcteam.engine.utils.NumberUT;
-import mc.promcteam.engine.utils.StringUT;
-import mc.promcteam.engine.utils.TimeUT;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -26,6 +19,13 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.manager.api.task.ITask;
+import mc.promcteam.engine.utils.FileUT;
+import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.StringUT;
+import mc.promcteam.engine.utils.TimeUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.EntityStatsBonusUpdateEvent;
 import su.nightexpress.quantumrpg.data.api.RPGUser;
@@ -63,32 +63,32 @@ import java.util.jar.JarFile;
 public class ClassManager extends QModule {
 
     boolean selectPopChildTime;
-    private AspectManager        aspectManager;
-    private ComboManager         comboManager;
-    private LevelingManager      levelingManager;
-    private RPGClass             selectDefClass;
-    private boolean              selectOnce;
-    private int                  selectCooldown;
-    private boolean              selectPopJoin;
-    private ClassSelectionGUI    selectMainGUI;
-    private ClassSelectionGUI    selectChildGUI;
+    private AspectManager aspectManager;
+    private ComboManager comboManager;
+    private LevelingManager levelingManager;
+    private RPGClass selectDefClass;
+    private boolean selectOnce;
+    private int selectCooldown;
+    private boolean selectPopJoin;
+    private ClassSelectionGUI selectMainGUI;
+    private ClassSelectionGUI selectChildGUI;
     private ClassPreSelectionGUI preSelectGUI;
-    private SkillListGUI         skillsGUI;
-    private ClassStatsGUI        statsGUI;
+    private SkillListGUI skillsGUI;
+    private ClassStatsGUI statsGUI;
 
-    private boolean  barHealthEnabled;
-    private String   barHealthTitle;
+    private boolean barHealthEnabled;
+    private String barHealthTitle;
     private BarColor barHealthColor;
     private BarStyle barHealthStyle;
-    private boolean  barManaEnabled;
-    private String   barManaTitle;
+    private boolean barManaEnabled;
+    private String barManaTitle;
     private BarColor barManaColor;
     private BarStyle barManaStyle;
 
     private Set<String> noRemind;
 
     private Map<String, IAbstractSkill> skills;
-    private Map<String, RPGClass>       classes;
+    private Map<String, RPGClass> classes;
 
     private Map<Player, BossBar> barHp;
     private Map<Player, BossBar> barMana;
@@ -409,7 +409,7 @@ public class ClassManager extends QModule {
 
         BossBar bb = this.barHp.computeIfAbsent(player, bar -> plugin.getServer().createBossBar("", this.barHealthColor, this.barHealthStyle));
 
-        double hp  = player.getHealth();
+        double hp = player.getHealth();
         double max = Math.max(hp, EntityStats.getEntityMaxHealth(player));
 
         String title = this.barHealthTitle
@@ -478,7 +478,7 @@ public class ClassManager extends QModule {
         }
 
         for (ClassAttributeType type : ClassAttributeType.values()) {
-            Attribute         a  = type.getVanillaAttribute();
+            Attribute a = type.getVanillaAttribute();
             AttributeInstance ai = player.getAttribute(a);
             if (ai == null) continue;
 
@@ -580,7 +580,7 @@ public class ClassManager extends QModule {
         if (user == null) return;
 
         UserProfile prof = user.getActiveProfile();
-        long        end  = -1L;
+        long end = -1L;
         if (!this.selectOnce && this.selectCooldown > 0) {
             end = System.currentTimeMillis() + this.selectCooldown * 1000L * 60L;
         }
@@ -591,9 +591,9 @@ public class ClassManager extends QModule {
         RPGUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return false;
 
-        UserProfile   prof  = user.getActiveProfile();
+        UserProfile prof = user.getActiveProfile();
         UserClassData cData = prof.getClassData();
-        long          end   = prof.getClassSelectionCooldown();
+        long end = prof.getClassSelectionCooldown();
 
         if (this.selectOnce && (cData != null || end < 0L)) {
             plugin.lang().Classes_Select_Error_Once.send(player);
@@ -618,7 +618,7 @@ public class ClassManager extends QModule {
         RPGUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return null;
 
-        UserProfile   prof  = user.getActiveProfile();
+        UserProfile prof = user.getActiveProfile();
         UserClassData cData = prof.getClassData();
         return cData;
     }
@@ -632,8 +632,8 @@ public class ClassManager extends QModule {
         RPGUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
-        UserProfile   prof     = user.getActiveProfile();
-        UserClassData cData    = prof.getClassData();
+        UserProfile prof = user.getActiveProfile();
+        UserClassData cData = prof.getClassData();
         UserClassData cDataNew = new UserClassData(cNew);
 
         if (cData != null) {
@@ -704,7 +704,7 @@ public class ClassManager extends QModule {
             if (sData != null) {
                 if (sData.getLevel() < lvl) {
                     int upCost = skill.getSkillPointsCost(sData.getLevel());
-                    int has    = cData.getSkillPoints();
+                    int has = cData.getSkillPoints();
                     if (has < upCost) {
                         plugin.lang().Classes_Skill_Learn_Error_TooExpensive.send(player);
                         return;
@@ -778,10 +778,10 @@ public class ClassManager extends QModule {
         if (!jar.getName().endsWith(".jar")) return;
 
         try {
-            JarFile               jarFile = new JarFile(jar);
-            Enumeration<JarEntry> e       = jarFile.entries();
-            URL[]                 urls    = {new URL("jar:file:" + jar.getPath() + "!/")};
-            ClassLoader           cl      = URLClassLoader.newInstance(urls, plugin.getClazzLoader());
+            JarFile jarFile = new JarFile(jar);
+            Enumeration<JarEntry> e = jarFile.entries();
+            URL[] urls = {new URL("jar:file:" + jar.getPath() + "!/")};
+            ClassLoader cl = URLClassLoader.newInstance(urls, plugin.getClazzLoader());
 
             while (e.hasMoreElements()) {
                 JarEntry je = (JarEntry) e.nextElement();
@@ -792,9 +792,9 @@ public class ClassManager extends QModule {
                 className = className.replace('/', '.');
                 Class<?> c = Class.forName(className, false, cl); // second was 'true'
                 if (IAbstractSkill.class.isAssignableFrom(c)) {
-                    Class<? extends IAbstractSkill>       requirementClass = c.asSubclass(IAbstractSkill.class);
-                    Constructor<? extends IAbstractSkill> cstrctr          = requirementClass.getConstructor(QuantumRPG.class);
-                    IAbstractSkill                        qskill           = cstrctr.newInstance(plugin);
+                    Class<? extends IAbstractSkill> requirementClass = c.asSubclass(IAbstractSkill.class);
+                    Constructor<? extends IAbstractSkill> cstrctr = requirementClass.getConstructor(QuantumRPG.class);
+                    IAbstractSkill qskill = cstrctr.newInstance(plugin);
                     if (qskill == null) continue;
 
                     this.skills.put(qskill.getId().toLowerCase(), qskill);
@@ -816,7 +816,7 @@ public class ClassManager extends QModule {
         RPGUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
-        UserProfile   prof  = user.getActiveProfile();
+        UserProfile prof = user.getActiveProfile();
         UserClassData cData = prof.getClassData();
         if (cData != null) {
             return;
@@ -860,9 +860,9 @@ public class ClassManager extends QModule {
         Player player = e.getPlayer();
         if (Hooks.isNPC(player)) return;
 
-        UserClassData data   = e.getClassData();
-        double        amount = e.getAmount();
-        double        stat   = EntityStats.get(player).getItemStat(AbstractStat.Type.MANA_REGEN, false);
+        UserClassData data = e.getClassData();
+        double amount = e.getAmount();
+        double stat = EntityStats.get(player).getItemStat(AbstractStat.Type.MANA_REGEN, false);
         amount *= (1D + stat / 100D);
         e.setAmount(amount);
 
@@ -883,9 +883,9 @@ public class ClassManager extends QModule {
             if (this.hasMagic()) {
                 MagicHK magicHook = this.getMagic();
                 if (magicHook != null) {
-                    MageController api   = magicHook.getAPI().getController();
-                    Mage           mage  = api.getMage(p);
-                    MageSpell      spell = mage.getSpell(sData.getId());
+                    MageController api = magicHook.getAPI().getController();
+                    Mage mage = api.getMage(p);
+                    MageSpell spell = mage.getSpell(sData.getId());
                     return spell.cast();
                 }
             }

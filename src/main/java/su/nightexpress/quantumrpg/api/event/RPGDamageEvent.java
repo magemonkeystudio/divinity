@@ -27,13 +27,13 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
 
     protected LivingEntity victim;
     protected LivingEntity damager;
-    protected Projectile   projectile;
+    protected Projectile projectile;
 
-    protected Map<DamageAttribute, Double>   damageMap;
-    protected Map<DefenseAttribute, Double>  defenseMap;
+    protected Map<DamageAttribute, Double> damageMap;
+    protected Map<DefenseAttribute, Double> defenseMap;
     protected Map<AbstractStat.Type, Double> damagerItemStatsMap;
 
-    protected DamageMeta        meta;
+    protected DamageMeta meta;
     protected EntityDamageEvent eventOrig;
 
     protected boolean cancelled = false;

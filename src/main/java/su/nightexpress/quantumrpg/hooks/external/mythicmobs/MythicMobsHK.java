@@ -2,6 +2,7 @@ package su.nightexpress.quantumrpg.hooks.external.mythicmobs;
 
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
+import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import mc.promcteam.engine.hooks.HookState;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;

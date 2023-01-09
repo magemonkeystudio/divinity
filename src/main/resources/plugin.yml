@@ -17,7 +17,6 @@ softdepend:
   - QuestCreator
   - RacesOfThana
   - SkillAPI
-  - ProSkillAPI
   - SkillsPro
   - Vault
   - WorldGuard

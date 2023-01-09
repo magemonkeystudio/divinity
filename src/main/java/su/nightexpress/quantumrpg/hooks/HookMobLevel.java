@@ -5,5 +5,5 @@ import org.jetbrains.annotations.NotNull;
 
 public interface HookMobLevel {
 
-    double getMobLevel(@NotNull Entity entity);
+	double getMobLevel(@NotNull Entity entity);
 }

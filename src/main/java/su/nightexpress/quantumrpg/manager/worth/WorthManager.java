@@ -34,7 +34,7 @@ import java.util.TreeMap;
 
 public class WorthManager implements Loadable {
 
-    private final QuantumRPG                                         plugin;
+    private final QuantumRPG plugin;
     private final Map<ItemStack, Double>                             worthCache = new HashMap<>();
     private       Map<String, Double>                                priceItemMaterial;
     private       Map<AbstractStat.Type, Double>                     priceItemStats;

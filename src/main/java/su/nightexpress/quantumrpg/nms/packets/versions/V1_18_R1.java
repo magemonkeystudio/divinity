@@ -10,12 +10,10 @@ import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
@@ -248,17 +246,17 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
 
             @SuppressWarnings("unchecked")
             List<Pair<Object, Object>> slots = (List<Pair<Object, Object>>) Reflex.getFieldValue(p, "c");
-            Pair<Object, Object> helmet = null;
+            boolean contains = false;
             for (Pair<Object, Object> pair : slots) {
                 Enum head = (Enum) Reflex.invokeMethod(
                         Reflex.getMethod(enumItemSlotClass, "a", String.class), //fromName
                         null, "head");
                 if (pair.getFirst() == head) {
-                    helmet = pair;
+                    contains = true;
                     break;
                 }
             }
-            if (slots == null || helmet == null) return;
+            if (slots == null || !contains) return;
 
             Integer entityId = (Integer) Reflex.getFieldValue(p, "b");
             if (entityId == null) return;
@@ -300,9 +298,7 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
 
             UserProfile profile = user.getActiveProfile();
             if (profile.isHideHelmet()) {
-                ItemStack air = new ItemStack(Material.AIR);
-                slots.remove(helmet);
-                slots.add(new Pair<>(helmet.getFirst(), reflectionUtil.getNMSCopy(air)));
+                Reflex.setFieldValue(p, "c", Reflex.getFieldValue(Reflex.getClass("net.minecraft.world.item", "ItemStack"), "a"));
             }
         });
     }

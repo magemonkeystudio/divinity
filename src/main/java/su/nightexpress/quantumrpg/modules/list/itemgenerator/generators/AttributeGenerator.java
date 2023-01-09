@@ -58,7 +58,6 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                 cfg.addMissing(path2 + "min", 0);
                 cfg.addMissing(path2 + "max", 0);
                 cfg.addMissing(path2 + "flat-range", false);
-                cfg.addMissing(path2 + "round", false);
             }
 
             if (!this.loreFormat.contains(att.getPlaceholder())) {
@@ -73,8 +72,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
             double            m2         = cfg.getDouble(path2 + "max", 0D);
             double            scale      = cfg.getDouble(path2 + "scale-by-level", 1D);
             boolean           flatRange  = cfg.getBoolean(path2 + "flat-range", false);
-            boolean           roundValues  = cfg.getBoolean(path2 + "round", false);
-            DamageInformation damageInfo = new DamageInformation(chance, m1, m2, scale, flatRange, roundValues);
+            DamageInformation damageInfo = new DamageInformation(chance, m1, m2, scale, flatRange);
             this.attributes.put(att, damageInfo);
         });
     }
@@ -236,10 +234,6 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                             if (!values.isFlatRange()) {
                                 rndV1 = NumberUT.round(Rnd.getDouble(vMin, vMax));
                                 rndV2 = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                                if (values.isRound()) {
-                                    rndV1 = Math.round(rndV1);
-                                    rndV2 = Math.round(rndV2);
-                                }
                             }
 
                             double vFinMin = Math.min(rndV1, rndV2);

@@ -4,6 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Tiered {
 
-    @NotNull
-    public Tier getTier();
+	@NotNull
+	public Tier getTier();
 }

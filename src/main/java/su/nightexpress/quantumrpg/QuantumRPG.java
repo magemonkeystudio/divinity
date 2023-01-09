@@ -1,11 +1,8 @@
 package su.nightexpress.quantumrpg;
 
 import mc.promcteam.engine.NexDataPlugin;
-import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.commands.api.IGeneralCommand;
 import mc.promcteam.engine.hooks.Hooks;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.command.BuffCommand;
 import su.nightexpress.quantumrpg.command.ModifyCommand;
@@ -40,7 +37,6 @@ import su.nightexpress.quantumrpg.utils.actions.executors.ActionTakeMana;
 import su.nightexpress.quantumrpg.utils.actions.params.AttackableParam;
 import su.nightexpress.quantumrpg.utils.actions.params.PartyMemberParam;
 
-import java.io.File;
 import java.sql.SQLException;
 
 /**
@@ -70,11 +66,6 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         instance = this;
     }
 
-    public QuantumRPG(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
-        super(loader, description, dataFolder, file);
-        instance = this;
-    }
-
     public static QuantumRPG getInstance() {
         return instance;
     }
@@ -90,15 +81,7 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 
         this.pms = new PMSManager(this);
         this.pms.setup();
-
-        String  coreVersion       = NexEngine.getEngine().getDescription().getVersion();
-        boolean minCoreVersionMet = coreVersion.compareTo(DependencyRequirement.MIN_CORE_VERSION) >= 0;
-
-        if (this.pms.get() == null || !minCoreVersionMet) {
-            if (!minCoreVersionMet) {
-                warn("Missing required ProMCCore version. " + coreVersion + " installed. "
-                        + DependencyRequirement.MIN_CORE_VERSION + " required. Disabling.");
-            }
+        if (this.pms.get() == null) {
             this.getPluginManager().disablePlugin(this);
             return;
         }
