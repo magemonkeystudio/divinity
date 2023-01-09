@@ -167,7 +167,7 @@ public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
 
     public enum Type {
 
-//        DIRECT_DAMAGE(ItemType.WEAPON, true, false, true),
+        //        DIRECT_DAMAGE(ItemType.WEAPON, true, false, true),
         AOE_DAMAGE(ItemType.WEAPON, true, false, true),
         PVP_DAMAGE(ItemType.WEAPON, true, true, true),
         PVE_DAMAGE(ItemType.WEAPON, true, true, true),

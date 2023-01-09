@@ -1,6 +1,5 @@
 package su.nightexpress.quantumrpg.hooks.external.mythicmobs;
 
-import io.lumine.mythic.bukkit.utils.lib.jooq.Require;
 import io.lumine.xikage.mythicmobs.mobs.MythicMob;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

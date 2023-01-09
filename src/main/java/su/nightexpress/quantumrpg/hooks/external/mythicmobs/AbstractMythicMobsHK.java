@@ -22,5 +22,6 @@ public abstract class AbstractMythicMobsHK extends NHook<QuantumRPG> implements 
     public abstract void setSkillDamage(@NotNull Entity entity, double amount);
 
     public abstract AbstractMythicEntity getMythicInstance(@NotNull Entity entity);
+
     public abstract int getMythicVersion();
 }

@@ -7,6 +7,7 @@ import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.nms.packets.events.EngineServerPacketEvent;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
+import mc.promcteam.engine.utils.reflection.ReflectionManager;
 import mc.promcteam.engine.utils.reflection.ReflectionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,9 +33,11 @@ import java.util.*;
 public class UniversalPacketHandler implements IPacketHandler {
 
     protected QuantumRPG plugin;
+    protected ReflectionUtil reflectionUtil;
 
     public UniversalPacketHandler(@NotNull QuantumRPG plugin) {
         this.plugin = plugin;
+        reflectionUtil = ReflectionManager.getReflectionUtil();
     }
 
     @Override
@@ -209,7 +212,7 @@ public class UniversalPacketHandler implements IPacketHandler {
 
             Object team;
             Object prefix;
-            if (ReflectionUtil.MINOR_VERSION >= 19) {
+            if (ReflectionManager.MINOR_VERSION >= 19) {
                 Class<?> baseComp   = Reflex.getClass("net.minecraft.network.chat.IChatBaseComponent");
                 Method   chatMethod = Reflex.getMethod(baseComp, "b", String.class);
                 team = Reflex.invokeMethod(chatMethod, null, teamId);

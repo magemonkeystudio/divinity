@@ -1,11 +1,10 @@
 package su.nightexpress.quantumrpg.stats.items.requirements.user;
 
+import mc.promcteam.engine.config.api.ILangMsg;
+import mc.promcteam.engine.utils.DataUT;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import mc.promcteam.engine.config.api.ILangMsg;
-import mc.promcteam.engine.utils.DataUT;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.hooks.HookClass;
@@ -18,11 +17,11 @@ public class BannedClassRequirement extends DynamicUserRequirement<String[]> {
 
     public BannedClassRequirement(@NotNull String name, @NotNull String format) {
         super("banned-class",
-              name,
-              format,
-              ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS,
-              ItemTags.TAG_REQ_USER_BANNED_CLASS,
-              DataUT.STRING_ARRAY);
+                name,
+                format,
+                ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS,
+                ItemTags.TAG_REQ_USER_BANNED_CLASS,
+                DataUT.STRING_ARRAY);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class BannedClassRequirement extends DynamicUserRequirement<String[]> {
     public String formatValue(@NotNull ItemStack item, @NotNull String[] values) {
         if (values.length == 0 || values[0].isEmpty()) return "";
 
-        String sep = EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_SEPAR;
+        String sep   = EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_SEPAR;
         String color = EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_COLOR;
 
         return LoreUT.getStrSeparated(values, sep, color, EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_MAX, EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_NEWLINE);

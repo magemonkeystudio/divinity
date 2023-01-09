@@ -14,7 +14,7 @@ public class EModule {
     public static final String ITEM_HINTS     = "item_hints";
     public static final String LOOT           = "loot";
     public static final String MAGIC_DUST     = "magic_dust";
-    public static final String MONEY 		  = "money";
+    public static final String MONEY          = "money";
     public static final String PARTY          = "party";
     public static final String REFINE         = "refine";
     public static final String REPAIR         = "repair";

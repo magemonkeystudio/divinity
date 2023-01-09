@@ -115,7 +115,8 @@ public class CombatLogManager extends QModule {
             if (soundStr != null && !soundStr.equalsIgnoreCase(JStrings.NONE)) {
                 try {
                     sound = Sound.valueOf(soundStr.toUpperCase());
-                } catch (IllegalArgumentException ex) {}
+                } catch (IllegalArgumentException ex) {
+                }
             }
 
             msgType.setEnabled(true);

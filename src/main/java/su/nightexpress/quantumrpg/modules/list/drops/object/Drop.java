@@ -5,30 +5,30 @@ import org.jetbrains.annotations.NotNull;
 
 public class Drop {
 
-	private final DropItem dropConfig;
-	private       int count = 0;
-	
-	public Drop(@NotNull DropItem dropTemplate) {
-		this.dropConfig = dropTemplate;
-	}
+    private final DropItem dropConfig;
+    private       int      count = 0;
 
-	/**
-	 * Regenerates item count upon each call
-	 */
-	public void calculateCount() {
-		count = Rnd.get(this.dropConfig.getMinAmount(), this.dropConfig.getMaxAmount());
-	}
+    public Drop(@NotNull DropItem dropTemplate) {
+        this.dropConfig = dropTemplate;
+    }
 
-	public int getCount() {
-		return count;
-	}
+    /**
+     * Regenerates item count upon each call
+     */
+    public void calculateCount() {
+        count = Rnd.get(this.dropConfig.getMinAmount(), this.dropConfig.getMaxAmount());
+    }
 
-	public void setCount(int count) {
-		this.count = count;
-	}
+    public int getCount() {
+        return count;
+    }
 
-	@NotNull
-	public DropItem getDropConfig() {
-		return dropConfig;
-	}
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    @NotNull
+    public DropItem getDropConfig() {
+        return dropConfig;
+    }
 }

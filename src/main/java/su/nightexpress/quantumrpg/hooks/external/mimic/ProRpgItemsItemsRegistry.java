@@ -56,15 +56,15 @@ public class ProRpgItemsItemsRegistry implements BukkitItemsRegistry {
         if (realItemId == null) return false;
 
         String[] parts = splitItemId(itemId);
-        String id = parts[1];
+        String   id    = parts[1];
         return realItemId.equals(id);
     }
 
     @Override
     public boolean isItemExists(@NotNull String itemId) {
-        String[] parts = splitItemId(itemId);
-        String moduleId = parts[0];
-        String id = parts[1];
+        String[] parts    = splitItemId(itemId);
+        String   moduleId = parts[0];
+        String   id       = parts[1];
 
         return getDropModules(moduleId)
                 .anyMatch(module -> module.getItemById(id) != null);
@@ -86,9 +86,9 @@ public class ProRpgItemsItemsRegistry implements BukkitItemsRegistry {
     @Nullable
     @Override
     public ItemStack getItem(@NotNull String itemId, @Nullable Object payload, int amount) {
-        String[] parts = splitItemId(itemId);
-        String moduleId = parts[0];
-        String id = parts[1];
+        String[] parts    = splitItemId(itemId);
+        String   moduleId = parts[0];
+        String   id       = parts[1];
 
         Optional<ItemStack> searchResult = getDropModules(moduleId)
                 .map(module -> module.getItemById(id))
