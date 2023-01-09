@@ -148,8 +148,8 @@ public abstract class ItemLoreStat<Z> {
             container.remove(this.getKey());
         }
 
-        String[] format = StringUT.colorFix(this.getFormat(item, value)).split("\n");
-        boolean isEmpty = true;
+        String[] format  = StringUT.colorFix(this.getFormat(item, value)).split("\n");
+        boolean  isEmpty = true;
         for (String formatLine : format) {
             if (!formatLine.isEmpty()) {
                 isEmpty = false;
@@ -157,13 +157,15 @@ public abstract class ItemLoreStat<Z> {
             }
         }
         if (isEmpty) {
-            if (pos != -1) { lore.remove(pos); }
+            if (pos != -1) {
+                lore.remove(pos);
+            }
         } else {
             container.set(this.getKey(), this.dataType, value);
             if (pos != -1) {
                 lore.set(pos, format[0]);
                 for (int i = 1; i < format.length; i++) {
-                    lore.add(pos+i, format[i]);
+                    lore.add(pos + i, format[i]);
                 }
             }
         }
@@ -176,7 +178,7 @@ public abstract class ItemLoreStat<Z> {
         if (!isEmpty) {
             ItemUT.addLoreTag(item, this.getMetaId(item), format[0]);
             for (int i = 1; i < format.length; i++) {
-                ItemUT.addLoreTag(item, this.getMetaId(item)+i, format[i]);
+                ItemUT.addLoreTag(item, this.getMetaId(item) + i, format[i]);
             }
         }
 

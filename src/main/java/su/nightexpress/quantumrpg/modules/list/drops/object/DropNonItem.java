@@ -7,7 +7,7 @@ public abstract class DropNonItem {
 
     private ConfigurationSection config;
 
-    public DropNonItem(ConfigurationSection config){
+    public DropNonItem(ConfigurationSection config) {
         this.config = config;
     }
 

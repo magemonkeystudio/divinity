@@ -1,6 +1,9 @@
 package su.nightexpress.quantumrpg.modules.list.classes;
 
+import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.*;
+import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -8,9 +11,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import mc.promcteam.engine.config.api.JYML;
-import mc.promcteam.engine.utils.NumberUT;
-import mc.promcteam.engine.utils.StringUT;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.data.api.RPGUser;
@@ -29,11 +29,11 @@ import java.util.function.BiFunction;
 
 public class AspectManager {
 
-    private QuantumRPG plugin;
+    private QuantumRPG   plugin;
     private ClassManager classManager;
 
     private Map<String, ClassAspect> aspects;
-    private AspectManager.GUI gui;
+    private AspectManager.GUI        gui;
 
     AspectManager(@NotNull ClassManager classManager) {
         this.classManager = classManager;
@@ -47,7 +47,7 @@ public class AspectManager {
         for (String aspectId : cfg.getSection("aspects")) {
             String path2 = "aspects." + aspectId + ".";
 
-            String name = cfg.getString(path2 + "name", aspectId);
+            String   name     = cfg.getString(path2 + "name", aspectId);
             Material material = Material.getMaterial(cfg.getString(path2 + "material", "").toUpperCase());
             if (material == null) {
                 this.classManager.error("Invalid material for aspect: '" + aspectId + "' in '" + cfg.getFile().getName() + "' !");
@@ -147,7 +147,7 @@ public class AspectManager {
 
     public class GUI extends NGUI<QuantumRPG> {
 
-        private int[] aspectSlots;
+        private int[]        aspectSlots;
         private List<String> aspectLore;
 
         public GUI(@NotNull JYML cfg) {
@@ -192,26 +192,26 @@ public class AspectManager {
             RPGUser user = plugin.getUserManager().getOrLoadUser(player);
             if (user == null) return;
 
-            UserProfile prof = user.getActiveProfile();
+            UserProfile   prof  = user.getActiveProfile();
             UserClassData cData = prof.getClassData();
             if (cData == null) return;
 
             RPGClass clazz = cData.getPlayerClass();
-            int j = 0;
+            int      j     = 0;
             for (Map.Entry<ClassAspect, ClassAspectBonus> entry : clazz.getAspectBonuses().entrySet()) {
-                ClassAspect aspect = entry.getKey();
+                ClassAspect      aspect      = entry.getKey();
                 ClassAspectBonus aspectBonus = entry.getValue();
-                ItemStack icon = new ItemStack(aspect.getMaterial());
+                ItemStack        icon        = new ItemStack(aspect.getMaterial());
 
                 ItemMeta meta = icon.getItemMeta();
                 if (meta == null) continue;
 
                 List<String> lore2 = new ArrayList<>();
 
-                String plCurrent = "%aspect_current%";
-                String plMax = "%aspect_max%";
-                String cost = "%cost%";
-                BonusMap bMap = aspectBonus.getBonusMap();
+                String   plCurrent = "%aspect_current%";
+                String   plMax     = "%aspect_max%";
+                String   cost      = "%cost%";
+                BonusMap bMap      = aspectBonus.getBonusMap();
 
                 String aspectMax = String.valueOf(aspectBonus.getMaxValue());
                 String aspectHas = String.valueOf(cData.getAspect(aspect.getId()));
@@ -293,13 +293,13 @@ public class AspectManager {
                 @NotNull BiFunction<Boolean, Double, Double> func,
                 double aspectCur) {
 
-            double valRaw = func.apply(false, 0D);
+            double valRaw   = func.apply(false, 0D);
             double valBonus = func.apply(true, 0D);
             if (valRaw == 0D && valBonus == 0D) return null;
 
-            double valTotal = valRaw != 0D ? valRaw : valBonus;
+            double valTotal  = valRaw != 0D ? valRaw : valBonus;
             String valFormat = NumberUT.format(valTotal);
-            String valStr = valBonus != 0D ? valFormat += EngineCfg.LORE_CHAR_PERCENT : valFormat;
+            String valStr    = valBonus != 0D ? valFormat += EngineCfg.LORE_CHAR_PERCENT : valFormat;
 
             return line
                     .replace("%" + placeholder + "_total%", NumberUT.format(valTotal * aspectCur))

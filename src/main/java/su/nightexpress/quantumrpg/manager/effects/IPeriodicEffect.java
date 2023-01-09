@@ -4,51 +4,51 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class IPeriodicEffect extends IExpirableEffect {
 
-	private long lastTrigger;
-	private double interval;
-	
-	protected IPeriodicEffect(@NotNull Builder<?> builder) {
-		super(builder);
-		this.interval = builder.interval;
-	}
-	
-	@Override
-	public void trigger(boolean force) {
-		super.trigger(force);
-		this.tick();
-	}
+    private long   lastTrigger;
+    private double interval;
 
-	public final double getInterval() {
-		return this.interval;
-	}
+    protected IPeriodicEffect(@NotNull Builder<?> builder) {
+        super(builder);
+        this.interval = builder.interval;
+    }
 
-	public final long getLastTriggerTime() {
-		return this.lastTrigger;
-	}
+    @Override
+    public void trigger(boolean force) {
+        super.trigger(force);
+        this.tick();
+    }
 
-	public final boolean isReady() {
-		return System.currentTimeMillis() > (this.getLastTriggerTime() + (this.getInterval() * 1000D));
-	}
+    public final double getInterval() {
+        return this.interval;
+    }
 
-	private final void tick() {
-		this.lastTrigger = System.currentTimeMillis();
-	}
-	
-	public abstract static class Builder<B extends Builder<B>> extends IExpirableEffect.Builder<B> {
+    public final long getLastTriggerTime() {
+        return this.lastTrigger;
+    }
 
-		private double interval;
-		
-		public Builder(double lifeTime, double interval) {
-			super(lifeTime);
-			this.interval = interval;
-		}
+    public final boolean isReady() {
+        return System.currentTimeMillis() > (this.getLastTriggerTime() + (this.getInterval() * 1000D));
+    }
 
-		@Override
-		@NotNull
-		public abstract IPeriodicEffect build();
+    private final void tick() {
+        this.lastTrigger = System.currentTimeMillis();
+    }
 
-		@Override
-		@NotNull
-		protected abstract B self();
-	}
+    public abstract static class Builder<B extends Builder<B>> extends IExpirableEffect.Builder<B> {
+
+        private double interval;
+
+        public Builder(double lifeTime, double interval) {
+            super(lifeTime);
+            this.interval = interval;
+        }
+
+        @Override
+        @NotNull
+        public abstract IPeriodicEffect build();
+
+        @Override
+        @NotNull
+        protected abstract B self();
+    }
 }

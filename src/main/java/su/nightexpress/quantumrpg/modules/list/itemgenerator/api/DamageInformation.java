@@ -8,6 +8,6 @@ import lombok.Data;
 public class DamageInformation {
 
     private double chance, min, max, scaleByLevel;
-    private boolean flatRange;
+    private boolean flatRange, round;
 
 }

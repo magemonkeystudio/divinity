@@ -363,6 +363,8 @@ public class RepairManager extends QModuleDrop<RepairItem> {
             return false;
         }
 
+        final int rLvl  = ItemStats.getLevel(src);
+        final int rPerc = rTool.getRepairPercent(rLvl);
         this.takeChargeClickEvent(player, src, e);
 
         // Save other items in stack
@@ -373,9 +375,6 @@ public class RepairManager extends QModuleDrop<RepairItem> {
             lost.setAmount(target.getAmount() - 1);
             target.setAmount(1);
         }
-
-        int rLvl  = ItemStats.getLevel(src);
-        int rPerc = rTool.getRepairPercent(rLvl);
 
         double durMax = arr[1];
         double durNow = arr[0];

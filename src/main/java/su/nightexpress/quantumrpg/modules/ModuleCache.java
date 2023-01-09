@@ -32,32 +32,32 @@ public class ModuleCache {
 
     private final QuantumRPG plugin;
 
-    private GemManager gemsManager;
-    private EssencesManager essencesManager;
-    private RuneManager runesManager;
-    private MagicDustManager magicDustManager;
-    private ArrowManager arrowManager;
-    private MoneyManager moneyManager;
-    private SetManager setManager;
+    private GemManager           gemsManager;
+    private EssencesManager      essencesManager;
+    private RuneManager          runesManager;
+    private MagicDustManager     magicDustManager;
+    private ArrowManager         arrowManager;
+    private MoneyManager         moneyManager;
+    private SetManager           setManager;
     private ItemGeneratorManager itemGeneratorManager;
-    private CustomItemsManager customItemsManager;
+    private CustomItemsManager   customItemsManager;
 
     private ClassManager classManager;
 
-    private RefineManager refineManager;
-    private FortifyManager fortifyManager;
-    private IdentifyManager identifyManager;
+    private RefineManager    refineManager;
+    private FortifyManager   fortifyManager;
+    private IdentifyManager  identifyManager;
     private SoulboundManager soulboundManager;
-    private RepairManager repairManager;
+    private RepairManager    repairManager;
     private DismantleManager dismantleManager;
     private ExtractorManager extractorManager;
-    private PartyManager partyManager;
+    private PartyManager     partyManager;
     private ItemHintsManager itemHintsManager;
 
     private DropManager dropManager;
     private LootManager lootManager;
 
-    private SellManager sellManager;
+    private SellManager      sellManager;
     private CombatLogManager combatLogManager;
 
     private ConsumablesManager consumablesManager;
@@ -230,9 +230,9 @@ public class ModuleCache {
     public CombatLogManager getCombatLogManager() {
         return this.combatLogManager;
     }
-    
+
     @Nullable
     public MoneyManager getMoneyManager() {
-    	return this.moneyManager;
+        return this.moneyManager;
     }
 }

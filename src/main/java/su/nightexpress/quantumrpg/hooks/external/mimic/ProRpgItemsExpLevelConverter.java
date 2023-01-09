@@ -14,7 +14,7 @@ import java.util.Objects;
 public class ProRpgItemsExpLevelConverter implements ExpLevelConverter {
 
     private final ExistingWeakReference<Player> playerRef;
-    private final ClassManager classManager;
+    private final ClassManager                  classManager;
 
     public ProRpgItemsExpLevelConverter(Player player) {
         playerRef = new ExistingWeakReference<>(player);

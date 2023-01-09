@@ -6,9 +6,11 @@ import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.utils.Reflex;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.EntityEquipmentChangeEvent;
@@ -90,17 +92,17 @@ public class V1_19_R1 extends V1_18_R2 {
 
             @SuppressWarnings("unchecked")
             List<Pair<Object, Object>> slots = (List<Pair<Object, Object>>) Reflex.getFieldValue(p, "c");
-            boolean contains = false;
+            Pair<Object, Object> helmet = null;
             for (Pair<Object, Object> pair : slots) {
                 Enum head = (Enum) Reflex.invokeMethod(
                         Reflex.getMethod(enumItemSlotClass, "a", String.class), //fromName
                         null, "head");
                 if (pair.getFirst() == head) {
-                    contains = true;
+                    helmet = pair;
                     break;
                 }
             }
-            if (slots == null || !contains) return;
+            if (slots == null || helmet == null) return;
 
             Integer entityId = (Integer) Reflex.getFieldValue(p, "b");
             if (entityId == null) return;
@@ -150,7 +152,9 @@ public class V1_19_R1 extends V1_18_R2 {
 
             UserProfile profile = user.getActiveProfile();
             if (profile.isHideHelmet()) {
-                Reflex.setFieldValue(p, "c", Reflex.getFieldValue(Reflex.getClass("net.minecraft.world.item", "ItemStack"), "a"));
+                ItemStack air = new ItemStack(Material.AIR);
+                slots.remove(helmet);
+                slots.add(new Pair<>(helmet.getFirst(), reflectionUtil.getNMSCopy(air)));
             }
         });
     }

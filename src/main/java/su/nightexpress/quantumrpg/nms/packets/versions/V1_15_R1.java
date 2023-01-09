@@ -4,10 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 
 public class V1_15_R1 extends UniversalPacketHandler {
-	
-	public V1_15_R1(@NotNull QuantumRPG plugin) {
-		super(plugin);
-	}
+
+    public V1_15_R1(@NotNull QuantumRPG plugin) {
+        super(plugin);
+    }
 
 //	@Override
 //	public void managePlayerPacket(@NotNull EnginePlayerPacketEvent e) {
@@ -139,7 +139,7 @@ public class V1_15_R1 extends UniversalPacketHandler {
 //			return;
 //		}
 //	}
-	
+
 //	protected void manageEntityNames(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
 //		RPGUser user = plugin.getUserManager().getOrLoadUser(e.getReciever());
 //		if (user == null) return;

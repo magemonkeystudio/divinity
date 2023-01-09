@@ -83,14 +83,15 @@ public class EntityStats {
         };
     }
 
-    @Getter private final Player       player;
-    private final         boolean      isNPC;
-    private final EntityEquipment equipment;
-    private final List<ItemStack> inventory;
+    @Getter
+    private final Player                                                          player;
+    private final boolean                                                         isNPC;
+    private final EntityEquipment                                                 equipment;
+    private final List<ItemStack>                                                 inventory;
     private final Map<PotionEffectType, PotionEffect>                             permaEffects;
     private final Map<ItemLoreStat<?>, List<BiFunction<Boolean, Double, Double>>> bonuses;
     private final Set<IEffect>                                                    effects;
-    private               LivingEntity entity;
+    private       LivingEntity                                                    entity;
     private       DamageMeta                                                      damageMeta;
 
     private QArrow arrowBonus;
