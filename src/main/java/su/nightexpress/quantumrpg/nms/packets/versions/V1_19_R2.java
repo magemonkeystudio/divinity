@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.EntityEquipmentChangeEvent;
 import su.nightexpress.quantumrpg.data.api.RPGUser;
+import su.nightexpress.quantumrpg.data.api.UserEntityNamesMode;
 import su.nightexpress.quantumrpg.data.api.UserProfile;
 import su.nightexpress.quantumrpg.manager.EntityManager;
 
@@ -157,5 +158,36 @@ public class V1_19_R2 extends V1_19_R1 {
                 slots.add(new Pair<>(helmet.getFirst(), reflectionUtil.getNMSCopy(air)));
             }
         });
+    }
+
+    @Override
+    protected void manageEntityNames(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
+        RPGUser user = plugin.getUserManager().getOrLoadUser(e.getReciever());
+        if (user == null) return;
+
+        UserProfile         profile   = user.getActiveProfile();
+        UserEntityNamesMode namesMode = profile.getNamesMode();
+        if (namesMode == UserEntityNamesMode.DEFAULT) return;
+
+        Class pClass = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutEntityMetadata");
+
+        Object p = pClass.cast(packet);
+        @SuppressWarnings("unchecked")
+        List<Object> list = (List<Object>) Reflex.getFieldValue(p, "c");
+        if (list == null) return;
+
+        // Hide or show custom entity names
+        if (list.size() > 13) {
+            Object index3 = list.get(13);
+
+            Method bMethod = Reflex.getMethod(index3.getClass(), "b");
+
+            Object b = Reflex.invokeMethod(bMethod, index3);
+            if (b == null || !b.getClass().equals(Boolean.class)) return;
+            //Object nameVisible = Reflex.getFieldValue(index3, "b");
+
+            boolean visibility = namesMode == UserEntityNamesMode.ALWAYS_VISIBLE;
+            Reflex.setFieldValue(index3, "c", visibility);
+        }
     }
 }
