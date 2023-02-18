@@ -178,6 +178,7 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
 
         e.getView().setCursor(null);
         this.startSocketing(player, target, src);
+        src.setAmount(0);
         return true;
     }
 

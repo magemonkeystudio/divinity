@@ -185,8 +185,7 @@ public class ExtractorManager extends QModuleDrop<ExtractorTool> {
         ItemStack cursor = e.getView().getCursor();
         e.getView().setCursor(null);
         boolean open = this.openExtraction(player, target, src, null, true);
-        if (!open)
-            e.getView().setCursor(cursor);
+        if (!open) e.getView().setCursor(cursor);
 
         Bukkit.getScheduler().runTaskLater(QuantumRPG.getInstance(), () -> player.updateInventory(), 1L);
         return open;

@@ -552,6 +552,7 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         e.getView().setCursor(null);
         this.splitDragItem(player, src, target);
         this.gui.open(player, target, src);
+        src.setAmount(0);
 
         return true;
     }

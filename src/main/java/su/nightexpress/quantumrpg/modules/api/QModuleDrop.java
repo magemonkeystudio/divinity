@@ -174,7 +174,7 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
         ItemStack current = src.clone();
         if (this.onDragDrop(p, current, target.clone(), mItem, e)) {
             e.setCancelled(true);
-            e.getView().setCursor(current);
+            if (current.getAmount() > 0) e.getView().setCursor(current);
         }
     }
 
