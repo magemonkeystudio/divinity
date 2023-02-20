@@ -22,6 +22,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.Config;
+import su.nightexpress.quantumrpg.hooks.EHook;
+import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.LimitedItem;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
@@ -30,6 +32,8 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ResourceManager.Res
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.IAttributeGenerator;
 //import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.CreateCommand;
 //import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.EditCommand;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.CreateCommand;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.EditCommand;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AttributeGenerator;
@@ -90,16 +94,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
         this.resourceManager = new ResourceManager(this);
 
-        this.abilityHandler = new ItemAbilityHandler(this);
-        this.abilityHandler.setup();
+        SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+        if (skillAPIHK != null) {
+            this.abilityHandler = new ItemAbilityHandler(this);
+            this.abilityHandler.setup();
+        }
         this.registerListeners();
     }
 
     @Override
     protected void onPostSetup() {
         super.onPostSetup();
-        //this.moduleCommand.addSubCommand(new CreateCommand(this));
-        //this.moduleCommand.addSubCommand(new EditCommand(this));
+        this.moduleCommand.addSubCommand(new CreateCommand(this));
+        this.moduleCommand.addSubCommand(new EditCommand(this));
     }
 
     @Override

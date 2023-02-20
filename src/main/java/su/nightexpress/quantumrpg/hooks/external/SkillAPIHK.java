@@ -5,6 +5,10 @@ import com.sucy.skill.api.event.PlayerCastSkillEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.player.PlayerSkill;
+import com.sucy.skill.api.skills.Skill;
+import com.sucy.skill.api.skills.SkillShot;
+import com.sucy.skill.dynamic.DynamicSkill;
 import mc.promcteam.engine.hooks.HookState;
 import mc.promcteam.engine.hooks.NHook;
 import mc.promcteam.engine.utils.StringUT;
@@ -19,6 +23,7 @@ import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.hooks.HookClass;
 import su.nightexpress.quantumrpg.hooks.HookLevel;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemAbilityHandler;
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
@@ -122,5 +127,25 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
 
     public boolean isExempt(LivingEntity player) {
         return exempt.contains(player.getUniqueId());
+    }
+
+    public void addSkill(Player player, String skillId, int level) {
+        PlayerData playerData = SkillAPI.getPlayerData(player);
+        Skill skill = SkillAPI.getSkill(skillId);
+        playerData.addSkillExternally(skill, playerData.getMainClass(), ItemAbilityHandler.ABILITY_KEY, level);
+    }
+
+    public void removeSkill(Player player, String skillId) {
+        PlayerData playerData = SkillAPI.getPlayerData(player);
+        Skill skill = SkillAPI.getSkill(skillId);
+        playerData.removeSkillExternally(skill, ItemAbilityHandler.ABILITY_KEY);
+    }
+
+    public void castSkill(Player player, String skillId, int level) {
+        addSkill(player, skillId, level);
+        PlayerData playerData = SkillAPI.getPlayerData(player);
+        PlayerSkill playerSkill = playerData.getSkill(skillId);
+        if (playerSkill == null) { return; }
+        playerData.cast(playerSkill);
     }
 }
