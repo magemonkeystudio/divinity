@@ -132,12 +132,17 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
     public void addSkill(Player player, String skillId, int level) {
         PlayerData playerData = SkillAPI.getPlayerData(player);
         Skill skill = SkillAPI.getSkill(skillId);
+        if (skill == null) {
+            plugin.warn("Could not find skill \""+skillId+"\" to add to the item");
+            return;
+        }
         playerData.addSkillExternally(skill, playerData.getMainClass(), ItemAbilityHandler.ABILITY_KEY, level);
     }
 
     public void removeSkill(Player player, String skillId) {
         PlayerData playerData = SkillAPI.getPlayerData(player);
         Skill skill = SkillAPI.getSkill(skillId);
+        if (skill == null) { return; }
         playerData.removeSkillExternally(skill, ItemAbilityHandler.ABILITY_KEY);
     }
 
