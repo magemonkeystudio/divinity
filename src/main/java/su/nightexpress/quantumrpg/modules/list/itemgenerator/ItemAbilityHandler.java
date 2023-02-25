@@ -15,8 +15,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.EHook;
@@ -81,15 +83,25 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         return map;
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        PlayerInventory inventory = player.getInventory();
+        for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD}) {
+            for (Map.Entry<String,Integer> entry : getAbilities(inventory.getItem(slot)).entrySet()) {
+                skillAPIHK.addSkill(player, entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onArmorEquip(ArmorEquipEvent event) {
-        Map<String,Integer> abilities = getAbilities(event.getOldArmorPiece());
-        for (String id : abilities.keySet()) {
-            skillAPIHK.removeSkill(event.getPlayer(), id);
+        Player player = event.getPlayer();
+        for (String id : getAbilities(event.getOldArmorPiece()).keySet()) {
+            skillAPIHK.removeSkill(player, id);
         }
-        abilities = getAbilities(event.getNewArmorPiece());
-        for (Map.Entry<String,Integer> entry : abilities.entrySet()) {
-            skillAPIHK.addSkill(event.getPlayer(), entry.getKey(), entry.getValue());
+        for (Map.Entry<String,Integer> entry : getAbilities(event.getNewArmorPiece()).entrySet()) {
+            skillAPIHK.addSkill(player, entry.getKey(), entry.getValue());
         }
     }
 
