@@ -112,6 +112,7 @@ public class SocketGUI extends AbstractEditorGUI {
                             case DROP: case CONTROL_DROP: {
                                 cfg.set(path, replaceLore(List.of("&8&m               &f  「 %current%S 」  &8&m               ",
                                                                   "%SOCKET_%current%_DEFAULT%"), List.of(this.name)));
+                                saveAndReopen();
                                 break;
                             }
                             default: {

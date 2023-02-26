@@ -27,6 +27,7 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.enchantments.EnchantmentsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials.MainMaterialsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.requirements.MainRequirementsGUI;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.skills.MainSkillsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.sockets.MainSocketsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.stats.MainStatsGUI;
 
@@ -195,6 +196,7 @@ public class EditorGUI extends AbstractEditorGUI {
                                 break;
                             }
                         }
+                        break;
                     }
                     case SKULL_HASH: {
                         switch (clickType) {
@@ -294,7 +296,8 @@ public class EditorGUI extends AbstractEditorGUI {
                         new EnchantmentsGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
                         break;
                     }
-                    case ABILITIES: {
+                    case SKILLS: {
+                        new MainSkillsGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
                         break;
                     }
                     case USES_BY_LEVEL: {
@@ -454,8 +457,8 @@ public class EditorGUI extends AbstractEditorGUI {
         this.addButton(this.createButton("enchantments", ItemType.ENCHANTMENTS, Material.ENCHANTED_BOOK,
                                          "&eEnchantments", List.of(
                                                  "&6Left-Click: &eModify"), 33, guiClick));
-        this.addButton(this.createButton("abilities", ItemType.ABILITIES, Material.FIRE_CHARGE,
-                                         "&eAbilities", List.of(
+        this.addButton(this.createButton("skills", ItemType.SKILLS, Material.FIRE_CHARGE,
+                                         "&eSkills", List.of(
                                                  "&6Left-Click: &eModify"), 34, guiClick));
         lore = new ArrayList<>();
         for (Map.Entry<Integer,Integer> entry : UsesByLevelGUI.getUsesByLevel(this.itemGenerator.getConfig()).entrySet()) {
@@ -576,7 +579,7 @@ public class EditorGUI extends AbstractEditorGUI {
         SOCKETS("generator.sockets"),
         REQUIREMENTS("user-requirements-by-level"),
         ENCHANTMENTS("generator.enchantments"),
-        ABILITIES("generator.abilities"),
+        SKILLS("generator.skills"),
         USES_BY_LEVEL("uses-by-level"),
         SAMPLE(null),
         ;

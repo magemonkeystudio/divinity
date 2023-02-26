@@ -7,11 +7,10 @@ import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.player.PlayerSkill;
 import com.sucy.skill.api.skills.Skill;
-import com.sucy.skill.api.skills.SkillShot;
-import com.sucy.skill.dynamic.DynamicSkill;
 import mc.promcteam.engine.hooks.HookState;
 import mc.promcteam.engine.hooks.NHook;
 import mc.promcteam.engine.utils.StringUT;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,6 +30,7 @@ import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClass {
@@ -152,5 +152,13 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
         PlayerSkill playerSkill = playerData.getSkill(skillId);
         if (playerSkill == null) { return; }
         playerData.cast(playerSkill);
+    }
+
+    public Set<String> getSkills() { return SkillAPI.getSkills().keySet(); }
+
+    public ItemStack getIndicator(String skillId) {
+        Skill skill = SkillAPI.getSkill(skillId);
+        if (skill == null) { return new ItemStack(Material.JACK_O_LANTERN); }
+        return skill.getIndicator();
     }
 }

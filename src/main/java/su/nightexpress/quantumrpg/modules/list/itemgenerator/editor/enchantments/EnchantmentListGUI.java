@@ -96,7 +96,7 @@ public class EnchantmentListGUI extends AbstractEditorGUI {
                     }
                 }
             } else if (type == ItemType.NEW) {
-                new NewEnchantmentGUI(this.itemGeneratorManager, this.itemGenerator, missingList).open(player1, currentPage);
+                new NewEnchantmentGUI(this.itemGeneratorManager, this.itemGenerator, missingList).open(player1, 1);
             }
         };
         for (int materialIndex = (currentPage-1)*42, last = Math.min(list.size(), materialIndex+42), invIndex = 1;

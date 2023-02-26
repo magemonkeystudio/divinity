@@ -14,10 +14,10 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class AbilityGenerator extends AbstractAttributeGenerator {
 
@@ -158,5 +158,16 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         public List<String> getLoreFormat() {
             return loreFormat;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) { return true; }
+            if (o == null || getClass() != o.getClass()) { return false; }
+            Ability ability = (Ability) o;
+            return id.equals(ability.id);
+        }
+
+        @Override
+        public int hashCode() { return Objects.hash(id); }
     }
 }
