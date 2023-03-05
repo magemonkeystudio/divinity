@@ -280,7 +280,7 @@ public class EditorGUI extends AbstractEditorGUI {
                         new HandTypesGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
                         break;
                     }
-                    case DAMAGE_TYPES: case DEFENSE_TYPES: case ITEM_STATS: {
+                    case DAMAGE_TYPES: case DEFENSE_TYPES: case ITEM_STATS: case SKILLAPI_ATTRIBUTES: {
                         new MainStatsGUI(this.itemGeneratorManager, this.itemGenerator, type2).open(player1, 1);
                         break;
                     }
@@ -319,7 +319,7 @@ public class EditorGUI extends AbstractEditorGUI {
         this.addButton(this.createButton("materials", ItemType.MATERIALS, Material.IRON_INGOT,
                                          "&eMaterials", List.of(
                                                  "&6Left-Click: &eModify"), 1, guiClick));
-        this.addButton(this.createButton("lore", ItemType.LORE, Material.BOOK,
+        this.addButton(this.createButton("lore", ItemType.LORE, Material.WRITABLE_BOOK,
                                          "&eLore format", replaceLore(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",
@@ -448,9 +448,12 @@ public class EditorGUI extends AbstractEditorGUI {
         this.addButton(this.createButton("item-stats", ItemType.ITEM_STATS, Material.PAPER,
                                          "&eItem Stats", List.of(
                                                 "&6Left-Click: &eModify"), 29, guiClick));
+        this.addButton(this.createButton("strillapi-attributes", ItemType.SKILLAPI_ATTRIBUTES, Material.BOOK,
+                                         "&eSkillAPI Attributes", List.of(
+                                                 "&6Left-Click: &eModify"), 30, guiClick));
         this.addButton(this.createButton("sockets", ItemType.SOCKETS, Material.EMERALD,
                                          "&eSockets", List.of(
-                                                "&6Left-Click: &eModify"), 30, guiClick));
+                                                "&6Left-Click: &eModify"), 31, guiClick));
         this.addButton(this.createButton("requirements", ItemType.REQUIREMENTS, Material.REDSTONE,
                                          "&eRequirements", List.of(
                                                  "&6Left-Click: &eModify"), 32, guiClick));
@@ -576,6 +579,7 @@ public class EditorGUI extends AbstractEditorGUI {
         DAMAGE_TYPES("generator.damage-types"),
         DEFENSE_TYPES("generator.defense-types"),
         ITEM_STATS("generator.item-stats"),
+        SKILLAPI_ATTRIBUTES("generator.skillapi-attributes"),
         SOCKETS("generator.sockets"),
         REQUIREMENTS("user-requirements-by-level"),
         ENCHANTMENTS("generator.enchantments"),

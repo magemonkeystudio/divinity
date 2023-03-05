@@ -155,7 +155,7 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
 
     public Set<String> getSkills() { return SkillAPI.getSkills().keySet(); }
 
-    public ItemStack getIndicator(String skillId) {
+    public ItemStack getSkillIndicator(String skillId) {
         Skill skill = SkillAPI.getSkill(skillId);
         if (skill == null) { return new ItemStack(Material.JACK_O_LANTERN); }
         return skill.getIndicator();
@@ -178,5 +178,9 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
             list.add(new SkillAPIAttribute(entry.getKey(), entry.getValue().getName(), format));
         }
         return list;
+    }
+
+    public ItemStack getAttributeIndicator(String attributeId) {
+        return SkillAPI.getAttributeManager().getAttribute(attributeId).getToolIcon();
     }
 }

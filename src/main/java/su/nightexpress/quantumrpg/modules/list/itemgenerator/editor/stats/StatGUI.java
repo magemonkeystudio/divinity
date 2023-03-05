@@ -21,12 +21,14 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 import java.util.List;
 
 public class StatGUI extends AbstractEditorGUI {
+    private final EditorGUI.ItemType itemType;
     private final String path;
     private final Runnable onReturn;
     private ItemType listening;
 
     public StatGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, EditorGUI.ItemType itemType, String path, Runnable onReturn) {
         super(itemGeneratorManager, itemGenerator, 9);
+        this.itemType = itemType;
         this.path = path;
         this.onReturn = onReturn;
         setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+itemType.getTitle());
@@ -36,6 +38,7 @@ public class StatGUI extends AbstractEditorGUI {
     protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int i) {
         JYML cfg = this.itemGenerator.getConfig();
         boolean flatRange = cfg.getBoolean(ItemType.FLAT_RANGE.getPath(this.path));
+        boolean round = cfg.getBoolean(ItemType.ROUND.getPath(this.path));
         GuiClick guiClick = (player1, type, clickEvent) -> {
             if (type == null) { return; }
             Class<?> clazz = type.getClass();
@@ -101,6 +104,20 @@ public class StatGUI extends AbstractEditorGUI {
                         }
                         break;
                     }
+                    case ROUND: {
+                        switch (clickEvent.getClick()) {
+                            case DROP: case CONTROL_DROP: {
+                                cfg.set(path, false);
+                                saveAndReopen();
+                                break;
+                            }
+                            default: {
+                                cfg.set(path, !round);
+                                saveAndReopen();
+                            }
+                        }
+                        break;
+                    }
                 }
             }
         };
@@ -129,6 +146,13 @@ public class StatGUI extends AbstractEditorGUI {
                                                  "&bCurrent: &a"+flatRange,
                                                  "&6Left-Click: &eToggle",
                                                  "&6Drop: &eSet to default value"), 4, guiClick));
+        if (this.itemType != EditorGUI.ItemType.SKILLAPI_ATTRIBUTES) {
+            this.addButton(this.createButton(ItemType.ROUND.name(), ItemType.ROUND, round ? Material.SNOWBALL : Material.SNOW_BLOCK,
+                                             "&eRound", List.of(
+                                                     "&bCurrent: &a"+round,
+                                                     "&6Left-Click: &eToggle",
+                                                     "&6Drop: &eSet to default value"), 5, guiClick));
+        }
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 8, guiClick));
     }
 
@@ -190,6 +214,7 @@ public class StatGUI extends AbstractEditorGUI {
         MIN("min"),
         MAX("max"),
         FLAT_RANGE("flat-range"),
+        ROUND("round"),
         ;
 
         private final String path;

@@ -18,14 +18,8 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.LoreGUI;
-import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class MainStatsGUI extends AbstractEditorGUI {
     private final EditorGUI.ItemType itemType;
@@ -126,28 +120,7 @@ public class MainStatsGUI extends AbstractEditorGUI {
                         break;
                     }
                     case LIST: {
-                        Set<String> statIDs = new HashSet<>();
-                        switch (this.itemType) {
-                            case DAMAGE_TYPES: {
-                                for (DamageAttribute damageAttribute : ItemStats.getDamages()) {
-                                    statIDs.add(damageAttribute.getId());
-                                }
-                                break;
-                            }
-                            case DEFENSE_TYPES: {
-                                for (DefenseAttribute defenseAttribute : ItemStats.getDefenses()) {
-                                    statIDs.add(defenseAttribute.getId());
-                                }
-                                break;
-                            }
-                            case ITEM_STATS: {
-                                for (AbstractStat<?> stat : ItemStats.getStats()) {
-                                    statIDs.add(stat.getId());
-                                }
-                                break;
-                            }
-                        }
-                        new StatListGUI(itemGeneratorManager, itemGenerator, itemType, statIDs, () -> new MainStatsGUI(itemGeneratorManager, itemGenerator, itemType).open(player, page)).open(player1, 1);
+                        new StatListGUI(itemGeneratorManager, itemGenerator, itemType, () -> new MainStatsGUI(itemGeneratorManager, itemGenerator, itemType).open(player, page)).open(player1, 1);
                         break;
                     }
                 }
@@ -168,14 +141,33 @@ public class MainStatsGUI extends AbstractEditorGUI {
                                                  "&6Left-Click: &eDecrease",
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 1, guiClick));
-        this.addButton(this.createButton("lore", ItemType.LORE, Material.BOOK,
+        this.addButton(this.createButton("lore", ItemType.LORE, Material.WRITABLE_BOOK,
                                          "&eLore format", replaceLore(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",
                                                  "&f%current%",
                                                  "&a----------",
                                                  "&6Left-Click: &eModify"), cfg.getStringList(ItemType.LORE.getPath(this.itemType))), 2, guiClick));
-        this.addButton(this.createButton("list", ItemType.LIST, Material.IRON_SWORD,
+        Material material;
+        switch (this.itemType) {
+            case DAMAGE_TYPES: {
+                material = Material.IRON_SWORD;
+                break;
+            }
+            case DEFENSE_TYPES: {
+                material = Material.IRON_CHESTPLATE;
+                break;
+            }
+            case SKILLAPI_ATTRIBUTES: {
+                material = Material.BOOK;
+                break;
+            }
+            default: {
+                material = Material.PAPER;
+                break;
+            }
+        }
+        this.addButton(this.createButton("list", ItemType.LIST, material,
                                          "&eList of "+this.itemType.getTitle(), List.of(
                                                  "&6Left-Click: &eModify"), 3, guiClick));
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 8, guiClick));

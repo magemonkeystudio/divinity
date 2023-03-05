@@ -126,7 +126,7 @@ public class SkillGUI extends AbstractEditorGUI {
                                                  "&6Left-Click: &eDecrease",
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 2, guiClick));
-        this.addButton(this.createButton(ItemType.LORE.name(), ItemType.LORE, Material.BOOK,
+        this.addButton(this.createButton(ItemType.LORE.name(), ItemType.LORE, Material.WRITABLE_BOOK,
                                          "&eLore format", replaceLore(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",

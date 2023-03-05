@@ -122,7 +122,7 @@ public class SkillListGUI extends AbstractEditorGUI {
                                                             "&6Left-Click: &eModify",
                                                             "&6Drop: &eRemove"), cfg.getStringList(SkillGUI.ItemType.LORE.getPath(path))), invIndex, guiClick);
                 if (skillAPIHK != null) {
-                    ItemStack indicator = skillAPIHK.getIndicator(key);
+                    ItemStack indicator = skillAPIHK.getSkillIndicator(key);
                     if (indicator != null) {
                         ItemStack itemStack = guiItem.getItemRaw();
                         itemStack.setType(indicator.getType());

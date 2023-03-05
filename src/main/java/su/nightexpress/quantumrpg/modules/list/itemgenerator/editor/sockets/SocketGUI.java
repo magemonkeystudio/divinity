@@ -144,7 +144,7 @@ public class SocketGUI extends AbstractEditorGUI {
                                                  "&6Left-Click: &eDecrease",
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 1, guiClick));
-        this.addButton(this.createButton("lore", MainStatsGUI.ItemType.LORE, Material.BOOK,
+        this.addButton(this.createButton("lore", MainStatsGUI.ItemType.LORE, Material.WRITABLE_BOOK,
                                          "&eLore format", replaceLore(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",

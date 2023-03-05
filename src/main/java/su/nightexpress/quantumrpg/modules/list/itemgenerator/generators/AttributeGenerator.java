@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.DamageInformation;
@@ -59,7 +60,9 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                 cfg.addMissing(path2 + "min", 0);
                 cfg.addMissing(path2 + "max", 0);
                 cfg.addMissing(path2 + "flat-range", false);
-                cfg.addMissing(path2 + "round", false);
+                if (!this.getPlaceholder().equalsIgnoreCase(ItemGeneratorManager.PLACE_GEN_SKILLAPI_ATTR)) {
+                    cfg.addMissing(path2 + "round", false);
+                }
             }
 
             if (!this.loreFormat.contains(att.getPlaceholder())) {
