@@ -220,3 +220,4 @@ lore:
             name: 'Tier'
             format:
               main: '&c▸ %name%: %value%'
+      skillapi-attribute-format: '&7%attrPre%&3%name%&7%attrPost%'

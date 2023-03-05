@@ -104,6 +104,8 @@ public class EngineCfg {
     public static String LORE_STYLE_REQ_ITEM_MODULE_FORMAT_SEPAR;
     public static String LORE_STYLE_REQ_ITEM_MODULE_FORMAT_COLOR;
 
+    public static String LORE_STYLE_SKILLAPI_ATTRIBUTE_FORMAT;
+
     public void setup() {
         this.plugin.info("Loading engine configuration...");
 
@@ -360,6 +362,10 @@ public class EngineCfg {
             ItemTierRequirement tierRequirement = new ItemTierRequirement(rName, rFormat);
             ItemRequirements.registerItemRequirement(tierRequirement);
         }
+
+        path = "lore.stats.style.skillapi-attribute-format";
+        cfg.addMissing(path, "&7%attrPre%&3%name%&7%attrPost%");
+        EngineCfg.LORE_STYLE_SKILLAPI_ATTRIBUTE_FORMAT = StringUT.color(cfg.getString(path, "&7%attrPre%&3%name%&7%attrPost%"));
 
         cfg.saveChanges();
     }

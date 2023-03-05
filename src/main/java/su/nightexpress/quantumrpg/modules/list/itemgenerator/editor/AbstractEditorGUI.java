@@ -6,7 +6,6 @@ import mc.promcteam.engine.manager.api.gui.GuiItem;
 import mc.promcteam.engine.manager.api.gui.NGUI;
 import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -19,13 +18,13 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.TreeMap;
 
 public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
     static final String CURRENT_PLACEHOLDER = "%current%";
-    static YamlConfiguration commonItemGenerator;
     static AbstractEditorGUI instance;
 
     protected final ItemGeneratorManager itemGeneratorManager;
@@ -37,16 +36,7 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
         this.itemGeneratorManager = itemGeneratorManager;
         this.itemGenerator = itemGenerator;
         load(itemGenerator);
-        init();
         this.setTitle(this.getTitle().replace("%id%", itemGenerator.getId()));
-    }
-
-    private void init() {
-        if (AbstractEditorGUI.commonItemGenerator == null) {
-            try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(plugin.getClass().getResourceAsStream(this.itemGeneratorManager.getPath()+"items/common.yml")))) {
-                AbstractEditorGUI.commonItemGenerator = YamlConfiguration.loadConfiguration(in);
-            } catch (IOException exception) { throw new RuntimeException(exception); }
-        }
     }
 
     @Nullable
@@ -191,7 +181,7 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
     }
 
     protected void setDefault(String path) {
-        this.itemGenerator.getConfig().set(path, commonItemGenerator.get(path));
+        this.itemGenerator.getConfig().set(path, ItemGeneratorManager.commonItemGenerator.get(path));
     }
 
     public void onChat(AsyncPlayerChatEvent event) { }

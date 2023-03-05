@@ -12,10 +12,11 @@ lore:
 - ''
 - '%ITEM_SET%'
 - ''
-- '%GENERATOR_SKILLS%'
+- '%GENERATOR_ABILITY%'
 - '%GENERATOR_DEFENSE%'
 - '%GENERATOR_DAMAGE%'
 - '%GENERATOR_STATS%'
+- '%GENERATOR_SKILLAPI_ATTR%'
 - '%GENERATOR_SOCKETS_GEM%'
 - '%GENERATOR_SOCKETS_ESSENCE%'
 - '%GENERATOR_SOCKETS_RUNE%'
@@ -235,6 +236,41 @@ generator:
         scale-by-level: 1.025
         min: 5.0
         max: 25.0
+  skillapi-attributes:
+    minimum: 1
+    maximum: 4
+    lore-format:
+      - '%SKILLAPI_ATTRIBUTE_VITALITY%'
+      - '%SKILLAPI_ATTRIBUTE_SPIRIT%'
+      - '%SKILLAPI_ATTRIBUTE_INTELLIGENCE%'
+      - '%SKILLAPI_ATTRIBUTE_DEXTERITY%'
+      - '%SKILLAPI_ATTRIBUTE_STRENGTH%'
+    list:
+      vitality:
+        chance: 20.0
+        scale-by-level: 1.025
+        min: 3.0
+        max: 6.25
+      spirit:
+        chance: 20.0
+        scale-by-level: 1.025
+        min: 1.1
+        max: 1.25
+      intelligence:
+        chance: 10.0
+        scale-by-level: 1.025
+        min: 2.5
+        max: 4.0
+      dexterity:
+        chance: 10.0
+        scale-by-level: 1.025
+        min: 4.5
+        max: 7.5
+      strength:
+        chance: 10.0
+        scale-by-level: 1.025
+        min: 1.5
+        max: 7.0
   sockets:
     GEM:
       minimum: 0

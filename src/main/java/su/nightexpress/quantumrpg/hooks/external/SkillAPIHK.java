@@ -7,6 +7,7 @@ import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
 import com.sucy.skill.api.player.PlayerSkill;
 import com.sucy.skill.api.skills.Skill;
+import com.sucy.skill.manager.AttributeManager;
 import mc.promcteam.engine.hooks.HookState;
 import mc.promcteam.engine.hooks.NHook;
 import mc.promcteam.engine.utils.StringUT;
@@ -25,13 +26,11 @@ import su.nightexpress.quantumrpg.hooks.HookLevel;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
+import su.nightexpress.quantumrpg.stats.items.attributes.SkillAPIAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClass {
 
@@ -160,5 +159,24 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
         Skill skill = SkillAPI.getSkill(skillId);
         if (skill == null) { return new ItemStack(Material.JACK_O_LANTERN); }
         return skill.getIndicator();
+    }
+
+    public Collection<SkillAPIAttribute> getAttributes() {
+        List<SkillAPIAttribute> list = new ArrayList<>();
+        String format;
+        {
+            String baseFormat = SkillAPI.getSettings().getAttrGiveText("{attr}");
+            int index = baseFormat.indexOf('{');
+            String attrPre = baseFormat.substring(0, index);
+            String attrPost = baseFormat.substring(index + "{attr}".length());
+            format = EngineCfg.LORE_STYLE_SKILLAPI_ATTRIBUTE_FORMAT
+                    .replace("%attrPre%", attrPre)
+                    .replace("%attrPost%", attrPost)
+                    +"%value%";
+        }
+        for (Map.Entry<String,AttributeManager.Attribute> entry : SkillAPI.getAttributeManager().getAttributes().entrySet()) {
+            list.add(new SkillAPIAttribute(entry.getKey(), entry.getValue().getName(), format));
+        }
+        return list;
     }
 }

@@ -17,6 +17,7 @@ import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.SkillAPIAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.DoubleStat;
@@ -268,6 +269,9 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                             } else if (stat instanceof DoubleStat) {
                                 DoubleStat rStat = (DoubleStat) stat;
                                 rStat.add(item, new double[]{vFin, vFin}, -1);
+                            } else if (stat instanceof SkillAPIAttribute) {
+                                SkillAPIAttribute skillAPIAttribute = (SkillAPIAttribute) stat;
+                                skillAPIAttribute.add(item, (int) Math.floor(vFin), -1);
                             }
                         }
                     }
