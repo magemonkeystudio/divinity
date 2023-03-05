@@ -22,7 +22,7 @@ import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.hooks.HookClass;
 import su.nightexpress.quantumrpg.hooks.HookLevel;
-import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemAbilityHandler;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
@@ -136,14 +136,14 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
             plugin.warn("Could not find skill \""+skillId+"\" to add to the item");
             return;
         }
-        playerData.addSkillExternally(skill, playerData.getMainClass(), ItemAbilityHandler.ABILITY_KEY, level);
+        playerData.addSkillExternally(skill, playerData.getMainClass(), AbilityGenerator.ABILITY_KEY, level);
     }
 
     public void removeSkill(Player player, String skillId) {
         PlayerData playerData = SkillAPI.getPlayerData(player);
         Skill skill = SkillAPI.getSkill(skillId);
         if (skill == null) { return; }
-        playerData.removeSkillExternally(skill, ItemAbilityHandler.ABILITY_KEY);
+        playerData.removeSkillExternally(skill, AbilityGenerator.ABILITY_KEY);
     }
 
     public void castSkill(Player player, String skillId, int level) {

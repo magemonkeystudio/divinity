@@ -5,11 +5,11 @@ import mc.promcteam.engine.manager.types.ClickType;
 import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.random.Rnd;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
-import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemAbilityHandler;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import su.nightexpress.quantumrpg.utils.LoreUT;
@@ -21,10 +21,12 @@ import java.util.Objects;
 
 public class AbilityGenerator extends AbstractAttributeGenerator {
 
+    public static NamespacedKey ABILITY_KEY;
     private final Map<AbilityGenerator.Ability, Double> abilities;
 
     public AbilityGenerator(@NotNull QuantumRPG plugin, @NotNull GeneratorItem generatorItem, @NotNull String placeholder) {
         super(plugin, generatorItem, placeholder);
+        AbilityGenerator.ABILITY_KEY = NamespacedKey.fromString("skills", plugin);
 
         JYML   cfg  = this.generatorItem.getConfig();
         String path = "generator.skills.";
@@ -125,7 +127,7 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
             abilityArray[i] = entry.getKey().getId()+':'+entry.getValue();
             i++;
         }
-        DataUT.setData(item, ItemAbilityHandler.ABILITY_KEY, abilityArray);
+        DataUT.setData(item, ABILITY_KEY, abilityArray);
     }
 
     public static class Ability {

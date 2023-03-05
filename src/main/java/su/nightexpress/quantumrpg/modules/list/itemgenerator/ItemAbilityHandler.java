@@ -7,7 +7,6 @@ import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.ItemUT;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
@@ -24,6 +23,7 @@ import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.EHook;
 import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
@@ -32,7 +32,6 @@ import java.util.*;
 
 public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadable {
 
-    public static NamespacedKey                                  ABILITY_KEY;
     private final ItemGeneratorManager                           itemGen;
     private final List<UUID>                                     noSpam       = new ArrayList<>();
     private       SkillAPIHK                                     skillAPIHK;
@@ -40,7 +39,6 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
     ItemAbilityHandler(@NotNull ItemGeneratorManager itemGen) {
         super(itemGen.plugin);
         this.itemGen = itemGen;
-        ItemAbilityHandler.ABILITY_KEY = NamespacedKey.fromString("skills", itemGen.plugin);
     }
 
     @Override
@@ -68,7 +66,7 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
     private Map<String,Integer> getAbilities(ItemStack item) {
         Map<String,Integer> map = new HashMap<>();
         if (item == null) { return map; }
-        String[] stringAbilities = DataUT.getStringArrayData(item, ABILITY_KEY);
+        String[] stringAbilities = DataUT.getStringArrayData(item, AbilityGenerator.ABILITY_KEY);
         if (stringAbilities == null) { return map; }
         for (String stringAbility : stringAbilities) {
             int i = stringAbility.lastIndexOf(':');
