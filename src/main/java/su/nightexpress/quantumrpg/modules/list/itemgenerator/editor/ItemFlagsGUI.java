@@ -68,7 +68,7 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
             }
             switch (inventoryClickEvent.getClick()) {
                 case DROP: case CONTROL_DROP: {
-                    Set<String> defaultFlags = new HashSet<>(EditorGUI.commonItemGenerator.getStringList(PATH));
+                    Set<String> defaultFlags = new HashSet<>(ItemGeneratorManager.commonItemGenerator.getStringList(PATH));
                     if (defaultFlags.contains(flag) || defaultFlags.contains(JStrings.MASK_ANY)) {
                         itemFlags.add(flag);
                     } else {

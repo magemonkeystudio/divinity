@@ -1,15 +1,12 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
+import mc.promcteam.engine.api.armor.ArmorEquipEvent;
 import mc.promcteam.engine.manager.IListener;
 import mc.promcteam.engine.manager.api.Loadable;
-import mc.promcteam.engine.manager.types.ClickType;
 import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.ItemUT;
-import mc.promcteam.engine.utils.TimeUT;
-import mc.promcteam.engine.utils.actions.ActionManipulator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
@@ -17,10 +14,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.hooks.EHook;
+import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
@@ -31,10 +32,9 @@ import java.util.*;
 
 public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadable {
 
-    public static final Map<ClickType, NamespacedKey>                  ABILITY_KEYS = new HashMap<>();
-    private final       ItemGeneratorManager                           itemGen;
-    private final       List<UUID>                                     noSpam       = new ArrayList<>();
-    private             Map<String, Map<String, Map<ClickType, Long>>> itemCooldown;
+    private final ItemGeneratorManager                           itemGen;
+    private final List<UUID>                                     noSpam       = new ArrayList<>();
+    private       SkillAPIHK                                     skillAPIHK;
 
     ItemAbilityHandler(@NotNull ItemGeneratorManager itemGen) {
         super(itemGen.plugin);
@@ -43,26 +43,14 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
 
     @Override
     public void setup() {
-        this.itemCooldown = new HashMap<>();
-
-        for (ClickType type : ClickType.values()) {
-            NamespacedKey key = new NamespacedKey(plugin, "itemgen-ability-" + type.name().toLowerCase());
-            ABILITY_KEYS.put(type, key);
-        }
-
+        this.skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+        if (this.skillAPIHK == null) { return; }
         this.registerListeners();
     }
 
     @Override
     public void shutdown() {
         this.unregisterListeners();
-
-        ABILITY_KEYS.clear();
-
-        if (this.itemCooldown != null) {
-            this.itemCooldown.clear();
-            this.itemCooldown = null;
-        }
     }
 
     private boolean registerSentMessage(Player player) {
@@ -75,36 +63,47 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         return true;
     }
 
-    private final boolean useItem(
-            @NotNull Player player,
-            @NotNull ItemStack item,
-            @NotNull GeneratorItem uItem,
-            @NotNull ClickType clickType) {
-
-        String abilityId = DataUT.getStringData(item, ABILITY_KEYS.get(clickType));
-        if (abilityId == null) return false;
-
-        AbilityGenerator.Ability ability = uItem.getAbilityGenerator().getAbility(abilityId);
-        if (ability == null) return false;
-
-        ActionManipulator manipulator = ability.getActions(ItemStats.getLevel(item));
-        if (manipulator == null) return false;
-
-        long cooldownLeft = this.getCooldownLeft(player, item, clickType);
-        if (cooldownLeft > 0L) {
-            if (registerSentMessage(player)) {
-                String name = ItemUT.getItemName(item);
-                String time = TimeUT.formatTime(cooldownLeft);
-                plugin.lang().Module_Item_Usage_Cooldown
-                        .replace("%time%", time).replace("%item%", name)
-                        .send(player);
+    private Map<String,Integer> getAbilities(ItemStack item) {
+        Map<String,Integer> map = new HashMap<>();
+        if (item == null) { return map; }
+        String[] stringAbilities = DataUT.getStringArrayData(item, AbilityGenerator.ABILITY_KEY);
+        if (stringAbilities == null) { return map; }
+        for (String stringAbility : stringAbilities) {
+            int i = stringAbility.lastIndexOf(':');
+            int level;
+            try {
+                level = Integer.parseInt(stringAbility.substring(i+1));
+            } catch (NumberFormatException e) {
+                continue;
             }
-
-            return false;
+            map.put(stringAbility.substring(0, i), level);
         }
+        return map;
+    }
 
-        // TODO Usage Event
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        PlayerInventory inventory = player.getInventory();
+        for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD}) {
+            for (Map.Entry<String,Integer> entry : getAbilities(inventory.getItem(slot)).entrySet()) {
+                skillAPIHK.addSkill(player, entry.getKey(), entry.getValue());
+            }
+        }
+    }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onArmorEquip(ArmorEquipEvent event) {
+        Player player = event.getPlayer();
+        for (String id : getAbilities(event.getOldArmorPiece()).keySet()) {
+            skillAPIHK.removeSkill(player, id);
+        }
+        for (Map.Entry<String,Integer> entry : getAbilities(event.getNewArmorPiece()).entrySet()) {
+            skillAPIHK.addSkill(player, entry.getKey(), entry.getValue());
+        }
+    }
+
+    private final boolean useItem(@NotNull Player player, @NotNull ItemStack item) {
         int uses = this.itemGen.getItemCharges(item);
         if (uses == 0) {
             if (registerSentMessage(player)) {
@@ -113,6 +112,13 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
                         .send(player);
             }
             return false;
+        }
+
+        // TODO Usage Event
+
+        Map<String,Integer> abilities = getAbilities(item);
+        for (Map.Entry<String,Integer> entry : abilities.entrySet()) {
+            skillAPIHK.castSkill(player, entry.getKey(), entry.getValue());
         }
 
         if (uses > 0) {
@@ -135,42 +141,7 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
                 duraStat.reduceDurability(player, item, 1);
             }
         }
-
-        manipulator.process(player);
-
-        // Add Item Ability Cooldown
-        String uuid   = player.getUniqueId().toString();
-        String itemId = uItem.getId();
-
-        Map<String, Map<ClickType, Long>> mapItem = this.itemCooldown.computeIfAbsent(uuid, map -> new HashMap<>());
-        mapItem.computeIfAbsent(itemId, map -> new HashMap<>()).put(clickType, ability.getCooldownDate());
-
         return true;
-    }
-
-    public boolean isOnCooldown(@NotNull Player player, @NotNull ItemStack item, @NotNull ClickType type) {
-        return this.getCooldownLeft(player, item, type) > 0L;
-    }
-
-    /**
-     * @param player
-     * @param item
-     * @param type
-     * @return Returns the amount of time until cooldown ends in Miliseconds.
-     */
-    private final long getCooldownLeft(@NotNull Player player, @NotNull ItemStack item, @NotNull ClickType type) {
-        if (!this.itemGen.isItemOfThisModule(item)) return 0L;
-
-        String uuid   = player.getUniqueId().toString();
-        String itemId = this.itemGen.getItemId(item);
-
-        Map<String, Map<ClickType, Long>> mapItems = this.itemCooldown.getOrDefault(uuid, Collections.emptyMap());
-
-        // Remove expired cooldowns.
-        mapItems.values().forEach(mapType -> mapType.entrySet().removeIf(entry -> entry.getValue() <= System.currentTimeMillis()));
-
-        long date = mapItems.getOrDefault(itemId, Collections.emptyMap()).getOrDefault(type, 0L);
-        return date > 0L ? date - System.currentTimeMillis() : date;
     }
 
     // ------------------------------------------------------------- //
@@ -195,13 +166,11 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         Player player = e.getPlayer();
         Action action = e.getAction();
         if (action == Action.PHYSICAL) return;
-        boolean   shift = player.isSneaking();
-        ClickType type  = ClickType.from(action, shift);
 
         if (!ItemUtils.isWeapon(item) && !ItemUtils.isBow(item) && item.getType() != Material.SHIELD) {
             e.setCancelled(true);
         }
-        this.useItem(player, item, aItem, type);
+        this.useItem(player, item);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -212,19 +181,18 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         if (aItem == null) return;
 
         Player    player = e.getPlayer();
-        ClickType type   = ClickType.RIGHT;
 
         e.setCancelled(true);
 
         ItemStack itemMain = player.getInventory().getItemInMainHand();
         if (!ItemUT.isAir(itemMain) && itemMain.isSimilar(item)) {
-            this.useItem(player, itemMain, aItem, type);
+            this.useItem(player, itemMain);
             return;
         }
 
         ItemStack itemOff = player.getInventory().getItemInOffHand();
         if (!ItemUT.isAir(itemOff) && itemOff.isSimilar(item)) {
-            this.useItem(player, itemOff, aItem, type);
+            this.useItem(player, itemOff);
         }
     }
 }

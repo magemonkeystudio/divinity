@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.DamageInformation;
@@ -17,6 +18,7 @@ import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.SkillAPIAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.DoubleStat;
@@ -58,7 +60,9 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                 cfg.addMissing(path2 + "min", 0);
                 cfg.addMissing(path2 + "max", 0);
                 cfg.addMissing(path2 + "flat-range", false);
-                cfg.addMissing(path2 + "round", false);
+                if (!this.getPlaceholder().equalsIgnoreCase(ItemGeneratorManager.PLACE_GEN_SKILLAPI_ATTR)) {
+                    cfg.addMissing(path2 + "round", false);
+                }
             }
 
             if (!this.loreFormat.contains(att.getPlaceholder())) {
@@ -268,6 +272,9 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                             } else if (stat instanceof DoubleStat) {
                                 DoubleStat rStat = (DoubleStat) stat;
                                 rStat.add(item, new double[]{vFin, vFin}, -1);
+                            } else if (stat instanceof SkillAPIAttribute) {
+                                SkillAPIAttribute skillAPIAttribute = (SkillAPIAttribute) stat;
+                                skillAPIAttribute.add(item, (int) Math.floor(vFin), -1);
                             }
                         }
                     }

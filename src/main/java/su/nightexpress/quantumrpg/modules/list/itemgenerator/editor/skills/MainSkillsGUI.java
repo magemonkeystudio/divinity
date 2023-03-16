@@ -1,4 +1,4 @@
-package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.enchantments;
+package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.skills;
 
 import mc.promcteam.engine.manager.api.gui.ContentType;
 import mc.promcteam.engine.manager.api.gui.GuiClick;
@@ -16,15 +16,16 @@ import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.enchantments.EnchantmentListGUI;
 
 import java.util.List;
 
-public class EnchantmentsGUI extends AbstractEditorGUI {
+public class MainSkillsGUI extends AbstractEditorGUI {
     private ItemType listening;
 
-    public EnchantmentsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
+    public MainSkillsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
         super(itemGeneratorManager, itemGenerator, 9);
-        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.ENCHANTMENTS.getTitle());
+        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.SKILLS.getTitle());
     }
 
     @Override
@@ -53,22 +54,22 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
                     case MINIMUM: {
                         switch (clickEvent.getClick()) {
                             case LEFT: {
-                                this.itemGenerator.getConfig().set(EditorGUI.ItemType.ENCHANTMENTS.getPath()+".minimum", Math.max(0, this.itemGenerator.getMinEnchantments()-1));
+                                this.itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath()+".minimum", Math.max(0, this.itemGenerator.getAbilityGenerator().getMinAmount()-1));
                                 saveAndReopen();
                                 break;
                             }
                             case RIGHT: {
-                                this.itemGenerator.getConfig().set(EditorGUI.ItemType.ENCHANTMENTS.getPath()+".minimum", this.itemGenerator.getMinEnchantments()+1);
+                                this.itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath()+".minimum", this.itemGenerator.getAbilityGenerator().getMinAmount()+1);
                                 saveAndReopen();
                                 break;
                             }
                             case DROP: case CONTROL_DROP: {
-                                setDefault(EditorGUI.ItemType.ENCHANTMENTS.getPath()+".minimum");
+                                setDefault(EditorGUI.ItemType.SKILLS.getPath()+".minimum");
                                 saveAndReopen();
                                 break;
                             }
                             default: {
-                                sendSetMessage(type2, String.valueOf(this.itemGenerator.getMinEnchantments()));
+                                sendSetMessage(type2, String.valueOf(this.itemGenerator.getAbilityGenerator().getMinAmount()));
                                 break;
                             }
                         }
@@ -77,72 +78,51 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
                     case MAXIMUM: {
                         switch (clickEvent.getClick()) {
                             case LEFT: {
-                                this.itemGenerator.getConfig().set(EditorGUI.ItemType.ENCHANTMENTS.getPath()+".maximum", Math.max(0, this.itemGenerator.getMaxEnchantments()-1));
+                                this.itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath()+".maximum", Math.max(0, this.itemGenerator.getAbilityGenerator().getMaxAmount()-1));
                                 saveAndReopen();
                                 break;
                             }
                             case RIGHT: {
-                                this.itemGenerator.getConfig().set(EditorGUI.ItemType.ENCHANTMENTS.getPath()+".maximum", this.itemGenerator.getMaxEnchantments()+1);
+                                this.itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath()+".maximum", this.itemGenerator.getAbilityGenerator().getMaxAmount()+1);
                                 saveAndReopen();
                                 break;
                             }
                             case DROP: case CONTROL_DROP: {
-                                setDefault(EditorGUI.ItemType.ENCHANTMENTS.getPath()+".maximum");
+                                setDefault(EditorGUI.ItemType.SKILLS.getPath()+".maximum");
                                 saveAndReopen();
                                 break;
                             }
                             default: {
-                                sendSetMessage(type2, String.valueOf(this.itemGenerator.getMinEnchantments()));
+                                sendSetMessage(type2, String.valueOf(this.itemGenerator.getAbilityGenerator().getMaxAmount()));
                                 break;
                             }
                         }
                         break;
                     }
-                    case SAFE_ONLY: {
-                        this.itemGenerator.getConfig().set(EditorGUI.ItemType.ENCHANTMENTS.getPath()+".safe-only", !this.itemGenerator.isSafeEnchant());
-                        saveAndReopen();
-                        break;
-                    }
-                    case SAFE_LEVELS: {
-                        this.itemGenerator.getConfig().set(EditorGUI.ItemType.ENCHANTMENTS.getPath()+".safe-levels", !this.itemGenerator.isEnchantsSafeLevels());
-                        saveAndReopen();
-                        break;
-                    }
                     case LIST: {
-                        new EnchantmentListGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
+                        new SkillListGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
                         break;
                     }
                 }
             }
         };
         this.addButton(this.createButton("minimum", ItemType.MINIMUM, Material.BROWN_MUSHROOM,
-                                         "&eMinimum enchantments", List.of(
-                                                 "&bCurrent: &a"+this.itemGenerator.getMinEnchantments(),
+                                         "&eMinimum skills", List.of(
+                                                 "&bCurrent: &a"+this.itemGenerator.getAbilityGenerator().getMinAmount(),
                                                  "&6Middle-Click: &eSet",
                                                  "&6Left-Click: &eDecrease",
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 0, guiClick));
         this.addButton(this.createButton("maximum", ItemType.MAXIMUM, Material.RED_MUSHROOM,
                                          "&eMaximum enchantments", List.of(
-                                                "&bCurrent: &a"+this.itemGenerator.getMaxEnchantments(),
-                                                "&6Middle-Click: &eSet",
-                                                "&6Left-Click: &eDecrease",
-                                                "&6Right-Click: &eIncrease",
-                                                "&6Drop: &eSet to default value"), 1, guiClick));
-        this.addButton(this.createButton("safe-only", ItemType.SAFE_ONLY, Material.BOW,
-                                         "&eSafe enchantments only", List.of(
-                                                 "&bCurrent: &a"+this.itemGenerator.isSafeEnchant(),
-                                                 "&6Left-Click: &eToggle",
-                                                 "&6Drop: &eSet to default value"), 2, guiClick));
-        this.addButton(this.createButton("safe-levels", ItemType.SAFE_LEVELS, Material.EXPERIENCE_BOTTLE,
-                                         "&eSafe enchantment levels only", List.of(
-                                                 "&bCurrent: &a"+this.itemGenerator.isEnchantsSafeLevels(),
-                                                 "&6Left-Click: &eToggle",
-                                                 "&6Drop: &eSet to default value"), 3, guiClick));
-
-        this.addButton(this.createButton("list", ItemType.LIST, Material.ENCHANTED_BOOK,
-                                         "&eList of enchantments", List.of(
-                                                 "&6Left-Click: &eModify"), 4, guiClick));
+                                                 "&bCurrent: &a"+this.itemGenerator.getAbilityGenerator().getMaxAmount(),
+                                                 "&6Middle-Click: &eSet",
+                                                 "&6Left-Click: &eDecrease",
+                                                 "&6Right-Click: &eIncrease",
+                                                 "&6Drop: &eSet to default value"), 1, guiClick));
+        this.addButton(this.createButton("list", ItemType.LIST, Material.FIRE_CHARGE,
+                                         "&eList of skills", List.of(
+                                                 "&6Left-Click: &eModify"), 2, guiClick));
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 8, guiClick));
     }
 
@@ -152,11 +132,11 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
         String name;
         switch (itemType) {
             case MINIMUM: {
-                name = "minimum enchantments";
+                name = "minimum skills";
                 break;
             }
             case MAXIMUM: {
-                name = "maximum enchantments";
+                name = "maximum skills";
                 break;
             }
             default: {
@@ -188,11 +168,11 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
         }
         switch (itemType) {
             case MINIMUM: {
-                this.itemGenerator.getConfig().set(EditorGUI.ItemType.ENCHANTMENTS.getPath()+".minimum", value);
+                this.itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath()+".minimum", value);
                 break;
             }
             case MAXIMUM: {
-                this.itemGenerator.getConfig().set(EditorGUI.ItemType.ENCHANTMENTS.getPath()+".maximum", value);
+                this.itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath()+".maximum", value);
                 break;
             }
         }
@@ -202,8 +182,6 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
     public enum ItemType {
         MINIMUM,
         MAXIMUM,
-        SAFE_ONLY,
-        SAFE_LEVELS,
         LIST,
     }
 }

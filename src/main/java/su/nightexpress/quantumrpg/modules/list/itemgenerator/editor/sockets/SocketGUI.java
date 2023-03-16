@@ -112,6 +112,7 @@ public class SocketGUI extends AbstractEditorGUI {
                             case DROP: case CONTROL_DROP: {
                                 cfg.set(path, replaceLore(List.of("&8&m               &f  「 %current%S 」  &8&m               ",
                                                                   "%SOCKET_%current%_DEFAULT%"), List.of(this.name)));
+                                saveAndReopen();
                                 break;
                             }
                             default: {
@@ -143,7 +144,7 @@ public class SocketGUI extends AbstractEditorGUI {
                                                  "&6Left-Click: &eDecrease",
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 1, guiClick));
-        this.addButton(this.createButton("lore", MainStatsGUI.ItemType.LORE, Material.BOOK,
+        this.addButton(this.createButton("lore", MainStatsGUI.ItemType.LORE, Material.WRITABLE_BOOK,
                                          "&eLore format", replaceLore(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",

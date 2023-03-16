@@ -1,4 +1,4 @@
-package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.stats;
+package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.skills;
 
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.ContentType;
@@ -17,28 +17,23 @@ import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.LoreGUI;
 
 import java.util.List;
 
-public class StatGUI extends AbstractEditorGUI {
-    private final EditorGUI.ItemType itemType;
+public class SkillGUI extends AbstractEditorGUI {
     private final String path;
-    private final Runnable onReturn;
     private ItemType listening;
 
-    public StatGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, EditorGUI.ItemType itemType, String path, Runnable onReturn) {
+    public SkillGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String path) {
         super(itemGeneratorManager, itemGenerator, 9);
-        this.itemType = itemType;
+        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.SKILLS.getTitle());
         this.path = path;
-        this.onReturn = onReturn;
-        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+itemType.getTitle());
     }
 
     @Override
-    protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int i) {
+    protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int page) {
         JYML cfg = this.itemGenerator.getConfig();
-        boolean flatRange = cfg.getBoolean(ItemType.FLAT_RANGE.getPath(this.path));
-        boolean round = cfg.getBoolean(ItemType.ROUND.getPath(this.path));
         GuiClick guiClick = (player1, type, clickEvent) -> {
             if (type == null) { return; }
             Class<?> clazz = type.getClass();
@@ -46,11 +41,7 @@ public class StatGUI extends AbstractEditorGUI {
                 ContentType type2 = (ContentType) type;
                 switch (type2) {
                     case RETURN: {
-                        if (this.onReturn == null) {
-                            player1.closeInventory();
-                        } else {
-                            this.onReturn.run();
-                        }
+                        new SkillListGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
                         break;
                     }
                     case EXIT: {
@@ -64,56 +55,51 @@ public class StatGUI extends AbstractEditorGUI {
                 ItemType type2 = (ItemType) type;
                 String path = type2.getPath(this.path);
                 switch (type2) {
-                    case CHANCE: case MIN: case MAX: {
+                    case CHANCE: {
                         switch (clickEvent.getClick()) {
                             case DROP: case CONTROL_DROP: {
                                 cfg.set(path, 0);
-                                saveAndReopen();
                                 break;
                             }
                             default: {
                                 sendSetMessage(type2, String.valueOf(cfg.getDouble(path)));
+                                break;
                             }
                         }
                         break;
                     }
-                    case SCALE_BY_LEVEL: {
+                    case MIN: case MAX: {
                         switch (clickEvent.getClick()) {
+                            case LEFT: {
+                                cfg.set(path, Math.max(1, cfg.getInt(path)-1));
+                                saveAndReopen();
+                                break;
+                            }
+                            case RIGHT: {
+                                cfg.set(path, cfg.getInt(path)+1);
+                                saveAndReopen();
+                                break;
+                            }
                             case DROP: case CONTROL_DROP: {
                                 cfg.set(path, 1);
                                 saveAndReopen();
                                 break;
                             }
                             default: {
-                                sendSetMessage(type2, String.valueOf(cfg.getDouble(path)));
+                                sendSetMessage(type2, String.valueOf(cfg.getInt(path)));
                             }
                         }
                         break;
                     }
-                    case FLAT_RANGE: {
+                    case LORE: {
                         switch (clickEvent.getClick()) {
                             case DROP: case CONTROL_DROP: {
-                                cfg.set(path, false);
+                                cfg.set(path, List.of("&b"+this.path.substring(this.path.lastIndexOf('.')+1)+" &7Lvl. &f%level%"));
                                 saveAndReopen();
                                 break;
                             }
                             default: {
-                                cfg.set(path, !flatRange);
-                                saveAndReopen();
-                            }
-                        }
-                        break;
-                    }
-                    case ROUND: {
-                        switch (clickEvent.getClick()) {
-                            case DROP: case CONTROL_DROP: {
-                                cfg.set(path, false);
-                                saveAndReopen();
-                                break;
-                            }
-                            default: {
-                                cfg.set(path, !round);
-                                saveAndReopen();
+                                new LoreGUI(this.itemGeneratorManager, this.itemGenerator, path, getTitle(), () -> new SkillGUI(this.itemGeneratorManager, this.itemGenerator, this.path).open(player1, 1)).open(player1, 1);
                             }
                         }
                         break;
@@ -126,33 +112,28 @@ public class StatGUI extends AbstractEditorGUI {
                                                  "&bCurrent: &a"+cfg.getDouble(ItemType.CHANCE.getPath(this.path)),
                                                  "&6Left-Click: &eSet",
                                                  "&6Drop: &eSet to default value"), 0, guiClick));
-        this.addButton(this.createButton(ItemType.SCALE_BY_LEVEL.name(), ItemType.SCALE_BY_LEVEL, Material.EXPERIENCE_BOTTLE,
-                                         "&eScale by Level", List.of(
-                                                 "&bCurrent: &a"+cfg.getDouble(ItemType.SCALE_BY_LEVEL.getPath(this.path)),
-                                                 "&6Left-Click: &eSet",
-                                                 "&6Drop: &eSet to default value"), 1, guiClick));
         this.addButton(this.createButton(ItemType.MIN.name(), ItemType.MIN, Material.BROWN_MUSHROOM,
-                                         "&eMinimum Value", List.of(
-                                                 "&bCurrent: &a"+cfg.getDouble(ItemType.MIN.getPath(this.path)),
-                                                 "&6Left-Click: &eSet",
-                                                 "&6Drop: &eSet to default value"), 2, guiClick));
+                                         "&eMinimum Level", List.of(
+                                                 "&bCurrent: &a"+cfg.getInt(ItemType.MIN.getPath(this.path)),
+                                                 "&6Middle-Click: &eSet",
+                                                 "&6Left-Click: &eDecrease",
+                                                 "&6Right-Click: &eIncrease",
+                                                 "&6Drop: &eSet to default value"), 1, guiClick));
         this.addButton(this.createButton(ItemType.MAX.name(), ItemType.MAX, Material.RED_MUSHROOM,
-                                         "&eMaximum Value", List.of(
-                                                 "&bCurrent: &a"+cfg.getDouble(ItemType.MAX.getPath(this.path)),
-                                                 "&6Left-Click: &eSet",
-                                                 "&6Drop: &eSet to default value"), 3, guiClick));
-        this.addButton(this.createButton(ItemType.FLAT_RANGE.name(), ItemType.FLAT_RANGE, flatRange ? Material.STRUCTURE_VOID : Material.BARRIER,
-                                         "&eFlat Range", List.of(
-                                                 "&bCurrent: &a"+flatRange,
-                                                 "&6Left-Click: &eToggle",
-                                                 "&6Drop: &eSet to default value"), 4, guiClick));
-        if (this.itemType != EditorGUI.ItemType.SKILLAPI_ATTRIBUTES) {
-            this.addButton(this.createButton(ItemType.ROUND.name(), ItemType.ROUND, round ? Material.SNOWBALL : Material.SNOW_BLOCK,
-                                             "&eRound", List.of(
-                                                     "&bCurrent: &a"+round,
-                                                     "&6Left-Click: &eToggle",
-                                                     "&6Drop: &eSet to default value"), 5, guiClick));
-        }
+                                         "&eMaximum Level", List.of(
+                                                 "&bCurrent: &a"+cfg.getInt(ItemType.MAX.getPath(this.path)),
+                                                 "&6Middle-Click: &eSet",
+                                                 "&6Left-Click: &eDecrease",
+                                                 "&6Right-Click: &eIncrease",
+                                                 "&6Drop: &eSet to default value"), 2, guiClick));
+        this.addButton(this.createButton(ItemType.LORE.name(), ItemType.LORE, Material.WRITABLE_BOOK,
+                                         "&eLore format", replaceLore(List.of(
+                                                 "&bCurrent:",
+                                                 "&a----------",
+                                                 "&f%current%",
+                                                 "&a----------",
+                                                 "&6Left-Click: &eModify",
+                                                 "&6Drop: &eSet to default value"), cfg.getStringList(ItemType.LORE.getPath(this.path))), 3, guiClick));
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 8, guiClick));
     }
 
@@ -165,16 +146,12 @@ public class StatGUI extends AbstractEditorGUI {
                 name = "Chance";
                 break;
             }
-            case SCALE_BY_LEVEL: {
-                name = "Level Scale";
-                break;
-            }
             case MIN: {
-                name = "Minimum Value";
+                name = "Minimum Level";
                 break;
             }
             case MAX: {
-                name = "Maximum Value";
+                name = "Maximum Level";
                 break;
             }
             default: {
@@ -196,25 +173,41 @@ public class StatGUI extends AbstractEditorGUI {
         ItemType itemType = this.listening;
         this.listening = null;
         String message = event.getMessage().strip();
-        double value;
-        try {
-            value = Double.parseDouble(message);
-        } catch (NumberFormatException e) {
-            plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", "number").send(player);
-            saveAndReopen();
-            return;
+        switch (itemType) {
+            case CHANCE: {
+                double value;
+                try {
+                    value = Double.parseDouble(message);
+                } catch (NumberFormatException e) {
+                    plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", "number").send(player);
+                    saveAndReopen();
+                    return;
+                }
+                this.itemGenerator.getConfig().set(itemType.getPath(this.path), value);
+                saveAndReopen();
+                break;
+            }
+            case MIN: case MAX: {
+                int value;
+                try {
+                    value = Integer.parseInt(message);
+                } catch (NumberFormatException e) {
+                    plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", "integer").send(player);
+                    saveAndReopen();
+                    return;
+                }
+                this.itemGenerator.getConfig().set(itemType.getPath(this.path), value);
+                saveAndReopen();
+                break;
+            }
         }
-        this.itemGenerator.getConfig().set(itemType.getPath(this.path), value);
-        saveAndReopen();
     }
 
     public enum ItemType {
         CHANCE("chance"),
-        SCALE_BY_LEVEL("scale-by-level"),
-        MIN("min"),
-        MAX("max"),
-        FLAT_RANGE("flat-range"),
-        ROUND("round"),
+        MIN("min-level"),
+        MAX("max-level"),
+        LORE("lore-format"),
         ;
 
         private final String path;

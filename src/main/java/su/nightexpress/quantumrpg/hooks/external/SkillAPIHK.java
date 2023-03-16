@@ -5,9 +5,13 @@ import com.sucy.skill.api.event.PlayerCastSkillEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.player.PlayerSkill;
+import com.sucy.skill.api.skills.Skill;
+import com.sucy.skill.manager.AttributeManager;
 import mc.promcteam.engine.hooks.HookState;
 import mc.promcteam.engine.hooks.NHook;
 import mc.promcteam.engine.utils.StringUT;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,14 +23,14 @@ import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.hooks.HookClass;
 import su.nightexpress.quantumrpg.hooks.HookLevel;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
+import su.nightexpress.quantumrpg.stats.items.attributes.SkillAPIAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClass {
 
@@ -122,5 +126,61 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
 
     public boolean isExempt(LivingEntity player) {
         return exempt.contains(player.getUniqueId());
+    }
+
+    public void addSkill(Player player, String skillId, int level) {
+        PlayerData playerData = SkillAPI.getPlayerData(player);
+        Skill skill = SkillAPI.getSkill(skillId);
+        if (skill == null) {
+            plugin.warn("Could not find skill \""+skillId+"\" to add to the item");
+            return;
+        }
+        playerData.addSkillExternally(skill, playerData.getMainClass(), AbilityGenerator.ABILITY_KEY, level);
+    }
+
+    public void removeSkill(Player player, String skillId) {
+        PlayerData playerData = SkillAPI.getPlayerData(player);
+        Skill skill = SkillAPI.getSkill(skillId);
+        if (skill == null) { return; }
+        playerData.removeSkillExternally(skill, AbilityGenerator.ABILITY_KEY);
+    }
+
+    public void castSkill(Player player, String skillId, int level) {
+        addSkill(player, skillId, level);
+        PlayerData playerData = SkillAPI.getPlayerData(player);
+        PlayerSkill playerSkill = playerData.getSkill(skillId);
+        if (playerSkill == null) { return; }
+        playerData.cast(playerSkill);
+    }
+
+    public Set<String> getSkills() { return SkillAPI.getSkills().keySet(); }
+
+    public ItemStack getSkillIndicator(String skillId) {
+        Skill skill = SkillAPI.getSkill(skillId);
+        if (skill == null) { return new ItemStack(Material.JACK_O_LANTERN); }
+        return skill.getIndicator();
+    }
+
+    public Collection<SkillAPIAttribute> getAttributes() {
+        List<SkillAPIAttribute> list = new ArrayList<>();
+        String format;
+        {
+            String baseFormat = SkillAPI.getSettings().getAttrGiveText("{attr}");
+            int index = baseFormat.indexOf('{');
+            String attrPre = baseFormat.substring(0, index);
+            String attrPost = baseFormat.substring(index + "{attr}".length());
+            format = EngineCfg.LORE_STYLE_SKILLAPI_ATTRIBUTE_FORMAT
+                    .replace("%attrPre%", attrPre)
+                    .replace("%attrPost%", attrPost)
+                    +"%value%";
+        }
+        for (Map.Entry<String,AttributeManager.Attribute> entry : SkillAPI.getAttributeManager().getAttributes().entrySet()) {
+            list.add(new SkillAPIAttribute(entry.getKey(), entry.getValue().getName(), format));
+        }
+        return list;
+    }
+
+    public ItemStack getAttributeIndicator(String attributeId) {
+        return SkillAPI.getAttributeManager().getAttribute(attributeId).getToolIcon();
     }
 }

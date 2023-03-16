@@ -107,7 +107,7 @@ public class LoreGUI extends AbstractEditorGUI {
             String loreLine = lore.get(loreIndex);
             this.addButton(loreLine == null ?
                                    this.createButton("new", ItemType.NEW, Material.REDSTONE, "&eAdd new lore line", List.of(), invIndex, guiClick) :
-                                   this.createButton(String.valueOf(loreIndex), EditorGUI.ItemType.LORE, Material.BOOK,
+                                   this.createButton(String.valueOf(loreIndex), EditorGUI.ItemType.LORE, Material.WRITABLE_BOOK,
                                                      "".equals(loreLine) ? "''" : loreLine, List.of(
                                                    "&6Left-Click: &eAdd to left",
                                                    "&6Right-Click: &eAdd to right",

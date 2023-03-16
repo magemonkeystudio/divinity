@@ -2,17 +2,18 @@ package su.nightexpress.quantumrpg.stats.items;
 
 public class ItemTags {
 
-    public static final String TAG_ITEM_MODULE      = "QRPG_ITEM_MODULE";
-    public static final String TAG_ITEM_ID          = "QRPG_ITEM_ID";
-    public static final String TAG_ITEM_LEVEL       = "QRPG_ITEM_LEVEL";
-    public static final String TAG_ITEM_SOCKET_RATE = "QRPG_ITEM_SOCKET_RATE";
-    public static final String TAG_ITEM_SOCKET      = "QRPG_ITEM_SOCKET_";
-    public static final String TAG_ITEM_AMMO        = "QRPG_ITEM_AMMO";
-    public static final String TAG_ITEM_HAND        = "QRPG_ITEM_HAND";
-    public static final String TAG_ITEM_CHARGES     = "QRPG_ITEM_CHARGES";
-    public static final String TAG_ITEM_STAT        = "QRPG_ITEM_STAT_";
-    public static final String TAG_ITEM_DAMAGE      = "QRPG_ITEM_DAMAGE_";
-    public static final String TAG_ITEM_DEFENSE     = "QRPG_ITEM_DEFENSE_";
+    public static final String TAG_ITEM_MODULE        = "QRPG_ITEM_MODULE";
+    public static final String TAG_ITEM_ID            = "QRPG_ITEM_ID";
+    public static final String TAG_ITEM_LEVEL         = "QRPG_ITEM_LEVEL";
+    public static final String TAG_ITEM_SOCKET_RATE   = "QRPG_ITEM_SOCKET_RATE";
+    public static final String TAG_ITEM_SOCKET        = "QRPG_ITEM_SOCKET_";
+    public static final String TAG_ITEM_AMMO          = "QRPG_ITEM_AMMO";
+    public static final String TAG_ITEM_HAND          = "QRPG_ITEM_HAND";
+    public static final String TAG_ITEM_CHARGES       = "QRPG_ITEM_CHARGES";
+    public static final String TAG_ITEM_STAT          = "QRPG_ITEM_STAT_";
+    public static final String TAG_ITEM_DAMAGE        = "QRPG_ITEM_DAMAGE_";
+    public static final String TAG_ITEM_DEFENSE       = "QRPG_ITEM_DEFENSE_";
+    public static final String TAG_ITEM_SKILLAPI_ATTR = "QRPG_ITEM_SKILLAPI_ATTR_";
 
 
     public static final String TAG_REQ_USER_LEVEL        = "QRPG_ITEM_USER_LEVEL";

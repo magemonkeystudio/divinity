@@ -22,14 +22,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.Config;
+import su.nightexpress.quantumrpg.hooks.EHook;
+import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.LimitedItem;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ResourceManager.ResourceCategory;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.IAttributeGenerator;
-//import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.CreateCommand;
-//import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.EditCommand;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.CreateCommand;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.command.EditCommand;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AttributeGenerator;
@@ -48,20 +50,25 @@ import su.nightexpress.quantumrpg.stats.items.requirements.user.SoulboundRequire
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.BiFunction;
 
 public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
+    public static YamlConfiguration commonItemGenerator;
+
     private ResourceManager    resourceManager;
     private ItemAbilityHandler abilityHandler;
 
-    private static final String PLACE_GEN_DAMAGE  = "%GENERATOR_DAMAGE%";
-    private static final String PLACE_GEN_DEFENSE = "%GENERATOR_DEFENSE%";
-    private static final String PLACE_GEN_STATS   = "%GENERATOR_STATS%";
-    private static final String PLACE_GEN_SOCKETS = "%GENERATOR_SOCKETS_%TYPE%%";
-    private static final String PLACE_GEN_ABILITY = "%GENERATOR_ABILITY%";
+    public static final String PLACE_GEN_DAMAGE        = "%GENERATOR_DAMAGE%";
+    public static final String PLACE_GEN_DEFENSE       = "%GENERATOR_DEFENSE%";
+    public static final String PLACE_GEN_STATS         = "%GENERATOR_STATS%";
+    public static final String PLACE_GEN_SOCKETS       = "%GENERATOR_SOCKETS_%TYPE%%";
+    public static final String PLACE_GEN_ABILITY       = "%GENERATOR_ABILITY%";
+    public static final String PLACE_GEN_SKILLAPI_ATTR = "%GENERATOR_SKILLAPI_ATTR%";
 
     public ItemGeneratorManager(@NotNull QuantumRPG plugin) {
         super(plugin, GeneratorItem.class);
@@ -81,6 +88,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
     @Override
     public void setup() {
+        if (ItemGeneratorManager.commonItemGenerator == null) {
+            try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(plugin.getClass().getResourceAsStream(this.getPath()+"items/common.yml")))) {
+                ItemGeneratorManager.commonItemGenerator = YamlConfiguration.loadConfiguration(in);
+            } catch (IOException exception) { throw new RuntimeException(exception); }
+        }
+
         try (InputStream in = plugin.getClass().getResourceAsStream(this.getPath()+"settings.yml")) {
             YamlConfiguration configuration = new YamlConfiguration();
             configuration.loadFromString(new String(in.readAllBytes()));
@@ -90,16 +103,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
         this.resourceManager = new ResourceManager(this);
 
-        this.abilityHandler = new ItemAbilityHandler(this);
-        this.abilityHandler.setup();
+        SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+        if (skillAPIHK != null) {
+            this.abilityHandler = new ItemAbilityHandler(this);
+            this.abilityHandler.setup();
+        }
         this.registerListeners();
     }
 
     @Override
     protected void onPostSetup() {
         super.onPostSetup();
-        //this.moduleCommand.addSubCommand(new CreateCommand(this));
-        //this.moduleCommand.addSubCommand(new EditCommand(this));
+        this.moduleCommand.addSubCommand(new CreateCommand(this));
+        this.moduleCommand.addSubCommand(new EditCommand(this));
     }
 
     @Override
@@ -287,12 +303,18 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             this.addAttributeGenerator(new AttributeGenerator<>(this.plugin, this, "generator.damage-types.", ItemStats.getDamages(), ItemGeneratorManager.PLACE_GEN_DAMAGE));
             this.addAttributeGenerator(new AttributeGenerator<>(this.plugin, this, "generator.defense-types.", ItemStats.getDefenses(), ItemGeneratorManager.PLACE_GEN_DEFENSE));
             this.addAttributeGenerator(new AttributeGenerator<>(this.plugin, this, "generator.item-stats.", ItemStats.getStats(), ItemGeneratorManager.PLACE_GEN_STATS));
+            cfg.addMissing("generator.skillapi-attributes", commonItemGenerator.get("generator.skillapi-attributes"));
+            SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+            if (skillAPIHK != null) {
+                this.addAttributeGenerator(new AttributeGenerator<>(this.plugin, this, "generator.skillapi-attributes.", skillAPIHK.getAttributes(), ItemGeneratorManager.PLACE_GEN_SKILLAPI_ATTR));
+            }
 
             // Pre-cache Socket Attributes
             for (SocketAttribute.Type socketType : SocketAttribute.Type.values()) {
                 this.addAttributeGenerator(new AttributeGenerator<>(this.plugin, this, "generator.sockets." + socketType.name() + ".", ItemStats.getSockets(socketType), ItemGeneratorManager.PLACE_GEN_SOCKETS.replace("%TYPE%", socketType.name())));
             }
 
+            cfg.addMissing("generator.skills", commonItemGenerator.get("generator.skills"));
             this.addAttributeGenerator(this.abilityGenerator = new AbilityGenerator(this.plugin, this, PLACE_GEN_ABILITY));
 
             // --------------- END OF CONFIG ---------------------- //
@@ -598,11 +620,18 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             for (ItemLoreStat<?> at : ItemStats.getDefenses()) {
                 lore.remove(at.getPlaceholder());
             }
+            SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+            if (skillAPIHK != null) {
+                for (ItemLoreStat<?> at : skillAPIHK.getAttributes()) {
+                    lore.remove(at.getPlaceholder());
+                }
+            }
             for (SocketAttribute.Type socketType : SocketAttribute.Type.values()) {
                 for (ItemLoreStat<?> at : ItemStats.getSockets(socketType)) {
                     lore.remove(at.getPlaceholder());
                 }
             }
+            // TODO
             meta.setLore(lore);
             item.setItemMeta(meta);
 
