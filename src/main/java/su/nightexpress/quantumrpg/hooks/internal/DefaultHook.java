@@ -24,6 +24,11 @@ public class DefaultHook implements HookLevel, HookClass, HookMobLevel {
     }
 
     @Override
+    public void giveExp(@NotNull Player player, int amount) {
+        player.giveExp(amount);
+    }
+
+    @Override
     @NotNull
     public String getClass(@NotNull Player player) {
         String klass = "";

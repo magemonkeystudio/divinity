@@ -29,4 +29,10 @@ public class McmmoHK extends NHook<QuantumRPG> implements HookLevel {
     public int getLevel(@NotNull Player player) {
         return ExperienceAPI.getPowerLevel(player);
     }
+
+    @Override
+    public void giveExp(@NotNull Player player, int amount) {
+        // Don't really know which skill would be right here since exp can come from several sources,
+        // will leave empty unless this is brought up again
+    }
 }

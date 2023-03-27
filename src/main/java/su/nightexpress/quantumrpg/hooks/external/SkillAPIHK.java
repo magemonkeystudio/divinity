@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.hooks.external;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.enums.ExpSource;
 import com.sucy.skill.api.event.PlayerCastSkillEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.event.SkillDamageEvent;
@@ -54,6 +55,12 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
     public int getLevel(Player player) {
         PlayerData playerData = SkillAPI.getPlayerData(player);
         return playerData.hasClass() ? playerData.getMainClass().getLevel() : 0;
+    }
+
+    @Override
+    public void giveExp(@NotNull Player player, int amount) {
+        PlayerData playerData = SkillAPI.getPlayerData(player);
+        playerData.giveExp(amount, ExpSource.SPECIAL);
     }
 
     @Override

@@ -43,6 +43,17 @@ public class QuantumRPGHook implements HookLevel, HookClass {
     }
 
     @Override
+    public void giveExp(@NotNull Player player, int amount) {
+        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        if (user == null) return;
+
+        UserProfile   prof  = user.getActiveProfile();
+        UserClassData cData = prof.getClassData();
+        if (cData == null) { return; }
+        cData.addExp(amount);
+    }
+
+    @Override
     public void takeMana(@NotNull Player player, double amount, boolean ofMax) {
         ClassManager classManager = plugin.getModuleCache().getClassManager();
         if (classManager == null) return;

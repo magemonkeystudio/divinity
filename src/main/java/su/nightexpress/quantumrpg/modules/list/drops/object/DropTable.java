@@ -96,6 +96,8 @@ public class DropTable extends LoadableItem implements DropCalculator {
 
             if (key.equalsIgnoreCase("money")) {
                 nonItemDrops.add(new DropMoney(cfg.getConfigurationSection(path)));
+            } else if (key.equalsIgnoreCase("experience")) {
+                nonItemDrops.add(new DropExperience(cfg.getConfigurationSection(path)));
             }
 
         }

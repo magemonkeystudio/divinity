@@ -4,6 +4,7 @@ import mc.promcteam.engine.hooks.HookState;
 import mc.promcteam.engine.hooks.NHook;
 import net.pwing.races.api.PwingRacesAPI;
 import net.pwing.races.api.race.Race;
+import net.pwing.races.api.race.RaceData;
 import net.pwing.races.api.race.RaceManager;
 import net.pwing.races.api.race.RacePlayer;
 import org.bukkit.entity.Player;
@@ -49,5 +50,14 @@ public class PwingRacesHK extends NHook<QuantumRPG> implements HookClass, HookLe
         Race        race        = racePlayer.getActiveRace();
 
         return racePlayer.getRaceData(race).getLevel();
+    }
+
+    @Override
+    public void giveExp(@NotNull Player player, int amount) {
+        RaceManager raceManager = PwingRacesAPI.getRaceManager();
+        RacePlayer  racePlayer  = raceManager.getRacePlayer(player);
+        Race        race        = racePlayer.getActiveRace();
+        RaceData    raceData    = racePlayer.getRaceData(race);
+        raceData.setExperience(raceData.getExperience()+amount);
     }
 }
