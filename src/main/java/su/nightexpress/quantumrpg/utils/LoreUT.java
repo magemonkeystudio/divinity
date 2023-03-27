@@ -7,6 +7,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.config.EngineCfg;
 
 import java.util.List;
 import java.util.Set;
@@ -122,7 +123,10 @@ public class LoreUT {
         if (pos < 0) return;
 
         for (Enchantment e : meta.getEnchants().keySet()) {
-            String value = plugin.lang().getEnchantment(e) + " " + NumberUT.toRoman(meta.getEnchantLevel(e));
+            int level = meta.getEnchantLevel(e);
+            String value = EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN
+                    .replace("%name%", plugin.lang().getEnchantment(e))
+                    .replace("%value%", level > EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN ? String.valueOf(level) : NumberUT.toRoman(level));
             lore.add(pos, value);
         }
         meta.setLore(lore);
