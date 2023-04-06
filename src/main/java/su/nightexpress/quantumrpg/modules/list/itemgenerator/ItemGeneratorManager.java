@@ -67,7 +67,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
     public static final String PLACE_GEN_DEFENSE       = "%GENERATOR_DEFENSE%";
     public static final String PLACE_GEN_STATS         = "%GENERATOR_STATS%";
     public static final String PLACE_GEN_SOCKETS       = "%GENERATOR_SOCKETS_%TYPE%%";
-    public static final String PLACE_GEN_ABILITY       = "%GENERATOR_ABILITY%";
+    public static final String PLACE_GEN_ABILITY       = "%GENERATOR_SKILLS%";
     public static final String PLACE_GEN_SKILLAPI_ATTR = "%GENERATOR_SKILLAPI_ATTR%";
 
     public ItemGeneratorManager(@NotNull QuantumRPG plugin) {

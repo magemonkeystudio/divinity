@@ -114,7 +114,7 @@ public class MainSkillsGUI extends AbstractEditorGUI {
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 0, guiClick));
         this.addButton(this.createButton("maximum", ItemType.MAXIMUM, Material.RED_MUSHROOM,
-                                         "&eMaximum enchantments", List.of(
+                                         "&eMaximum skills", List.of(
                                                  "&bCurrent: &a"+this.itemGenerator.getAbilityGenerator().getMaxAmount(),
                                                  "&6Middle-Click: &eSet",
                                                  "&6Left-Click: &eDecrease",
