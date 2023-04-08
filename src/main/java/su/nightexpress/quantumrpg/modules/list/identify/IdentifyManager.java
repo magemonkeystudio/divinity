@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.identify;
 
+import com.sucy.skill.exception.SkillAPINotEnabledException;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.modules.IModule;
 import mc.promcteam.engine.utils.ItemUT;
@@ -74,9 +75,15 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
             try {
                 IdentifyTome tome = new IdentifyTome(plugin, cfg);
                 this.items.put(tome.getId(), tome);
-            } catch (Exception ex) {
-                this.error("Could not load item: " + cfg.getFile().getName());
-                ex.printStackTrace();
+            } catch (SkillAPINotEnabledException se) {
+                this.error("Could not load item '" + cfg.getFile().getName() + "'");
+                this.error(" - It looks like this item uses skills from ProSkillAPI, but ProSkillAPI is not enabled yet");
+            } catch (IllegalArgumentException iae) {
+                this.error("Could not load item '" + cfg.getFile().getName() + "'");
+                this.error(" - " + iae.getMessage());
+            } catch (Exception e) {
+                this.error("Could not load item '" + cfg.getFile().getName() + "'");
+                e.printStackTrace();
             }
         }
 
@@ -84,9 +91,15 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
             try {
                 UnidentifiedItem item = new UnidentifiedItem(plugin, cfg);
                 this.items.put(item.getId(), item);
-            } catch (Exception ex) {
-                this.error("Could not load item: " + cfg.getFile().getName());
-                ex.printStackTrace();
+            } catch (SkillAPINotEnabledException se) {
+                this.error("Could not load item '" + cfg.getFile().getName() + "'");
+                this.error(" - It looks like this item uses skills from ProSkillAPI, but ProSkillAPI is not enabled yet");
+            } catch (IllegalArgumentException iae) {
+                this.error("Could not load item '" + cfg.getFile().getName() + "'");
+                this.error(" - " + iae.getMessage());
+            } catch (Exception e) {
+                this.error("Could not load item '" + cfg.getFile().getName() + "'");
+                e.printStackTrace();
             }
         }
     }
@@ -245,7 +258,7 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
 
             String finalId = cfg.getString("item-id");
             if (finalId == null || this.itemModule.getItemById(finalId) == null) {
-                throw new IllegalArgumentException("Invalid 'item-id' provided! No such item.");
+                throw new IllegalArgumentException("Invalid 'item-id' provided (" + finalId + ")! No such item.");
             }
             this.setResultId(finalId);
 

@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.api;
 
+import com.sucy.skill.exception.SkillAPINotEnabledException;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -24,6 +25,7 @@ import su.nightexpress.quantumrpg.stats.items.attributes.ChargesAttribute;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
@@ -71,8 +73,18 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
                 Constructor<I> ctor = clazz.getDeclaredConstructor(this.getClass(), QuantumRPG.class, JYML.class);
                 item = ctor.newInstance(this, plugin, cfg);
                 if (item == null) continue;
+            } catch (InvocationTargetException ite) {
+                this.error("Could not load item '" + cfg.getFile().getName() + "'");
+                if (ite.getCause() instanceof IllegalArgumentException) {
+                    this.error(" - " + ite.getCause().getMessage());
+                } else if (ite.getCause() instanceof SkillAPINotEnabledException) {
+                    this.error(" - It looks like this item uses skills from ProSkillAPI, but ProSkillAPI is not enabled yet");
+                } else {
+                    ite.printStackTrace();
+                }
+                continue;
             } catch (Exception e) {
-                this.error("Could not load item: " + cfg.getFile().getName());
+                this.error("Could not load item '" + cfg.getFile().getName() + "'");
                 e.printStackTrace();
                 continue;
             }
