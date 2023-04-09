@@ -1,6 +1,5 @@
 package su.nightexpress.quantumrpg.modules.api;
 
-import com.sucy.skill.exception.SkillAPINotEnabledException;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -77,7 +76,7 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
                 this.error("Could not load item '" + cfg.getFile().getName() + "'");
                 if (ite.getCause() instanceof IllegalArgumentException) {
                     this.error(" - " + ite.getCause().getMessage());
-                } else if (ite.getCause() instanceof SkillAPINotEnabledException) {
+                } else if (ite.getCause().getClass().getSimpleName().equals("SkillAPINotEnabledException")) {
                     this.error(" - It looks like this item uses skills from ProSkillAPI, but ProSkillAPI is not enabled yet");
                 } else {
                     ite.printStackTrace();

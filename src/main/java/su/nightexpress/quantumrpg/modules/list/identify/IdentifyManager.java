@@ -1,6 +1,5 @@
 package su.nightexpress.quantumrpg.modules.list.identify;
 
-import com.sucy.skill.exception.SkillAPINotEnabledException;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.modules.IModule;
 import mc.promcteam.engine.utils.ItemUT;
@@ -75,15 +74,17 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
             try {
                 IdentifyTome tome = new IdentifyTome(plugin, cfg);
                 this.items.put(tome.getId(), tome);
-            } catch (SkillAPINotEnabledException se) {
-                this.error("Could not load item '" + cfg.getFile().getName() + "'");
-                this.error(" - It looks like this item uses skills from ProSkillAPI, but ProSkillAPI is not enabled yet");
             } catch (IllegalArgumentException iae) {
                 this.error("Could not load item '" + cfg.getFile().getName() + "'");
                 this.error(" - " + iae.getMessage());
             } catch (Exception e) {
-                this.error("Could not load item '" + cfg.getFile().getName() + "'");
-                e.printStackTrace();
+                if (e.getClass().getSimpleName().equals("SkillAPINotEnabledException")) {
+                    this.error("Could not load item '" + cfg.getFile().getName() + "'");
+                    this.error(" - It looks like this item uses skills from ProSkillAPI, but ProSkillAPI is not enabled yet");
+                } else {
+                    this.error("Could not load item '" + cfg.getFile().getName() + "'");
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -91,13 +92,14 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
             try {
                 UnidentifiedItem item = new UnidentifiedItem(plugin, cfg);
                 this.items.put(item.getId(), item);
-            } catch (SkillAPINotEnabledException se) {
-                this.error("Could not load item '" + cfg.getFile().getName() + "'");
-                this.error(" - It looks like this item uses skills from ProSkillAPI, but ProSkillAPI is not enabled yet");
             } catch (IllegalArgumentException iae) {
                 this.error("Could not load item '" + cfg.getFile().getName() + "'");
                 this.error(" - " + iae.getMessage());
             } catch (Exception e) {
+                if (e.getClass().getSimpleName().equals("SkillAPINotEnabledException")) {
+                    this.error("Could not load item '" + cfg.getFile().getName() + "'");
+                    this.error(" - It looks like this item uses skills from ProSkillAPI, but ProSkillAPI is not enabled yet");
+                }
                 this.error("Could not load item '" + cfg.getFile().getName() + "'");
                 e.printStackTrace();
             }
