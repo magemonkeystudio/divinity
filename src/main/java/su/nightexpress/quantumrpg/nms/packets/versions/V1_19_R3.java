@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
-public class V1_19_R3 extends V1_19_R1 {
+public class V1_19_R3 extends V1_19_R2 {
     public V1_19_R3(@NotNull QuantumRPG plugin) {
         super(plugin);
     }
@@ -50,7 +50,7 @@ public class V1_19_R3 extends V1_19_R1 {
             );
 
             Iterable<?> worlds = (Iterable<?>) Reflex.invokeMethod(
-                    Reflex.getMethod(dedicatedServer.getClass(), "E"), // Get worlds (getAllLevels)
+                    Reflex.getMethod(dedicatedServer.getClass(), "F"), // Get worlds (getAllLevels)
                     dedicatedServer
             );
 
@@ -119,7 +119,7 @@ public class V1_19_R3 extends V1_19_R1 {
             );
 
             Iterable<?> worlds = (Iterable<?>) Reflex.invokeMethod(
-                    Reflex.getMethod(dedicatedServer.getClass(), "E"), //Get worlds (getAllLevels)
+                    Reflex.getMethod(dedicatedServer.getClass(), "F"), //Get worlds (getAllLevels)
                     dedicatedServer
             );
 
