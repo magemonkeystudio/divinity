@@ -1,5 +1,5 @@
-[![Build](https://github.com/promcteam/prorpgitems/actions/workflows/release.yml/badge.svg?branch=main)](https://s01.oss.sonatype.org/content/repositories/releases/com/promcteam/prorpgitems/1.0.4-R0.16-SNAPSHOT)
-[![Build](https://github.com/promcteam/prorpgitems/actions/workflows/devbuild.yml/badge.svg?branch=dev)](https://s01.oss.sonatype.org/content/repositories/snapshots/com/promcteam/prorpgitems/1.0.4-R0.16-SNAPSHOT)
+[![Build](https://github.com/promcteam/prorpgitems/actions/workflows/release.yml/badge.svg?branch=main)](https://s01.oss.sonatype.org/content/repositories/releases/com/promcteam/prorpgitems/1.0.4-R0.17-SNAPSHOT)
+[![Build](https://github.com/promcteam/prorpgitems/actions/workflows/devbuild.yml/badge.svg?branch=dev)](https://s01.oss.sonatype.org/content/repositories/snapshots/com/promcteam/prorpgitems/1.0.4-R0.17-SNAPSHOT)
 
 # ProRPGItems
 
@@ -15,6 +15,6 @@ or snapshots through Sonatype.
 <dependency>
     <groupId>com.promcteam</groupId>
     <artifactId>prorpgitems</artifactId>
-    <version>1.0.4-R0.16-SNAPSHOT</version>
+    <version>1.0.4-R0.17-SNAPSHOT</version>
 </dependency>
 ```
