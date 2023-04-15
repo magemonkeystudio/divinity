@@ -3,32 +3,34 @@ package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 import mc.promcteam.engine.api.armor.ArmorEquipEvent;
 import mc.promcteam.engine.manager.IListener;
 import mc.promcteam.engine.manager.api.Loadable;
-import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.ItemUT;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.*;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.EHook;
 import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
-import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadable {
 
@@ -63,43 +65,42 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         return true;
     }
 
-    private Map<String,Integer> getAbilities(ItemStack item) {
-        Map<String,Integer> map = new HashMap<>();
-        if (item == null) { return map; }
-        String[] stringAbilities = DataUT.getStringArrayData(item, AbilityGenerator.ABILITY_KEY);
-        if (stringAbilities == null) { return map; }
-        for (String stringAbility : stringAbilities) {
-            int i = stringAbility.lastIndexOf(':');
-            int level;
-            try {
-                level = Integer.parseInt(stringAbility.substring(i+1));
-            } catch (NumberFormatException e) {
-                continue;
-            }
-            map.put(stringAbility.substring(0, i), level);
-        }
-        return map;
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        skillAPIHK.updateSkills(event.getPlayer());
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        PlayerInventory inventory = player.getInventory();
-        for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.FEET, EquipmentSlot.LEGS, EquipmentSlot.CHEST, EquipmentSlot.HEAD}) {
-            for (Map.Entry<String,Integer> entry : getAbilities(inventory.getItem(slot)).entrySet()) {
-                skillAPIHK.addSkill(player, entry.getKey(), entry.getValue());
-            }
-        }
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onItemHeldEvent(PlayerItemHeldEvent event) {
+        skillAPIHK.updateSkills(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onArmorEquip(ArmorEquipEvent event) {
-        Player player = event.getPlayer();
-        for (String id : getAbilities(event.getOldArmorPiece()).keySet()) {
-            skillAPIHK.removeSkill(player, id);
+        skillAPIHK.updateSkills(event.getPlayer());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onInventoryClick(InventoryClickEvent event) {
+        InventoryView view = event.getView();
+        for (Inventory inventory : new Inventory[]{view.getTopInventory(), view.getBottomInventory()}) {
+            if (!(inventory instanceof PlayerInventory)) { continue; }
+            PlayerInventory playerInventory = (PlayerInventory) inventory;
+            HumanEntity humanEntity = playerInventory.getHolder();
+            if (!(humanEntity instanceof Player)) { return; }
+            skillAPIHK.updateSkills((Player) humanEntity);
         }
-        for (Map.Entry<String,Integer> entry : getAbilities(event.getNewArmorPiece()).entrySet()) {
-            skillAPIHK.addSkill(player, entry.getKey(), entry.getValue());
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onInventoryDrag(InventoryDragEvent event) {
+        InventoryView view = event.getView();
+        for (Inventory inventory : new Inventory[]{view.getTopInventory(), view.getBottomInventory()}) {
+            if (!(inventory instanceof PlayerInventory)) { continue; }
+            PlayerInventory playerInventory = (PlayerInventory) inventory;
+            HumanEntity humanEntity = playerInventory.getHolder();
+            if (!(humanEntity instanceof Player)) { return; }
+            skillAPIHK.updateSkills((Player) humanEntity);
         }
     }
 
@@ -115,11 +116,6 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         }
 
         // TODO Usage Event
-
-        Map<String,Integer> abilities = getAbilities(item);
-        for (Map.Entry<String,Integer> entry : abilities.entrySet()) {
-            skillAPIHK.castSkill(player, entry.getKey(), entry.getValue());
-        }
 
         if (uses > 0) {
             if (item.getAmount() > 1) {

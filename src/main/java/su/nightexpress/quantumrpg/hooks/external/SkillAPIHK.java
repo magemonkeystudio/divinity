@@ -6,11 +6,11 @@ import com.sucy.skill.api.event.PlayerCastSkillEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
-import com.sucy.skill.api.player.PlayerSkill;
 import com.sucy.skill.api.skills.Skill;
 import com.sucy.skill.manager.AttributeManager;
 import mc.promcteam.engine.hooks.HookState;
 import mc.promcteam.engine.hooks.NHook;
+import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -19,6 +19,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
@@ -152,14 +154,6 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
         playerData.removeSkillExternally(skill, AbilityGenerator.ABILITY_KEY);
     }
 
-    public void castSkill(Player player, String skillId, int level) {
-        addSkill(player, skillId, level);
-        PlayerData playerData = SkillAPI.getPlayerData(player);
-        PlayerSkill playerSkill = playerData.getSkill(skillId);
-        if (playerSkill == null) { return; }
-        playerData.cast(playerSkill);
-    }
-
     public Set<String> getSkills() { return SkillAPI.getSkills().keySet(); }
 
     public ItemStack getSkillIndicator(String skillId) {
@@ -189,5 +183,60 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
 
     public ItemStack getAttributeIndicator(String attributeId) {
         return SkillAPI.getAttributeManager().getAttribute(attributeId).getToolIcon();
+    }
+
+    private Map<String,Integer> getAbilities(ItemStack item) {
+        Map<String,Integer> map = new HashMap<>();
+        if (item == null) { return map; }
+        String[] stringAbilities = DataUT.getStringArrayData(item, AbilityGenerator.ABILITY_KEY);
+        if (stringAbilities == null) { return map; }
+        for (String stringAbility : stringAbilities) {
+            int i = stringAbility.lastIndexOf(':');
+            int level;
+            try {
+                level = Integer.parseInt(stringAbility.substring(i+1));
+            } catch (NumberFormatException e) {
+                continue;
+            }
+            map.put(stringAbility.substring(0, i), level);
+        }
+        return map;
+    }
+
+    public void updateSkills(Player player) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                Map<String,Integer> skills    = new HashMap<>();
+                PlayerInventory     inventory = player.getInventory();
+                for (int i : new int[]{inventory.getHeldItemSlot(), 36, 37, 38, 39, 40}) {
+                    for (Map.Entry<String,Integer> entry : getAbilities(inventory.getItem(i)).entrySet()) {
+                        String id = entry.getKey();
+                        int level = entry.getValue();
+                        if (!skills.containsKey(id) || level > skills.get(id)) {
+                            skills.put(id, level);
+                        }
+                    }
+                }
+                Set<PlayerData.ExternallyAddedSkill> prevSkills = new HashSet<>(SkillAPI.getPlayerData(player).getExternallyAddedSkills());
+                for (PlayerData.ExternallyAddedSkill prevSkill : prevSkills) {
+                    if (!prevSkill.getKey().equals(AbilityGenerator.ABILITY_KEY)) { continue; }
+                    String id = prevSkill.getId();
+                    Integer level = skills.get(id);
+                    if (level == null) { // Removed skill
+                        removeSkill(player, id);
+                    } else if (level != prevSkill.getLevel()) { // Update changed level
+                        addSkill(player, id, level);
+                    }
+                }
+                for (Map.Entry<String,Integer> entry : skills.entrySet()) {
+                    String id = entry.getKey();
+                    if (prevSkills.stream().noneMatch(extSkill -> extSkill.getKey().equals(AbilityGenerator.ABILITY_KEY) && extSkill.getId().equals(id))) {
+                        addSkill(player, id, entry.getValue());
+                    }
+                }
+            }
+        }.runTask(plugin);
     }
 }
