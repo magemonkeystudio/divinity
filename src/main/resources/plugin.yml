@@ -5,6 +5,7 @@ authors: [ Travja, goflish ]
 desciption: The most advanced, customizable and configurable RPG-Core plugin!
 depend: [ ProMCCore ]
 loadafter: [ Magic ]
+provides: [ QuantumRPG ]
 softdepend:
   - Citizens
   - HolographicDisplays
