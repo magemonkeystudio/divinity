@@ -17,7 +17,7 @@ public class IPESkillAPI extends IPartyLevelManager {
 
     @EventHandler
     public void onExpSkillapi(PlayerExperienceGainEvent e) {
-        if (e.getSource() != ExpSource.MOB) return;
+        if (e.getSource() == ExpSource.PLUGIN) return;
 
         Player player = e.getPlayerData().getPlayer();
         int    exp    = this.getBalancedExp(player, (int) e.getExp());
@@ -28,6 +28,6 @@ public class IPESkillAPI extends IPartyLevelManager {
 
     @Override
     public void giveExp(@NotNull Player player, int amount) {
-        SkillAPI.getPlayerAccountData(player).getActiveData().giveExp(amount, ExpSource.MOB);
+        SkillAPI.getPlayerAccountData(player).getActiveData().giveExp(amount, ExpSource.PLUGIN);
     }
 }
