@@ -3,6 +3,7 @@ package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.sockets;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.ContentType;
 import mc.promcteam.engine.manager.api.gui.GuiClick;
+import mc.promcteam.engine.utils.StringUT;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -110,8 +111,8 @@ public class SocketGUI extends AbstractEditorGUI {
                     case LORE: {
                         switch (clickEvent.getClick()) {
                             case DROP: case CONTROL_DROP: {
-                                cfg.set(path, replaceLore(List.of("&8&m               &f  「 %current%S 」  &8&m               ",
-                                                                  "%SOCKET_%current%_DEFAULT%"), List.of(this.name)));
+                                cfg.set(path, StringUT.replace(color(List.of("&8&m               &f  「 %current%S 」  &8&m               ",
+                                        "%SOCKET_%current%_DEFAULT%")), CURRENT_PLACEHOLDER, List.of(this.name)));
                                 saveAndReopen();
                                 break;
                             }
@@ -145,12 +146,12 @@ public class SocketGUI extends AbstractEditorGUI {
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 1, guiClick));
         this.addButton(this.createButton("lore", MainStatsGUI.ItemType.LORE, Material.WRITABLE_BOOK,
-                                         "&eLore format", replaceLore(List.of(
+                                         "&eLore format", StringUT.replace(color(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",
                                                  "&f%current%",
                                                  "&a----------",
-                                                 "&6Left-Click: &eModify"), cfg.getStringList(path+MainStatsGUI.ItemType.LORE.getPath())), 2, guiClick));
+                                                 "&6Left-Click: &eModify")), CURRENT_PLACEHOLDER, cfg.getStringList(path+MainStatsGUI.ItemType.LORE.getPath())), 2, guiClick));
         List<String> lore = new ArrayList<>();
         ConfigurationSection listSection = cfg.getConfigurationSection(EditorGUI.ItemType.SOCKETS.getPath()+'.'+this.name+".list");
         if (listSection != null) {
@@ -159,11 +160,11 @@ public class SocketGUI extends AbstractEditorGUI {
             }
         }
         this.addButton(this.createButton("list", MainStatsGUI.ItemType.LIST, Material.IRON_SWORD,
-                                         "&eList of chances per tier", replaceLore(List.of(
+                                         "&eList of chances per tier", StringUT.replace(color(List.of(
                                                  "&bCurrent:",
                                                  "%current%",
                                                  "&6Left-Click: &eModify",
-                                                 "&6Drop: &eSet to default value"), lore) , 3, guiClick));
+                                                 "&6Drop: &eSet to default value")), CURRENT_PLACEHOLDER, lore) , 3, guiClick));
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 8, guiClick));
     }
 

@@ -3,6 +3,7 @@ package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.stats;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.ContentType;
 import mc.promcteam.engine.manager.api.gui.GuiClick;
+import mc.promcteam.engine.utils.StringUT;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -142,12 +143,12 @@ public class MainStatsGUI extends AbstractEditorGUI {
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 1, guiClick));
         this.addButton(this.createButton("lore", ItemType.LORE, Material.WRITABLE_BOOK,
-                                         "&eLore format", replaceLore(List.of(
+                                         "&eLore format", StringUT.replace(color(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",
                                                  "&f%current%",
                                                  "&a----------",
-                                                 "&6Left-Click: &eModify"), cfg.getStringList(ItemType.LORE.getPath(this.itemType))), 2, guiClick));
+                                                 "&6Left-Click: &eModify")), CURRENT_PLACEHOLDER, cfg.getStringList(ItemType.LORE.getPath(this.itemType))), 2, guiClick));
         Material material;
         switch (this.itemType) {
             case DAMAGE_TYPES: {

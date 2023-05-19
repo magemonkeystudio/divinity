@@ -5,6 +5,7 @@ import mc.promcteam.engine.manager.api.gui.ContentType;
 import mc.promcteam.engine.manager.api.gui.GuiClick;
 import mc.promcteam.engine.manager.api.gui.GuiItem;
 import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.StringUT;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -312,20 +313,20 @@ public class EditorGUI extends AbstractEditorGUI {
             }
         };
         this.addButton(this.createButton("name", ItemType.NAME, Material.NAME_TAG,
-                                         "&eName format", replaceLore(List.of(
+                                         "&eName format", StringUT.replace(color(List.of(
                                                  "&bCurrent: &a%current%",
                                                  "&6Left-Click: &eSet",
-                                                 "&6Drop: &eSet to default value"), itemGenerator.getName().substring("§r§f".length()), 30), 0, guiClick));
+                                                 "&6Drop: &eSet to default value")), CURRENT_PLACEHOLDER, StringUT.wrap(itemGenerator.getName().substring("§r§f".length()), 30)), 0, guiClick));
         this.addButton(this.createButton("materials", ItemType.MATERIALS, Material.IRON_INGOT,
                                          "&eMaterials", List.of(
                                                  "&6Left-Click: &eModify"), 1, guiClick));
         this.addButton(this.createButton("lore", ItemType.LORE, Material.WRITABLE_BOOK,
-                                         "&eLore format", replaceLore(List.of(
+                                         "&eLore format", StringUT.replace(color(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",
                                                  "&f%current%",
                                                  "&a----------",
-                                                 "&6Left-Click: &eModify"), itemGenerator.getConfig().getStringList(ItemType.LORE.getPath())), 2, guiClick));
+                                                 "&6Left-Click: &eModify")), CURRENT_PLACEHOLDER, itemGenerator.getConfig().getStringList(ItemType.LORE.getPath())), 2, guiClick));
         this.addButton(this.createButton("model-data", ItemType.MODEL_DATA, Material.END_CRYSTAL,
                                          "&eCustom Model Data", List.of(
                                                  "&bCurrent: &a"+this.itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), -1),
@@ -373,11 +374,11 @@ public class EditorGUI extends AbstractEditorGUI {
         List<String> lore = new ArrayList<>();
         for (ItemFlag flag : itemGenerator.getFlags()) { lore.add("- "+flag.name().toLowerCase()); }
         this.addButton(this.createButton("item-flags", ItemType.ITEM_FLAGS, Material.OAK_SIGN,
-                                         "&eItemFlags", replaceLore(List.of(
+                                         "&eItemFlags", StringUT.replace(color(List.of(
                                                  "&bCurrent:",
                                                  "&a%current%",
                                                  "&6Left-Click: &eModify",
-                                                 "&6Drop: &eSet to default value"), lore), 12, guiClick));
+                                                 "&6Drop: &eSet to default value")), CURRENT_PLACEHOLDER, lore), 12, guiClick));
         boolean enchanted = this.itemGenerator.getConfig().getBoolean(ItemType.ENCHANTED.getPath(), false);
         this.addButton(this.createButton("enchanted", ItemType.ENCHANTED, enchanted ? Material.ENCHANTED_BOOK : Material.BOOK,
                                          "&eEnchanted", List.of(
@@ -386,10 +387,10 @@ public class EditorGUI extends AbstractEditorGUI {
                                                  "&6Drop: &eSet to default value"), 13, guiClick));
         String hash = this.itemGenerator.getConfig().getString(ItemType.SKULL_HASH.getPath());
         guiItem = this.createButton("skull-hash", ItemType.SKULL_HASH, Material.PLAYER_HEAD,
-                                    "&eSkull Hash", replaceLore(List.of(
+                                    "&eSkull Hash", StringUT.replace(color(List.of(
                                             "&bCurrent: &a%current%",
                                             "&6Left-Click: &eSet",
-                                            "&6Drop: &eSet to default value"), hash == null ? "\"\"" : hash, 30), 14, guiClick);
+                                            "&6Drop: &eSet to default value")), CURRENT_PLACEHOLDER, StringUT.wrap(hash == null ? "\"\"" : hash, 30)), 14, guiClick);
 
         if (hash != null) {
             ItemStack itemStack = guiItem.getItemRaw();
@@ -412,9 +413,10 @@ public class EditorGUI extends AbstractEditorGUI {
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 21, guiClick));
         this.addButton(this.createButton("tier", ItemType.TIER, Material.DIAMOND,
-                                         "&eTier", replaceLore(List.of(
+                                         "&eTier", StringUT.replace(color(List.of(
                                                  "&bCurrent: &a%current%",
-                                                 "&6Left-Click: &eSet"), this.itemGenerator.getTier().getName(), 12), 22, guiClick));
+                                                 "&6Left-Click: &eSet")), CURRENT_PLACEHOLDER, StringUT.wrap(this.itemGenerator.getTier().getName(), 12)), 22,
+                guiClick));
         lore = new ArrayList<>();
         ConfigurationSection ammoSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.AMMO_TYPES.getPath());
         if (ammoSection != null) {
@@ -423,10 +425,10 @@ public class EditorGUI extends AbstractEditorGUI {
             }
         }
         this.addButton(this.createButton("ammo-types", ItemType.AMMO_TYPES, Material.ARROW,
-                                         "&eAmmo Types", replaceLore(List.of(
+                                         "&eAmmo Types", StringUT.replace(color(List.of(
                                                  "&bCurrent:",
                                                  "%current%",
-                                                 "&6Left-Click: &eModify"), lore), 23, guiClick));
+                                                 "&6Left-Click: &eModify")), CURRENT_PLACEHOLDER, lore), 23, guiClick));
         List<String> handTypes = new ArrayList<>();
         ConfigurationSection handSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.HAND_TYPES.getPath());
         if (handSection != null) {
@@ -435,10 +437,10 @@ public class EditorGUI extends AbstractEditorGUI {
             }
         }
         this.addButton(this.createButton("hand-types", ItemType.HAND_TYPES, Material.STICK,
-                                         "&eHand Types", replaceLore(List.of(
+                                         "&eHand Types", StringUT.replace(color(List.of(
                                                  "&bCurrent:",
                                                  "%current%",
-                                                 "&6Left-Click: &eModify"), handTypes), 24, guiClick));
+                                                 "&6Left-Click: &eModify")), CURRENT_PLACEHOLDER, handTypes), 24, guiClick));
         this.addButton(this.createButton("damage-types", ItemType.DAMAGE_TYPES, Material.IRON_SWORD,
                                          "&eDamage Types", List.of(
                                                  "&6Left-Click: &eModify"), 27, guiClick));
@@ -468,10 +470,10 @@ public class EditorGUI extends AbstractEditorGUI {
             lore.add("&a "+entry.getKey()+": &f"+entry.getValue());
         }
         this.addButton(this.createButton("uses-by-level", ItemType.USES_BY_LEVEL, Material.CAULDRON,
-                                         "&eUses by level", replaceLore(List.of(
+                                         "&eUses by level", StringUT.replace(List.of(
                                                  "&bCurrent:",
                                                  "&a%current%",
-                                                 "&6Left-Click: &eModify"), lore), 35, guiClick));
+                                                 "&6Left-Click: &eModify"), CURRENT_PLACEHOLDER, lore), 35, guiClick));
         this.addButton(this.createButton("sample", ItemType.SAMPLE, this.itemGenerator.create(-1, -1, null), 40, guiClick));
         this.addButton(this.createButton("exit", ContentType.EXIT, Material.BARRIER, "&c&lExit", List.of(), 44, guiClick));
     }

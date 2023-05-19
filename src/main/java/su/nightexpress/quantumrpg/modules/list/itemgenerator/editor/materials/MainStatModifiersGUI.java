@@ -154,11 +154,11 @@ public class MainStatModifiersGUI extends AbstractEditorGUI {
             this.addButton(group == null ?
                                    this.createButton("new", ItemType.NEW, Material.REDSTONE, "&eAdd new material or group", List.of(), invIndex, guiClick) :
                                    this.createButton(group, MainMaterialsGUI.ItemType.STAT_MODIFIERS, MainMaterialsGUI.getMaterialGroup(group),
-                                                     "&e"+group, replaceLore(List.of(
+                                                     "&e"+group, StringUT.replace(color(List.of(
                                                              "&bCurrent:",
                                                              "&a%current%",
                                                              "&6Left-Click: &eModify",
-                                                             "&6Drop: &eRemove"), map.get(group)), invIndex, guiClick));
+                                                             "&6Drop: &eRemove")), CURRENT_PLACEHOLDER, map.get(group)), invIndex, guiClick));
         }
         list.remove(list.size()-1);
         this.addButton(this.createButton("prev-page", ContentType.BACK, Material.ENDER_PEARL, "&dPrevious Page", List.of(), 0, guiClick));

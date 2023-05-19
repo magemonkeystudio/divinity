@@ -3,6 +3,7 @@ package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.skills;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.ContentType;
 import mc.promcteam.engine.manager.api.gui.GuiClick;
+import mc.promcteam.engine.utils.StringUT;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -127,13 +128,13 @@ public class SkillGUI extends AbstractEditorGUI {
                                                  "&6Right-Click: &eIncrease",
                                                  "&6Drop: &eSet to default value"), 2, guiClick));
         this.addButton(this.createButton(ItemType.LORE.name(), ItemType.LORE, Material.WRITABLE_BOOK,
-                                         "&eLore format", replaceLore(List.of(
+                                         "&eLore format", StringUT.replace(color(List.of(
                                                  "&bCurrent:",
                                                  "&a----------",
                                                  "&f%current%",
                                                  "&a----------",
                                                  "&6Left-Click: &eModify",
-                                                 "&6Drop: &eSet to default value"), cfg.getStringList(ItemType.LORE.getPath(this.path))), 3, guiClick));
+                                                 "&6Drop: &eSet to default value")), CURRENT_PLACEHOLDER, cfg.getStringList(ItemType.LORE.getPath(this.path))), 3, guiClick));
         this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 8, guiClick));
     }
 

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.TreeMap;
 
 public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
-    static final String CURRENT_PLACEHOLDER = "%current%";
+    public static final String CURRENT_PLACEHOLDER = "%current%";
     static AbstractEditorGUI instance;
 
     protected final ItemGeneratorManager itemGeneratorManager;
@@ -119,50 +119,6 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
             coloredList.add(StringUT.color(string));
         }
         return coloredList;
-    }
-
-    protected List<String> replaceLore(List<String> lore, String value, int maxLength) {
-        lore = color(lore);
-
-        List<String> splitValue = new ArrayList<>();
-        while (value.length() > maxLength) {
-            int i = value.lastIndexOf(' ', maxLength);
-            if (i < 0) { i = maxLength; }
-            splitValue.add(value.substring(0, i));
-            value = value.substring(i);
-        }
-        splitValue.add(value);
-
-        for (int i = 0, loreSize = lore.size(); i < loreSize; i++) {
-            String line = lore.get(i);
-            int pos = line.indexOf(CURRENT_PLACEHOLDER);
-            if (pos < 0) { continue; }
-            String format = StringUT.getColor(line.substring(0, pos));
-            lore.set(i, line.substring(0, pos)+splitValue.get(0));
-            for (int j = 1, valueSize = splitValue.size(); j < valueSize; j++) {
-                i++;
-                lore.add(i, format+splitValue.get(j));
-            }
-            lore.set(i, lore.get(i)+line.substring(pos+CURRENT_PLACEHOLDER.length()));
-        }
-        return lore;
-    }
-
-    protected List<String> replaceLore(List<String> lore, List<String> value) {
-        if (value.isEmpty()) { value = List.of("[]"); }
-        lore = color(lore);
-        for (int i = 0, loreSize = lore.size(); i < loreSize; i++) {
-            String line = lore.get(i);
-            int pos = line.indexOf(CURRENT_PLACEHOLDER);
-            if (pos < 0) { continue; }
-            String format = StringUT.getColor(line.substring(0, pos));
-            lore.set(i, line.replace(CURRENT_PLACEHOLDER, value.get(0)));
-            for (int j = 1, size = value.size(); j < size; j++) {
-                i++;
-                lore.add(i, format+value.get(j));
-            }
-        }
-        return lore;
     }
 
     protected void saveAndReopen() { saveAndReopen(1); }

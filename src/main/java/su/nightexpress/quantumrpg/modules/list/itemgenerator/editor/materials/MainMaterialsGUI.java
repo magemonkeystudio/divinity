@@ -2,6 +2,7 @@ package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials;
 
 import mc.promcteam.engine.manager.api.gui.ContentType;
 import mc.promcteam.engine.manager.api.gui.GuiClick;
+import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -107,10 +108,10 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
                                                  "&bCurrent: &a"+reversed,
                                                  "&6Left-Click: &eToggle"), 0, guiClick));
         this.addButton(this.createButton("materials", ItemType.LIST, Material.BOOK,
-                                         "&e"+(reversed ? "Whitelist" : "Blacklist"), replaceLore(List.of(
+                                         "&e"+(reversed ? "Whitelist" : "Blacklist"), StringUT.replace(color(List.of(
                                                  "&bCurrent:",
                                                  "&a%current%",
-                                                 "&6Left-Click: &eModify"), this.itemGenerator.getConfig().getStringList(ItemType.LIST.getPath())), 2, guiClick));
+                                                 "&6Left-Click: &eModify")), CURRENT_PLACEHOLDER, this.itemGenerator.getConfig().getStringList(ItemType.LIST.getPath())), 2, guiClick));
         this.addButton(this.createButton("model-data", ItemType.MODEL_DATA, Material.END_CRYSTAL,
                                          "&eModel Data", List.of(
                                                  "&6Left-Click: &eModify"), 4, guiClick));

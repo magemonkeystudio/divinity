@@ -4,6 +4,7 @@ import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.ContentType;
 import mc.promcteam.engine.manager.api.gui.GuiClick;
 import mc.promcteam.engine.manager.api.gui.GuiItem;
+import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -111,7 +112,7 @@ public class SkillListGUI extends AbstractEditorGUI {
             } else {
                 String path = EditorGUI.ItemType.SKILLS.getPath()+".list."+key;
                 GuiItem guiItem = this.createButton(key, EditorGUI.ItemType.SKILLS, Material.JACK_O_LANTERN,
-                                                    "&e"+key, replaceLore(List.of(
+                                                    "&e"+key, StringUT.replace(color(List.of(
                                                             "&bChance: &a"+cfg.getDouble(SkillGUI.ItemType.CHANCE.getPath(path)),
                                                             "&bMinimum level: &a"+cfg.getInt(SkillGUI.ItemType.MIN.getPath(path)),
                                                             "&bMaximum level: &a"+cfg.getInt(SkillGUI.ItemType.MAX.getPath(path)),
@@ -120,7 +121,7 @@ public class SkillListGUI extends AbstractEditorGUI {
                                                             "&f%current%",
                                                             "&a----------",
                                                             "&6Left-Click: &eModify",
-                                                            "&6Drop: &eRemove"), cfg.getStringList(SkillGUI.ItemType.LORE.getPath(path))), invIndex, guiClick);
+                                                            "&6Drop: &eRemove")), CURRENT_PLACEHOLDER, cfg.getStringList(SkillGUI.ItemType.LORE.getPath(path))), invIndex, guiClick);
                 if (skillAPIHK != null) {
                     ItemStack indicator = skillAPIHK.getSkillIndicator(key);
                     if (indicator != null) {

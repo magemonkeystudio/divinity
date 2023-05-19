@@ -4,6 +4,7 @@ import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.gui.ContentType;
 import mc.promcteam.engine.manager.api.gui.GuiClick;
 import mc.promcteam.engine.manager.api.gui.GuiItem;
+import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -102,20 +103,20 @@ public class MainModelDataGUI extends AbstractEditorGUI {
                 List<String> stringList = new ArrayList<>();
                 for (int cmd : map.get(path)) { stringList.add(String.valueOf(cmd)); }
                 this.addButton(this.createButton(path, MainMaterialsGUI.ItemType.MODEL_DATA, Material.STONE,
-                                                 "&e"+path, replaceLore(List.of(
+                                                 "&e"+path, StringUT.replace(color(List.of(
                                                          "&bCurrent:",
                                                          "&a%current%",
-                                                         "&6Left-Click: &eModify"), stringList), invIndex, guiClick));
+                                                         "&6Left-Click: &eModify")), CURRENT_PLACEHOLDER, stringList), invIndex, guiClick));
             } else {
                 String id = path.replace("special.", "");
                 List<String> stringList = new ArrayList<>();
                 for (int cmd : map.get(path)) { stringList.add(String.valueOf(cmd)); }
                 this.addButton(this.createButton(path, MainMaterialsGUI.ItemType.MODEL_DATA, MainMaterialsGUI.getMaterialGroup(id),
-                                                 "&e"+id, replaceLore(List.of(
+                                                 "&e"+id, StringUT.replace(color(List.of(
                                                          "&bCurrent:",
                                                          "&a%current%",
                                                          "&6Left-Click: &eModify",
-                                                         "&6Drop: &eRemove"), stringList), invIndex, guiClick));
+                                                         "&6Drop: &eRemove")), CURRENT_PLACEHOLDER, stringList), invIndex, guiClick));
             }
         }
         this.addButton(this.createButton("prev-page", ContentType.BACK, Material.ENDER_PEARL, "&dPrevious Page", List.of(), 0, guiClick));
