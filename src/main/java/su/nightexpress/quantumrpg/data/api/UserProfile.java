@@ -15,9 +15,10 @@ import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
 
 import java.util.HashSet;
-import java.util.Optional;
+import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 public class UserProfile {
 
@@ -134,17 +135,22 @@ public class UserProfile {
 
     @NotNull
     private BiFunction<Boolean, Double, Double> getBuff(@NotNull ItemLoreStat<?> stat, @NotNull Set<SavedBuff> list) {
-        Optional<SavedBuff> opt = list.stream()
+        List<SavedBuff> buffs = list.stream()
                 .filter(buff -> buff.getStatId().equalsIgnoreCase(stat.getId()))
-                .findFirst();
+                .collect(Collectors.toList());
 
-        if (opt.isPresent()) {
-            SavedBuff buff = opt.get();
-            return (isBonus, result) -> {
-                return isBonus == buff.isModifier() ? result + buff.getAmount() : result;
-            };
+        if (buffs.isEmpty()) {
+            return (isBonus, result) -> result;
         }
-        return (isBonus, result) -> result;
+
+        return (isBonus, result) -> {
+            double modifier = buffs.stream()
+                    .filter(buff -> isBonus == buff.isModifier())
+                    .mapToDouble(SavedBuff::getAmount)
+                    .sum();
+
+            return result + modifier;
+        };
     }
 
     @NotNull

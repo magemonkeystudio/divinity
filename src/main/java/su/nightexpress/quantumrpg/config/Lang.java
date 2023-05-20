@@ -58,7 +58,7 @@ public class Lang extends CoreLang {
     public ILangMsg Command_Modify_Desc                               = new ILangMsg(this, "Modify an item.");
     public ILangMsg Command_Modify_Done                               = new ILangMsg(this, "Done!");
     public ILangMsg Command_Buff_Desc                                 = new ILangMsg(this, "Temporary increases specified attribute.");
-    public ILangMsg Command_Buff_Usage                                = new ILangMsg(this, "<player> <type> <id> <amount> <duration>");
+    public ILangMsg Command_Buff_Usage                                = new ILangMsg(this, "<player> <type> <id> <amount> <duration> [-r]");
     public ILangMsg Command_Buff_Done                                 = new ILangMsg(this, "Added &a%amount% %stat%&7 buff to &a%player%&7 for &a%time%&7!");
     public ILangMsg Command_Buff_Get                                  = new ILangMsg(this, "You just got &a%amount% %stat%&7 buff for &a%time%&7!");
     public ILangMsg Module_Cmd_List_Usage                             = new ILangMsg(this, "[page]");

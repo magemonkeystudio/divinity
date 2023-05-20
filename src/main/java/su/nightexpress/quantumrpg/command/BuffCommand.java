@@ -12,8 +12,6 @@ import su.nightexpress.quantumrpg.data.api.RPGUser;
 import su.nightexpress.quantumrpg.manager.effects.buffs.SavedBuff;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 
 import java.util.ArrayList;
@@ -47,49 +45,50 @@ public class BuffCommand extends ISubCommand<QuantumRPG> {
     @Override
     @NotNull
     public List<String> getTab(@NotNull Player player, int i, @NotNull String[] args) {
+        List<String> list = new ArrayList<>();
+        if (!Arrays.asList(args).contains("-r"))
+            list.add("-r");
+        else {
+            List<String> temp = new ArrayList<>(Arrays.asList(args));
+            temp.remove("-r");
+            args = temp.toArray(new String[0]);
+            i--;
+        }
+
         if (i == 1) {
-            return PlayerUT.getPlayerNames();
-        }
-        if (i == 2) {
-            return Arrays.asList("damage", "defense", "stat");
-        }
-        if (i == 3) {
+            list.addAll(PlayerUT.getPlayerNames());
+        } else if (i == 2) {
+            list.addAll(Arrays.asList("damage", "defense", "stat"));
+        } else if (i == 3) {
             if (args[2].equalsIgnoreCase("damage")) {
-                List<String> list = new ArrayList<>();
-                for (DamageAttribute d : ItemStats.getDamages()) {
-                    list.add(d.getId());
-                }
-                return list;
+                ItemStats.getDamages().forEach(d -> list.add(d.getId()));
+            } else if (args[2].equalsIgnoreCase("defense")) {
+                ItemStats.getDefenses().forEach(d -> list.add(d.getId()));
+            } else if (args[2].equalsIgnoreCase("stat")) {
+                ItemStats.getStats().forEach(d -> list.add(d.getId()));
             }
-            if (args[2].equalsIgnoreCase("defense")) {
-                List<String> list = new ArrayList<>();
-                for (DefenseAttribute d : ItemStats.getDefenses()) {
-                    list.add(d.getId());
-                }
-                return list;
-            }
-            if (args[2].equalsIgnoreCase("stat")) {
-                List<String> list = new ArrayList<>();
-                for (AbstractStat<?> d : ItemStats.getStats()) {
-                    list.add(d.getId());
-                }
-                return list;
-            }
+        } else if (i == 4) {
+            list.addAll(Arrays.asList("<amount>", "10", "25%"));
+        } else if (i == 5) {
+            list.addAll(Arrays.asList("<duration>", "60", "300"));
         }
-        if (i == 4) {
-            return Arrays.asList("<amount>", "10", "25%");
-        }
-        if (i == 5) {
-            return Arrays.asList("<duration>", "60", "300");
-        }
-        return super.getTab(player, i, args);
+
+        return list;
     }
 
     @Override
     public void perform(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        if (args.length != 6) {
+        if (args.length != 6 && args.length != 7) {
             this.printUsage(sender);
             return;
+        }
+
+        boolean replace = false;
+        if (Arrays.asList(args).contains("-r")) {
+            List<String> list = new ArrayList<>(Arrays.asList(args));
+            list.remove("-r");
+            args = list.toArray(new String[0]);
+            replace = true;
         }
 
         Player player = plugin.getServer().getPlayer(args[1]);
@@ -134,6 +133,7 @@ public class BuffCommand extends ISubCommand<QuantumRPG> {
             return;
         }
 
+        if (replace) userBuffs.removeIf(buff -> buff.getStatId().equals(statId));
         SavedBuff buff = new SavedBuff(stat, amount, isModifier, seconds);
         userBuffs.add(buff);
 
