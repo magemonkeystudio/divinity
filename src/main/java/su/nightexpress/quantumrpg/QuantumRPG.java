@@ -92,7 +92,7 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.pms.setup();
 
         String  coreVersion       = NexEngine.getEngine().getDescription().getVersion();
-        boolean minCoreVersionMet = coreVersion.compareTo(DependencyRequirement.MIN_CORE_VERSION) >= 0;
+        boolean minCoreVersionMet = DependencyRequirement.meetsVersion(DependencyRequirement.MIN_CORE_VERSION, coreVersion);
 
         if (this.pms.get() == null || !minCoreVersionMet) {
             if (!minCoreVersionMet) {
