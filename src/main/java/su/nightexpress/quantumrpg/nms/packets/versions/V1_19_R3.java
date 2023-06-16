@@ -137,13 +137,8 @@ public class V1_19_R3 extends V1_19_R2 {
             Entity bukkitEntity;
             Method getUniqueId;
 
-            try {
-                getUniqueId = Reflex.getMethod(nmsEntityClass, "cs");
-                bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
-            } catch (ClassCastException ex) {
-                getUniqueId = Reflex.getMethod(nmsEntityClass, "co");
-                bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
-            }
+            getUniqueId = Reflex.getMethod(nmsEntityClass, "cs");
+            bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 
             if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;
 

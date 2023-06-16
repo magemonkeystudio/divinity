@@ -118,7 +118,8 @@
         <dependency>
             <groupId>com.github.Pwing-Minecraft</groupId>
             <artifactId>PwingRaces-API</artifactId>
-            <version>-SNAPSHOT</version>
+            <!--version>-SNAPSHOT FIXME</version-->
+            <version>-51bee492b4-1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
