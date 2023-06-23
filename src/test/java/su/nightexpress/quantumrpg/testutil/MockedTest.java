@@ -55,7 +55,8 @@ public abstract class MockedTest {
         String itemsVersion = System.getProperty("ITEMS_VERSION");
 
         try {
-            File itemsJar = new File(server.getPluginsFolder().getAbsolutePath(), "ProRPGItems-" + itemsVersion + ".jar");
+            File itemsJar =
+                    new File(server.getPluginsFolder().getAbsolutePath(), "ProRPGItems-" + itemsVersion + ".jar");
             if (!itemsJar.exists()) itemsJar.createNewFile();
             createZipArchive(itemsJar, "target/classes");
 
@@ -86,7 +87,9 @@ public abstract class MockedTest {
         engine = mock(NexEngine.class);
         nexEngine = mockStatic(NexEngine.class);
         nexEngine.when(() -> NexEngine.get()).thenReturn(engine);
-        when(engine.getDescription()).thenReturn(new PluginDescriptionFile("ProMCCore", coreVersion, NexEngine.class.getName()));
+        when(engine.getDescription()).thenReturn(new PluginDescriptionFile("ProMCCore",
+                coreVersion,
+                NexEngine.class.getName()));
         when(engine.getHooksManager()).thenReturn(hookManager);
         when(engine.getActionsManager()).thenReturn(actionsManager);
         when(engine.getNMS()).thenReturn(nms);
@@ -97,6 +100,8 @@ public abstract class MockedTest {
         ItemUT.setEngine(engine);
 
         plugin = MockBukkit.load(QuantumRPG.class);
+        server.getScheduler().performOneTick();
+//        server.getScheduler().waitAsyncTasksFinished();
     }
 
     @AfterAll

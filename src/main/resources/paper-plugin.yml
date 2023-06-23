@@ -1,29 +1,75 @@
 main: su.nightexpress.quantumrpg.QuantumRPG
 version: ${project.version}
 name: ${project.name}
-authors: [ Travja, goflish ]
+provides:
+  - QuantumRPG
+api-version: '1.19'
+authors:
+  - Travja
+  - goflish
 description: The most advanced, customizable and configurable RPG-Core plugin!
-depend: [ ProMCCore ]
-loadafter: [ Magic, ProSkillAPI ]
-provides: [ QuantumRPG ]
-softdepend:
-  - Citizens
-  - HolographicDisplays
-  - LorinthsRpgMobs
-  - MangoQuest
-  - mcMMO
-  - MythicMobs
-  - PlaceholderAPI
-  - PwingRaces
-  - QuestCreator
-  - RacesOfThana
-  - SkillAPI
-  - ProSkillAPI
-  - SkillsPro
-  - Vault
-  - WorldGuard
-  - Mimic
-api-version: 1.14
+has-open-classloader: true
+
+dependencies:
+  - name: ProMCCore
+    required: true
+    bootstrap: true
+  - name: ProSkillAPI
+    required: false
+    bootstrap: true
+  - name: SkillAPI
+    required: false
+    bootstrap: true
+  - name: SkillPro
+    required: false
+    bootstrap: true
+  - name: Citizens
+    required: false
+    bootstrap: true
+  - name: HolographicDisplays
+    required: false
+    bootstrap: true
+  - name: LorinthsRpgMobs
+    required: false
+    bootstrap: true
+  - name: MangoQuest
+    required: false
+    bootstrap: true
+  - name: mcMMO
+    required: false
+    bootstrap: true
+  - name: MythicMobs
+    required: false
+    bootstrap: true
+  - name: PlaceholderAPI
+    required: false
+    bootstrap: true
+  - name: PwingRaces
+    required: false
+    bootstrap: true
+  - name: QuestCreator
+    required: false
+    bootstrap: true
+  - name: RacesOfThana
+    required: false
+    bootstrap: true
+  - name : Vault
+    required: false
+    bootstrap: true
+  - name: WorldGuard
+    required: false
+    bootstrap: true
+  - name: Mimic
+    required: false
+    bootstrap: true
+load-after:
+  - name: ProMCCore
+    boostrap: false
+  - name: ProSkillAPI
+    boostrap: false
+  - name: Magic
+    boostrap: false
+
 permissions:
   quantumrpg.admin:
     description: Full access

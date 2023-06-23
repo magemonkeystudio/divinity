@@ -89,17 +89,22 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
     @Override
     public void setup() {
         if (ItemGeneratorManager.commonItemGenerator == null) {
-            try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(plugin.getClass().getResourceAsStream(this.getPath()+"items/common.yml")))) {
+            try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(plugin.getClass()
+                    .getResourceAsStream(this.getPath() + "items/common.yml")))) {
                 ItemGeneratorManager.commonItemGenerator = YamlConfiguration.loadConfiguration(in);
-            } catch (IOException exception) { throw new RuntimeException(exception); }
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
+            }
         }
 
-        try (InputStream in = plugin.getClass().getResourceAsStream(this.getPath()+"settings.yml")) {
+        try (InputStream in = plugin.getClass().getResourceAsStream(this.getPath() + "settings.yml")) {
             YamlConfiguration configuration = new YamlConfiguration();
             configuration.loadFromString(new String(in.readAllBytes()));
             cfg.addMissing("editor-gui", configuration.get("editor-gui"));
             cfg.saveChanges();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         this.resourceManager = new ResourceManager(this);
 
@@ -121,7 +126,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
     @Override
     public void shutdown() {
         AbstractEditorGUI editorGUI = AbstractEditorGUI.getInstance();
-        if (editorGUI != null) { editorGUI.shutdown(); }
+        if (editorGUI != null) {
+            editorGUI.shutdown();
+        }
         this.unregisterListeners();
         if (this.abilityHandler != null) {
             this.abilityHandler.shutdown();
@@ -195,7 +202,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 for (String mCfg : materials) {
                     boolean isWildCard = mCfg.startsWith(mask) || mCfg.endsWith(mask);
                     String  mCfgRaw    = isWildCard ? mCfg.replace(mask, "") : mCfg;
-                    boolean matches    = isWildCard ? (mAll.startsWith(mCfgRaw) || mAll.endsWith(mCfgRaw)) : mAll.equalsIgnoreCase(mCfgRaw);
+                    boolean matches    = isWildCard ? (mAll.startsWith(mCfgRaw) || mAll.endsWith(mCfgRaw))
+                            : mAll.equalsIgnoreCase(mCfgRaw);
 
                     if (matches) { // If matches then either keep item in list or remove it
                         return !this.materialsWhitelist;
@@ -220,7 +228,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             this.materialsModifiers = new HashMap<>();
             for (String group : cfg.getSection("generator.materials.stat-modifiers")) {
                 if (!ItemUtils.parseItemGroup(group)) {
-                    error("Invalid item group provided: '" + group + "' in '" + path + "'. File: " + cfg.getFile().getName());
+                    error("Invalid item group provided: '" + group + "' in '" + path + "'. File: " + cfg.getFile()
+                            .getName());
                     continue;
                 }
 
@@ -297,25 +306,56 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             this.attributeGenerators = new HashSet<>();
 
             // Pre-cache Ammo Attributes
-            this.addAttributeGenerator(new SingleAttributeGenerator<>(this.plugin, this, "generator.ammo-types.", ItemStats.getAmmos(), ItemTags.PLACEHOLDER_ITEM_AMMO));
-            this.addAttributeGenerator(new SingleAttributeGenerator<>(this.plugin, this, "generator.hand-types.", ItemStats.getHands(), ItemTags.PLACEHOLDER_ITEM_HAND));
+            this.addAttributeGenerator(new SingleAttributeGenerator<>(this.plugin,
+                    this,
+                    "generator.ammo-types.",
+                    ItemStats.getAmmos(),
+                    ItemTags.PLACEHOLDER_ITEM_AMMO));
+            this.addAttributeGenerator(new SingleAttributeGenerator<>(this.plugin,
+                    this,
+                    "generator.hand-types.",
+                    ItemStats.getHands(),
+                    ItemTags.PLACEHOLDER_ITEM_HAND));
 
-            this.addAttributeGenerator(new AttributeGenerator<>(this.plugin, this, "generator.damage-types.", ItemStats.getDamages(), ItemGeneratorManager.PLACE_GEN_DAMAGE));
-            this.addAttributeGenerator(new AttributeGenerator<>(this.plugin, this, "generator.defense-types.", ItemStats.getDefenses(), ItemGeneratorManager.PLACE_GEN_DEFENSE));
-            this.addAttributeGenerator(new AttributeGenerator<>(this.plugin, this, "generator.item-stats.", ItemStats.getStats(), ItemGeneratorManager.PLACE_GEN_STATS));
-            cfg.addMissing("generator.skillapi-attributes", commonItemGenerator.get("generator.skillapi-attributes"));
+            this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
+                    this,
+                    "generator.damage-types.",
+                    ItemStats.getDamages(),
+                    ItemGeneratorManager.PLACE_GEN_DAMAGE));
+            this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
+                    this,
+                    "generator.defense-types.",
+                    ItemStats.getDefenses(),
+                    ItemGeneratorManager.PLACE_GEN_DEFENSE));
+            this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
+                    this,
+                    "generator.item-stats.",
+                    ItemStats.getStats(),
+                    ItemGeneratorManager.PLACE_GEN_STATS));
             SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+            // If SkillAPI is installed, add SkillAPI Attributes
             if (skillAPIHK != null) {
-                this.addAttributeGenerator(new AttributeGenerator<>(this.plugin, this, "generator.skillapi-attributes.", skillAPIHK.getAttributes(), ItemGeneratorManager.PLACE_GEN_SKILLAPI_ATTR));
+                cfg.addMissing("generator.skillapi-attributes",
+                        commonItemGenerator.get("generator.skillapi-attributes"));
+                this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
+                        this,
+                        "generator.skillapi-attributes.",
+                        skillAPIHK.getAttributes(),
+                        ItemGeneratorManager.PLACE_GEN_SKILLAPI_ATTR));
+                cfg.addMissing("generator.skills", commonItemGenerator.get("generator.skills"));
+                this.addAttributeGenerator(
+                        this.abilityGenerator = new AbilityGenerator(this.plugin, this, PLACE_GEN_ABILITY));
             }
 
             // Pre-cache Socket Attributes
             for (SocketAttribute.Type socketType : SocketAttribute.Type.values()) {
-                this.addAttributeGenerator(new AttributeGenerator<>(this.plugin, this, "generator.sockets." + socketType.name() + ".", ItemStats.getSockets(socketType), ItemGeneratorManager.PLACE_GEN_SOCKETS.replace("%TYPE%", socketType.name())));
+                this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
+                        this,
+                        "generator.sockets." + socketType.name() + ".",
+                        ItemStats.getSockets(socketType),
+                        ItemGeneratorManager.PLACE_GEN_SOCKETS.replace("%TYPE%", socketType.name())));
             }
 
-            cfg.addMissing("generator.skills", commonItemGenerator.get("generator.skills"));
-            this.addAttributeGenerator(this.abilityGenerator = new AbilityGenerator(this.plugin, this, PLACE_GEN_ABILITY));
 
             // --------------- END OF CONFIG ---------------------- //
 
@@ -385,7 +425,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         }
 
         @NotNull
-        public BiFunction<Boolean, Double, Double> getMaterialModifier(@NotNull ItemStack item, @NotNull ItemLoreStat<?> stat) {
+        public BiFunction<Boolean, Double, Double> getMaterialModifier(@NotNull ItemStack item,
+                                                                       @NotNull ItemLoreStat<?> stat) {
             for (Map.Entry<String, BonusMap> e : this.materialsModifiers.entrySet()) {
                 if (ItemUtils.compareItemGroup(item, e.getKey())) {
                     BonusMap bMap = e.getValue();
@@ -488,15 +529,15 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             // Replace prefix and suffix
             if (meta.hasDisplayName()) {
                 String metaName = meta.getDisplayName()
-                                      .replace("%item_type%", itemGroupName)
-                                      .replace("%suffix_tier%", suffixTier != null ? suffixTier : "")
-                                      .replace("%prefix_tier%", prefixTier != null ? prefixTier : "")
+                        .replace("%item_type%", itemGroupName)
+                        .replace("%suffix_tier%", suffixTier != null ? suffixTier : "")
+                        .replace("%prefix_tier%", prefixTier != null ? prefixTier : "")
 
-                                      .replace("%prefix_type%", prefixItemType != null ? prefixItemType : "")
-                                      .replace("%suffix_type%", suffixItemType != null ? suffixItemType : "")
+                        .replace("%prefix_type%", prefixItemType != null ? prefixItemType : "")
+                        .replace("%suffix_type%", suffixItemType != null ? suffixItemType : "")
 
-                                      .replace("%prefix_material%", prefixMaterial != null ? prefixMaterial : "")
-                                      .replace("%suffix_material%", suffixMaterial != null ? suffixMaterial : "");
+                        .replace("%prefix_material%", prefixMaterial != null ? prefixMaterial : "")
+                        .replace("%suffix_material%", suffixMaterial != null ? suffixMaterial : "");
                 metaName = StringUT.oneSpace(metaName);
                 meta.setDisplayName(metaName);
             }
@@ -528,7 +569,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             item.setItemMeta(meta);
 
             // Add enchants
-            int                                    enchRoll  = Rnd.get(this.getMinEnchantments(), this.getMaxEnchantments());
+            int                                    enchRoll  =
+                    Rnd.get(this.getMinEnchantments(), this.getMaxEnchantments());
             int                                    enchCount = 0;
             List<Map.Entry<Enchantment, String[]>> enchants  = new ArrayList<>(this.enchantsList.entrySet());
             Collections.shuffle(enchants);
@@ -578,7 +620,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             String[] bannedUserClass = this.getBannedUserClassRequirement(itemLvl);
             if (bannedUserClass != null) {
-                BannedClassRequirement reqBannedClass = ItemRequirements.getUserRequirement(BannedClassRequirement.class);
+                BannedClassRequirement reqBannedClass =
+                        ItemRequirements.getUserRequirement(BannedClassRequirement.class);
                 if (reqBannedClass != null) {
                     reqBannedClass.add(item, bannedUserClass, -1);
                 }
@@ -642,7 +685,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         AbstractEditorGUI editorInstance = AbstractEditorGUI.getInstance();
-        if (editorInstance == null || !editorInstance.getPlayer().equals(event.getPlayer())) { return; }
+        if (editorInstance == null || !editorInstance.getPlayer().equals(event.getPlayer())) {
+            return;
+        }
         editorInstance.onChat(event);
     }
 }

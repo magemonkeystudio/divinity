@@ -4,6 +4,7 @@ import mc.promcteam.engine.NexDataPlugin;
 import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.commands.api.IGeneralCommand;
 import mc.promcteam.engine.hooks.Hooks;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
@@ -102,6 +103,12 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
             this.getPluginManager().disablePlugin(this);
             return;
         }
+
+        getServer().getScheduler().runTaskLater(this, this::onPostEnable, 1L);
+    }
+
+    private void onPostEnable() {
+        info("Performing post-load tasks...");
 
         this.interactionManager = new InteractionManager(this);
         this.interactionManager.setup();
