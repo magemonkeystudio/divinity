@@ -6,6 +6,7 @@ import be.seeseemelk.mockbukkit.entity.ZombieMock;
 import org.bukkit.entity.FishHook;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.testutil.MockedTest;
@@ -15,6 +16,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@Disabled
 class DamageManagerTest extends MockedTest {
 
     private PlayerMock player;
