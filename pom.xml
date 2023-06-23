@@ -7,12 +7,12 @@
     <parent>
         <groupId>com.promcteam</groupId>
         <artifactId>promc-parent</artifactId>
-        <version>1.19.4-SNAPSHOT</version>
+        <version>1.20.1-SNAPSHOT</version>
     </parent>
 
     <properties>
-        <promccore.version>1.0.4-R0.8-SNAPSHOT</promccore.version>
-        <proskillapi.version>1.1.8-R0.22-SNAPSHOT</proskillapi.version>
+        <promccore.version>1.0.4-R0.13-SNAPSHOT</promccore.version>
+        <proskillapi.version>1.1.8-R0.31-SNAPSHOT</proskillapi.version>
     </properties>
 
     <groupId>com.promcteam</groupId>
@@ -70,7 +70,6 @@
         <dependency>
             <groupId>com.promcteam</groupId>
             <artifactId>proskillapi</artifactId>
-            <version>1.1.8-R0.29-SNAPSHOT</version>
         </dependency>
 
         <dependency>
