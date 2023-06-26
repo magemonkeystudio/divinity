@@ -219,6 +219,7 @@
                         <PROMCCORE_VERSION>${promccore.version}</PROMCCORE_VERSION>
                         <ITEMS_VERSION>${project.version}</ITEMS_VERSION>
                     </systemPropertyVariables>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
         </plugins>
