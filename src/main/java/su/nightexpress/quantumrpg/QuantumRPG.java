@@ -104,12 +104,6 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
             return;
         }
 
-        getServer().getScheduler().runTaskLater(this, this::onPostEnable, 1L);
-    }
-
-    private void onPostEnable() {
-        info("Performing post-load tasks...");
-
         this.interactionManager = new InteractionManager(this);
         this.interactionManager.setup();
 
