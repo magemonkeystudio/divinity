@@ -67,10 +67,10 @@ public class NewEnchantmentGUI extends AbstractEditorGUI {
             this.addButton(this.createButton(key, ItemType.NEW, Material.ENCHANTED_BOOK,
                                              "&e"+key, List.of(
                                                    "&6Left-Click: &eSet"), invIndex, guiClick));
-            this.addButton(this.createButton("prev-page", ContentType.BACK, Material.ENDER_PEARL, "&dPrevious Page", List.of(), 0, guiClick));
-            this.addButton(this.createButton("next-page", ContentType.NEXT, Material.ENDER_PEARL, "&dNext Page", List.of(), 8, guiClick));
-            this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 53, guiClick));
         }
+        this.addButton(this.createButton("prev-page", ContentType.BACK, Material.ENDER_PEARL, "&dPrevious Page", List.of(), 0, guiClick));
+        this.addButton(this.createButton("next-page", ContentType.NEXT, Material.ENDER_PEARL, "&dNext Page", List.of(), 8, guiClick));
+        this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 53, guiClick));
     }
 
     private void sendSetMessage(String key) {
