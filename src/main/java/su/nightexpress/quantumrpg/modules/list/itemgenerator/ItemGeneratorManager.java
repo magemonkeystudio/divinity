@@ -108,11 +108,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
         this.resourceManager = new ResourceManager(this);
 
-        SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
-        if (skillAPIHK != null) {
-            this.abilityHandler = new ItemAbilityHandler(this);
-            this.abilityHandler.setup();
-        }
+        this.abilityHandler = new ItemAbilityHandler(this);
+        this.abilityHandler.setup();
+
         this.registerListeners();
     }
 

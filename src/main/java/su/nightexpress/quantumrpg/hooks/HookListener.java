@@ -2,6 +2,8 @@ package su.nightexpress.quantumrpg.hooks;
 
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.IListener;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.server.PluginEnableEvent;
 import org.jetbrains.annotations.NotNull;
@@ -56,6 +58,10 @@ public class HookListener extends IListener<QuantumRPG> {
                 this.plugin.setConfig();
                 PartyManager partyManager = this.plugin.getModuleManager().getModule(PartyManager.class);
                 if (partyManager != null) {partyManager.reload();}
+                SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
+                if (skillAPIHK != null) {
+                    for (Player player : Bukkit.getServer().getOnlinePlayers()) {skillAPIHK.updateSkills(player);}
+                }
                 break;
             }
         }
