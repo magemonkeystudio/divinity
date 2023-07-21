@@ -20,6 +20,7 @@ public class ItemTags {
     public static final String TAG_REQ_USER_CLASS        = "QRPG_ITEM_USER_CLASS";
     public static final String TAG_REQ_USER_BANNED_CLASS = "QRPG_ITEM_USER_BANNED_CLASS";
     public static final String TAG_REQ_USER_OWNER        = "QRPG_ITEM_USER_UUID";
+    public static final String TAG_REQ_USER_MCMMO_SKILL       = "QRPG_ITEM_USER_MCMMO_SKILL";
 
 
     public static final String TAG_REQ_ITEM_TYPE   = "QRPG_REQ_ITEM_TYPE";
@@ -45,6 +46,11 @@ public class ItemTags {
     public static final String PLACEHOLDER_REQ_USER_BANNED_CLASS = "%USER_BANNED_CLASS%";
     public static final String PLACEHOLDER_REQ_USER_LEVEL        = "%USER_LEVEL%";
     public static final String PLACEHOLDER_REQ_USER_SOUL         = "%USER_SOULBOUND%";
+
+    public static final String PLACEHOLDER_REQ_USER_MCMMO_SKILL        = "%USER_MCMMO_SKILL%";
+
+
+
 
 
     public static final String PLACEHOLDER_REQ_ITEM_TYPE        = "%TARGET_TYPE%";

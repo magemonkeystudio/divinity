@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
+import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -47,6 +48,8 @@ import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequi
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.SoulboundRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.setup.HookRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.McMMORequirement;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
@@ -55,19 +58,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
     public static YamlConfiguration commonItemGenerator;
 
-    private ResourceManager    resourceManager;
+    private ResourceManager resourceManager;
     private ItemAbilityHandler abilityHandler;
 
-    public static final String PLACE_GEN_DAMAGE        = "%GENERATOR_DAMAGE%";
-    public static final String PLACE_GEN_DEFENSE       = "%GENERATOR_DEFENSE%";
-    public static final String PLACE_GEN_STATS         = "%GENERATOR_STATS%";
-    public static final String PLACE_GEN_SOCKETS       = "%GENERATOR_SOCKETS_%TYPE%%";
-    public static final String PLACE_GEN_ABILITY       = "%GENERATOR_SKILLS%";
+    public static final String PLACE_GEN_DAMAGE = "%GENERATOR_DAMAGE%";
+    public static final String PLACE_GEN_DEFENSE = "%GENERATOR_DEFENSE%";
+    public static final String PLACE_GEN_STATS = "%GENERATOR_STATS%";
+    public static final String PLACE_GEN_SOCKETS = "%GENERATOR_SOCKETS_%TYPE%%";
+    public static final String PLACE_GEN_ABILITY = "%GENERATOR_SKILLS%";
     public static final String PLACE_GEN_SKILLAPI_ATTR = "%GENERATOR_SKILLAPI_ATTR%";
 
     public ItemGeneratorManager(@NotNull QuantumRPG plugin) {
@@ -161,10 +165,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private double prefixChance;
         private double suffixChance;
 
-        private boolean       materialsWhitelist;
+        private boolean materialsWhitelist;
         private Set<Material> materialsList;
 
-        private List<Integer>              modelDataList;
+        private List<Integer> modelDataList;
         private Map<String, List<Integer>> modelDataSpecial;
 
         private Map<String, BonusMap> materialsModifiers;
@@ -172,15 +176,16 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private TreeMap<Integer, String[]> reqUserLvl;
         private TreeMap<Integer, String[]> reqUserClass;
         private TreeMap<Integer, String[]> reqBannedUserClass;
+        private TreeMap<Integer, String[]> reqMcMMOSkills;
 
-        private int                        enchantsMinAmount;
-        private int                        enchantsMaxAmount;
-        private boolean                    enchantsSafeOnly;
-        private boolean                    enchantsSafeLevels;
+        private int enchantsMinAmount;
+        private int enchantsMaxAmount;
+        private boolean enchantsSafeOnly;
+        private boolean enchantsSafeLevels;
         private Map<Enchantment, String[]> enchantsList;
 
         private Set<IAttributeGenerator> attributeGenerators;
-        private AbilityGenerator         abilityGenerator;
+        private AbilityGenerator abilityGenerator;
 
         public GeneratorItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
             super(plugin, cfg, ItemGeneratorManager.this);
@@ -193,7 +198,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             this.materialsWhitelist = cfg.getBoolean(path + "materials.reverse");
             this.materialsList = new HashSet<>(Config.getAllRegisteredMaterials());
 
-            String      mask      = JStrings.MASK_ANY;
+            String mask = JStrings.MASK_ANY;
             Set<String> materials = new HashSet<>(cfg.getStringList(path + "materials.black-list"));
 
             this.materialsList.removeIf(matAll -> {
@@ -201,8 +206,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 String mAll = matAll.name();
                 for (String mCfg : materials) {
                     boolean isWildCard = mCfg.startsWith(mask) || mCfg.endsWith(mask);
-                    String  mCfgRaw    = isWildCard ? mCfg.replace(mask, "") : mCfg;
-                    boolean matches    = isWildCard ? (mAll.startsWith(mCfgRaw) || mAll.endsWith(mCfgRaw))
+                    String mCfgRaw = isWildCard ? mCfg.replace(mask, "") : mCfg;
+                    boolean matches = isWildCard ? (mAll.startsWith(mCfgRaw) || mAll.endsWith(mCfgRaw))
                             : mAll.equalsIgnoreCase(mCfgRaw);
 
                     if (matches) { // If matches then either keep item in list or remove it
@@ -233,8 +238,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     continue;
                 }
 
-                BonusMap bMap  = new BonusMap();
-                String   path2 = path + group + ".";
+                BonusMap bMap = new BonusMap();
+                String path2 = path + group + ".";
                 bMap.loadDamages(cfg, path2 + "damage-types");
                 bMap.loadDefenses(cfg, path2 + "defense-types");
                 bMap.loadStats(cfg, path2 + "item-stats");
@@ -278,6 +283,22 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (reqRaw == null || reqRaw.isEmpty()) continue;
 
                     this.reqBannedUserClass.put(itemLvl, reqRaw.split(","));
+                }
+            }
+            // API Requirements
+            if (ItemRequirements.isRegisteredUser(McMMORequirement.class)) {
+                this.reqMcMMOSkills = new TreeMap<>();
+                for (String skill : cfg.getSection(path + ".mcmmo-skills")) {
+                    for (String sLvl : cfg.getSection(path + ".mcmmo-skills." + skill)) {
+                        int itemLvl = StringUT.getInteger(sLvl, -1);
+                        if (itemLvl <= 0) continue;
+
+                        String reqRaw = cfg.getString(path + ".mcmmo-skills." + skill + "." + sLvl);
+                        if (reqRaw == null || reqRaw.isEmpty()) continue;
+
+                        String[] reqEdit = new String[]{skill, reqRaw.split(":")[0], reqRaw.split(":")[1]};
+                        this.reqMcMMOSkills.put(itemLvl, reqEdit);
+                    }
                 }
             }
 
@@ -389,6 +410,21 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             if (e == null) return null;
 
             return e.getValue();
+        }
+
+        @Nullable
+        protected final HookRequirement<PrimarySkillType, int[]> getMcMMOSkillsRequirement(int itemLvl) {
+            if (this.reqMcMMOSkills == null)
+                return null;
+
+            String[] reqRaw = this.reqMcMMOSkills.get(itemLvl);
+            int[] reqLevel = new int[]{StringUT.getInteger(reqRaw[1], -1), StringUT.getInteger(reqRaw[2], -1)};
+
+            HookRequirement<PrimarySkillType, int[]> e = new HookRequirement<>(HookRequirement.HookRequirementType.MCMMO, PrimarySkillType.valueOf(reqRaw[0].toUpperCase()), reqLevel);
+            if (Arrays.stream(PrimarySkillType.values()).noneMatch(Predicate.isEqual(e.getKey()))) return null;
+            if (e.getValue()[0] <= 0 || e.getValue()[1] <= 0) return null;
+
+            return e;
         }
 
         public double getPrefixChance() {
@@ -512,7 +548,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             String prefixItemType = "";
             String suffixItemType = "";
 
-            String itemGroupId   = ItemUtils.getItemGroupIdFor(item);
+            String itemGroupId = ItemUtils.getItemGroupIdFor(item);
             String itemGroupName = ItemUtils.getItemGroupNameFor(item.getType());
 
             if (Rnd.get(true) <= prefixChance) {
@@ -554,12 +590,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             // +-------------------------+
             // TODO More options, mb generator?
             if (meta instanceof BlockStateMeta) {
-                BlockStateMeta bmeta  = (BlockStateMeta) meta;
-                Banner         banner = (Banner) bmeta.getBlockState();
+                BlockStateMeta bmeta = (BlockStateMeta) meta;
+                Banner banner = (Banner) bmeta.getBlockState();
 
-                DyeColor    bBaseColor    = Rnd.get(DyeColor.values());
-                PatternType bPattern      = Rnd.get(PatternType.values());
-                DyeColor    bPatternColor = Rnd.get(DyeColor.values());
+                DyeColor bBaseColor = Rnd.get(DyeColor.values());
+                PatternType bPattern = Rnd.get(PatternType.values());
+                DyeColor bPatternColor = Rnd.get(DyeColor.values());
 
                 banner.setBaseColor(bBaseColor);
                 banner.addPattern(new Pattern(bPatternColor, bPattern));
@@ -569,19 +605,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             item.setItemMeta(meta);
 
             // Add enchants
-            int                                    enchRoll  =
+            int enchRoll =
                     Rnd.get(this.getMinEnchantments(), this.getMaxEnchantments());
-            int                                    enchCount = 0;
-            List<Map.Entry<Enchantment, String[]>> enchants  = new ArrayList<>(this.enchantsList.entrySet());
+            int enchCount = 0;
+            List<Map.Entry<Enchantment, String[]>> enchants = new ArrayList<>(this.enchantsList.entrySet());
             Collections.shuffle(enchants);
 
             for (Map.Entry<Enchantment, String[]> e : enchants) {
                 if (enchCount >= enchRoll) {
                     break;
                 }
-                Enchantment enchant    = e.getKey();
-                int[]       enchLevels = this.doMathExpression(itemLvl, e.getValue());
-                int         enchLevel  = Rnd.get(enchLevels[0], enchLevels[1]);
+                Enchantment enchant = e.getKey();
+                int[] enchLevels = this.doMathExpression(itemLvl, e.getValue());
+                int enchLevel = Rnd.get(enchLevels[0], enchLevels[1]);
                 if (enchLevel < 1) continue;
 
                 if (this.isSafeEnchant()) {
@@ -626,9 +662,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     reqBannedClass.add(item, bannedUserClass, -1);
                 }
             }
+
+            HookRequirement<PrimarySkillType, int[]> mcmmo = getMcMMOSkillsRequirement(itemLvl);
+            if (mcmmo != null) {
+                McMMORequirement reqMcMMO = ItemRequirements.getUserRequirement(McMMORequirement.class);
+                if (reqMcMMO != null) {
+                    reqMcMMO.add(item, new String[]{mcmmo.getKey().toString().toLowerCase(), Integer.toString(mcmmo.getValue()[0]), Integer.toString(mcmmo.getValue()[1])}, -1);
+                }
+            }
+
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_LEVEL, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_CLASS, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS, null);
+            LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_MCMMO_SKILL, null);
 
             // Replace %SOULBOUND% placeholder.
             SoulboundRequirement reqSoul = ItemRequirements.getUserRequirement(SoulboundRequirement.class);

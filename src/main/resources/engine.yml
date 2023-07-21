@@ -186,6 +186,16 @@ lore:
                 separator: '&7/'
                 color: '&f'
                 newline: '&r  '
+          extensions:
+            mcmmo-skill:
+              enabled: true
+              name: 'McMMO Skill'
+              format:
+                main: '&c%state%%name%: %value%'
+                value:
+                  skill: '%skill%'
+                  single: '%min%+'
+                  range: '%min%-%max%'
         item:
           level:
             enabled: true
