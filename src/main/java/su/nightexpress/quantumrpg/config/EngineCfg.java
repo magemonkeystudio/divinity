@@ -1,15 +1,14 @@
 package su.nightexpress.quantumrpg.config;
 
 import mc.promcteam.engine.config.api.JYML;
-import mc.promcteam.engine.hooks.HookManager;
 import mc.promcteam.engine.hooks.NHook;
 import mc.promcteam.engine.utils.StringUT;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.hooks.EHook;
 import su.nightexpress.quantumrpg.hooks.HookClass;
 import su.nightexpress.quantumrpg.hooks.HookLevel;
 import su.nightexpress.quantumrpg.hooks.HookMobLevel;
-import su.nightexpress.quantumrpg.hooks.external.McmmoHK;
 import su.nightexpress.quantumrpg.hooks.internal.DefaultHook;
 import su.nightexpress.quantumrpg.hooks.internal.QuantumRPGHook;
 import su.nightexpress.quantumrpg.modules.EModule;
@@ -331,7 +330,7 @@ public class EngineCfg {
             EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%min%-%max%&f"));
 
             McMMORequirement mcMMO = new McMMORequirement(rName, rFormat);
-            if (QuantumRPG.getInstance().isHooked("mcMMO"))
+            if (QuantumRPG.getInstance().isHooked(EHook.MCMMO))
                 ItemRequirements.registerUserRequirement(mcMMO);
         }
 

@@ -288,12 +288,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             // API Requirements
             if (ItemRequirements.isRegisteredUser(McMMORequirement.class)) {
                 this.reqMcMMOSkills = new TreeMap<>();
-                for (String skill : cfg.getSection(path + ".mcmmo-skills")) {
-                    for (String sLvl : cfg.getSection(path + ".mcmmo-skills." + skill)) {
+                for (String skill : cfg.getSection(path + ".mcmmo-skill")) {
+                    for (String sLvl : cfg.getSection(path + ".mcmmo-skill." + skill)) {
                         int itemLvl = StringUT.getInteger(sLvl, -1);
                         if (itemLvl <= 0) continue;
 
-                        String reqRaw = cfg.getString(path + ".mcmmo-skills." + skill + "." + sLvl);
+                        String reqRaw = cfg.getString(path + ".mcmmo-skill." + skill + "." + sLvl);
                         if (reqRaw == null || reqRaw.isEmpty()) continue;
 
                         String[] reqEdit = new String[]{skill, reqRaw.split(":")[0], reqRaw.split(":")[1]};
@@ -413,7 +413,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         }
 
         @Nullable
-        protected final HookRequirement<PrimarySkillType, int[]> getMcMMOSkillsRequirement(int itemLvl) {
+        protected final String[] getMcMMOSkillsRequirement(int itemLvl) {
             if (this.reqMcMMOSkills == null)
                 return null;
 
@@ -424,7 +424,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             if (Arrays.stream(PrimarySkillType.values()).noneMatch(Predicate.isEqual(e.getKey()))) return null;
             if (e.getValue()[0] <= 0 || e.getValue()[1] <= 0) return null;
 
-            return e;
+            return new String[]{e.getKey().toString().toLowerCase(), Integer.toString(e.getValue()[0]), Integer.toString(e.getValue()[1])};
         }
 
         public double getPrefixChance() {
@@ -663,11 +663,11 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 }
             }
 
-            HookRequirement<PrimarySkillType, int[]> mcmmo = getMcMMOSkillsRequirement(itemLvl);
+            String[] mcmmo = getMcMMOSkillsRequirement(itemLvl);
             if (mcmmo != null) {
                 McMMORequirement reqMcMMO = ItemRequirements.getUserRequirement(McMMORequirement.class);
                 if (reqMcMMO != null) {
-                    reqMcMMO.add(item, new String[]{mcmmo.getKey().toString().toLowerCase(), Integer.toString(mcmmo.getValue()[0]), Integer.toString(mcmmo.getValue()[1])}, -1);
+                    reqMcMMO.add(item, mcmmo, -1);
                 }
             }
 
