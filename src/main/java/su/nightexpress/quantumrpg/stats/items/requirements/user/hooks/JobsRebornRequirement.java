@@ -1,5 +1,7 @@
 package su.nightexpress.quantumrpg.stats.items.requirements.user.hooks;
 
+import com.gamingmesh.jobs.Jobs;
+import com.gamingmesh.jobs.container.Job;
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import mc.promcteam.engine.config.api.ILangMsg;
@@ -17,22 +19,23 @@ import su.nightexpress.quantumrpg.stats.items.requirements.api.DynamicUserRequir
 import java.util.Arrays;
 import java.util.function.Predicate;
 
-public class McMMORequirement extends DynamicUserRequirement<String[]> {
+public class JobsRebornRequirement extends DynamicUserRequirement<String[]> {
 
-    public McMMORequirement(@NotNull String name,
-                            @NotNull String format
+    public JobsRebornRequirement(@NotNull String name,
+                                 @NotNull String format
     ) {
-        super("mcmmo-skill",
+        super("jobs-job",
                 name,
                 format,
-                ItemTags.PLACEHOLDER_REQ_USER_MCMMO_SKILL,
-                ItemTags.TAG_REQ_USER_MCMMO_SKILL,
+                ItemTags.PLACEHOLDER_REQ_USER_JOBS_JOB,
+                ItemTags.TAG_REQ_USER_JOBS_JOB,
                 DataUT.STRING_ARRAY);
     }
 
+
     @Override
     public @NotNull String getBypassPermission() {
-        return Perms.BYPASS_REQ_USER_MCMMO_SKILL;
+        return Perms.BYPASS_REQ_USER_JOBS_JOB;
     }
 
     @Override
@@ -40,34 +43,33 @@ public class McMMORequirement extends DynamicUserRequirement<String[]> {
         String[] itemClass = this.getRaw(item);
         if (itemClass == null || itemClass.length == 0) return true;
 
-        PrimarySkillType skill = PrimarySkillType.valueOf(itemClass[0].toUpperCase());
-        int min       = StringUT.getInteger(itemClass[1], -1);
-        int max       = StringUT.getInteger(itemClass[2], 0);
-        int skillLevel = ExperienceAPI.getLevel(player, skill);
-        return min == max ? (skillLevel >= min) : (skillLevel >= min && skillLevel <= max);
+        int min = StringUT.getInteger(itemClass[1], -1);
+        int max = StringUT.getInteger(itemClass[2], 0);
+        int jobLevel = Jobs.getPlayerManager().getJobsPlayer(player).getJobProgression(Jobs.getJob(itemClass[0])).getLevel();
+        return min == max ? (jobLevel >= min) : (jobLevel >= min && jobLevel <= max);
     }
 
     @Override
     public @NotNull String formatValue(@NotNull ItemStack item, @NotNull String[] value) {
-        PrimarySkillType skill = PrimarySkillType.valueOf(value[0].toUpperCase());
-        int v1       = StringUT.getInteger(value[1], -1);
-        int v2       = StringUT.getInteger(value[2], -1);
+        Job job = Jobs.getJob(value[0]);
+        int v1 = StringUT.getInteger(value[1], -1);
+        int v2 = StringUT.getInteger(value[2], -1);
         int min = Math.min(v1, v2);
         int max = Math.max(v1, v2);
-        if(min <= 0 || Arrays.stream(PrimarySkillType.values()).noneMatch(Predicate.isEqual(skill)))
+        if (min <= 0 || job == null)
             return "";
 
         String lore;
         if (min == max) {
-            lore = EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SINGLE.replace("%skill%", skill.getName()).replace("%min%", String.valueOf(min));
+            lore = EngineCfg.LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_SINGLE.replace("%job%", job.getName()).replace("%min%", String.valueOf(min));
         } else {
-            lore = EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE.replace("%skill%", skill.getName()).replace("%max%", String.valueOf(max)).replace("%min%", String.valueOf(min));
+            lore = EngineCfg.LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_RANGE.replace("%job%", job.getName()).replace("%max%", String.valueOf(max)).replace("%min%", String.valueOf(min));
         }
         return ChatColor.WHITE + lore;
     }
 
     @Override
     public @NotNull ILangMsg getDenyMessage(@NotNull Player player, @NotNull ItemStack src) {
-        return plugin.lang().Module_Item_Interact_Error_McMMO_Skill;
+        return plugin.lang().Module_Item_Interact_Error_Jobs_Job;
     }
 }

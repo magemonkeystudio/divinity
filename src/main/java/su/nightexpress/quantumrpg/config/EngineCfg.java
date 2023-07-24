@@ -19,6 +19,7 @@ import su.nightexpress.quantumrpg.stats.items.requirements.item.*;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.JobsRebornRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.McMMORequirement;
 
 import java.util.*;
@@ -97,9 +98,10 @@ public class EngineCfg {
     public static int LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_MAX;
     public static String LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_NEWLINE;
 
-    public static String LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SKILL;
     public static String LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SINGLE;
     public static String LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE;
+    public static String LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_SINGLE;
+    public static String LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_RANGE;
 
     public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_SINGLE;
     public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_RANGE;
@@ -316,22 +318,38 @@ public class EngineCfg {
 
         path = "lore.stats.style.requirements.user.extensions.mcmmo-skill.";
         cfg.addMissing(path + "enabled", true);
-        cfg.addMissing(path + "name", "McMMO Skill");
+        cfg.addMissing(path + "name", "McMMO");
         cfg.addMissing(path + "format.main", "%state%%name%: %value%");
-        cfg.addMissing(path + "format.value.skill", "%skill%");
-        cfg.addMissing(path + "format.value.single", "%min%+");
-        cfg.addMissing(path + "format.value.range", "%min%-%max%&f");
+        cfg.addMissing(path + "format.value.single", "%skill% | %min%+");
+        cfg.addMissing(path + "format.value.range", "%skill% | %min%-%max%&f");
         if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "Banned Player Class"));
+            String rName = StringUT.color(cfg.getString(path + "name", "McMMO"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
 
-            EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SKILL = StringUT.color(cfg.getString(path + "format.value.skill", "%skill%"));
-            EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%min%+"));
-            EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%min%-%max%&f"));
+            EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%skill% | %min%+"));
+            EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%skill% | %min%-%max%&f"));
 
             McMMORequirement mcMMO = new McMMORequirement(rName, rFormat);
             if (QuantumRPG.getInstance().isHooked(EHook.MCMMO))
                 ItemRequirements.registerUserRequirement(mcMMO);
+        }
+
+        path = "lore.stats.style.requirements.user.extensions.jobs-job.";
+        cfg.addMissing(path + "enabled", true);
+        cfg.addMissing(path + "name", "Jobs");
+        cfg.addMissing(path + "format.main", "%state%%name%: %value%");
+        cfg.addMissing(path + "format.value.single", "%job% | %min%+");
+        cfg.addMissing(path + "format.value.range", "%job% | %min%-%max%&f");
+        if (cfg.getBoolean(path + "enabled")) {
+            String rName = StringUT.color(cfg.getString(path + "name", "Jobs"));
+            String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
+
+            EngineCfg.LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%job% | %min%+"));
+            EngineCfg.LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%job% | %min%-%max%&f"));
+
+            JobsRebornRequirement jobs = new JobsRebornRequirement(rName, rFormat);
+            if (QuantumRPG.getInstance().isHooked(EHook.JOBS))
+                ItemRequirements.registerUserRequirement(jobs);
         }
 
         path = "lore.stats.style.requirements.item.level.";

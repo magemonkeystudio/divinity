@@ -8,6 +8,7 @@ public class EHook {
     public static final String LORINTHS_RPG_MOBS    = "LorinthsRpgMobs";
     public static final String MAGIC                = "Magic";
     public static final String MCMMO                = "mcMMO";
+    public static final String JOBS                = "Jobs";
     public static final String MY_PET               = "MyPet";
     public static final String PWING_RACES          = "PwingRaces";
     public static final String RACES_OF_THANA       = "RacesOfThana";

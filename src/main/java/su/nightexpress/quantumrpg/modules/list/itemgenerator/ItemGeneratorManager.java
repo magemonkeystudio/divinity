@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
+import com.gamingmesh.jobs.Jobs;
 import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.ItemUT;
@@ -48,7 +49,7 @@ import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequi
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.SoulboundRequirement;
-import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.setup.HookRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.JobsRebornRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.McMMORequirement;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
@@ -58,7 +59,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.function.Predicate;
 
 public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
@@ -177,6 +177,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private TreeMap<Integer, String[]> reqUserClass;
         private TreeMap<Integer, String[]> reqBannedUserClass;
         private TreeMap<Integer, String[]> reqMcMMOSkills;
+        private TreeMap<Integer, String[]> reqJobs;
 
         private int enchantsMinAmount;
         private int enchantsMaxAmount;
@@ -288,16 +289,32 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             // API Requirements
             if (ItemRequirements.isRegisteredUser(McMMORequirement.class)) {
                 this.reqMcMMOSkills = new TreeMap<>();
-                for (String skill : cfg.getSection(path + ".mcmmo-skill")) {
-                    for (String sLvl : cfg.getSection(path + ".mcmmo-skill." + skill)) {
+                for (String skill : cfg.getSection(path + "mcmmo-skill")) {
+                    for (String sLvl : cfg.getSection(path + "mcmmo-skill." + skill)) {
                         int itemLvl = StringUT.getInteger(sLvl, -1);
                         if (itemLvl <= 0) continue;
 
-                        String reqRaw = cfg.getString(path + ".mcmmo-skill." + skill + "." + sLvl);
+                        String reqRaw = cfg.getString(path + "mcmmo-skill." + skill + "." + sLvl);
                         if (reqRaw == null || reqRaw.isEmpty()) continue;
 
                         String[] reqEdit = new String[]{skill, reqRaw.split(":")[0], reqRaw.split(":")[1]};
                         this.reqMcMMOSkills.put(itemLvl, reqEdit);
+                    }
+                }
+            }
+
+            if (ItemRequirements.isRegisteredUser(JobsRebornRequirement.class)) {
+                this.reqJobs = new TreeMap<>();
+                for (String job : cfg.getSection(path + "jobs-job")) {
+                    for (String sLvl : cfg.getSection(path + "jobs-job." + job)) {
+                        int itemLvl = StringUT.getInteger(sLvl, -1);
+                        if (itemLvl <= 0) continue;
+
+                        String reqRaw = cfg.getString(path + "jobs-job." + job + "." + sLvl);
+                        if (reqRaw == null || reqRaw.isEmpty()) continue;
+
+                        String[] reqEdit = new String[]{job, reqRaw.split(":")[0], reqRaw.split(":")[1]};
+                        this.reqJobs.put(itemLvl, reqEdit);
                     }
                 }
             }
@@ -417,14 +434,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             if (this.reqMcMMOSkills == null)
                 return null;
 
-            String[] reqRaw = this.reqMcMMOSkills.get(itemLvl);
-            int[] reqLevel = new int[]{StringUT.getInteger(reqRaw[1], -1), StringUT.getInteger(reqRaw[2], -1)};
+            Map.Entry<Integer, String[]> e = this.reqUserLvl.floorEntry(itemLvl);
+            if (e == null) return null;
+            return e.getValue();
+        }
 
-            HookRequirement<PrimarySkillType, int[]> e = new HookRequirement<>(HookRequirement.HookRequirementType.MCMMO, PrimarySkillType.valueOf(reqRaw[0].toUpperCase()), reqLevel);
-            if (Arrays.stream(PrimarySkillType.values()).noneMatch(Predicate.isEqual(e.getKey()))) return null;
-            if (e.getValue()[0] <= 0 || e.getValue()[1] <= 0) return null;
+        @Nullable
+        protected final String[] getJobsRequirement(int itemLvl) {
+            if (this.reqJobs == null)
+                return null;
 
-            return new String[]{e.getKey().toString().toLowerCase(), Integer.toString(e.getValue()[0]), Integer.toString(e.getValue()[1])};
+            Map.Entry<Integer, String[]> e = this.reqJobs.floorEntry(itemLvl);
+            if (e == null) return null;
+            return e.getValue();
         }
 
         public double getPrefixChance() {
@@ -671,10 +693,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 }
             }
 
+            String[] jobs = getJobsRequirement(itemLvl);
+            if (jobs != null) {
+                JobsRebornRequirement reqJobs = ItemRequirements.getUserRequirement(JobsRebornRequirement.class);
+                if (reqJobs != null) {
+                    reqJobs.add(item, jobs, -1);
+                }
+            }
+
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_LEVEL, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_CLASS, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_MCMMO_SKILL, null);
+            LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_JOBS_JOB, null);
 
             // Replace %SOULBOUND% placeholder.
             SoulboundRequirement reqSoul = ItemRequirements.getUserRequirement(SoulboundRequirement.class);

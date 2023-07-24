@@ -40,6 +40,11 @@
             <id>mcmmo-repo</id>
             <url>https://nexus.neetgames.com/repository/maven-snapshots/</url>
         </repository>
+        <!-- Jobs -->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -136,6 +141,12 @@
                     <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Zrips</groupId>
+            <artifactId>Jobs</artifactId>
+            <version>v4.17.2</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Legacy Dependencies -->

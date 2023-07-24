@@ -4,7 +4,6 @@ import mc.promcteam.engine.NexDataPlugin;
 import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.commands.api.IGeneralCommand;
 import mc.promcteam.engine.hooks.Hooks;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
@@ -51,19 +50,19 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 
     public static QuantumRPG instance;
 
-    private Config    config;
-    private Lang      lang;
+    private Config config;
+    private Lang lang;
     private EngineCfg engineCfg;
 
     private RPGUserData dataHandler;
 
     private InteractionManager interactionManager;
-    private WorthManager       worthManager;
-    private DamageManager      dmgManager;
-    private EntityManager      entityManager;
-    private ListenerManager    listenerManager;
-    private ProfileManager     profileManager;
-    private ModuleCache        moduleCache;
+    private WorthManager worthManager;
+    private DamageManager dmgManager;
+    private EntityManager entityManager;
+    private ListenerManager listenerManager;
+    private ProfileManager profileManager;
+    private ModuleCache moduleCache;
 
     private PMSManager pms;
 
@@ -92,7 +91,7 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.pms = new PMSManager(this);
         this.pms.setup();
 
-        String  coreVersion       = NexEngine.getEngine().getDescription().getVersion();
+        String coreVersion = NexEngine.getEngine().getDescription().getVersion();
         boolean minCoreVersionMet = DependencyRequirement.meetsVersion(DependencyRequirement.MIN_CORE_VERSION, coreVersion);
 
         if (this.pms.get() == null || !minCoreVersionMet) {
@@ -104,10 +103,6 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
             return;
         }
 
-        getServer().getScheduler().runTaskLater(this, this::onPostEnable, 1L);
-    }
-
-    private void onPostEnable() {
         info("Performing post-load tasks...");
 
         this.interactionManager = new InteractionManager(this);
@@ -181,6 +176,7 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.registerHook(EHook.LORINTHS_RPG_MOBS, LorinthsRpgMobsHK.class);
         this.registerHook(EHook.MAGIC, MagicHK.class);
         this.registerHook(EHook.MCMMO, McmmoHK.class);
+        this.registerHook(EHook.JOBS, McmmoHK.class);
 
         boolean mythic4 = true;
         try {
