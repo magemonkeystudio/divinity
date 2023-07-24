@@ -2,8 +2,6 @@ package su.nightexpress.quantumrpg.stats.items.requirements.user.hooks;
 
 import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.container.Job;
-import com.gmail.nossr50.api.ExperienceAPI;
-import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import mc.promcteam.engine.config.api.ILangMsg;
 import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -15,9 +13,6 @@ import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.requirements.api.DynamicUserRequirement;
-
-import java.util.Arrays;
-import java.util.function.Predicate;
 
 public class JobsRebornRequirement extends DynamicUserRequirement<String[]> {
 

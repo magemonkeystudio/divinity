@@ -1,7 +1,5 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
-import com.gamingmesh.jobs.Jobs;
-import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
