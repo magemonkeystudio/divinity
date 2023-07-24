@@ -434,7 +434,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             if (this.reqMcMMOSkills == null)
                 return null;
 
-            Map.Entry<Integer, String[]> e = this.reqUserLvl.floorEntry(itemLvl);
+            Map.Entry<Integer, String[]> e = this.reqMcMMOSkills.floorEntry(itemLvl);
             if (e == null) return null;
             return e.getValue();
         }

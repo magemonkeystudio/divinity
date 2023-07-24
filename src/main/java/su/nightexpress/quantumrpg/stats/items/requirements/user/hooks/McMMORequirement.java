@@ -2,6 +2,7 @@ package su.nightexpress.quantumrpg.stats.items.requirements.user.hooks;
 
 import com.gmail.nossr50.api.ExperienceAPI;
 import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
+import com.gmail.nossr50.util.player.UserManager;
 import mc.promcteam.engine.config.api.ILangMsg;
 import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -43,6 +44,9 @@ public class McMMORequirement extends DynamicUserRequirement<String[]> {
         PrimarySkillType skill = PrimarySkillType.valueOf(itemClass[0].toUpperCase());
         int min       = StringUT.getInteger(itemClass[1], -1);
         int max       = StringUT.getInteger(itemClass[2], 0);
+
+        if(UserManager.getPlayer(player) == null) return false;
+
         int skillLevel = ExperienceAPI.getLevel(player, skill);
         return min == max ? (skillLevel >= min) : (skillLevel >= min && skillLevel <= max);
     }
