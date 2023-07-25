@@ -189,13 +189,36 @@ lore:
           extensions:
             mcmmo-skill:
               enabled: true
-              name: 'McMMO Skill'
+              name: 'McMMO'
               format:
                 main: '&c%state%%name%: %value%'
                 value:
-                  skill: '%skill%'
-                  single: '%min%+'
-                  range: '%min%-%max%'
+                  single: '%skill% | %min%+'
+                  range: '%skill% | %min%-%max%'
+            jobs-job:
+              enabled: true
+              name: 'JobsReborn'
+              format:
+                main: '%state%%name%: %value%'
+                value:
+                  single: '%job% | %min%+'
+                  range: '%job% | %min%-%max%'
+            aureliumskills-skill:
+              enabled: true
+              name: 'AureliumSkill'
+              format:
+                main: '%state%%name%: %value%'
+                value:
+                  single: '%skill% | %min%+'
+                  range: '%skill% | %min%-%max%'
+            aureliumskills-stat:
+              enabled: true
+              name: 'AureliumStat'
+              format:
+                main: '%state%%name%: %value%'
+                value:
+                  single: '%stat% | %min%+'
+                  range: '%stat% | %min%-%max%'
         item:
           level:
             enabled: true

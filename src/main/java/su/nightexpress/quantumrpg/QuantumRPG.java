@@ -176,7 +176,8 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.registerHook(EHook.LORINTHS_RPG_MOBS, LorinthsRpgMobsHK.class);
         this.registerHook(EHook.MAGIC, MagicHK.class);
         this.registerHook(EHook.MCMMO, McmmoHK.class);
-        this.registerHook(EHook.JOBS, McmmoHK.class);
+        this.registerHook(EHook.JOBS, JobsRebornHK.class);
+        this.registerHook(EHook.AURELIUM_SKILLS, AureliumSkillsHK.class);
 
         boolean mythic4 = true;
         try {

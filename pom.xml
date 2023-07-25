@@ -148,6 +148,12 @@
             <version>v4.17.2</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.Archy-X</groupId>
+            <artifactId>AureliumSkills</artifactId>
+            <version>Beta1.3.21</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- Legacy Dependencies -->
         <dependency>

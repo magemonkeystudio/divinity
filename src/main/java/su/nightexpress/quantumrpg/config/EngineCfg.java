@@ -19,6 +19,8 @@ import su.nightexpress.quantumrpg.stats.items.requirements.item.*;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.AureliumSkillsSkillRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.AureliumSkillsStatRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.JobsRebornRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.McMMORequirement;
 
@@ -102,6 +104,10 @@ public class EngineCfg {
     public static String LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE;
     public static String LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_SINGLE;
     public static String LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_RANGE;
+    public static String LORE_STYLE_REQ_USER_AURELIUM_SKILLS_SKILL_FORMAT_SINGLE;
+    public static String LORE_STYLE_REQ_USER_AURELIUM_SKILLS_SKILL_FORMAT_RANGE;
+    public static String LORE_STYLE_REQ_USER_AURELIUM_SKILLS_STAT_FORMAT_SINGLE;
+    public static String LORE_STYLE_REQ_USER_AURELIUM_SKILLS_STAT_FORMAT_RANGE;
 
     public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_SINGLE;
     public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_RANGE;
@@ -327,7 +333,7 @@ public class EngineCfg {
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
 
             EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%skill% | %min%+"));
-            EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%skill% | %min%-%max%&f"));
+            EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%skill% | %min%-%max%"));
 
             McMMORequirement mcMMO = new McMMORequirement(rName, rFormat);
             if (QuantumRPG.getInstance().isHooked(EHook.MCMMO))
@@ -336,7 +342,7 @@ public class EngineCfg {
 
         path = "lore.stats.style.requirements.user.extensions.jobs-job.";
         cfg.addMissing(path + "enabled", true);
-        cfg.addMissing(path + "name", "Jobs");
+        cfg.addMissing(path + "name", "JobsReborn");
         cfg.addMissing(path + "format.main", "%state%%name%: %value%");
         cfg.addMissing(path + "format.value.single", "%job% | %min%+");
         cfg.addMissing(path + "format.value.range", "%job% | %min%-%max%&f");
@@ -345,11 +351,47 @@ public class EngineCfg {
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
 
             EngineCfg.LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%job% | %min%+"));
-            EngineCfg.LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%job% | %min%-%max%&f"));
+            EngineCfg.LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%job% | %min%-%max%"));
 
             JobsRebornRequirement jobs = new JobsRebornRequirement(rName, rFormat);
             if (QuantumRPG.getInstance().isHooked(EHook.JOBS))
                 ItemRequirements.registerUserRequirement(jobs);
+        }
+
+        path = "lore.stats.style.requirements.user.extensions.aureliumskills-skill.";
+        cfg.addMissing(path + "enabled", true);
+        cfg.addMissing(path + "name", "AureliumSkill");
+        cfg.addMissing(path + "format.main", "%state%%name%: %value%");
+        cfg.addMissing(path + "format.value.single", "%skill% | %min%+");
+        cfg.addMissing(path + "format.value.range", "%skill% | %min%-%max%&f");
+        if (cfg.getBoolean(path + "enabled")) {
+            String rName = StringUT.color(cfg.getString(path + "name", "Skill"));
+            String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
+
+            EngineCfg.LORE_STYLE_REQ_USER_AURELIUM_SKILLS_SKILL_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%skill% | %min%+"));
+            EngineCfg.LORE_STYLE_REQ_USER_AURELIUM_SKILLS_SKILL_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%skill% | %min%-%max%"));
+
+            AureliumSkillsSkillRequirement aureliumSkillsSkills = new AureliumSkillsSkillRequirement(rName, rFormat);
+            if (QuantumRPG.getInstance().isHooked(EHook.AURELIUM_SKILLS))
+                ItemRequirements.registerUserRequirement(aureliumSkillsSkills);
+        }
+
+        path = "lore.stats.style.requirements.user.extensions.aureliumskills-stat.";
+        cfg.addMissing(path + "enabled", true);
+        cfg.addMissing(path + "name", "AureliumStat");
+        cfg.addMissing(path + "format.main", "%state%%name%: %value%");
+        cfg.addMissing(path + "format.value.single", "%stat% | %min%+");
+        cfg.addMissing(path + "format.value.range", "%stat% | %min%-%max%&f");
+        if (cfg.getBoolean(path + "enabled")) {
+            String rName = StringUT.color(cfg.getString(path + "name", "AureliumStat"));
+            String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
+
+            EngineCfg.LORE_STYLE_REQ_USER_AURELIUM_SKILLS_STAT_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%stat% | %min%+"));
+            EngineCfg.LORE_STYLE_REQ_USER_AURELIUM_SKILLS_STAT_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%stat% | %min%-%max%"));
+
+            AureliumSkillsStatRequirement aureliumSkillsStats = new AureliumSkillsStatRequirement(rName, rFormat);
+            if (QuantumRPG.getInstance().isHooked(EHook.AURELIUM_SKILLS))
+                ItemRequirements.registerUserRequirement(aureliumSkillsStats);
         }
 
         path = "lore.stats.style.requirements.item.level.";

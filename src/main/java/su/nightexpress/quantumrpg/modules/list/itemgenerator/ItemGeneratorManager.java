@@ -47,6 +47,8 @@ import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequi
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.SoulboundRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.AureliumSkillsSkillRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.AureliumSkillsStatRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.JobsRebornRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.McMMORequirement;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
@@ -176,6 +178,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private TreeMap<Integer, String[]> reqBannedUserClass;
         private TreeMap<Integer, String[]> reqMcMMOSkills;
         private TreeMap<Integer, String[]> reqJobs;
+        private TreeMap<Integer, String[]> reqAureliumSkillsSkill;
+        private TreeMap<Integer, String[]> reqAureliumSkillsStat;
 
         private int enchantsMinAmount;
         private int enchantsMaxAmount;
@@ -284,6 +288,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     this.reqBannedUserClass.put(itemLvl, reqRaw.split(","));
                 }
             }
+
             // API Requirements
             if (ItemRequirements.isRegisteredUser(McMMORequirement.class)) {
                 this.reqMcMMOSkills = new TreeMap<>();
@@ -313,6 +318,38 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
                         String[] reqEdit = new String[]{job, reqRaw.split(":")[0], reqRaw.split(":")[1]};
                         this.reqJobs.put(itemLvl, reqEdit);
+                    }
+                }
+            }
+
+            if (ItemRequirements.isRegisteredUser(AureliumSkillsSkillRequirement.class)) {
+                this.reqAureliumSkillsSkill = new TreeMap<>();
+                for (String job : cfg.getSection(path + "aurelium-skill")) {
+                    for (String sLvl : cfg.getSection(path + "aurelium-skill." + job)) {
+                        int itemLvl = StringUT.getInteger(sLvl, -1);
+                        if (itemLvl <= 0) continue;
+
+                        String reqRaw = cfg.getString(path + "aurelium-skill." + job + "." + sLvl);
+                        if (reqRaw == null || reqRaw.isEmpty()) continue;
+
+                        String[] reqEdit = new String[]{job, reqRaw.split(":")[0], reqRaw.split(":")[1]};
+                        this.reqAureliumSkillsSkill.put(itemLvl, reqEdit);
+                    }
+                }
+            }
+
+            if (ItemRequirements.isRegisteredUser(AureliumSkillsStatRequirement.class)) {
+                this.reqAureliumSkillsStat = new TreeMap<>();
+                for (String job : cfg.getSection(path + "aurelium-stat")) {
+                    for (String sLvl : cfg.getSection(path + "aurelium-stat." + job)) {
+                        int itemLvl = StringUT.getInteger(sLvl, -1);
+                        if (itemLvl <= 0) continue;
+
+                        String reqRaw = cfg.getString(path + "aurelium-stat." + job + "." + sLvl);
+                        if (reqRaw == null || reqRaw.isEmpty()) continue;
+
+                        String[] reqEdit = new String[]{job, reqRaw.split(":")[0], reqRaw.split(":")[1]};
+                        this.reqAureliumSkillsStat.put(itemLvl, reqEdit);
                     }
                 }
             }
@@ -443,6 +480,26 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 return null;
 
             Map.Entry<Integer, String[]> e = this.reqJobs.floorEntry(itemLvl);
+            if (e == null) return null;
+            return e.getValue();
+        }
+
+        @Nullable
+        protected final String[] getAureliumSkillsSkillRequirement(int itemLvl) {
+            if (this.reqAureliumSkillsSkill == null)
+                return null;
+
+            Map.Entry<Integer, String[]> e = this.reqAureliumSkillsSkill.floorEntry(itemLvl);
+            if (e == null) return null;
+            return e.getValue();
+        }
+
+        @Nullable
+        protected final String[] getAureliumSkillsStatRequirement(int itemLvl) {
+            if (this.reqAureliumSkillsStat == null)
+                return null;
+
+            Map.Entry<Integer, String[]> e = this.reqAureliumSkillsStat.floorEntry(itemLvl);
             if (e == null) return null;
             return e.getValue();
         }
@@ -699,11 +756,29 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 }
             }
 
+            String[] aureliumSkillsSkills = getAureliumSkillsSkillRequirement(itemLvl);
+            if (jobs != null) {
+                AureliumSkillsSkillRequirement reqAureliumSkills = ItemRequirements.getUserRequirement(AureliumSkillsSkillRequirement.class);
+                if (reqAureliumSkills != null) {
+                    reqAureliumSkills.add(item, aureliumSkillsSkills, -1);
+                }
+            }
+
+            String[] aureliumSkillsStats = getAureliumSkillsStatRequirement(itemLvl);
+            if (jobs != null) {
+                AureliumSkillsStatRequirement reqAureliumStats = ItemRequirements.getUserRequirement(AureliumSkillsStatRequirement.class);
+                if (reqAureliumStats != null) {
+                    reqAureliumStats.add(item, aureliumSkillsStats, -1);
+                }
+            }
+
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_LEVEL, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_CLASS, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_MCMMO_SKILL, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_JOBS_JOB, null);
+            LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_AURELIUM_SKILLS_SKILL, null);
+            LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_AURELIUM_SKILLS_STAT, null);
 
             // Replace %SOULBOUND% placeholder.
             SoulboundRequirement reqSoul = ItemRequirements.getUserRequirement(SoulboundRequirement.class);

@@ -19,6 +19,8 @@ public class Perms {
 
     public static final String BYPASS_REQ_USER_MCMMO_SKILL = PREFIX + "bypass.requirement.mcmmoskill";
     public static final String BYPASS_REQ_USER_JOBS_JOB= PREFIX + "bypass.requirement.jobsjob";
+    public static final String BYPASS_REQ_USER_AURELIUM_SKILLS_SKILL = PREFIX + "bypass.requirement.aureliumskillsskill";
+    public static final String BYPASS_REQ_USER_AURELIUM_SKILLS_STAT = PREFIX + "bypass.requirement.aureliumskillsstat";
 
     public static final String EXTRACTOR_CMD_OPEN = PREFIX + "extractor.cmd.open";
     public static final String EXTRACTOR_GUI      = PREFIX + "extractor.gui";
