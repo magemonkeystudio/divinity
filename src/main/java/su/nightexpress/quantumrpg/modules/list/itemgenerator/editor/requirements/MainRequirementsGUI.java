@@ -16,13 +16,15 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
 
     public MainRequirementsGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
         super(itemGeneratorManager, itemGenerator, 18);
-        setTitle("[&d"+itemGenerator.getId()+"&r] editor/"+EditorGUI.ItemType.REQUIREMENTS.getTitle());
+        setTitle("[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.REQUIREMENTS.getTitle());
     }
 
     @Override
     protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int page) {
         GuiClick guiClick = (player1, type, clickEvent) -> {
-            if (type == null) { return; }
+            if (type == null) {
+                return;
+            }
             Class<?> clazz = type.getClass();
             if (clazz.equals(ContentType.class)) {
                 ContentType type2 = (ContentType) type;
@@ -55,11 +57,19 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
                         break;
                     }
                     case MCMMO_SKILL: {
-                        new RequirementsGUI(itemGeneratorManager, itemGenerator, MainRequirementsGUI.ItemType.MCMMO_SKILL.getPath(), Material.DIAMOND_SWORD).open(player1, 1);
+                        new NestedRequirementsGUI(itemGeneratorManager, itemGenerator, MainRequirementsGUI.ItemType.MCMMO_SKILL, Material.DIAMOND_SWORD).open(player1, 1);
                         break;
                     }
                     case JOBS_JOB: {
-                        new RequirementsGUI(itemGeneratorManager, itemGenerator, MainRequirementsGUI.ItemType.JOBS_JOB.getPath(), Material.IRON_PICKAXE).open(player1, 1);
+                        new NestedRequirementsGUI(itemGeneratorManager, itemGenerator, MainRequirementsGUI.ItemType.JOBS_JOB, Material.IRON_PICKAXE).open(player1, 1);
+                        break;
+                    }
+                    case AURELIUM_SKILL: {
+                        new NestedRequirementsGUI(itemGeneratorManager, itemGenerator, MainRequirementsGUI.ItemType.AURELIUM_SKILL, Material.PAPER).open(player1, 1);
+                        break;
+                    }
+                    case AURELIUM_STAT: {
+                        new NestedRequirementsGUI(itemGeneratorManager, itemGenerator, MainRequirementsGUI.ItemType.AURELIUM_STAT, Material.RED_DYE).open(player1, 1);
                         break;
                     }
                 }
@@ -67,26 +77,26 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
         };
 
         this.addButton(this.createButton("level", ItemType.LEVEL, Material.EXPERIENCE_BOTTLE,
-                                         "&eLevel requirements", List.of(
-                                                "&6Left-Click: &eModify"), 2, guiClick));
+                "&eLevel requirements", List.of(
+                        "&6Left-Click: &eModify"), 1, guiClick));
         this.addButton(this.createButton("class", ItemType.CLASS, Material.BOW,
-                                         "&eClass requirements", List.of(
-                                                "&6Left-Click: &eModify"), 4, guiClick));
+                "&eClass requirements", List.of(
+                        "&6Left-Click: &eModify"), 2, guiClick));
         this.addButton(this.createButton("banned-class", ItemType.BANNED_CLASS, Material.BARRIER,
-                                         "&eBanned Class requirements", List.of(
-                                                "&6Left-Click: &eModify"), 6, guiClick));
+                "&eBanned Class requirements", List.of(
+                        "&6Left-Click: &eModify"), 3, guiClick));
         this.addButton(this.createButton("mcmmo-skill", ItemType.MCMMO_SKILL, Material.DIAMOND_SWORD,
                 "&emcMMO Skill", List.of(
-                        "&6Left-Click: &eModify"), 11, guiClick));
+                        "&6Left-Click: &eModify"), 10, guiClick));
         this.addButton(this.createButton("jobs-job", ItemType.JOBS_JOB, Material.IRON_PICKAXE,
-                "&eJob", List.of(
-                        "&6Left-Click: &eModify"), 13, guiClick));
+                "&eJobReborn Job", List.of(
+                        "&6Left-Click: &eModify"), 11, guiClick));
         this.addButton(this.createButton("aurelium-skill", ItemType.AURELIUM_SKILL, Material.PAPER,
                 "&eAureliumSkills Skill", List.of(
-                        "&6Left-Click: &eModify"), 15, guiClick));
+                        "&6Left-Click: &eModify"), 12, guiClick));
         this.addButton(this.createButton("aurelium-stat", ItemType.AURELIUM_STAT, Material.RED_DYE,
                 "&eAureliumSkills Stat", List.of(
-                        "&6Left-Click: &eModify"), 17, guiClick));
+                        "&6Left-Click: &eModify"), 13, guiClick));
         this.addButton(this.createButton("exit", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 8, guiClick));
     }
 
@@ -101,8 +111,12 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
 
         private final String path;
 
-        ItemType(String path) { this.path = "generator.user-requirements-by-level."+path; }
+        ItemType(String path) {
+            this.path = "generator.user-requirements-by-level." + path;
+        }
 
-        public String getPath() { return path; }
+        public String getPath() {
+            return path;
+        }
     }
 }
