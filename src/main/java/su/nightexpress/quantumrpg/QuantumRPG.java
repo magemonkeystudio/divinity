@@ -103,8 +103,6 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
             return;
         }
 
-        info("Performing post-load tasks...");
-
         this.interactionManager = new InteractionManager(this);
         this.interactionManager.setup();
 
