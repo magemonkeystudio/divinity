@@ -1,5 +1,8 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
+import com.archyx.aureliumskills.api.AureliumAPI;
+import com.gamingmesh.jobs.Jobs;
+import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -293,6 +296,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             if (ItemRequirements.isRegisteredUser(McMMORequirement.class)) {
                 this.reqMcMMOSkills = new TreeMap<>();
                 for (String skill : cfg.getSection(path + "mcmmo-skill")) {
+                    //Deprecated and might need a change in future
+                    if (PrimarySkillType.getSkill(skill) == null) {
+                        QuantumRPG.getInstance().warn("The required mcmmo skill cannot be found: " + skill);
+                        continue;
+                    }
+
                     for (String sLvl : cfg.getSection(path + "mcmmo-skill." + skill)) {
                         int itemLvl = StringUT.getInteger(sLvl, -1);
                         if (itemLvl <= 0) continue;
@@ -309,6 +318,11 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             if (ItemRequirements.isRegisteredUser(JobsRebornRequirement.class)) {
                 this.reqJobs = new TreeMap<>();
                 for (String job : cfg.getSection(path + "jobs-job")) {
+                    if (Jobs.getJob(job) == null) {
+                        QuantumRPG.getInstance().warn("The required job cannot be found: " + job);
+                        continue;
+                    }
+
                     for (String sLvl : cfg.getSection(path + "jobs-job." + job)) {
                         int itemLvl = StringUT.getInteger(sLvl, -1);
                         if (itemLvl <= 0) continue;
@@ -324,15 +338,20 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             if (ItemRequirements.isRegisteredUser(AureliumSkillsSkillRequirement.class)) {
                 this.reqAureliumSkillsSkill = new TreeMap<>();
-                for (String job : cfg.getSection(path + "aurelium-skill")) {
-                    for (String sLvl : cfg.getSection(path + "aurelium-skill." + job)) {
+                for (String skill : cfg.getSection(path + "aurelium-skill")) {
+                    if (AureliumAPI.getPlugin().getSkillRegistry().getSkill(skill) == null) {
+                        QuantumRPG.getInstance().warn("The required aurelium skill cannot be found: " + skill);
+                        continue;
+                    }
+
+                    for (String sLvl : cfg.getSection(path + "aurelium-skill." + skill)) {
                         int itemLvl = StringUT.getInteger(sLvl, -1);
                         if (itemLvl <= 0) continue;
 
-                        String reqRaw = cfg.getString(path + "aurelium-skill." + job + "." + sLvl);
+                        String reqRaw = cfg.getString(path + "aurelium-skill." + skill + "." + sLvl);
                         if (reqRaw == null || reqRaw.isEmpty()) continue;
 
-                        String[] reqEdit = new String[]{job, reqRaw.split(":")[0], reqRaw.split(":")[1]};
+                        String[] reqEdit = new String[]{skill, reqRaw.split(":")[0], reqRaw.split(":")[1]};
                         this.reqAureliumSkillsSkill.put(itemLvl, reqEdit);
                     }
                 }
@@ -340,15 +359,20 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             if (ItemRequirements.isRegisteredUser(AureliumSkillsStatRequirement.class)) {
                 this.reqAureliumSkillsStat = new TreeMap<>();
-                for (String job : cfg.getSection(path + "aurelium-stat")) {
-                    for (String sLvl : cfg.getSection(path + "aurelium-stat." + job)) {
+                for (String stat : cfg.getSection(path + "aurelium-stat")) {
+                    if (AureliumAPI.getPlugin().getStatRegistry().getStat(stat) == null) {
+                        QuantumRPG.getInstance().warn("The required aurelium stat cannot be found: " + stat);
+                        continue;
+                    }
+
+                    for (String sLvl : cfg.getSection(path + "aurelium-stat." + stat)) {
                         int itemLvl = StringUT.getInteger(sLvl, -1);
                         if (itemLvl <= 0) continue;
 
-                        String reqRaw = cfg.getString(path + "aurelium-stat." + job + "." + sLvl);
+                        String reqRaw = cfg.getString(path + "aurelium-stat." + stat + "." + sLvl);
                         if (reqRaw == null || reqRaw.isEmpty()) continue;
 
-                        String[] reqEdit = new String[]{job, reqRaw.split(":")[0], reqRaw.split(":")[1]};
+                        String[] reqEdit = new String[]{stat, reqRaw.split(":")[0], reqRaw.split(":")[1]};
                         this.reqAureliumSkillsStat.put(itemLvl, reqEdit);
                     }
                 }
@@ -757,7 +781,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             }
 
             String[] aureliumSkillsSkills = getAureliumSkillsSkillRequirement(itemLvl);
-            if (jobs != null) {
+            if (aureliumSkillsSkills != null) {
                 AureliumSkillsSkillRequirement reqAureliumSkills = ItemRequirements.getUserRequirement(AureliumSkillsSkillRequirement.class);
                 if (reqAureliumSkills != null) {
                     reqAureliumSkills.add(item, aureliumSkillsSkills, -1);
@@ -765,7 +789,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             }
 
             String[] aureliumSkillsStats = getAureliumSkillsStatRequirement(itemLvl);
-            if (jobs != null) {
+            if (aureliumSkillsStats != null) {
                 AureliumSkillsStatRequirement reqAureliumStats = ItemRequirements.getUserRequirement(AureliumSkillsStatRequirement.class);
                 if (reqAureliumStats != null) {
                     reqAureliumStats.add(item, aureliumSkillsStats, -1);

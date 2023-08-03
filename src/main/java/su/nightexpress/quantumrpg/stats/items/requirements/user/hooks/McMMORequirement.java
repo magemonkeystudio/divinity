@@ -58,14 +58,14 @@ public class McMMORequirement extends DynamicUserRequirement<String[]> {
         int v2       = StringUT.getInteger(value[2], -1);
         int min = Math.min(v1, v2);
         int max = Math.max(v1, v2);
-        if(min <= 0 || Arrays.stream(PrimarySkillType.values()).noneMatch(Predicate.isEqual(skill)))
+        if(min <= 0)
             return "";
 
         String lore;
         if (min == max) {
-            lore = EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SINGLE.replace("%skill%", skill.getName()).replace("%min%", String.valueOf(min));
+            lore = EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SINGLE.replace("%skill%", skill.name()).replace("%min%", String.valueOf(min));
         } else {
-            lore = EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE.replace("%skill%", skill.getName()).replace("%max%", String.valueOf(max)).replace("%min%", String.valueOf(min));
+            lore = EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE.replace("%skill%", skill.name()).replace("%max%", String.valueOf(max)).replace("%min%", String.valueOf(min));
         }
         return ChatColor.WHITE + lore;
     }

@@ -2,6 +2,7 @@ package su.nightexpress.quantumrpg.stats.items.requirements.user.hooks;
 
 import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.container.Job;
+import com.gamingmesh.jobs.container.JobProgression;
 import mc.promcteam.engine.config.api.ILangMsg;
 import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -40,7 +41,8 @@ public class JobsRebornRequirement extends DynamicUserRequirement<String[]> {
 
         int min = StringUT.getInteger(itemClass[1], -1);
         int max = StringUT.getInteger(itemClass[2], 0);
-        int jobLevel = Jobs.getPlayerManager().getJobsPlayer(player).getJobProgression(Jobs.getJob(itemClass[0])).getLevel();
+        JobProgression progress = Jobs.getPlayerManager().getJobsPlayer(player).getJobProgression(Jobs.getJob(itemClass[0]));
+        int jobLevel = progress != null ? progress.getLevel() : 0;
         return min == max ? (jobLevel >= min) : (jobLevel >= min && jobLevel <= max);
     }
 

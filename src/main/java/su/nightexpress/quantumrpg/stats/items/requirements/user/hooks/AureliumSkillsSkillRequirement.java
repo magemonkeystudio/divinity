@@ -42,8 +42,8 @@ public class AureliumSkillsSkillRequirement extends DynamicUserRequirement<Strin
 
         int min = StringUT.getInteger(itemClass[1], -1);
         int max = StringUT.getInteger(itemClass[2], 0);
-        int jobLevel = AureliumAPI.getSkillLevel(player, AureliumAPI.getPlugin().getSkillRegistry().getSkill(itemClass[0]));
-        return min == max ? (jobLevel >= min) : (jobLevel >= min && jobLevel <= max);
+        int skillLevel = AureliumAPI.getSkillLevel(player, AureliumAPI.getPlugin().getSkillRegistry().getSkill(itemClass[0]));
+        return min == max ? (skillLevel >= min) : (skillLevel >= min && skillLevel <= max);
     }
 
     @Override

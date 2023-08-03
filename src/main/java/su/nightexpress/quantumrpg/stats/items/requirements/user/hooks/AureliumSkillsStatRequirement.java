@@ -42,8 +42,8 @@ public class AureliumSkillsStatRequirement extends DynamicUserRequirement<String
 
         double min = StringUT.getDouble(itemClass[1], -1);
         double max = StringUT.getDouble(itemClass[2], 0);
-        double jobLevel = AureliumAPI.getStatLevel(player, AureliumAPI.getPlugin().getStatRegistry().getStat(itemClass[0]));
-        return min == max ? (jobLevel >= min) : (jobLevel >= min && jobLevel <= max);
+        double statLevel = AureliumAPI.getStatLevel(player, AureliumAPI.getPlugin().getStatRegistry().getStat(itemClass[0]));
+        return min == max ? (statLevel >= min) : (statLevel >= min && statLevel <= max);
     }
 
     @Override
