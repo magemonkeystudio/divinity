@@ -36,7 +36,6 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
 
     private final ItemGeneratorManager                           itemGen;
     private final List<UUID>                                     noSpam       = new ArrayList<>();
-    private       SkillAPIHK                                     skillAPIHK;
 
     ItemAbilityHandler(@NotNull ItemGeneratorManager itemGen) {
         super(itemGen.plugin);
@@ -45,8 +44,6 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
 
     @Override
     public void setup() {
-        this.skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
-        if (this.skillAPIHK == null) { return; }
         this.registerListeners();
     }
 
@@ -60,24 +57,27 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
 
         noSpam.add(player.getUniqueId());
         //TODO Make this cooldown configurable.
-        Bukkit.getScheduler().runTaskLater(QuantumRPG.getInstance(),
+        Bukkit.getScheduler().runTaskLater(this.plugin,
                 () -> noSpam.remove(player.getUniqueId()), 60L);
         return true;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        skillAPIHK.updateSkills(event.getPlayer());
+        SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
+        if (skillAPIHK != null) {skillAPIHK.updateSkills(event.getPlayer());}
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onItemHeldEvent(PlayerItemHeldEvent event) {
-        skillAPIHK.updateSkills(event.getPlayer());
+        SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
+        if (skillAPIHK != null) {skillAPIHK.updateSkills(event.getPlayer());}
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onArmorEquip(ArmorEquipEvent event) {
-        skillAPIHK.updateSkills(event.getPlayer());
+        SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
+        if (skillAPIHK != null) {skillAPIHK.updateSkills(event.getPlayer());}
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -88,7 +88,8 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
             PlayerInventory playerInventory = (PlayerInventory) inventory;
             HumanEntity humanEntity = playerInventory.getHolder();
             if (!(humanEntity instanceof Player)) { return; }
-            skillAPIHK.updateSkills((Player) humanEntity);
+            SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
+            if (skillAPIHK != null) {skillAPIHK.updateSkills((Player) humanEntity);}
         }
     }
 
@@ -100,7 +101,8 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
             PlayerInventory playerInventory = (PlayerInventory) inventory;
             HumanEntity humanEntity = playerInventory.getHolder();
             if (!(humanEntity instanceof Player)) { return; }
-            skillAPIHK.updateSkills((Player) humanEntity);
+            SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
+            if (skillAPIHK != null) {skillAPIHK.updateSkills((Player) humanEntity);}
         }
     }
 

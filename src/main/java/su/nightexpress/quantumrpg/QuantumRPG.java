@@ -3,8 +3,6 @@ package su.nightexpress.quantumrpg;
 import mc.promcteam.engine.NexDataPlugin;
 import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.commands.api.IGeneralCommand;
-import mc.promcteam.engine.hooks.Hooks;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
@@ -18,10 +16,9 @@ import su.nightexpress.quantumrpg.data.RPGUserData;
 import su.nightexpress.quantumrpg.data.UserManager;
 import su.nightexpress.quantumrpg.data.api.RPGUser;
 import su.nightexpress.quantumrpg.hooks.EHook;
-import su.nightexpress.quantumrpg.hooks.external.*;
+import su.nightexpress.quantumrpg.hooks.external.CrackShotHK;
+import su.nightexpress.quantumrpg.hooks.external.MyPetHK;
 import su.nightexpress.quantumrpg.hooks.external.mimic.MimicHook;
-import su.nightexpress.quantumrpg.hooks.external.mythicmobs.MythicMobsHK;
-import su.nightexpress.quantumrpg.hooks.external.mythicmobs.MythicMobsHKv5;
 import su.nightexpress.quantumrpg.manager.EntityManager;
 import su.nightexpress.quantumrpg.manager.damage.DamageManager;
 import su.nightexpress.quantumrpg.manager.interactions.InteractionManager;
@@ -104,12 +101,6 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
             return;
         }
 
-        getServer().getScheduler().runTaskLater(this, this::onPostEnable, 1L);
-    }
-
-    private void onPostEnable() {
-        info("Performing post-load tasks...");
-
         this.interactionManager = new InteractionManager(this);
         this.interactionManager.setup();
 
@@ -178,29 +169,11 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
     @Override
     public void registerHooks() {
         this.registerHook(EHook.CRACK_SHOT, CrackShotHK.class);
-        this.registerHook(EHook.LORINTHS_RPG_MOBS, LorinthsRpgMobsHK.class);
-        this.registerHook(EHook.MAGIC, MagicHK.class);
-        this.registerHook(EHook.MCMMO, McmmoHK.class);
-
-        boolean mythic4 = true;
-        try {
-            Class.forName("io.lumine.xikage.mythicmobs.MythicMobs");
-        } catch (ClassNotFoundException classNotFoundException) {
-            mythic4 = false;
-        }
-        if (mythic4)
-            this.registerHook(Hooks.MYTHIC_MOBS, MythicMobsHK.class);
-        else
-            this.registerHook(Hooks.MYTHIC_MOBS, MythicMobsHKv5.class);
-
         this.registerHook(EHook.MY_PET, MyPetHK.class);
-        if (Hooks.hasPlaceholderAPI()) {
-            this.registerHook(Hooks.PLACEHOLDER_API, PlaceholderAPIHK.class);
-        }
-        this.registerHook(EHook.PWING_RACES, PwingRacesHK.class);
-        this.registerHook(EHook.SKILL_API, SkillAPIHK.class);
 //		this.registerHook(EHook.RACES_OF_THANA, RacesOfThanaHK.class);
 //		this.registerHook(EHook.SKILLS, SkillsProHK.class);
+
+        // Other hooks loaded dynamically by HookListener
     }
 
     @Override

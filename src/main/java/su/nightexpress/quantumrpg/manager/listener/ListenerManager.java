@@ -3,6 +3,7 @@ package su.nightexpress.quantumrpg.manager.listener;
 import mc.promcteam.engine.manager.api.Loadable;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.hooks.HookListener;
 import su.nightexpress.quantumrpg.manager.listener.object.*;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
@@ -16,6 +17,7 @@ public class ListenerManager implements Loadable {
     private       ItemRequirementListener lisReq;
     private       ItemUpdaterListener     updater;
     private       VanillaWrapperListener  lisQuantum;
+    private       HookListener            hookListener;
 
     public ListenerManager(@NotNull QuantumRPG plugin) {
         this.plugin = plugin;
@@ -44,6 +46,9 @@ public class ListenerManager implements Loadable {
 
         this.updater = new ItemUpdaterListener(this.plugin);
         this.updater.registerListeners();
+
+        this.hookListener = new HookListener(this.plugin);
+        this.hookListener.registerListeners();
     }
 
     @Override

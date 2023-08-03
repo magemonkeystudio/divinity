@@ -108,11 +108,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
         this.resourceManager = new ResourceManager(this);
 
-        SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
-        if (skillAPIHK != null) {
-            this.abilityHandler = new ItemAbilityHandler(this);
-            this.abilityHandler.setup();
-        }
+        this.abilityHandler = new ItemAbilityHandler(this);
+        this.abilityHandler.setup();
+
         this.registerListeners();
     }
 
@@ -332,19 +330,18 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     "generator.item-stats.",
                     ItemStats.getStats(),
                     ItemGeneratorManager.PLACE_GEN_STATS));
+            this.addAttributeGenerator(this.abilityGenerator = new AbilityGenerator(this.plugin,
+                    this,
+                    PLACE_GEN_ABILITY));
             SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
-            // If SkillAPI is installed, add SkillAPI Attributes
+            this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
+                    this,
+                    "generator.skillapi-attributes.",
+                    skillAPIHK == null ? List.of() : skillAPIHK.getAttributes(),
+                    ItemGeneratorManager.PLACE_GEN_SKILLAPI_ATTR));
             if (skillAPIHK != null) {
-                cfg.addMissing("generator.skillapi-attributes",
-                        commonItemGenerator.get("generator.skillapi-attributes"));
-                this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
-                        this,
-                        "generator.skillapi-attributes.",
-                        skillAPIHK.getAttributes(),
-                        ItemGeneratorManager.PLACE_GEN_SKILLAPI_ATTR));
+                cfg.addMissing("generator.skillapi-attributes", commonItemGenerator.get("generator.skillapi-attributes"));
                 cfg.addMissing("generator.skills", commonItemGenerator.get("generator.skills"));
-                this.addAttributeGenerator(
-                        this.abilityGenerator = new AbilityGenerator(this.plugin, this, PLACE_GEN_ABILITY));
             }
 
             // Pre-cache Socket Attributes

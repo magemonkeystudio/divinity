@@ -20,6 +20,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -182,7 +183,17 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
     }
 
     public ItemStack getAttributeIndicator(String attributeId) {
-        return SkillAPI.getAttributeManager().getAttribute(attributeId).getToolIcon();
+        AttributeManager.Attribute attribute = SkillAPI.getAttributeManager().getAttribute(attributeId);
+        if (attribute == null) {
+            ItemStack itemStack = new ItemStack(Material.DIRT);
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta != null) {
+                meta.setDisplayName(attributeId);
+                itemStack.setItemMeta(meta);
+            }
+            return itemStack;
+        }
+        return attribute.getToolIcon();
     }
 
     private Map<String,Integer> getAbilities(ItemStack item) {
