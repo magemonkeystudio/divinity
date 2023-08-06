@@ -1,7 +1,5 @@
 package su.nightexpress.quantumrpg.modules.list.combatlog;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.api.task.ITask;
 import mc.promcteam.engine.utils.ClickText;
@@ -9,6 +7,9 @@ import mc.promcteam.engine.utils.MsgUT;
 import mc.promcteam.engine.utils.NumberUT;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
+import me.hsgamer.unihologram.common.api.Hologram;
+import me.hsgamer.unihologram.common.line.TextHologramLine;
+import me.hsgamer.unihologram.spigot.plugin.UniHologramPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -21,6 +22,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -35,6 +37,7 @@ import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CombatLogManager extends QModule {
 
@@ -127,7 +130,7 @@ public class CombatLogManager extends QModule {
         }
 
         path = "indicators.";
-        if (cfg.getBoolean(path + "enabled") && Hooks.hasPlugin(EHook.HOLOGRAPHIC_DISPLAYS)) {
+        if (cfg.getBoolean(path + "enabled") && Hooks.hasPlugin(EHook.UNI_HOLOGRAM)) {
             this.indicatorOrder = cfg.getStringList(path + "format.order");
 
             this.indicatorDamageTypes = new HashMap<>();
@@ -481,7 +484,7 @@ public class CombatLogManager extends QModule {
 
     class IndicatorExpansion {
 
-        private Map<Hologram, Integer> map;
+        private Map<Hologram<Location>, Integer> map;
         private UpTask                 taskUp;
 
         public void setup() {
@@ -496,8 +499,8 @@ public class CombatLogManager extends QModule {
                 this.taskUp = null;
             }
             if (this.map != null) {
-                for (Hologram hologram : this.map.keySet()) {
-                    hologram.delete();
+                for (Hologram<Location> hologram : this.map.keySet()) {
+                    hologram.clear();
                 }
                 this.map.clear();
                 this.map = null;
@@ -537,10 +540,8 @@ public class CombatLogManager extends QModule {
             if (list.isEmpty()) return;
 
             plugin.getServer().getScheduler().runTask(plugin, () -> {
-                Hologram holo = HologramsAPI.createHologram(plugin, loc);
-                for (String line : list) {
-                    holo.appendTextLine(line);
-                }
+                Hologram<Location> holo = JavaPlugin.getPlugin(UniHologramPlugin.class).getProvider().createHologram("CLM-" + UUID.randomUUID(), loc);
+                holo.setLines(list.stream().map(TextHologramLine::new).collect(Collectors.toList()));
                 map.put(holo, 1);
             });
         }
@@ -553,14 +554,14 @@ public class CombatLogManager extends QModule {
 
             @Override
             public void action() {
-                for (Map.Entry<Hologram, Integer> e : new HashMap<>(map).entrySet()) {
-                    Hologram holo   = e.getKey();
-                    int      yStack = e.getValue();
+                for (Map.Entry<Hologram<Location>, Integer> e : new HashMap<>(map).entrySet()) {
+                    Hologram<Location> holo = e.getKey();
+                    int yStack = e.getValue();
 
-                    holo.teleport(holo.getLocation().add(0, 0.11, 0));
+                    holo.setLocation(holo.getLocation().add(0, 0.11, 0));
                     if (yStack++ >= 20) {
                         map.remove(holo);
-                        holo.delete();
+                        holo.clear();
                     } else {
                         map.put(holo, yStack);
                     }

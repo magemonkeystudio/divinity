@@ -1,12 +1,14 @@
 package su.nightexpress.quantumrpg.modules.list.loot;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import mc.promcteam.engine.manager.IListener;
 import mc.promcteam.engine.manager.api.task.ITask;
 import mc.promcteam.engine.modules.IModuleExecutor;
 import mc.promcteam.engine.utils.*;
 import mc.promcteam.engine.utils.random.Rnd;
+import me.hsgamer.unihologram.common.api.Hologram;
+import me.hsgamer.unihologram.common.api.HologramLine;
+import me.hsgamer.unihologram.common.line.TextHologramLine;
+import me.hsgamer.unihologram.spigot.plugin.UniHologramPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -20,6 +22,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -30,6 +33,7 @@ import su.nightexpress.quantumrpg.modules.list.party.PartyManager.PartyMember;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 public class LootHolder extends IListener<QuantumRPG> implements InventoryHolder {
 
@@ -469,29 +473,29 @@ public class LootHolder extends IListener<QuantumRPG> implements InventoryHolder
 
     class HologramExpansion {
 
-        private Hologram holo;
+        private Hologram<Location> holo;
 
         public HologramExpansion() {
-            this.holo = HologramsAPI.createHologram(plugin, LocUT.getCenter(boxLoc.clone()).add(0, 1.25, 0));
+            this.holo = JavaPlugin.getPlugin(UniHologramPlugin.class).getProvider().createHologram("HD-" + UUID.randomUUID(), LocUT.getCenter(boxLoc.clone()).add(0, 1.25, 0));
             this.update();
         }
 
         public void update() {
             if (this.holo == null) return;
 
-            this.holo.clearLines();
-            for (String s : manager.getHoloText()) {
-                this.holo.appendTextLine(s
-                        .replace("%entity%", title)
-                        .replace("%owner%", ownerName)
-                        .replace("%time%", TimeUT.formatTimeLeft(LootHolder.this.despawnTime)));
-            }
+            List<HologramLine> lines = manager.getHoloText().stream()
+                    .map(s -> s.replace("%entity%", title)
+                            .replace("%owner%", ownerName)
+                            .replace("%time%", TimeUT.formatTimeLeft(LootHolder.this.despawnTime)))
+                    .map(TextHologramLine::new)
+                    .collect(Collectors.toList());
+            holo.setLines(lines);
         }
 
         public void remove() {
             if (this.holo == null) return;
 
-            this.holo.delete();
+            this.holo.clear();
             this.holo = null;
         }
     }

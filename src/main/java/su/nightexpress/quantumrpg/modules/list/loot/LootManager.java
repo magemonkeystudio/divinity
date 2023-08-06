@@ -105,7 +105,7 @@ public class LootManager extends QModule {
         this.boxSkullHash = cfg.getString(path + "skull-hash");
         this.boxParticleStatic = cfg.getString(path + "particles.static");
         this.boxParticleDespawn = cfg.getString(path + "particles.despawn");
-        this.boxHoloEnabled = cfg.getBoolean(path + "holograms.enabled") && Hooks.hasPlugin(EHook.HOLOGRAPHIC_DISPLAYS);
+        this.boxHoloEnabled = cfg.getBoolean(path + "holograms.enabled") && Hooks.hasPlugin(EHook.UNI_HOLOGRAM);
         this.boxHoloText = StringUT.color(cfg.getStringList(path + "holograms.text"));
 
         path = "party.drop-modes.";
