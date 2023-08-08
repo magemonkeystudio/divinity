@@ -249,9 +249,10 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         final Map<DefenseAttribute, Double>  defenses = new HashMap<>();
 
         // Pre-cache damager damage types.
-        if (isFullDamage && statsDamager != null && !exempt) {
+        if (isFullDamage && !exempt) {
             damages.putAll(statsDamager.getDamageTypes(false));
-        } else {
+        }
+        if (damages.isEmpty()) {
             DamageAttribute dmgCause = ItemStats.getDamageByCause(cause);
             if (dmgCause == null) dmgCause = ItemStats.getDamageByDefault();
             damages.put(dmgCause, damageStart);

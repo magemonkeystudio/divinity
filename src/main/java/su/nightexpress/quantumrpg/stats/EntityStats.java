@@ -614,9 +614,9 @@ public class EntityStats {
             // Check for empty map before add default damage.
             // The default damage is always the latest in list
             // so map will be filled if there was any damage types.
-            if (value == 0D && dmgAtt.isDefault() && map.isEmpty()) {
-                value = 1D; // Default hand damage for default damage type.
-            }
+            //if (value == 0D && dmgAtt.isDefault() && map.isEmpty()) {
+            //    value = 1D; // Default hand damage for default damage type.
+            //}
 
             value = BonusCalculator.CALC_FULL.apply(value, this.getBonuses(dmgAtt));
             value *= dmgAtt.getDamageModifierByBiome(bio); // Multiply by Biome
