@@ -1,5 +1,8 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
+import com.archyx.aureliumskills.api.AureliumAPI;
+import com.gamingmesh.jobs.Jobs;
+import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -47,6 +50,10 @@ import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequi
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.SoulboundRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.AureliumSkillsSkillRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.AureliumSkillsStatRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.JobsRebornRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.McMMORequirement;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
@@ -60,14 +67,14 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
     public static YamlConfiguration commonItemGenerator;
 
-    private ResourceManager    resourceManager;
+    private ResourceManager resourceManager;
     private ItemAbilityHandler abilityHandler;
 
-    public static final String PLACE_GEN_DAMAGE        = "%GENERATOR_DAMAGE%";
-    public static final String PLACE_GEN_DEFENSE       = "%GENERATOR_DEFENSE%";
-    public static final String PLACE_GEN_STATS         = "%GENERATOR_STATS%";
-    public static final String PLACE_GEN_SOCKETS       = "%GENERATOR_SOCKETS_%TYPE%%";
-    public static final String PLACE_GEN_ABILITY       = "%GENERATOR_SKILLS%";
+    public static final String PLACE_GEN_DAMAGE = "%GENERATOR_DAMAGE%";
+    public static final String PLACE_GEN_DEFENSE = "%GENERATOR_DEFENSE%";
+    public static final String PLACE_GEN_STATS = "%GENERATOR_STATS%";
+    public static final String PLACE_GEN_SOCKETS = "%GENERATOR_SOCKETS_%TYPE%%";
+    public static final String PLACE_GEN_ABILITY = "%GENERATOR_SKILLS%";
     public static final String PLACE_GEN_SKILLAPI_ATTR = "%GENERATOR_SKILLAPI_ATTR%";
 
     public ItemGeneratorManager(@NotNull QuantumRPG plugin) {
@@ -159,10 +166,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private double prefixChance;
         private double suffixChance;
 
-        private boolean       materialsWhitelist;
+        private boolean materialsWhitelist;
         private Set<Material> materialsList;
 
-        private List<Integer>              modelDataList;
+        private List<Integer> modelDataList;
         private Map<String, List<Integer>> modelDataSpecial;
 
         private Map<String, BonusMap> materialsModifiers;
@@ -170,15 +177,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private TreeMap<Integer, String[]> reqUserLvl;
         private TreeMap<Integer, String[]> reqUserClass;
         private TreeMap<Integer, String[]> reqBannedUserClass;
+        private TreeMap<Integer, String[]> reqMcMMOSkills;
+        private TreeMap<Integer, String[]> reqJobs;
+        private TreeMap<Integer, String[]> reqAureliumSkillsSkill;
+        private TreeMap<Integer, String[]> reqAureliumSkillsStat;
 
-        private int                        enchantsMinAmount;
-        private int                        enchantsMaxAmount;
-        private boolean                    enchantsSafeOnly;
-        private boolean                    enchantsSafeLevels;
+        private int enchantsMinAmount;
+        private int enchantsMaxAmount;
+        private boolean enchantsSafeOnly;
+        private boolean enchantsSafeLevels;
         private Map<Enchantment, String[]> enchantsList;
 
         private Set<IAttributeGenerator> attributeGenerators;
-        private AbilityGenerator         abilityGenerator;
+        private AbilityGenerator abilityGenerator;
 
         public GeneratorItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
             super(plugin, cfg, ItemGeneratorManager.this);
@@ -191,7 +202,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             this.materialsWhitelist = cfg.getBoolean(path + "materials.reverse");
             this.materialsList = new HashSet<>(Config.getAllRegisteredMaterials());
 
-            String      mask      = JStrings.MASK_ANY;
+            String mask = JStrings.MASK_ANY;
             Set<String> materials = new HashSet<>(cfg.getStringList(path + "materials.black-list"));
 
             this.materialsList.removeIf(matAll -> {
@@ -199,8 +210,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 String mAll = matAll.name();
                 for (String mCfg : materials) {
                     boolean isWildCard = mCfg.startsWith(mask) || mCfg.endsWith(mask);
-                    String  mCfgRaw    = isWildCard ? mCfg.replace(mask, "") : mCfg;
-                    boolean matches    = isWildCard ? (mAll.startsWith(mCfgRaw) || mAll.endsWith(mCfgRaw))
+                    String mCfgRaw = isWildCard ? mCfg.replace(mask, "") : mCfg;
+                    boolean matches = isWildCard ? (mAll.startsWith(mCfgRaw) || mAll.endsWith(mCfgRaw))
                             : mAll.equalsIgnoreCase(mCfgRaw);
 
                     if (matches) { // If matches then either keep item in list or remove it
@@ -231,8 +242,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     continue;
                 }
 
-                BonusMap bMap  = new BonusMap();
-                String   path2 = path + group + ".";
+                BonusMap bMap = new BonusMap();
+                String path2 = path + group + ".";
                 bMap.loadDamages(cfg, path2 + "damage-types");
                 bMap.loadDefenses(cfg, path2 + "defense-types");
                 bMap.loadStats(cfg, path2 + "item-stats");
@@ -276,6 +287,92 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (reqRaw == null || reqRaw.isEmpty()) continue;
 
                     this.reqBannedUserClass.put(itemLvl, reqRaw.split(","));
+                }
+            }
+
+            // API Requirements
+            if (ItemRequirements.isRegisteredUser(McMMORequirement.class)) {
+                this.reqMcMMOSkills = new TreeMap<>();
+                for (String skill : cfg.getSection(path + "mcmmo-skill")) {
+                    //Deprecated and might need a change in future
+                    if (PrimarySkillType.getSkill(skill) == null) {
+                        QuantumRPG.getInstance().warn("The required mcmmo skill cannot be found: " + skill);
+                        continue;
+                    }
+
+                    for (String sLvl : cfg.getSection(path + "mcmmo-skill." + skill)) {
+                        int itemLvl = StringUT.getInteger(sLvl, -1);
+                        if (itemLvl <= 0) continue;
+
+                        String reqRaw = cfg.getString(path + "mcmmo-skill." + skill + "." + sLvl);
+                        if (reqRaw == null || reqRaw.isEmpty()) continue;
+
+                        String[] reqEdit = new String[]{skill, reqRaw.split(":")[0], reqRaw.split(":")[1]};
+                        this.reqMcMMOSkills.put(itemLvl, reqEdit);
+                    }
+                }
+            }
+
+            if (ItemRequirements.isRegisteredUser(JobsRebornRequirement.class)) {
+                this.reqJobs = new TreeMap<>();
+                for (String job : cfg.getSection(path + "jobs-job")) {
+                    if (Jobs.getJob(job) == null) {
+                        QuantumRPG.getInstance().warn("The required job cannot be found: " + job);
+                        continue;
+                    }
+
+                    for (String sLvl : cfg.getSection(path + "jobs-job." + job)) {
+                        int itemLvl = StringUT.getInteger(sLvl, -1);
+                        if (itemLvl <= 0) continue;
+
+                        String reqRaw = cfg.getString(path + "jobs-job." + job + "." + sLvl);
+                        if (reqRaw == null || reqRaw.isEmpty()) continue;
+
+                        String[] reqEdit = new String[]{job, reqRaw.split(":")[0], reqRaw.split(":")[1]};
+                        this.reqJobs.put(itemLvl, reqEdit);
+                    }
+                }
+            }
+
+            if (ItemRequirements.isRegisteredUser(AureliumSkillsSkillRequirement.class)) {
+                this.reqAureliumSkillsSkill = new TreeMap<>();
+                for (String skill : cfg.getSection(path + "aurelium-skill")) {
+                    if (AureliumAPI.getPlugin().getSkillRegistry().getSkill(skill) == null) {
+                        QuantumRPG.getInstance().warn("The required aurelium skill cannot be found: " + skill);
+                        continue;
+                    }
+
+                    for (String sLvl : cfg.getSection(path + "aurelium-skill." + skill)) {
+                        int itemLvl = StringUT.getInteger(sLvl, -1);
+                        if (itemLvl <= 0) continue;
+
+                        String reqRaw = cfg.getString(path + "aurelium-skill." + skill + "." + sLvl);
+                        if (reqRaw == null || reqRaw.isEmpty()) continue;
+
+                        String[] reqEdit = new String[]{skill, reqRaw.split(":")[0], reqRaw.split(":")[1]};
+                        this.reqAureliumSkillsSkill.put(itemLvl, reqEdit);
+                    }
+                }
+            }
+
+            if (ItemRequirements.isRegisteredUser(AureliumSkillsStatRequirement.class)) {
+                this.reqAureliumSkillsStat = new TreeMap<>();
+                for (String stat : cfg.getSection(path + "aurelium-stat")) {
+                    if (AureliumAPI.getPlugin().getStatRegistry().getStat(stat) == null) {
+                        QuantumRPG.getInstance().warn("The required aurelium stat cannot be found: " + stat);
+                        continue;
+                    }
+
+                    for (String sLvl : cfg.getSection(path + "aurelium-stat." + stat)) {
+                        int itemLvl = StringUT.getInteger(sLvl, -1);
+                        if (itemLvl <= 0) continue;
+
+                        String reqRaw = cfg.getString(path + "aurelium-stat." + stat + "." + sLvl);
+                        if (reqRaw == null || reqRaw.isEmpty()) continue;
+
+                        String[] reqEdit = new String[]{stat, reqRaw.split(":")[0], reqRaw.split(":")[1]};
+                        this.reqAureliumSkillsStat.put(itemLvl, reqEdit);
+                    }
                 }
             }
 
@@ -385,6 +482,46 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             Map.Entry<Integer, String[]> e = this.reqBannedUserClass.floorEntry(itemLvl);
             if (e == null) return null;
 
+            return e.getValue();
+        }
+
+        @Nullable
+        protected final String[] getMcMMOSkillsRequirement(int itemLvl) {
+            if (this.reqMcMMOSkills == null)
+                return null;
+
+            Map.Entry<Integer, String[]> e = this.reqMcMMOSkills.floorEntry(itemLvl);
+            if (e == null) return null;
+            return e.getValue();
+        }
+
+        @Nullable
+        protected final String[] getJobsRequirement(int itemLvl) {
+            if (this.reqJobs == null)
+                return null;
+
+            Map.Entry<Integer, String[]> e = this.reqJobs.floorEntry(itemLvl);
+            if (e == null) return null;
+            return e.getValue();
+        }
+
+        @Nullable
+        protected final String[] getAureliumSkillsSkillRequirement(int itemLvl) {
+            if (this.reqAureliumSkillsSkill == null)
+                return null;
+
+            Map.Entry<Integer, String[]> e = this.reqAureliumSkillsSkill.floorEntry(itemLvl);
+            if (e == null) return null;
+            return e.getValue();
+        }
+
+        @Nullable
+        protected final String[] getAureliumSkillsStatRequirement(int itemLvl) {
+            if (this.reqAureliumSkillsStat == null)
+                return null;
+
+            Map.Entry<Integer, String[]> e = this.reqAureliumSkillsStat.floorEntry(itemLvl);
+            if (e == null) return null;
             return e.getValue();
         }
 
@@ -509,7 +646,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             String prefixItemType = "";
             String suffixItemType = "";
 
-            String itemGroupId   = ItemUtils.getItemGroupIdFor(item);
+            String itemGroupId = ItemUtils.getItemGroupIdFor(item);
             String itemGroupName = ItemUtils.getItemGroupNameFor(item.getType());
 
             if (Rnd.get(true) <= prefixChance) {
@@ -551,12 +688,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             // +-------------------------+
             // TODO More options, mb generator?
             if (meta instanceof BlockStateMeta) {
-                BlockStateMeta bmeta  = (BlockStateMeta) meta;
-                Banner         banner = (Banner) bmeta.getBlockState();
+                BlockStateMeta bmeta = (BlockStateMeta) meta;
+                Banner banner = (Banner) bmeta.getBlockState();
 
-                DyeColor    bBaseColor    = Rnd.get(DyeColor.values());
-                PatternType bPattern      = Rnd.get(PatternType.values());
-                DyeColor    bPatternColor = Rnd.get(DyeColor.values());
+                DyeColor bBaseColor = Rnd.get(DyeColor.values());
+                PatternType bPattern = Rnd.get(PatternType.values());
+                DyeColor bPatternColor = Rnd.get(DyeColor.values());
 
                 banner.setBaseColor(bBaseColor);
                 banner.addPattern(new Pattern(bPatternColor, bPattern));
@@ -566,19 +703,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             item.setItemMeta(meta);
 
             // Add enchants
-            int                                    enchRoll  =
+            int enchRoll =
                     Rnd.get(this.getMinEnchantments(), this.getMaxEnchantments());
-            int                                    enchCount = 0;
-            List<Map.Entry<Enchantment, String[]>> enchants  = new ArrayList<>(this.enchantsList.entrySet());
+            int enchCount = 0;
+            List<Map.Entry<Enchantment, String[]>> enchants = new ArrayList<>(this.enchantsList.entrySet());
             Collections.shuffle(enchants);
 
             for (Map.Entry<Enchantment, String[]> e : enchants) {
                 if (enchCount >= enchRoll) {
                     break;
                 }
-                Enchantment enchant    = e.getKey();
-                int[]       enchLevels = this.doMathExpression(itemLvl, e.getValue());
-                int         enchLevel  = Rnd.get(enchLevels[0], enchLevels[1]);
+                Enchantment enchant = e.getKey();
+                int[] enchLevels = this.doMathExpression(itemLvl, e.getValue());
+                int enchLevel = Rnd.get(enchLevels[0], enchLevels[1]);
                 if (enchLevel < 1) continue;
 
                 if (this.isSafeEnchant()) {
@@ -623,9 +760,46 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     reqBannedClass.add(item, bannedUserClass, -1);
                 }
             }
+
+            String[] mcmmo = getMcMMOSkillsRequirement(itemLvl);
+            if (mcmmo != null) {
+                McMMORequirement reqMcMMO = ItemRequirements.getUserRequirement(McMMORequirement.class);
+                if (reqMcMMO != null) {
+                    reqMcMMO.add(item, mcmmo, -1);
+                }
+            }
+
+            String[] jobs = getJobsRequirement(itemLvl);
+            if (jobs != null) {
+                JobsRebornRequirement reqJobs = ItemRequirements.getUserRequirement(JobsRebornRequirement.class);
+                if (reqJobs != null) {
+                    reqJobs.add(item, jobs, -1);
+                }
+            }
+
+            String[] aureliumSkillsSkills = getAureliumSkillsSkillRequirement(itemLvl);
+            if (aureliumSkillsSkills != null) {
+                AureliumSkillsSkillRequirement reqAureliumSkills = ItemRequirements.getUserRequirement(AureliumSkillsSkillRequirement.class);
+                if (reqAureliumSkills != null) {
+                    reqAureliumSkills.add(item, aureliumSkillsSkills, -1);
+                }
+            }
+
+            String[] aureliumSkillsStats = getAureliumSkillsStatRequirement(itemLvl);
+            if (aureliumSkillsStats != null) {
+                AureliumSkillsStatRequirement reqAureliumStats = ItemRequirements.getUserRequirement(AureliumSkillsStatRequirement.class);
+                if (reqAureliumStats != null) {
+                    reqAureliumStats.add(item, aureliumSkillsStats, -1);
+                }
+            }
+
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_LEVEL, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_CLASS, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS, null);
+            LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_MCMMO_SKILL, null);
+            LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_JOBS_JOB, null);
+            LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_AURELIUM_SKILLS_SKILL, null);
+            LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_AURELIUM_SKILLS_STAT, null);
 
             // Replace %SOULBOUND% placeholder.
             SoulboundRequirement reqSoul = ItemRequirements.getUserRequirement(SoulboundRequirement.class);
