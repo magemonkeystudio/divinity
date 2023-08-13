@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.EntityEquipmentChangeEvent;
@@ -31,8 +32,6 @@ import java.util.Map;
 public class EntityManager extends IListener<QuantumRPG> {
 
     private static final String                  PACKET_DUPLICATOR_FIXER = "PACKET_DUPLICATOR_FIXER";
-    private              Map<LivingEntity, Long> updateQueue;
-    private              StatsUpdater            statsUpdater;
     private              EntityStatsTask         entityStatsTask;
 
     public EntityManager(@NotNull QuantumRPG plugin) {
@@ -48,11 +47,6 @@ public class EntityManager extends IListener<QuantumRPG> {
     }
 
     public void setup() {
-        this.updateQueue = new HashMap<>();
-
-        this.statsUpdater = new StatsUpdater(plugin);
-        this.statsUpdater.start();
-
         this.entityStatsTask = new EntityStatsTask(plugin);
         this.entityStatsTask.start();
 
@@ -61,18 +55,9 @@ public class EntityManager extends IListener<QuantumRPG> {
 
     public void shutdown() {
         this.unregisterListeners();
-
-        if (this.statsUpdater != null) {
-            this.statsUpdater.stop();
-            this.statsUpdater = null;
-        }
         if (this.entityStatsTask != null) {
             this.entityStatsTask.stop();
             this.entityStatsTask = null;
-        }
-        if (this.updateQueue != null) {
-            this.updateQueue.clear();
-            this.updateQueue = null;
         }
     }
 
@@ -124,7 +109,12 @@ public class EntityManager extends IListener<QuantumRPG> {
             plugin.getServer().getScheduler().runTask(plugin, () -> EntityStats.get(entity).updateAll());
             return;
         }
-        this.updateQueue.put(entity, System.currentTimeMillis() + (long) (1000D * time));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                EntityStats.get(entity).updateAll();
+            }
+        }.runTask(QuantumRPG.getInstance());
     }
 
     private final void addDuplicatorFixer(@NotNull Entity entity) {
@@ -173,23 +163,5 @@ public class EntityManager extends IListener<QuantumRPG> {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityUpdateEquipmentChange(EntityEquipmentChangeEvent e) {
         this.pushToUpdate(e.getEntity(), 0.5D);
-    }
-
-    class StatsUpdater extends ITask<QuantumRPG> {
-
-        public StatsUpdater(@NotNull QuantumRPG plugin) {
-            super(plugin, 10L, false);
-        }
-
-        @Override
-        public void action() {
-            updateQueue.entrySet().removeIf(en -> {
-                if (System.currentTimeMillis() >= en.getValue()) {
-                    EntityStats.get(en.getKey()).updateAll();
-                    return true;
-                }
-                return false;
-            });
-        }
     }
 }
