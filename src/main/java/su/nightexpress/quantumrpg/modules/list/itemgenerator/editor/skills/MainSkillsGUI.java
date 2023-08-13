@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.enchantments.EnchantmentListGUI;
 
 import java.util.List;
 
