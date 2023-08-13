@@ -105,10 +105,6 @@ public class Lang extends CoreLang {
     public ILangMsg Module_Item_Apply_Error_Tier                      = new ILangMsg(this, "&e%source% &ccan only be applied to &e%tier% &citems!");
     public ILangMsg Module_Item_Interact_Error_Level                  = new ILangMsg(this, "&cYour level is not suitable for using %item%&c.");
     public ILangMsg Module_Item_Interact_Error_Class                  = new ILangMsg(this, "&cYour class is not suitable for using %item%&c.");
-    public ILangMsg Module_Item_Interact_Error_McMMO_Skill            = new ILangMsg(this, "&cYour skill level is not suitable for using %item%&c.");
-    public ILangMsg Module_Item_Interact_Error_Jobs_Job               = new ILangMsg(this, "&cYour job level is not suitable for using %item%&c.");
-    public ILangMsg Module_Item_Interact_Error_Aurelium_Skills_Skill         = new ILangMsg(this, "&cYour skill level is not suitable for using %item%&c.");
-    public ILangMsg Module_Item_Interact_Error_Aurelium_Skills_Stat          = new ILangMsg(this, "&cYour stat level is not suitable for using %item%&c.");
     public ILangMsg Module_Item_Interact_Error_Soulbound              = new ILangMsg(this, "&cYou must set &eSoulbound &cto use %item%! Do &eRight-Click &con &e%item%&c in opened inventory.");
     public ILangMsg Module_Item_Interact_Error_Owner                  = new ILangMsg(this, "&e%item% &cbounds to &e%owner%&c. You can not use it.");
     public ILangMsg Module_Item_Interact_Error_Hand                   = new ILangMsg(this, "Your weapon is two-handed! You can't hold items in off hand!");

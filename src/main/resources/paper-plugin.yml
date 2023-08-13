@@ -23,16 +23,10 @@ dependencies:
   - name: SkillPro
     required: false
     bootstrap: true
-  - name: AureliumSkills
-    required: false
-    bootstrap: true
   - name: Citizens
     required: false
     bootstrap: true
   - name: HolographicDisplays
-    required: false
-    bootstrap: true
-  - name: Jobs
     required: false
     bootstrap: true
   - name: LorinthsRpgMobs

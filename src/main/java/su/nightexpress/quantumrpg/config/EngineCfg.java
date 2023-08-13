@@ -5,7 +5,6 @@ import mc.promcteam.engine.hooks.NHook;
 import mc.promcteam.engine.utils.StringUT;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
-import su.nightexpress.quantumrpg.hooks.EHook;
 import su.nightexpress.quantumrpg.hooks.HookClass;
 import su.nightexpress.quantumrpg.hooks.HookLevel;
 import su.nightexpress.quantumrpg.hooks.HookMobLevel;
@@ -19,17 +18,13 @@ import su.nightexpress.quantumrpg.stats.items.requirements.item.*;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
-import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.AureliumSkillsSkillRequirement;
-import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.AureliumSkillsStatRequirement;
-import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.JobsRebornRequirement;
-import su.nightexpress.quantumrpg.stats.items.requirements.user.hooks.McMMORequirement;
 
 import java.util.*;
 
 public class EngineCfg {
 
     private QuantumRPG plugin;
-    private JYML cfg;
+    private JYML       cfg;
 
     public EngineCfg(@NotNull QuantumRPG plugin) {
         this.plugin = plugin;
@@ -41,8 +36,8 @@ public class EngineCfg {
     public static boolean PACKETS_REDUCE_COMBAT_PARTICLES;
 
 
-    public static HookLevel HOOK_PLAYER_LEVEL_PLUGIN;
-    public static HookClass HOOK_PLAYER_CLASS_PLUGIN;
+    public static HookLevel    HOOK_PLAYER_LEVEL_PLUGIN;
+    public static HookClass    HOOK_PLAYER_CLASS_PLUGIN;
     public static HookMobLevel HOOK_MOB_LEVEL_PLUGIN;
 
     public static boolean ATTRIBUTES_EFFECTIVE_FOR_MOBS;
@@ -54,15 +49,15 @@ public class EngineCfg {
     public static boolean ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API;
 
 
-    public static double COMBAT_SHIELD_BLOCK_BONUS_RATE;
-    public static double COMBAT_SHIELD_BLOCK_BONUS_DAMAGE_MOD;
-    public static int COMBAT_SHIELD_BLOCK_COOLDOWN;
+    public static double  COMBAT_SHIELD_BLOCK_BONUS_RATE;
+    public static double  COMBAT_SHIELD_BLOCK_BONUS_DAMAGE_MOD;
+    public static int     COMBAT_SHIELD_BLOCK_COOLDOWN;
     public static boolean COMBAT_DISABLE_VANILLA_SWEEP;
     public static boolean COMBAT_REDUCE_PLAYER_HEALTH_BAR;
     public static boolean COMBAT_FISHING_HOOK_DO_DAMAGE;
     public static boolean COMBAT_BOWS_DO_FULL_MELEE_DAMAGE;
-    public static double COMBAT_DAMAGE_MODIFIER_FOR_COOLDOWN;
-    public static double COMBAT_MAX_GET_TARGET_DISTANCE;
+    public static double  COMBAT_DAMAGE_MODIFIER_FOR_COOLDOWN;
+    public static double  COMBAT_MAX_GET_TARGET_DISTANCE;
 
     public static String LORE_CHAR_PERCENT;
     public static String LORE_CHAR_NEGATIVE;
@@ -75,16 +70,16 @@ public class EngineCfg {
     public static String LORE_STYLE_DAMAGE_FORMAT_SINGLE;
     public static String LORE_STYLE_DAMAGE_FORMAT_RANGE;
 
-    private static String LORE_STYLE_DURA_FORMAT_NAME;
-    private static String LORE_STYLE_DURA_FORMAT_UNBREAKABLE;
+    private static String                   LORE_STYLE_DURA_FORMAT_NAME;
+    private static String                   LORE_STYLE_DURA_FORMAT_UNBREAKABLE;
     private static TreeMap<Integer, String> LORE_STYLE_DURA_FORMAT_MAP;
 
-    public static String LORE_STYLE_ATT_CHARGES_FORMAT_DEFAULT;
-    public static String LORE_STYLE_ATT_CHARGES_FORMAT_UNLIMITED;
-    public static boolean CHARGES_BREAK_ITEMS_ENABLED;
+    public static String      LORE_STYLE_ATT_CHARGES_FORMAT_DEFAULT;
+    public static String      LORE_STYLE_ATT_CHARGES_FORMAT_UNLIMITED;
+    public static boolean     CHARGES_BREAK_ITEMS_ENABLED;
     public static Set<String> CHARGES_BREAK_ITEMS_STOP_MODULES;
 
-    public static boolean LORE_STYLE_REQ_USER_DYN_UPDATE = true;
+    public static  boolean              LORE_STYLE_REQ_USER_DYN_UPDATE = true;
     private static Map<Boolean, String> LORE_STYLE_REQ_USER_DYN_STATE;
 
     public static String LORE_STYLE_REQ_USER_LVL_FORMAT_SINGLE;
@@ -92,22 +87,13 @@ public class EngineCfg {
 
     public static String LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR;
     public static String LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR;
-    public static int LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX;
+    public static int    LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX;
     public static String LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE;
 
     public static String LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_SEPAR;
     public static String LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_COLOR;
-    public static int LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_MAX;
+    public static int    LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_MAX;
     public static String LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_NEWLINE;
-
-    public static String LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SINGLE;
-    public static String LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE;
-    public static String LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_SINGLE;
-    public static String LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_RANGE;
-    public static String LORE_STYLE_REQ_USER_AURELIUM_SKILLS_SKILL_FORMAT_SINGLE;
-    public static String LORE_STYLE_REQ_USER_AURELIUM_SKILLS_SKILL_FORMAT_RANGE;
-    public static String LORE_STYLE_REQ_USER_AURELIUM_SKILLS_STAT_FORMAT_SINGLE;
-    public static String LORE_STYLE_REQ_USER_AURELIUM_SKILLS_STAT_FORMAT_RANGE;
 
     public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_SINGLE;
     public static String LORE_STYLE_REQ_ITEM_LVL_FORMAT_RANGE;
@@ -119,7 +105,7 @@ public class EngineCfg {
     public static String LORE_STYLE_REQ_ITEM_MODULE_FORMAT_COLOR;
 
     public static String LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN;
-    public static int LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN;
+    public static int    LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN;
 
     public static String LORE_STYLE_SKILLAPI_ATTRIBUTE_FORMAT;
 
@@ -137,7 +123,7 @@ public class EngineCfg {
 
         path = "compatibility.";
         QuantumRPGHook internalHook = new QuantumRPGHook(this.plugin);
-        DefaultHook defHook = new DefaultHook(this.plugin);
+        DefaultHook    defHook      = new DefaultHook(this.plugin);
 
         String pUserLevel = cfg.getString(path + "player-level-plugin", plugin.getName());
         String pUserClass = cfg.getString(path + "player-class-plugin", plugin.getName());
@@ -246,7 +232,7 @@ public class EngineCfg {
         cfg.addMissing(path + "break-items-on-zero.excluded-modules", Arrays.asList("item_generator"));
 
         if (cfg.getBoolean(path + "enabled")) {
-            String aName = StringUT.color(cfg.getString(path + "name", "Charges"));
+            String aName   = StringUT.color(cfg.getString(path + "name", "Charges"));
             String aFormat = StringUT.color(cfg.getString(path + "format.main", "&7%name%: &f%value%"));
 
             EngineCfg.LORE_STYLE_ATT_CHARGES_FORMAT_DEFAULT = StringUT.color(cfg.getString(path + "format.value.default", "&f%min%&7/&f%max%"));
@@ -275,7 +261,7 @@ public class EngineCfg {
 
         path = "lore.stats.style.requirements.user.level.";
         if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "Player Level"));
+            String rName   = StringUT.color(cfg.getString(path + "name", "Player Level"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
 
             EngineCfg.LORE_STYLE_REQ_USER_LVL_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%value%+"));
@@ -289,7 +275,7 @@ public class EngineCfg {
         cfg.addMissing(path + "format.max-classes-per-line", -1);
         cfg.addMissing(path + "format.value.newline", "&7  ");
         if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "Player Class"));
+            String rName   = StringUT.color(cfg.getString(path + "name", "Player Class"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
 
             EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
@@ -310,7 +296,7 @@ public class EngineCfg {
         cfg.addMissing(path + "format.max-classes-per-line", -1);
         cfg.addMissing(path + "format.value.newline", "&7  ");
         if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "McMMO Skill"));
+            String rName   = StringUT.color(cfg.getString(path + "name", "Banned Player Class"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
 
             EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_SEPAR = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
@@ -322,81 +308,9 @@ public class EngineCfg {
             ItemRequirements.registerUserRequirement(bannedClass);
         }
 
-        path = "lore.stats.style.requirements.user.extensions.mcmmo-skill.";
-        cfg.addMissing(path + "enabled", true);
-        cfg.addMissing(path + "name", "McMMO");
-        cfg.addMissing(path + "format.main", "%state%%name%: %value%");
-        cfg.addMissing(path + "format.value.single", "%skill% | %min%+");
-        cfg.addMissing(path + "format.value.range", "%skill% | %min%-%max%&f");
-        if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "McMMO"));
-            String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
-
-            EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%skill% | %min%+"));
-            EngineCfg.LORE_STYLE_REQ_USER_MCMMO_SKILL_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%skill% | %min%-%max%"));
-
-            McMMORequirement mcMMO = new McMMORequirement(rName, rFormat);
-            if (QuantumRPG.getInstance().isHooked(EHook.MCMMO))
-                ItemRequirements.registerUserRequirement(mcMMO);
-        }
-
-        path = "lore.stats.style.requirements.user.extensions.jobs-job.";
-        cfg.addMissing(path + "enabled", true);
-        cfg.addMissing(path + "name", "JobsReborn");
-        cfg.addMissing(path + "format.main", "%state%%name%: %value%");
-        cfg.addMissing(path + "format.value.single", "%job% | %min%+");
-        cfg.addMissing(path + "format.value.range", "%job% | %min%-%max%&f");
-        if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "Jobs"));
-            String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
-
-            EngineCfg.LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%job% | %min%+"));
-            EngineCfg.LORE_STYLE_REQ_USER_JOBS_JOB_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%job% | %min%-%max%"));
-
-            JobsRebornRequirement jobs = new JobsRebornRequirement(rName, rFormat);
-            if (QuantumRPG.getInstance().isHooked(EHook.JOBS))
-                ItemRequirements.registerUserRequirement(jobs);
-        }
-
-        path = "lore.stats.style.requirements.user.extensions.aureliumskills-skill.";
-        cfg.addMissing(path + "enabled", true);
-        cfg.addMissing(path + "name", "AureliumSkill");
-        cfg.addMissing(path + "format.main", "%state%%name%: %value%");
-        cfg.addMissing(path + "format.value.single", "%skill% | %min%+");
-        cfg.addMissing(path + "format.value.range", "%skill% | %min%-%max%&f");
-        if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "Skill"));
-            String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
-
-            EngineCfg.LORE_STYLE_REQ_USER_AURELIUM_SKILLS_SKILL_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%skill% | %min%+"));
-            EngineCfg.LORE_STYLE_REQ_USER_AURELIUM_SKILLS_SKILL_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%skill% | %min%-%max%"));
-
-            AureliumSkillsSkillRequirement aureliumSkillsSkills = new AureliumSkillsSkillRequirement(rName, rFormat);
-            if (QuantumRPG.getInstance().isHooked(EHook.AURELIUM_SKILLS))
-                ItemRequirements.registerUserRequirement(aureliumSkillsSkills);
-        }
-
-        path = "lore.stats.style.requirements.user.extensions.aureliumskills-stat.";
-        cfg.addMissing(path + "enabled", true);
-        cfg.addMissing(path + "name", "AureliumStat");
-        cfg.addMissing(path + "format.main", "%state%%name%: %value%");
-        cfg.addMissing(path + "format.value.single", "%stat% | %min%+");
-        cfg.addMissing(path + "format.value.range", "%stat% | %min%-%max%&f");
-        if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "AureliumStat"));
-            String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
-
-            EngineCfg.LORE_STYLE_REQ_USER_AURELIUM_SKILLS_STAT_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%stat% | %min%+"));
-            EngineCfg.LORE_STYLE_REQ_USER_AURELIUM_SKILLS_STAT_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%stat% | %min%-%max%"));
-
-            AureliumSkillsStatRequirement aureliumSkillsStats = new AureliumSkillsStatRequirement(rName, rFormat);
-            if (QuantumRPG.getInstance().isHooked(EHook.AURELIUM_SKILLS))
-                ItemRequirements.registerUserRequirement(aureliumSkillsStats);
-        }
-
         path = "lore.stats.style.requirements.item.level.";
         if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "Item Level"));
+            String rName   = StringUT.color(cfg.getString(path + "name", "Item Level"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "&c▸ %name%: %value%"));
 
             EngineCfg.LORE_STYLE_REQ_ITEM_LVL_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%value%+"));
@@ -408,7 +322,7 @@ public class EngineCfg {
 
         path = "lore.stats.style.requirements.item.type.";
         if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "Item Type"));
+            String rName   = StringUT.color(cfg.getString(path + "name", "Item Type"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "&c▸ %name%: %value%"));
 
             EngineCfg.LORE_STYLE_REQ_ITEM_TYPE_FORMAT_SEPAR = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
@@ -420,7 +334,7 @@ public class EngineCfg {
 
         path = "lore.stats.style.requirements.item.module.";
         if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "Item Module"));
+            String rName   = StringUT.color(cfg.getString(path + "name", "Item Module"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "&c▸ %name%: %value%"));
 
             EngineCfg.LORE_STYLE_REQ_ITEM_MODULE_FORMAT_SEPAR = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
@@ -432,7 +346,7 @@ public class EngineCfg {
 
         path = "lore.stats.style.requirements.item.socket.";
         if (plugin.cfg().isModuleEnabled(EModule.GEMS) || plugin.cfg().isModuleEnabled(EModule.ESSENCES) || plugin.cfg().isModuleEnabled(EModule.RUNES)) {
-            String rName = StringUT.color(cfg.getString(path + "name", "Socket"));
+            String rName   = StringUT.color(cfg.getString(path + "name", "Socket"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "&c▸ %name%: %value%"));
 
             ItemSocketRequirement reqSOcket = new ItemSocketRequirement(rName, rFormat);
@@ -445,7 +359,7 @@ public class EngineCfg {
         cfg.addMissing(path + "format.main", "&c▸ %name%: %value%");
 
         if (cfg.getBoolean(path + "enabled")) {
-            String rName = StringUT.color(cfg.getString(path + "name", "Tier"));
+            String rName   = StringUT.color(cfg.getString(path + "name", "Tier"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "&c▸ %name%: %value%"));
 
             ItemTierRequirement tierRequirement = new ItemTierRequirement(rName, rFormat);
@@ -471,8 +385,8 @@ public class EngineCfg {
             return EngineCfg.LORE_STYLE_DURA_FORMAT_UNBREAKABLE;
         }
 
-        int percent = (int) (((double) current / (double) max) * 100D);
-        String best = EngineCfg.LORE_STYLE_DURA_FORMAT_MAP.floorEntry(percent).getValue();
+        int    percent = (int) (((double) current / (double) max) * 100D);
+        String best    = EngineCfg.LORE_STYLE_DURA_FORMAT_MAP.floorEntry(percent).getValue();
 
         return best
                 .replace("%max%", String.valueOf(max))

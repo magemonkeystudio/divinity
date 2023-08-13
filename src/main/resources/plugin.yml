@@ -7,10 +7,8 @@ depend: [ ProMCCore ]
 loadafter: [ Magic, ProSkillAPI ]
 provides: [ QuantumRPG ]
 softdepend:
-  - AureliumSkills
   - Citizens
   - HolographicDisplays
-  - Jobs
   - LorinthsRpgMobs
   - MangoQuest
   - mcMMO
