@@ -13,8 +13,6 @@ import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -110,8 +108,6 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
         this.abilityHandler = new ItemAbilityHandler(this);
         this.abilityHandler.setup();
-
-        this.registerListeners();
     }
 
     @Override
@@ -677,14 +673,5 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             return item;
         }
-    }
-
-    @EventHandler
-    public void onChat(AsyncPlayerChatEvent event) {
-        AbstractEditorGUI editorInstance = AbstractEditorGUI.getInstance();
-        if (editorInstance == null || !editorInstance.getPlayer().equals(event.getPlayer())) {
-            return;
-        }
-        editorInstance.onChat(event);
     }
 }
