@@ -1,14 +1,14 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor;
 
-import mc.promcteam.engine.manager.api.menu.Menu;
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.core.Version;
+import mc.promcteam.engine.manager.api.menu.Menu;
 import mc.promcteam.engine.utils.StringUT;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -63,6 +63,9 @@ public abstract class AbstractEditorGUI extends Menu {
         if (meta != null) {
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            if (Version.CURRENT.isHigher(Version.V1_19_R3)) {
+                meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
+            }
             meta.setDisplayName(StringUT.color(name));
             List<String> coloredLore = new ArrayList<>(lore.size());
             for (String loreLine : lore) {coloredLore.add(StringUT.color(loreLine));}

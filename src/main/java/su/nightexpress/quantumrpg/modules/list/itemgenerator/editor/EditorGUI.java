@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor;
 
+import mc.promcteam.engine.core.Version;
 import mc.promcteam.engine.manager.api.menu.Slot;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -19,6 +20,7 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.requirements
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.skills.MainSkillsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.sockets.MainSocketsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.stats.MainStatsGUI;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.trimmings.TrimmingListGUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -264,6 +266,19 @@ public class EditorGUI extends AbstractEditorGUI {
                 saveAndReopen();
             }
         });
+        if (Version.CURRENT.isHigher(Version.V1_19_R3)) {
+            List<String> lore = new ArrayList<>();
+            setSlot(11, new Slot(createItem(Material.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE,
+                    "&eArmor Trimmings", StringUT.replace(CURRENT_PLACEHOLDER, lore,
+                            "&bCurrent:",
+                            "&a%current%",
+                            "&6Left-Click: &eModify"))) {
+                @Override
+                public void onLeftClick() {
+                    openSubMenu(new TrimmingListGUI(player, itemGenerator));
+                }
+            });
+        }
         List<String> lore = new ArrayList<>();
         for (ItemFlag flag : itemGenerator.getHandle().getFlags()) {lore.add("- " + flag.name().toLowerCase());}
         setSlot(12, new Slot(createItem(Material.OAK_SIGN,
@@ -553,6 +568,7 @@ public class EditorGUI extends AbstractEditorGUI {
         UNBREAKABLE("unbreakable"),
         PREFIX_CHANCE("generator.prefix-chance"),
         SUFFIX_CHANCE("generator.suffix-chance"),
+        ARMOR_TRIMINGS("generator.armor-trimmings"),
         ITEM_FLAGS("item-flags"),
         ENCHANTED("enchanted"),
         SKULL_HASH("skull-hash"),

@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.core.Version;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
@@ -8,14 +9,19 @@ import mc.promcteam.engine.utils.random.Rnd;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ArmorMeta;
 import org.bukkit.inventory.meta.BlockStateMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.trim.ArmorTrim;
+import org.bukkit.inventory.meta.trim.TrimMaterial;
+import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -171,7 +177,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private int                        enchantsMaxAmount;
         private boolean                    enchantsSafeOnly;
         private boolean                    enchantsSafeLevels;
-        private Map<Enchantment, String[]> enchantsList;
+        private       Map<Enchantment, String[]> enchantsList;
+        private final TreeMap<Double, String> armorTrims = new TreeMap<>();
 
         private Set<IAttributeGenerator> attributeGenerators;
         private AbilityGenerator         abilityGenerator;
@@ -295,6 +302,36 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 if (reqRaw == null || reqRaw.isEmpty()) continue;
 
                 this.enchantsList.put(en, reqRaw.split(":"));
+            }
+
+            if (Version.CURRENT.isHigher(Version.V1_19_R3)) {
+                path = "generator.armor-trimmings";
+                double totalWeight = 0;
+                for (String key : cfg.getSection(path)) {
+                    double weight = cfg.getDouble(path+'.'+key);
+                    if (weight == 0) {
+                        continue;
+                    }
+                    if (key.equals("none")) {
+                        totalWeight += weight;
+                        armorTrims.put(totalWeight, null);
+                        continue;
+                    }
+                    String[]     split        = key.toLowerCase().split(":");
+                    if (split.length != 2) {
+                        continue;
+                    }
+                    TrimMaterial trimMaterial = Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(split[0]));
+                    if (trimMaterial == null) {
+                        continue;
+                    }
+                    TrimPattern trimPattern = Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(split[1]));
+                    if (trimPattern == null) {
+                        continue;
+                    }
+                    totalWeight += weight;
+                    armorTrims.put(totalWeight, key);
+                }
             }
 
             this.attributeGenerators = new HashSet<>();
@@ -559,6 +596,20 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 banner.update();
                 bmeta.setBlockState(banner);
             }
+
+            if (!armorTrims.isEmpty() && meta instanceof ArmorMeta) {
+                String trimString = armorTrims.ceilingEntry(Rnd.nextDouble()*armorTrims.lastKey()).getValue();
+                ArmorTrim armorTrim;
+                if (trimString == null) {
+                    armorTrim = null;
+                } else {
+                    String[]     split        = trimString.split(":");
+                    armorTrim = new ArmorTrim(Objects.requireNonNull(Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(split[0]))),
+                            Objects.requireNonNull(Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(split[1]))));
+                }
+                ((ArmorMeta) meta).setTrim(armorTrim);
+            }
+
             item.setItemMeta(meta);
 
             // Add enchants
