@@ -1,95 +1,45 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor;
 
+import mc.promcteam.engine.manager.api.menu.Menu;
 import mc.promcteam.engine.config.api.JYML;
-import mc.promcteam.engine.manager.api.gui.GuiClick;
-import mc.promcteam.engine.manager.api.gui.GuiItem;
-import mc.promcteam.engine.manager.api.gui.NGUI;
 import mc.promcteam.engine.utils.StringUT;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.Objects;
+import java.util.function.Consumer;
 
-public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
-    public static final String CURRENT_PLACEHOLDER = "%current%";
-    static AbstractEditorGUI instance;
+public abstract class AbstractEditorGUI extends Menu {
+    public static final String            CURRENT_PLACEHOLDER = "%current%";
+    static              AbstractEditorGUI instance;
 
-    protected final ItemGeneratorManager itemGeneratorManager;
-    protected ItemGeneratorManager.GeneratorItem itemGenerator;
-    protected Player player;
+    protected ItemGeneratorReference itemGenerator;
 
-    public AbstractEditorGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, int size) {
-        super(itemGeneratorManager.plugin, "[&d"+itemGenerator.getId()+"&r] editor", size);
-        this.itemGeneratorManager = itemGeneratorManager;
+    public AbstractEditorGUI(Player player, int rows, String title, ItemGeneratorReference itemGenerator) {
+        super(player, rows, title);
         this.itemGenerator = itemGenerator;
-        load(itemGenerator);
-        this.setTitle(this.getTitle().replace("%id%", itemGenerator.getId()));
     }
 
     @Nullable
-    public static AbstractEditorGUI getInstance() { return instance; }
-
-    public Player getPlayer() { return player; }
-
-    public ItemGeneratorManager.GeneratorItem getItemGenerator() { return itemGenerator; }
+    public static AbstractEditorGUI getInstance() {return instance;}
 
     @Override
-    protected boolean ignoreNullClick() { return true; }
-
-    @Override
-    protected boolean cancelClick(int i) { return true; }
-
-    @Override
-    protected boolean cancelPlayerClick() { return true; }
-
-    protected GuiItem createButton(String id, Enum<?> type, Material material, String name, List<String> lore, int slot, GuiClick guiClick) {
-        ItemStack itemStack = new ItemStack(material);
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta != null) {
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            meta.setDisplayName(StringUT.color(name));
-            List<String> coloredLore = new ArrayList<>();
-            for (String loreLine : lore) { coloredLore.add(StringUT.color(loreLine)); }
-            meta.setLore(coloredLore);
-            itemStack.setItemMeta(meta);
-        }
-        return createButton(id, type, itemStack, slot, guiClick);
-    }
-
-    protected GuiItem createButton(String id, Enum<?> type, ItemStack itemStack, int slot, GuiClick guiClick) {
-        GuiItem guiItem = new GuiItem(id, type, itemStack, false, 0, new TreeMap<>(), Collections.emptyMap(), null, new int[] {slot});
-        guiItem.setClick(guiClick);
-        return guiItem;
-    }
-
-    private void load(ItemGeneratorManager.GeneratorItem itemGenerator) {
-        if (this.player == null) {
-            this.clear();
-        } else {
-            int page = this.getUserPage(this.player, 0);
-            int pages = this.getUserPage(this.player, 1);
-            this.clear();
-            this.setUserPage(this.player, page, pages);
-        }
-        this.registerListeners();
-        this.itemGenerator = itemGenerator;
-    }
-
-    @Override
-    public void open(@NotNull Player player, int page) {
+    public void open(int page) {
         if (AbstractEditorGUI.instance != null) {
             for (HumanEntity humanEntity : instance.getInventory().getViewers()) {
                 if (!humanEntity.getUniqueId().equals(player.getUniqueId())) {
@@ -97,13 +47,30 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
                 }
             }
         }
-        super.open(player, page);
+        super.open(page);
         AbstractEditorGUI.instance = this;
-        this.player = player;
     }
 
-    @Override
-    public void shutdown() { AbstractEditorGUI.instance = null; }
+    public void shutdown() {AbstractEditorGUI.instance = null;}
+
+    protected ItemStack createItem(Material material, String name, String... lore) {
+        return createItem(material, name, List.of(lore));
+    }
+
+    protected ItemStack createItem(Material material, String name, List<String> lore) {
+        ItemStack itemStack = new ItemStack(material);
+        ItemMeta  meta      = itemStack.getItemMeta();
+        if (meta != null) {
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            meta.setDisplayName(StringUT.color(name));
+            List<String> coloredLore = new ArrayList<>(lore.size());
+            for (String loreLine : lore) {coloredLore.add(StringUT.color(loreLine));}
+            meta.setLore(coloredLore);
+            itemStack.setItemMeta(meta);
+        }
+        return itemStack;
+    }
 
     protected List<String> color(List<String> list) {
         List<String> coloredList = new ArrayList<>(list.size());
@@ -121,28 +88,78 @@ public abstract class AbstractEditorGUI extends NGUI<QuantumRPG> {
         return coloredList;
     }
 
-    protected void saveAndReopen() { saveAndReopen(1); }
-
-    protected void saveAndReopen(int page) {
-        final Player player = this.player;
-        JYML cfg = this.itemGenerator.getConfig();
-        cfg.saveChanges();
-        this.load(this.itemGeneratorManager.load(this.itemGenerator.getId(), cfg));
+    protected void saveAndReopen() {
+        itemGenerator.reload();
         new BukkitRunnable() {
             @Override
             public void run() {
-                AbstractEditorGUI.this.open(player, page);
+                if (parentMenu == null) {
+                    open();
+                } else {
+                    fakeClosing = true;
+                    parentMenu.openSubMenu(AbstractEditorGUI.this);
+                    fakeClosing = false; // In case it wasn't open yet
+                }
             }
-        }.runTask(plugin);
+        }.runTask(QuantumRPG.getInstance());
     }
 
     protected void setDefault(String path) {
         this.itemGenerator.getConfig().set(path, ItemGeneratorManager.commonItemGenerator.get(path));
     }
 
-    public void onChat(AsyncPlayerChatEvent event) { }
+    protected void sendSetMessage(String valueName, @Nullable String currentValue, Consumer<String> onMessage) {
+        fakeClose();
+        BaseComponent component = StringUT.parseJson("[\"\",{\"text\":\"\\u25b8 Enter the desired " + valueName +
+                ". \"},{\"text\":\"Cancel\",\"underlined\":true,\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"cancel\"}}"
+                + (currentValue == null ? ']'
+                : ",{\"text\":\" \"},{\"text\":\"Current Value\",\"underlined\":true,\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + currentValue + "\"}}]"));
+        player.spigot().sendMessage(component);
+        this.registerListener(new Listener() {
+            @EventHandler
+            public void onChat(AsyncPlayerChatEvent event) {
+                if (!event.getPlayer().equals(AbstractEditorGUI.this.player)) {return;}
+                event.setCancelled(true);
+                String message = event.getMessage().strip();
+                if (message.equalsIgnoreCase("cancel")) {
+                    unregisterListener(this);
+                    saveAndReopen();
+                } else {
+                    try {
+                        onMessage.accept(message);
+                        unregisterListener(this);
+                    } catch (IllegalArgumentException e) {
+                        QuantumRPG.getInstance().lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", valueName).send(player);
+                        player.spigot().sendMessage(component);
+                    }
+                }
+            }
+        });
+    }
 
-    public enum ItemType {
-        NEW,
+    public static class ItemGeneratorReference {
+        private ItemGeneratorManager.GeneratorItem handle;
+
+        public ItemGeneratorReference(ItemGeneratorManager.GeneratorItem itemGenerator) {
+            this.handle = itemGenerator;
+        }
+
+        public ItemGeneratorManager.GeneratorItem getHandle() {
+            return handle;
+        }
+
+        public void reload() {
+            JYML cfg = getConfig();
+            cfg.save();
+            handle = Objects.requireNonNull(QuantumRPG.getInstance().getModuleManager().getModule(ItemGeneratorManager.class)).load(handle.getId(), cfg);
+        }
+
+        public String getId() {
+            return handle.getId();
+        }
+
+        public JYML getConfig() {
+            return handle.getConfig();
+        }
     }
 }

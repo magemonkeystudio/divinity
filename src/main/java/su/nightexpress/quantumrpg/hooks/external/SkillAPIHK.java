@@ -155,7 +155,13 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
         playerData.removeSkillExternally(skill, AbilityGenerator.ABILITY_KEY);
     }
 
-    public Set<String> getSkills() { return SkillAPI.getSkills().keySet(); }
+    public Set<String> getSkills() {
+        Set<String> skills = new HashSet<>();
+        for (Skill skill : SkillAPI.getSkills().values()) {
+            skills.add(skill.getName());
+        }
+        return skills;
+    }
 
     public ItemStack getSkillIndicator(String skillId) {
         Skill skill = SkillAPI.getSkill(skillId);

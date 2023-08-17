@@ -7,6 +7,7 @@ import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.command.MCmd;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class EditCommand extends MCmd<ItemGeneratorManager> {
             return;
         }
         try {
-            new EditorGUI(module, itemGenerator).open((Player) commandSender, 1);
+            new EditorGUI((Player) commandSender, new AbstractEditorGUI.ItemGeneratorReference(itemGenerator)).open(1);
         } catch (IllegalStateException e) {
             plugin.lang().ItemGenerator_Cmd_Editor_Error_AlreadyOpen.replace("%player%", commandSender.getName()).send(commandSender);
         }

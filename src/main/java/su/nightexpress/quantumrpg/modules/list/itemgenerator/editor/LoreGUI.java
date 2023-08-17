@@ -1,155 +1,102 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor;
 
-import mc.promcteam.engine.config.api.JYML;
-import mc.promcteam.engine.manager.api.gui.ContentType;
-import mc.promcteam.engine.manager.api.gui.GuiClick;
-import mc.promcteam.engine.manager.api.gui.GuiItem;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import mc.promcteam.engine.manager.api.menu.Slot;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.NotNull;
-import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LoreGUI extends AbstractEditorGUI {
     private final String path;
-    private List<String> lore;
-    private Integer listening = null;
-    private final Runnable onReturn;
 
-    public LoreGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator, String path, String title, Runnable onReturn) {
-        super(itemGeneratorManager, itemGenerator, 54);
+    public LoreGUI(Player player, String title, ItemGeneratorReference itemGenerator, String path) {
+        super(player, 6, title, itemGenerator);
         this.path = path;
-        this.onReturn = onReturn;
-        setTitle(title);
     }
 
     @Override
-    protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int page) {
-        JYML cfg = this.itemGenerator.getConfig();
-        this.lore = new ArrayList<>(cfg.getStringList(path));
-        this.lore.add(null);
-        int totalPages = Math.max((int) Math.ceil(this.lore.size()*1.0/42), 1);
-        final int currentPage = page < 1 ? totalPages : Math.min(page, totalPages);
-        this.setUserPage(player, currentPage, totalPages);
-        GuiClick guiClick = (player1, type, clickEvent) -> {
-            this.setUserPage(player1, currentPage, totalPages);
-            if (type == null) { return; }
-            Class<?> clazz = type.getClass();
-            if (clazz.equals(ContentType.class)) {
-                ContentType type2 = (ContentType) type;
-                switch (type2) {
-                    case RETURN:
-                        if (this.onReturn == null) {
-                            player1.closeInventory();
-                        } else {
-                            this.onReturn.run();
+    public void setContents() {
+        List<String> lore = new ArrayList<>(itemGenerator.getConfig().getStringList(path));
+        lore.add(null);
+        int i = 0;
+        for (int j = 0; j < lore.size(); j++) {
+            i++;
+            if (i % this.inventory.getSize() == 53) {
+                this.setSlot(i, getNextButton());
+                i++;
+            } else if (i % 9 == 8) {i++;}
+            if (i % this.inventory.getSize() == 45) {
+                this.setSlot(i, getPrevButton());
+                i++;
+            } else if (i % 9 == 0) {i++;}
+            String loreLine = lore.get(j);
+            int    k        = j;
+            setSlot(i, loreLine == null ?
+                    new Slot(createItem(Material.REDSTONE, "&eAdd new lore line")) {
+                        @Override
+                        public void onLeftClick() {
+                            lore.add("");
+                            sendSetMessage("lore line " + k,
+                                    null,
+                                    s -> {
+                                        lore.set(k, s);
+                                        itemGenerator.getConfig().set(path, lore);
+                                        saveAndReopen();
+                                    });
                         }
-                        break;
-                    case EXIT: {
-                        player1.closeInventory();
-                        break;
-                    }
-                    case NEXT: {
-                        saveAndReopen(currentPage+1);
-                        break;
-                    }
-                    case BACK: {
-                        saveAndReopen(currentPage-1);
-                        break;
-                    }
-                }
-                return;
-            }
-            if (type == EditorGUI.ItemType.LORE) {
-                GuiItem guiItem = this.getButton(player1, clickEvent.getSlot());
-                if (guiItem == null) { return; }
-                int loreIndex = Integer.parseInt(guiItem.getId());
-                switch (clickEvent.getClick()) {
-                    case DROP: case CONTROL_DROP: {
-                        this.lore.remove(loreIndex);
-                        setLore();
-                        saveAndReopen(currentPage);
-                        break;
-                    }
-                    case LEFT: {
-                        this.lore.add(loreIndex, "");
-                        sendSetMessage(loreIndex, null);
-                        break;
-                    }
-                    case RIGHT: {
-                        this.lore.add(loreIndex+1, "");
-                        sendSetMessage(loreIndex+1, null);
-                        break;
-                    }
-                    default: {
-                        sendSetMessage(loreIndex, this.lore.get(loreIndex));
-                        break;
-                    }
-                }
-            } else if (type == ItemType.NEW) {
-                this.lore.add("");
-                sendSetMessage(this.lore.size()-1, null);
-            }
-        };
-        for (int loreIndex = (currentPage-1)*42, last = Math.min(lore.size(), loreIndex+42), invIndex = 1;
-             loreIndex < last; loreIndex++, invIndex++) {
-            if ((invIndex)%9 == 8) { invIndex += 2; }
-            String loreLine = lore.get(loreIndex);
-            this.addButton(loreLine == null ?
-                                   this.createButton("new", ItemType.NEW, Material.REDSTONE, "&eAdd new lore line", List.of(), invIndex, guiClick) :
-                                   this.createButton(String.valueOf(loreIndex), EditorGUI.ItemType.LORE, Material.WRITABLE_BOOK,
-                                                     "".equals(loreLine) ? "''" : loreLine, List.of(
-                                                   "&6Left-Click: &eAdd to left",
-                                                   "&6Right-Click: &eAdd to right",
-                                                   "&6Middle-Click: &eSet",
-                                                   "&6Drop: &eRemove"), invIndex, guiClick));
-        }
-        lore.remove(lore.size()-1);
-        this.addButton(this.createButton("prev-page", ContentType.BACK, Material.ENDER_PEARL, "&dPrevious Page", List.of(), 0, guiClick));
-        this.addButton(this.createButton("next-page", ContentType.NEXT, Material.ENDER_PEARL, "&dNext Page", List.of(), 8, guiClick));
-        this.addButton(this.createButton("return", ContentType.RETURN, Material.BARRIER, "&c&lReturn", List.of(), 53, guiClick));
-    }
+                    } :
+                    new Slot(createItem(Material.WRITABLE_BOOK,
+                            loreLine.isEmpty() ? "''" : loreLine,
+                            "&6Left-Click: &eAdd to left",
+                            "&6Right-Click: &eAdd to right",
+                            "&6Middle-Click: &eSet",
+                            "&6Drop: &eRemove")) {
+                        @Override
+                        public void onLeftClick() {
+                            lore.add(k, "");
+                            sendSetMessage("lore line " + k,
+                                    null,
+                                    s -> {
+                                        lore.set(k, s);
+                                        itemGenerator.getConfig().set(path, lore);
+                                        saveAndReopen();
+                                    });
+                        }
 
-    private void setLore() {
-        this.itemGenerator.getConfig().set(path, this.lore);
-    }
+                        @Override
+                        public void onRightClick() {
+                            lore.add(k + 1, "");
+                            sendSetMessage("lore line " + (k + 1),
+                                    null,
+                                    s -> {
+                                        lore.set(k + 1, s);
+                                        itemGenerator.getConfig().set(path, lore);
+                                        saveAndReopen();
+                                    });
+                        }
 
-    private void sendSetMessage(int index, String currentValue) {
-        this.listening = index;
-        this.player.closeInventory();
-        player.sendMessage("▸ Enter the desired value for lore line "+index+", or \"cancel\" to go back");
-        if (currentValue != null) {
-            BaseComponent component = new TextComponent("[Current value]");
-            component.setColor(ChatColor.GOLD);
-            component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, currentValue));
-            component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Enter the current value to chat")));
-            player.spigot().sendMessage(component);
-        }
-    }
+                        @Override
+                        public void onMiddleClick() {
+                            sendSetMessage("lore line " + k,
+                                    lore.get(k),
+                                    s -> {
+                                        lore.set(k, s);
+                                        itemGenerator.getConfig().set(path, lore);
+                                        saveAndReopen();
+                                    });
+                        }
 
-    @Override
-    public void onChat(AsyncPlayerChatEvent event) {
-        if (this.listening == null) { return; }
-        event.setCancelled(true);
-        int index = this.listening;
-        this.listening = null;
-        String message = event.getMessage();
-        if (message.strip().equalsIgnoreCase("cancel")) {
-            saveAndReopen(getUserPage(this.player, 0));
-            return;
+                        @Override
+                        public void onDrop() {
+                            lore.remove(k);
+                            itemGenerator.getConfig().set(path, lore);
+                            saveAndReopen();
+                        }
+                    });
         }
-        lore.set(index, message);
-        setLore();
-        saveAndReopen(getUserPage(this.player, 0));
+        lore.remove(lore.size() - 1);
+        this.setSlot(this.getPages() * this.inventory.getSize() - 9, getPrevButton());
+        this.setSlot(this.getPages() * this.inventory.getSize() - 1, getNextButton());
     }
 }

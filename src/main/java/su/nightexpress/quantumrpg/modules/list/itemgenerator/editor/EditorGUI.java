@@ -1,30 +1,18 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor;
 
-import mc.promcteam.engine.config.api.JYML;
-import mc.promcteam.engine.manager.api.gui.ContentType;
-import mc.promcteam.engine.manager.api.gui.GuiClick;
-import mc.promcteam.engine.manager.api.gui.GuiItem;
+import mc.promcteam.engine.manager.api.menu.Slot;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import mc.promcteam.engine.utils.random.Rnd;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
+import org.bukkit.inventory.meta.PotionMeta;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.enchantments.EnchantmentsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials.MainMaterialsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.requirements.MainRequirementsGUI;
@@ -37,527 +25,522 @@ import java.util.List;
 import java.util.Map;
 
 public class EditorGUI extends AbstractEditorGUI {
-    private ItemType listening;
 
-    public EditorGUI(@NotNull ItemGeneratorManager itemGeneratorManager, ItemGeneratorManager.GeneratorItem itemGenerator) {
-        super(itemGeneratorManager, itemGenerator, 45);
+    public EditorGUI(Player player, ItemGeneratorReference itemGenerator) {
+        super(player, 5, "[&d" + itemGenerator.getId() + "&r] editor", itemGenerator);
     }
 
     @Override
-    protected void onCreate(@NotNull Player player, @NotNull Inventory inventory, int page) {
-        GuiClick guiClick = (player1, type, clickEvent) -> {
-            if (type == null) { return; }
-            Class<?> clazz = type.getClass();
-            if (clazz.equals(ContentType.class)) {
-                ContentType type2 = (ContentType) type;
-                switch (type2) {
-                    case EXIT: case RETURN: {
-                        player1.closeInventory();
-                        break;
-                    }
-                }
-                return;
+    public void setContents() {
+        setSlot(0, new Slot(createItem(Material.NAME_TAG,
+                "&eName format", StringUT.replace(CURRENT_PLACEHOLDER,
+                        StringUT.wrap(itemGenerator.getHandle().getName().substring("§r§f".length()), 30),
+                        "&bCurrent: &a%current%",
+                        "&6Left-Click: &eSet",
+                        "&6Drop: &eSet to default value"))) {
+            @Override
+            public void onLeftClick() {
+                sendSetMessage(ItemType.NAME.getTitle(),
+                        itemGenerator.getHandle().getName().substring("§r§f".length()).replace('§', '&'),
+                        s -> {
+                            itemGenerator.getConfig().set(ItemType.NAME.getPath(), s);
+                            saveAndReopen();
+                        });
             }
 
-            if (clazz.equals(ItemType.class)) {
-                ItemType type2 = (ItemType) type;
-                ClickType clickType = clickEvent.getClick();
-                switch (type2) {
-                    case NAME: {
-                        switch (clickType) {
-                            case DROP: case CONTROL_DROP: {
-                                setDefault(type2);
-                                break;
-                            }
-                            default: {
-                                sendSetMessage(type2, this.itemGenerator.getName().substring("§r§f".length()).replace('§', '&'));
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case MATERIALS: {
-                        new MainMaterialsGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
-                        break;
-                    }
-                    case LORE: {
-                        switch (clickType) {
-                            case DROP: case CONTROL_DROP: {
-                                setDefault(type2);
-                                break;
-                            }
-                            default: {
-                                new LoreGUI(this.itemGeneratorManager, this.itemGenerator, ItemType.LORE.getPath(), "[&d"+itemGenerator.getId()+"&r] editor/"+ItemType.LORE.getTitle(), () -> new EditorGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1)).open(player1, 1);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case MODEL_DATA: case DURABILITY: {
-                        switch (clickType) {
-                            case MIDDLE: {
-                                sendSetMessage(type2, String.valueOf(this.itemGenerator.getConfig().getInt(type2.getPath(), -1)));
-                                break;
-                            }
-                            case LEFT: {
-                                this.itemGenerator.getConfig().set(type2.getPath(), this.itemGenerator.getConfig().getInt(type2.getPath(), -1)-1);
-                                saveAndReopen();
-                                break;
-                            }
-                            case RIGHT: {
-                                this.itemGenerator.getConfig().set(type2.getPath(), this.itemGenerator.getConfig().getInt(type2.getPath(), -1)+1);
-                                saveAndReopen();
-                                break;
-                            }
-                            case DROP: case CONTROL_DROP: {
-                                this.itemGenerator.getConfig().remove(type2.getPath());
-                                saveAndReopen();
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case COLOR: {
-                        switch (clickType) {
-                            case DROP: case CONTROL_DROP: {
-                                setDefault(type2);
-                                break;
-                            }
-                            default: {
-                                int[] color = this.itemGenerator.getColor();
-                                sendSetMessage(type2, color[0]+","+color[1]+","+color[2]);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case UNBREAKABLE: {
-                        switch (clickType) {
-                            case DROP: case CONTROL_DROP: {
-                                setDefault(type2);
-                                break;
-                            }
-                            default: {
-                                this.itemGenerator.getConfig().set(type2.getPath(), !this.itemGenerator.isUnbreakable());
-                                saveAndReopen();
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case PREFIX_CHANCE: {
-                        switch (clickType) {
-                            case DROP: case CONTROL_DROP: {
-                                setDefault(type2);
-                                break;
-                            }
-                            default: {
-                                sendSetMessage(type2, String.valueOf(this.itemGenerator.getPrefixChance()));
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case SUFFIX_CHANCE: {
-                        switch (clickType) {
-                            case DROP: case CONTROL_DROP: {
-                                setDefault(type2);
-                                break;
-                            }
-                            default: {
-                                sendSetMessage(type2, String.valueOf(this.itemGenerator.getSuffixChance()));
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case ITEM_FLAGS: {
-                        switch (clickType) {
-                            case DROP: case CONTROL_DROP: {
-                                setDefault(type2);
-                                break;
-                            }
-                            default: {
-                                new ItemFlagsGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case ENCHANTED: {
-                        switch (clickType) {
-                            case DROP: case CONTROL_DROP: {
-                                this.itemGenerator.getConfig().remove(type2.getPath());
-                                saveAndReopen();
-                                break;
-                            }
-                            default: {
-                                this.itemGenerator.getConfig().set(type2.getPath(), !this.itemGenerator.getConfig().getBoolean(type2.getPath()));
-                                saveAndReopen();
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case SKULL_HASH: {
-                        switch (clickType) {
-                            case DROP: case CONTROL_DROP: {
-                                this.itemGenerator.getConfig().remove(type2.getPath());
-                                saveAndReopen();
-                                break;
-                            }
-                            default: {
-                                String current = this.itemGenerator.getConfig().getString(type2.getPath());
-                                sendSetMessage(type2, current == null ? "" : current);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case MIN_LEVEL: {
-                        switch (clickType) {
-                            case MIDDLE: {
-                                sendSetMessage(type2, String.valueOf(this.itemGenerator.getMinLevel()));
-                                break;
-                            }
-                            case LEFT: {
-                                this.itemGenerator.getConfig().set(type2.getPath(), this.itemGenerator.getMinLevel()-1);
-                                saveAndReopen();
-                                break;
-                            }
-                            case RIGHT: {
-                                this.itemGenerator.getConfig().set(type2.getPath(), this.itemGenerator.getMinLevel()+1);
-                                saveAndReopen();
-                                break;
-                            }
-                            case DROP: case CONTROL_DROP: {
-                                setDefault(type2);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case MAX_LEVEL: {
-                        switch (clickType) {
-                            case MIDDLE: {
-                                sendSetMessage(type2, String.valueOf(this.itemGenerator.getMaxLevel()));
-                                break;
-                            }
-                            case LEFT: {
-                                this.itemGenerator.getConfig().set(type2.getPath(), this.itemGenerator.getMaxLevel()-1);
-                                saveAndReopen();
-                                break;
-                            }
-                            case RIGHT: {
-                                this.itemGenerator.getConfig().set(type2.getPath(), this.itemGenerator.getMaxLevel()+1);
-                                saveAndReopen();
-                                break;
-                            }
-                            case DROP: case CONTROL_DROP: {
-                                setDefault(type2);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case TIER: {
-                        switch (clickType) {
-                            case DROP: case CONTROL_DROP: {
-                                setDefault(type2);
-                                break;
-                            }
-                            default: {
-                                new TierGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                    case AMMO_TYPES: {
-                        new AmmoTypesGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
-                        break;
-                    }
-                    case HAND_TYPES: {
-                        new HandTypesGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
-                        break;
-                    }
-                    case DAMAGE_TYPES: case DEFENSE_TYPES: case ITEM_STATS: case SKILLAPI_ATTRIBUTES: {
-                        new MainStatsGUI(this.itemGeneratorManager, this.itemGenerator, type2).open(player1, 1);
-                        break;
-                    }
-                    case SOCKETS: {
-                        new MainSocketsGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
-                        break;
-                    }
-                    case REQUIREMENTS: {
-                        new MainRequirementsGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
-                        break;
-                    }
-                    case ENCHANTMENTS: {
-                        new EnchantmentsGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
-                        break;
-                    }
-                    case SKILLS: {
-                        new MainSkillsGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
-                        break;
-                    }
-                    case USES_BY_LEVEL: {
-                        new UsesByLevelGUI(this.itemGeneratorManager, this.itemGenerator).open(player1, 1);
-                        break;
-                    }
-                    case SAMPLE: {
-                        saveAndReopen();
-                        break;
-                    }
-                }
+            @Override
+            public void onDrop() {
+                setDefault(ItemType.NAME.getPath());
+                saveAndReopen();
             }
-        };
-        this.addButton(this.createButton("name", ItemType.NAME, Material.NAME_TAG,
-                                         "&eName format", StringUT.replace(color(List.of(
-                                                 "&bCurrent: &a%current%",
-                                                 "&6Left-Click: &eSet",
-                                                 "&6Drop: &eSet to default value")), CURRENT_PLACEHOLDER, StringUT.wrap(itemGenerator.getName().substring("§r§f".length()), 30)), 0, guiClick));
-        this.addButton(this.createButton("materials", ItemType.MATERIALS, Material.IRON_INGOT,
-                                         "&eMaterials", List.of(
-                                                 "&6Left-Click: &eModify"), 1, guiClick));
-        this.addButton(this.createButton("lore", ItemType.LORE, Material.WRITABLE_BOOK,
-                                         "&eLore format", StringUT.replace(color(List.of(
-                                                 "&bCurrent:",
-                                                 "&a----------",
-                                                 "&f%current%",
-                                                 "&a----------",
-                                                 "&6Left-Click: &eModify")), CURRENT_PLACEHOLDER, itemGenerator.getConfig().getStringList(ItemType.LORE.getPath())), 2, guiClick));
-        this.addButton(this.createButton("model-data", ItemType.MODEL_DATA, Material.END_CRYSTAL,
-                                         "&eCustom Model Data", List.of(
-                                                 "&bCurrent: &a"+this.itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), -1),
-                                                 "&6Middle-Click: &eSet",
-                                                 "&6Left-Click: &eDecrease",
-                                                 "&6Right-Click: &eIncrease",
-                                                 "&6Drop: &eSet to default value"), 3, guiClick));
-        int[] color = itemGenerator.getColor();
-        this.addButton(this.createButton("color", ItemType.COLOR, Material.MAGENTA_DYE,
-                                         "&eColor", List.of(
-                                                 "&bCurrent: &a"+color[0]+","+color[1]+","+color[2],
-                                                 "&6Left-Click: &eSet",
-                                                 "&6Drop: &eSet to default value"), 4, guiClick));
-        this.addButton(this.createButton("durability", ItemType.DURABILITY, Material.ANVIL,
-                                         "&eDurability", List.of(
-                                                 "&bCurrent: &a"+this.itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), -1),
-                                                 "&6Middle-Click: &eSet",
-                                                 "&6Left-Click: &eDecrease",
-                                                 "&6Right-Click: &eIncrease",
-                                                 "&6Drop: &eSet to default value"), 5, guiClick));
-        GuiItem guiItem = this.createButton("unbreakable", ItemType.UNBREAKABLE, Material.ELYTRA,
-                                            "&eUnbreakable", List.of("&bCurrent: &a"+itemGenerator.isUnbreakable(),
-                                                                     "&6Left-Click: &eToggle",
-                                                                     "&6Drop: &eSet to default value"), 6, guiClick);
-        if (!itemGenerator.isUnbreakable()) {
-            ItemStack itemStack = guiItem.getItemRaw();
+        });
+        setSlot(1, new Slot(createItem(Material.IRON_INGOT,
+                "&eMaterials",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new MainMaterialsGUI(player, itemGenerator));
+            }
+        });
+        setSlot(2, new Slot(createItem(Material.WRITABLE_BOOK,
+                "&eLore format", StringUT.replace(CURRENT_PLACEHOLDER, itemGenerator.getConfig().getStringList(ItemType.LORE.getPath()),
+                        "&bCurrent:",
+                        "&a----------",
+                        "&f%current%",
+                        "&a----------",
+                        "&6Left-Click: &eModify"))) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new LoreGUI(player, "[&d" + itemGenerator.getId() + "&r] editor/" + ItemType.LORE.getTitle(), itemGenerator, ItemType.LORE.getPath()));
+            }
+
+            @Override
+            public void onDrop() {
+                setDefault(ItemType.LORE.getPath());
+                saveAndReopen();
+            }
+        });
+        setSlot(3, new Slot(createItem(Material.END_CRYSTAL,
+                "&eCustom Model Data",
+                "&bCurrent: &a" + this.itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0),
+                "&6Middle-Click: &eSet",
+                "&6Left-Click: &eDecrease",
+                "&6Right-Click: &eIncrease",
+                "&6Drop: &eSet to default value")) {
+            @Override
+            public void onLeftClick() {
+                itemGenerator.getConfig().set(ItemType.MODEL_DATA.getPath(), Math.max(0, itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0) - 1));
+                saveAndReopen();
+            }
+
+            @Override
+            public void onRightClick() {
+                itemGenerator.getConfig().set(ItemType.MODEL_DATA.getPath(), Math.max(0, itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0) + 1));
+                saveAndReopen();
+            }
+
+            @Override
+            public void onMiddleClick() {
+                sendSetMessage(ItemType.MODEL_DATA.getTitle(),
+                        String.valueOf(itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0)),
+                        s -> {
+                    int cmd = Integer.parseInt(s);
+                    if (cmd >= 0) {
+                        itemGenerator.getConfig().set(ItemType.MODEL_DATA.getPath(), cmd);
+                    } else {
+                        throw new IllegalArgumentException();
+                    }
+                    saveAndReopen();
+                });
+            }
+
+            @Override
+            public void onDrop() {
+                itemGenerator.getConfig().remove(ItemType.MODEL_DATA.getPath());
+                saveAndReopen();
+            }
+        });
+        int[] color = itemGenerator.getHandle().getColor();
+        ItemStack itemStack = createItem(Material.POTION,
+                "&eColor",
+                "&bCurrent: &a" + color[0] + "," + color[1] + "," + color[2],
+                "&6Left-Click: &eSet",
+                "&6Drop: &eSet to default value");
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta instanceof PotionMeta) {
+            int r = color[0] >= 0 ? color[0] : Rnd.get(255);
+            int g = color[1] >= 0 ? color[1] : Rnd.get(255);
+            int b = color[2] >= 0 ? color[2] : Rnd.get(255);
+            ((PotionMeta) meta).setColor(Color.fromRGB(r, g, b));
+            itemStack.setItemMeta(meta);
+        }
+        setSlot(4, new Slot(itemStack) {
+            @Override
+            public void onLeftClick() {
+                sendSetMessage(ItemType.COLOR.getTitle(),
+                        color[0] + "," + color[1] + "," + color[2],
+                        s -> {
+                            String[] splitString = s.split(",");
+                            if (splitString.length != 3) {throw new IllegalArgumentException();}
+                            int[] rgb = new int[3];
+                            rgb[0] = Integer.parseInt(splitString[0].strip());
+                            rgb[1] = Integer.parseInt(splitString[1].strip());
+                            rgb[2] = Integer.parseInt(splitString[2].strip());
+                            itemGenerator.getConfig().set(ItemType.COLOR.getPath(), rgb[0] + "," + rgb[1] + "," + rgb[2]);
+                            saveAndReopen();
+                        });
+            }
+
+            @Override
+            public void onDrop() {
+                setDefault(ItemType.COLOR.getPath());
+                saveAndReopen();
+            }
+        });
+        setSlot(5, new Slot(createItem(Material.ANVIL,
+                "&eDurability",
+                "&bCurrent: &a" + this.itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0),
+                "&6Middle-Click: &eSet",
+                "&6Left-Click: &eDecrease",
+                "&6Right-Click: &eIncrease",
+                "&6Drop: &eSet to default value")) {
+            @Override
+            public void onLeftClick() {
+                itemGenerator.getConfig().set(ItemType.DURABILITY.getPath(), Math.max(0, itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0) - 1));
+                saveAndReopen();
+            }
+
+            @Override
+            public void onRightClick() {
+                itemGenerator.getConfig().set(ItemType.DURABILITY.getPath(), Math.max(0, itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0) + 1));
+                saveAndReopen();
+            }
+
+            @Override
+            public void onMiddleClick() {
+                sendSetMessage(ItemType.DURABILITY.getTitle(),
+                        String.valueOf(itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0)),
+                        s -> {
+                    int durability = Integer.parseInt(s);
+                    if (durability >= 0) {
+                        itemGenerator.getConfig().set(ItemType.DURABILITY.getPath(), durability);
+                    } else {
+                        throw new IllegalArgumentException();
+                    }
+                    saveAndReopen();
+                });
+            }
+
+            @Override
+            public void onDrop() {
+                itemGenerator.getConfig().remove(ItemType.DURABILITY.getPath());
+                saveAndReopen();
+            }
+        });
+        itemStack = createItem(Material.ELYTRA,
+                "&eUnbreakable",
+                "&bCurrent: &a" + itemGenerator.getHandle().isUnbreakable(),
+                "&6Left-Click: &eToggle",
+                "&6Drop: &eSet to default value");
+        if (!itemGenerator.getHandle().isUnbreakable()) {
             ItemMeta itemMeta = itemStack.getItemMeta();
             if (itemMeta instanceof Damageable) {
                 ((Damageable) itemMeta).setDamage(432);
                 itemStack.setItemMeta(itemMeta);
-                guiItem.setItem(itemStack);
             }
         }
-        this.addButton(guiItem);
-        this.addButton(this.createButton("prefix-chance", ItemType.PREFIX_CHANCE, Material.BROWN_MUSHROOM,
-                                         "&ePrefix Chance", List.of(
-                                                 "&bCurrent: &a"+itemGenerator.getPrefixChance(),
-                                                 "&6Left-Click: &eSet",
-                                                 "&6Drop: &eSet to default value"), 7, guiClick));
-        this.addButton(this.createButton("suffix-chance", ItemType.SUFFIX_CHANCE, Material.RED_MUSHROOM,
-                                         "&eSuffix Chance", List.of(
-                                                 "&bCurrent: &a"+itemGenerator.getSuffixChance(),
-                                                 "&6Left-Click: &eSet",
-                                                 "&6Drop: &eSet to default value"), 8, guiClick));
-        List<String> lore = new ArrayList<>();
-        for (ItemFlag flag : itemGenerator.getFlags()) { lore.add("- "+flag.name().toLowerCase()); }
-        this.addButton(this.createButton("item-flags", ItemType.ITEM_FLAGS, Material.OAK_SIGN,
-                                         "&eItemFlags", StringUT.replace(color(List.of(
-                                                 "&bCurrent:",
-                                                 "&a%current%",
-                                                 "&6Left-Click: &eModify",
-                                                 "&6Drop: &eSet to default value")), CURRENT_PLACEHOLDER, lore), 12, guiClick));
-        boolean enchanted = this.itemGenerator.getConfig().getBoolean(ItemType.ENCHANTED.getPath(), false);
-        this.addButton(this.createButton("enchanted", ItemType.ENCHANTED, enchanted ? Material.ENCHANTED_BOOK : Material.BOOK,
-                                         "&eEnchanted", List.of(
-                                                 "&bCurrent: &a"+enchanted,
-                                                 "&6Left-Click: &eToggle",
-                                                 "&6Drop: &eSet to default value"), 13, guiClick));
-        String hash = this.itemGenerator.getConfig().getString(ItemType.SKULL_HASH.getPath());
-        guiItem = this.createButton("skull-hash", ItemType.SKULL_HASH, Material.PLAYER_HEAD,
-                                    "&eSkull Hash", StringUT.replace(color(List.of(
-                                            "&bCurrent: &a%current%",
-                                            "&6Left-Click: &eSet",
-                                            "&6Drop: &eSet to default value")), CURRENT_PLACEHOLDER, StringUT.wrap(hash == null ? "\"\"" : hash, 30)), 14, guiClick);
+        setSlot(6, new Slot(itemStack) {
+            @Override
+            public void onLeftClick() {
+                itemGenerator.getConfig().set(ItemType.UNBREAKABLE.getPath(), !itemGenerator.getHandle().isUnbreakable());
+                saveAndReopen();
+            }
 
+            @Override
+            public void onDrop() {
+                setDefault(ItemType.UNBREAKABLE.getPath());
+                saveAndReopen();
+            }
+        });
+        setSlot(7, new Slot(createItem(Material.BROWN_MUSHROOM,
+                "&ePrefix Chance", List.of(
+                        "&bCurrent: &a" + itemGenerator.getHandle().getPrefixChance(),
+                        "&6Left-Click: &eSet",
+                        "&6Drop: &eSet to default value"))) {
+            @Override
+            public void onLeftClick() {
+                sendSetMessage(ItemType.PREFIX_CHANCE.getTitle(),
+                        String.valueOf(itemGenerator.getHandle().getPrefixChance()),
+                        s -> {
+                            itemGenerator.getConfig().set(ItemType.PREFIX_CHANCE.getPath(), Double.parseDouble(s));
+                            saveAndReopen();
+                        });
+            }
+
+            @Override
+            public void onDrop() {
+                setDefault(ItemType.PREFIX_CHANCE.getPath());
+                saveAndReopen();
+            }
+        });
+        setSlot(8, new Slot(createItem(Material.RED_MUSHROOM,
+                "&eSuffix Chance",
+                "&bCurrent: &a" + itemGenerator.getHandle().getSuffixChance(),
+                "&6Left-Click: &eSet",
+                "&6Drop: &eSet to default value")) {
+            @Override
+            public void onLeftClick() {
+                sendSetMessage(ItemType.SUFFIX_CHANCE.getTitle(),
+                        String.valueOf(itemGenerator.getHandle().getSuffixChance()),
+                        s -> {
+                            itemGenerator.getConfig().set(ItemType.SUFFIX_CHANCE.getPath(), Double.parseDouble(s));
+                            saveAndReopen();
+                        });
+            }
+
+            @Override
+            public void onDrop() {
+                setDefault(ItemType.SUFFIX_CHANCE.getPath());
+                saveAndReopen();
+            }
+        });
+        List<String> lore = new ArrayList<>();
+        for (ItemFlag flag : itemGenerator.getHandle().getFlags()) {lore.add("- " + flag.name().toLowerCase());}
+        setSlot(12, new Slot(createItem(Material.OAK_SIGN,
+                "&eItemFlags", StringUT.replace(CURRENT_PLACEHOLDER, lore,
+                        "&bCurrent:",
+                        "&a%current%",
+                        "&6Left-Click: &eModify",
+                        "&6Drop: &eSet to default value"))) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new ItemFlagsGUI(player, itemGenerator));
+            }
+
+            @Override
+            public void onDrop() {
+                setDefault(ItemType.ITEM_FLAGS.getPath());
+                saveAndReopen();
+            }
+        });
+        boolean enchanted = this.itemGenerator.getConfig().getBoolean(ItemType.ENCHANTED.getPath(), false);
+        setSlot(13, new Slot(createItem(enchanted ? Material.ENCHANTED_BOOK : Material.BOOK,
+                "&eEnchanted",
+                "&bCurrent: &a" + enchanted,
+                "&6Left-Click: &eToggle",
+                "&6Drop: &eSet to default value")) {
+            @Override
+            public void onLeftClick() {
+                itemGenerator.getConfig().set(ItemType.ENCHANTED.getPath(), !itemGenerator.getConfig().getBoolean(ItemType.ENCHANTED.getPath()));
+                saveAndReopen();
+            }
+
+            @Override
+            public void onDrop() {
+                itemGenerator.getConfig().remove(ItemType.ENCHANTED.getPath());
+                saveAndReopen();
+            }
+        });
+        String hash = this.itemGenerator.getConfig().getString(ItemType.SKULL_HASH.getPath());
+        itemStack = createItem(Material.PLAYER_HEAD,
+                "&eSkull Hash", StringUT.replace(CURRENT_PLACEHOLDER, StringUT.wrap(hash == null ? "\"\"" : hash, 30),
+                        "&bCurrent: &a%current%",
+                        "&6Left-Click: &eSet",
+                        "&6Drop: &eSet to default value"));
         if (hash != null) {
-            ItemStack itemStack = guiItem.getItemRaw();
             ItemUT.addSkullTexture(itemStack, hash, this.itemGenerator.getId());
-            guiItem.setItem(itemStack);
         }
-        this.addButton(guiItem);
-        this.addButton(this.createButton("min-level", ItemType.MIN_LEVEL, Material.EXPERIENCE_BOTTLE,
-                                         "&eMinimum Level", List.of(
-                                                 "&bCurrent: &a"+this.itemGenerator.getMinLevel(),
-                                                 "&6Middle-Click: &eSet",
-                                                 "&6Left-Click: &eDecrease",
-                                                 "&6Right-Click: &eIncrease",
-                                                 "&6Drop: &eSet to default value"), 20, guiClick));
-        this.addButton(this.createButton("max-level", ItemType.MAX_LEVEL, Material.EXPERIENCE_BOTTLE,
-                                         "&eMaximum Level", List.of(
-                                                 "&bCurrent: &a"+this.itemGenerator.getMaxLevel(),
-                                                 "&6Middle-Click: &eSet",
-                                                 "&6Left-Click: &eDecrease",
-                                                 "&6Right-Click: &eIncrease",
-                                                 "&6Drop: &eSet to default value"), 21, guiClick));
-        this.addButton(this.createButton("tier", ItemType.TIER, Material.DIAMOND,
-                                         "&eTier", StringUT.replace(color(List.of(
-                                                 "&bCurrent: &a%current%",
-                                                 "&6Left-Click: &eSet")), CURRENT_PLACEHOLDER, StringUT.wrap(this.itemGenerator.getTier().getName(), 12)), 22,
-                guiClick));
+        setSlot(14, new Slot(itemStack) {
+            @Override
+            public void onLeftClick() {
+                String current = itemGenerator.getConfig().getString(ItemType.SKULL_HASH.getPath());
+                sendSetMessage(ItemType.SKULL_HASH.getTitle(),
+                        current == null ? "" : current,
+                        s -> {
+                            itemGenerator.getConfig().set(ItemType.SKULL_HASH.getPath(), s);
+                            saveAndReopen();
+                        });
+            }
+
+            @Override
+            public void onDrop() {
+                itemGenerator.getConfig().remove(ItemType.SKULL_HASH.getPath());
+                saveAndReopen();
+            }
+        });
+        setSlot(20, new Slot(createItem(Material.EXPERIENCE_BOTTLE,
+                "&eMinimum Level",
+                "&bCurrent: &a" + itemGenerator.getConfig().getInt(ItemType.MIN_LEVEL.getPath()),
+                "&6Middle-Click: &eSet",
+                "&6Left-Click: &eDecrease",
+                "&6Right-Click: &eIncrease",
+                "&6Drop: &eSet to default value")) {
+            @Override
+            public void onLeftClick() {
+                itemGenerator.getConfig().set(ItemType.MIN_LEVEL.getPath(), Math.max(0, itemGenerator.getHandle().getMinLevel() - 1));
+                saveAndReopen();
+            }
+
+            @Override
+            public void onRightClick() {
+                itemGenerator.getConfig().set(ItemType.MIN_LEVEL.getPath(), Math.max(0, itemGenerator.getHandle().getMinLevel() + 1));
+                saveAndReopen();
+            }
+
+            @Override
+            public void onMiddleClick() {
+                sendSetMessage(ItemType.MIN_LEVEL.getTitle(),
+                        String.valueOf(itemGenerator.getHandle().getMinLevel()),
+                        s -> {
+                    int level = Integer.parseInt(s);
+                    if (level >= 0) {
+                        itemGenerator.getConfig().set(ItemType.MIN_LEVEL.getPath(), level);
+                    } else {
+                        throw new IllegalArgumentException();
+                    }
+                    saveAndReopen();
+                });
+            }
+
+            @Override
+            public void onDrop() {
+                setDefault(ItemType.MIN_LEVEL.getPath());
+                saveAndReopen();
+            }
+        });
+        setSlot(21, new Slot(createItem(Material.EXPERIENCE_BOTTLE,
+                "&eMaximum Level",
+                "&bCurrent: &a" + itemGenerator.getConfig().getInt(ItemType.MAX_LEVEL.getPath()),
+                "&6Middle-Click: &eSet",
+                "&6Left-Click: &eDecrease",
+                "&6Right-Click: &eIncrease",
+                "&6Drop: &eSet to default value")) {
+            @Override
+            public void onLeftClick() {
+                itemGenerator.getConfig().set(ItemType.MAX_LEVEL.getPath(), itemGenerator.getHandle().getMaxLevel() - 1);
+                saveAndReopen();
+            }
+
+            @Override
+            public void onRightClick() {
+                itemGenerator.getConfig().set(ItemType.MAX_LEVEL.getPath(), itemGenerator.getHandle().getMaxLevel() + 1);
+                saveAndReopen();
+            }
+
+            @Override
+            public void onMiddleClick() {
+                sendSetMessage(ItemType.MAX_LEVEL.getTitle(),
+                        String.valueOf(itemGenerator.getHandle().getMaxLevel()),
+                        s -> {
+                    int level = Integer.parseInt(s);
+                    if (level >= 0) {
+                        itemGenerator.getConfig().set(ItemType.MAX_LEVEL.getPath(), level);
+                    } else {
+                        throw new IllegalArgumentException();
+                    }
+                    saveAndReopen();
+                });
+            }
+
+            @Override
+            public void onDrop() {
+                setDefault(ItemType.MAX_LEVEL.getPath());
+                saveAndReopen();
+            }
+        });
+        setSlot(22, new Slot(createItem(Material.DIAMOND,
+                "&eTier", StringUT.replace(CURRENT_PLACEHOLDER, StringUT.wrap(itemGenerator.getHandle().getTier().getName(), 12),
+                        "&bCurrent: &a%current%",
+                        "&6Left-Click: &eSet"))) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new TierGUI(player, itemGenerator));
+            }
+
+            @Override
+            public void onDrop() {
+                setDefault(ItemType.TIER.getPath());
+                saveAndReopen();
+            }
+        });
         lore = new ArrayList<>();
         ConfigurationSection ammoSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.AMMO_TYPES.getPath());
         if (ammoSection != null) {
             for (String ammoType : ammoSection.getKeys(false)) {
-                lore.add("&a "+ammoType+": &f"+ammoSection.getDouble(ammoType));
+                lore.add("&a " + ammoType + ": &f" + ammoSection.getDouble(ammoType));
             }
         }
-        this.addButton(this.createButton("ammo-types", ItemType.AMMO_TYPES, Material.ARROW,
-                                         "&eAmmo Types", StringUT.replace(color(List.of(
-                                                 "&bCurrent:",
-                                                 "%current%",
-                                                 "&6Left-Click: &eModify")), CURRENT_PLACEHOLDER, lore), 23, guiClick));
-        List<String> handTypes = new ArrayList<>();
+        setSlot(23, new Slot(createItem(Material.ARROW,
+                "&eAmmo Types", StringUT.replace(CURRENT_PLACEHOLDER, lore,
+                        "&bCurrent:",
+                        "%current%",
+                        "&6Left-Click: &eModify"))) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new AmmoTypesGUI(player, itemGenerator));
+            }
+        });
+        lore = new ArrayList<>();
         ConfigurationSection handSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.HAND_TYPES.getPath());
         if (handSection != null) {
             for (String handType : handSection.getKeys(false)) {
-                handTypes.add("&a "+handType+": &f"+handSection.getDouble(handType));
+                lore.add("&a " + handType + ": &f" + handSection.getDouble(handType));
             }
         }
-        this.addButton(this.createButton("hand-types", ItemType.HAND_TYPES, Material.STICK,
-                                         "&eHand Types", StringUT.replace(color(List.of(
-                                                 "&bCurrent:",
-                                                 "%current%",
-                                                 "&6Left-Click: &eModify")), CURRENT_PLACEHOLDER, handTypes), 24, guiClick));
-        this.addButton(this.createButton("damage-types", ItemType.DAMAGE_TYPES, Material.IRON_SWORD,
-                                         "&eDamage Types", List.of(
-                                                 "&6Left-Click: &eModify"), 27, guiClick));
-        this.addButton(this.createButton("defense-types", ItemType.DEFENSE_TYPES, Material.IRON_CHESTPLATE,
-                                         "&eDefense Types", List.of(
-                                                 "&6Left-Click: &eModify"), 28, guiClick));
-        this.addButton(this.createButton("item-stats", ItemType.ITEM_STATS, Material.PAPER,
-                                         "&eItem Stats", List.of(
-                                                "&6Left-Click: &eModify"), 29, guiClick));
-        this.addButton(this.createButton("strillapi-attributes", ItemType.SKILLAPI_ATTRIBUTES, Material.BOOK,
-                                         "&eSkillAPI Attributes", List.of(
-                                                 "&6Left-Click: &eModify"), 30, guiClick));
-        this.addButton(this.createButton("sockets", ItemType.SOCKETS, Material.EMERALD,
-                                         "&eSockets", List.of(
-                                                "&6Left-Click: &eModify"), 31, guiClick));
-        this.addButton(this.createButton("requirements", ItemType.REQUIREMENTS, Material.REDSTONE,
-                                         "&eRequirements", List.of(
-                                                 "&6Left-Click: &eModify"), 32, guiClick));
-        this.addButton(this.createButton("enchantments", ItemType.ENCHANTMENTS, Material.ENCHANTED_BOOK,
-                                         "&eEnchantments", List.of(
-                                                 "&6Left-Click: &eModify"), 33, guiClick));
-        this.addButton(this.createButton("skills", ItemType.SKILLS, Material.FIRE_CHARGE,
-                                         "&eSkills", List.of(
-                                                 "&6Left-Click: &eModify"), 34, guiClick));
+        setSlot(24, new Slot(createItem(Material.STICK,
+                "&eHand Types", StringUT.replace(CURRENT_PLACEHOLDER, lore,
+                        "&bCurrent:",
+                        "%current%",
+                        "&6Left-Click: &eModify"))) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new HandTypesGUI(player, itemGenerator));
+            }
+        });
+        setSlot(27, new Slot(createItem(Material.IRON_SWORD,
+                "&eDamage Types",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new MainStatsGUI(player, itemGenerator, ItemType.DAMAGE_TYPES));
+            }
+        });
+        setSlot(28, new Slot(createItem(Material.IRON_CHESTPLATE,
+                "&eDefense Types",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new MainStatsGUI(player, itemGenerator, ItemType.DEFENSE_TYPES));
+            }
+        });
+        setSlot(29, new Slot(createItem(Material.PAPER,
+                "&eItem Stats",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new MainStatsGUI(player, itemGenerator, ItemType.ITEM_STATS));
+            }
+        });
+        setSlot(30, new Slot(createItem(Material.BOOK,
+                "&eSkillAPI Attributes",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new MainStatsGUI(player, itemGenerator, ItemType.SKILLAPI_ATTRIBUTES));
+            }
+        });
+        setSlot(31, new Slot(createItem(Material.EMERALD,
+                "&eSockets",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new MainSocketsGUI(player, itemGenerator));
+            }
+        });
+        setSlot(32, new Slot(createItem(Material.REDSTONE,
+                "&eRequirements",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new MainRequirementsGUI(player, itemGenerator));
+            }
+        });
+        setSlot(33, new Slot(createItem(Material.ENCHANTED_BOOK,
+                "&eEnchantments",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new EnchantmentsGUI(player, itemGenerator));
+            }
+        });
+        setSlot(34, new Slot(createItem(Material.FIRE_CHARGE,
+                "&eSkills",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new MainSkillsGUI(player, itemGenerator));
+            }
+        });
         lore = new ArrayList<>();
-        for (Map.Entry<Integer,Integer> entry : UsesByLevelGUI.getUsesByLevel(this.itemGenerator.getConfig()).entrySet()) {
-            lore.add("&a "+entry.getKey()+": &f"+entry.getValue());
+        for (Map.Entry<Integer, Integer> entry : UsesByLevelGUI.getUsesByLevel(this.itemGenerator.getConfig()).entrySet()) {
+            lore.add("&a " + entry.getKey() + ": &f" + entry.getValue());
         }
-        this.addButton(this.createButton("uses-by-level", ItemType.USES_BY_LEVEL, Material.CAULDRON,
-                                         "&eUses by level", StringUT.replace(List.of(
-                                                 "&bCurrent:",
-                                                 "&a%current%",
-                                                 "&6Left-Click: &eModify"), CURRENT_PLACEHOLDER, lore), 35, guiClick));
-        this.addButton(this.createButton("sample", ItemType.SAMPLE, this.itemGenerator.create(-1, -1, null), 40, guiClick));
-        this.addButton(this.createButton("exit", ContentType.EXIT, Material.BARRIER, "&c&lExit", List.of(), 44, guiClick));
-    }
-
-    private void setDefault(ItemType itemType) {
-        setDefault(itemType.getPath());
-        saveAndReopen();
-    }
-
-    private void sendSetMessage(ItemType itemType, String currentValue) {
-        this.listening = itemType;
-        player.closeInventory();
-        String name = itemType.getTitle();
-        player.sendMessage("▸ Enter the desired "+name+", or \"cancel\" to go back");
-        BaseComponent component = new TextComponent("[Current "+name+"]");
-        component.setColor(ChatColor.GOLD);
-        component.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, currentValue));
-        component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Enter the current "+name+" to chat")));
-        player.spigot().sendMessage(component);
-    }
-
-    @Override
-    public void onChat(AsyncPlayerChatEvent event) {
-        if (this.listening == null) { return; }
-        event.setCancelled(true);
-        String message = event.getMessage().strip();
-        if (!message.equalsIgnoreCase("cancel")) {
-            ItemType itemType = this.listening;
-            Player player = event.getPlayer();
-            JYML cfg = itemGenerator.getConfig();
-            switch (itemType) {
-                // Strings
-                case NAME: case SKULL_HASH: {
-                    cfg.set(itemType.getPath(), message);
-                    break;
-                }
-                // Integers
-                case MODEL_DATA: case DURABILITY: case MIN_LEVEL: case MAX_LEVEL: {
-                    try {
-                        cfg.set(itemType.getPath(), Integer.parseInt(message));
-                    } catch (NumberFormatException e) { this.listening = null; }
-                    break;
-                }
-                case COLOR: {
-                    String newColor = null;
-                    String[] splitString = message.split(",");
-                    if (splitString.length == 3) {
-                        int[] rgb  = new int[3];
-                        try {
-                            for (int i = 0; i < 3; i++) {
-                                rgb[i] = Integer.parseInt(splitString[i].strip());
-                            }
-                            newColor = rgb[0]+","+rgb[1]+","+rgb[2];
-                        } catch (NumberFormatException ignored) { }
-                    }
-                    if (newColor == null) {
-                        this.listening = null;
-                    } else { cfg.set(itemType.getPath(), newColor); }
-                    break;
-                }
-                // Doubles
-                case PREFIX_CHANCE: case SUFFIX_CHANCE: {
-                    try {
-                        cfg.set(itemType.getPath(), Double.parseDouble(message));
-                    } catch (NumberFormatException e) { this.listening = null; }
-                    break;
-                }
-                default: {
-                    this.listening = null;
-                    break;
-                }
+        setSlot(35, new Slot(createItem(Material.CAULDRON,
+                "&eUses by level", StringUT.replace(CURRENT_PLACEHOLDER, lore,
+                        "&bCurrent:",
+                        "&a%current%",
+                        "&6Left-Click: &eModify"))) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new UsesByLevelGUI(player, itemGenerator));
             }
-            if (listening == null) {
-                // Nothing changed
-                plugin.lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", itemType.getTitle()).send(player);
+        });
+        setSlot(40, new Slot(this.itemGenerator.getHandle().create(-1, -1, null)) {
+            @Override
+            public void onLeftClick() {
+                saveAndReopen();
             }
-        }
-        this.listening = null;
-        saveAndReopen();
-    }
-
-    @Override
-    protected void onClose(@NotNull Player player, @NotNull InventoryCloseEvent e) {
-
+        });
     }
 
     public enum ItemType {
@@ -592,10 +575,10 @@ public class EditorGUI extends AbstractEditorGUI {
 
         private final String path;
 
-        ItemType(String path) { this.path = path; }
+        ItemType(String path) {this.path = path;}
 
-        public String getPath() { return path; }
+        public String getPath() {return path;}
 
-        public String getTitle() { return this.name().replace('_', ' ').toLowerCase(); }
+        public String getTitle() {return this.name().replace('_', ' ').toLowerCase();}
     }
 }
