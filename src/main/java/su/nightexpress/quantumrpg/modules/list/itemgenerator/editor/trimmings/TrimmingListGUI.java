@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ArmorMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 
@@ -35,13 +35,26 @@ public class TrimmingListGUI extends AbstractEditorGUI {
                     continue;
                 }
                 String[]     split        = key.toLowerCase().split(":");
-                TrimMaterial trimMaterial = Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(split[0]));
-                if (trimMaterial == null) {
+                if (split.length != 2) {
                     continue;
                 }
-                TrimPattern trimPattern = Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(split[1]));
-                if (trimPattern == null) {
-                    continue;
+                TrimMaterial trimMaterial;
+                if (split[0].equals("*")) {
+                    trimMaterial = null;
+                } else {
+                    trimMaterial = Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(split[0]));
+                    if (trimMaterial == null) {
+                        continue;
+                    }
+                }
+                TrimPattern trimPattern;
+                if (split[1].equals("*")) {
+                    trimPattern = null;
+                } else {
+                    trimPattern = Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(split[1]));
+                    if (trimPattern == null) {
+                        continue;
+                    }
                 }
                 ArmorTrim armorTrim = new ArmorTrim(trimMaterial, trimPattern);
                 map.put(armorTrim, cfg.getDouble(key));
@@ -50,13 +63,37 @@ public class TrimmingListGUI extends AbstractEditorGUI {
         }
         ArmorTrim next = null;
         outer:
-        for (TrimMaterial trimMaterial : Registry.TRIM_MATERIAL) {
+        for (TrimMaterial trimMaterial : Registry.TRIM_MATERIAL) { //
             for (TrimPattern trimPattern : Registry.TRIM_PATTERN) {
                 ArmorTrim armorTrim = new ArmorTrim(trimMaterial, trimPattern);
                 if (!map.containsKey(armorTrim)) {
                     next = armorTrim;
                     break outer;
                 }
+            }
+        }
+        if (next == null) {
+            for (TrimMaterial trimMaterial : Registry.TRIM_MATERIAL) {
+                ArmorTrim armorTrim = new ArmorTrim(trimMaterial, null);
+                if (!map.containsKey(armorTrim)) {
+                    next = armorTrim;
+                    break;
+                }
+            }
+        }
+        if (next == null) {
+            for (TrimPattern trimPattern : Registry.TRIM_PATTERN) {
+                ArmorTrim armorTrim = new ArmorTrim(null, trimPattern);
+                if (!map.containsKey(armorTrim)) {
+                    next = armorTrim;
+                    break;
+                }
+            }
+        }
+        if (next == null) {
+            ArmorTrim armorTrim = new ArmorTrim(null, null);
+            if (!map.containsKey(armorTrim)) {
+                next = armorTrim;
             }
         }
         if (next != null) {
@@ -108,20 +145,8 @@ public class TrimmingListGUI extends AbstractEditorGUI {
                     }
                 });
             } else {
-                double weight       = map.get(trim);
-                String trimMaterial = trim.getMaterial().getKey().getKey();
-                String trimPattern  = trim.getPattern().getKey().getKey();
-                ItemStack itemStack = createItem(Material.NETHERITE_CHESTPLATE,
-                        "&e" + trimMaterial.substring(0, 1).toUpperCase() + trimMaterial.substring(1) + ' ' + trimPattern,
-                        "&bWeight: &a" + weight,
-                        "&6Left-Click: &eModify",
-                        "&6Drop: &eRemove");
-                ItemMeta meta = itemStack.getItemMeta();
-                if (meta instanceof ArmorMeta) {
-                    ((ArmorMeta) meta).setTrim(trim);
-                    itemStack.setItemMeta(meta);
-                }
-                setSlot(i, new Slot(itemStack) {
+                double weight = map.get(trim);
+                setSlot(i, new Slot(trim.toItemStack(weight)) {
                     @Override
                     public void onLeftClick() {
                         openSubMenu(new TrimmingGUI(player, itemGenerator, new TrimmingEntry(trim, weight)));
@@ -144,7 +169,77 @@ public class TrimmingListGUI extends AbstractEditorGUI {
         return EditorGUI.ItemType.ARMOR_TRIMINGS.getPath() + '.' +
                 (armorTrim == null ?
                         "none" :
-                        armorTrim.getMaterial().getKey().getKey() + ':' + armorTrim.getPattern().getKey().getKey());
+                        (armorTrim.getMaterial() == null ? "*" : armorTrim.getMaterial().getKey().getKey()) + ':'
+                                + (armorTrim.getPattern() == null ? "*" : armorTrim.getPattern().getKey().getKey()));
+    }
+
+    public static class ArmorTrim {
+        private TrimMaterial trimMaterial;
+        private TrimPattern trimPattern;
+
+        public ArmorTrim(TrimMaterial material, TrimPattern pattern) {
+            this.trimMaterial = material;
+            this.trimPattern = pattern;
+        }
+
+        @Nullable
+        public TrimMaterial getMaterial() {return trimMaterial;}
+
+        public void setMaterial(@Nullable TrimMaterial trimMaterial) {
+            this.trimMaterial = trimMaterial;
+        }
+
+        @Nullable
+        public TrimPattern getPattern() {
+            return trimPattern;
+        }
+
+        public void setPattern(@Nullable TrimPattern trimPattern) {
+            this.trimPattern = trimPattern;
+        }
+
+        public ItemStack toItemStack(double weight) {
+            Material material;
+            if (this.trimMaterial == null) {
+                if (this.trimPattern == null) {
+                    material = Material.CRAFTING_TABLE;
+                } else {
+                    material = TrimmingGUI.fromPattern(this.trimPattern);
+                }
+            } else {
+                if (this.trimPattern == null) {
+                    material = TrimmingGUI.fromMaterial(this.trimMaterial);
+                } else {
+                    material = Material.NETHERITE_CHESTPLATE;
+                }
+            }
+            String trimMaterial = this.trimMaterial == null ? "*" : this.trimMaterial.getKey().getKey();
+            String trimPattern  = this.trimPattern == null ? "*" : this.trimPattern.getKey().getKey();
+            ItemStack itemStack = createItem(material,
+                    "&e" + trimMaterial.substring(0, 1).toUpperCase() + trimMaterial.substring(1) + ' ' + trimPattern,
+                    "&bWeight: &a" + weight,
+                    "&6Left-Click: &eModify",
+                    "&6Drop: &eRemove");
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta instanceof ArmorMeta) {
+                ((ArmorMeta) meta).setTrim(new org.bukkit.inventory.meta.trim.ArmorTrim(this.trimMaterial, this.trimPattern));
+                itemStack.setItemMeta(meta);
+            }
+            return itemStack;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ArmorTrim armorTrim = (ArmorTrim) o;
+            return Objects.equals(trimMaterial, armorTrim.trimMaterial) && Objects.equals(trimPattern, armorTrim.trimPattern);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(trimMaterial, trimPattern);
+        }
     }
 
     public static class TrimmingEntry {

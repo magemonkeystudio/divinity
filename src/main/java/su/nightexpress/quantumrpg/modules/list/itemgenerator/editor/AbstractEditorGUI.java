@@ -53,11 +53,11 @@ public abstract class AbstractEditorGUI extends Menu {
 
     public void shutdown() {AbstractEditorGUI.instance = null;}
 
-    protected ItemStack createItem(Material material, String name, String... lore) {
+    protected static ItemStack createItem(Material material, String name, String... lore) {
         return createItem(material, name, List.of(lore));
     }
 
-    protected ItemStack createItem(Material material, String name, List<String> lore) {
+    protected static ItemStack createItem(Material material, String name, List<String> lore) {
         ItemStack itemStack = new ItemStack(material);
         ItemMeta  meta      = itemStack.getItemMeta();
         if (meta != null) {

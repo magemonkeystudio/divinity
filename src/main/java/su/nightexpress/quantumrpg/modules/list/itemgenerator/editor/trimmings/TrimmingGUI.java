@@ -18,7 +18,7 @@ public class TrimmingGUI extends AbstractEditorGUI {
 
     @Override
     public void setContents() {
-        String name = entry.getArmorTrim().getMaterial().getKey().getKey();
+        String name = entry.getArmorTrim().getMaterial() == null ? "Any" : entry.getArmorTrim().getMaterial().getKey().getKey();
         setSlot(0, new Slot(createItem(fromMaterial(entry.getArmorTrim().getMaterial()),
                 "&eTrim Material",
                 "&bCurrent: &a" + name.substring(0, 1).toUpperCase() + name.substring(1),
@@ -28,7 +28,7 @@ public class TrimmingGUI extends AbstractEditorGUI {
                 openSubMenu(new TrimmingMaterialGUI(player, itemGenerator, entry));
             }
         });
-        name = entry.getArmorTrim().getPattern().getKey().getKey();
+        name = entry.getArmorTrim().getPattern() == null ? "Any" : entry.getArmorTrim().getPattern().getKey().getKey();
         setSlot(1, new Slot(createItem(fromPattern(entry.getArmorTrim().getPattern()),
                 "&eTrim Pattern",
                 "&bCurrent: &a" + name.substring(0, 1).toUpperCase() + name.substring(1),
@@ -76,11 +76,16 @@ public class TrimmingGUI extends AbstractEditorGUI {
             return Material.LAPIS_LAZULI;
         } else if (trimMaterial == TrimMaterial.AMETHYST) {
             return Material.AMETHYST_SHARD;
+        } else if (trimMaterial == null) {
+            return Material.CRAFTING_TABLE;
         }
         return Material.STONE;
     }
 
     public static Material fromPattern(TrimPattern trimPattern) {
+        if (trimPattern == null) {
+            return Material.CRAFTING_TABLE;
+        }
         try {
             return Material.valueOf(trimPattern.getKey().getKey().toUpperCase()
                     + Material.SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE.name().substring("sentry".length()));

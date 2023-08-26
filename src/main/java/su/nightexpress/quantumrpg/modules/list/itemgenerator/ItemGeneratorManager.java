@@ -321,12 +321,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (split.length != 2) {
                         continue;
                     }
-                    TrimMaterial trimMaterial = Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(split[0]));
-                    if (trimMaterial == null) {
+                    if (!split[0].equals("*") && Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(split[0])) == null) {
                         continue;
                     }
-                    TrimPattern trimPattern = Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(split[1]));
-                    if (trimPattern == null) {
+                    if (!split[1].equals("*") && Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(split[1])) == null) {
                         continue;
                     }
                     totalWeight += weight;
@@ -603,9 +601,46 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 if (trimString == null) {
                     armorTrim = null;
                 } else {
-                    String[]     split        = trimString.split(":");
-                    armorTrim = new ArmorTrim(Objects.requireNonNull(Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(split[0]))),
-                            Objects.requireNonNull(Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(split[1]))));
+                    String[] split = trimString.split(":");
+                    TrimMaterial trimMaterial = null;
+                    if (split[0].equals("*")) {
+                        int size = 0;
+                        for (TrimMaterial ignored : Registry.TRIM_MATERIAL) {
+                            size++;
+                        }
+                        int index = Rnd.get(size);
+                        int i = 0;
+                        for (Iterator<TrimMaterial> iterator = Registry.TRIM_MATERIAL.iterator(); iterator.hasNext();) {
+                            TrimMaterial next = iterator.next();
+                            if (index == i) {
+                                trimMaterial = next;
+                                break;
+                            }
+                            i++;
+                        }
+                    } else {
+                        trimMaterial = Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(split[0]));
+                    }
+                    TrimPattern trimPattern = null;
+                    if (split[1].equals("*")) {
+                        int size = 0;
+                        for (TrimPattern ignored : Registry.TRIM_PATTERN) {
+                            size++;
+                        }
+                        int index = Rnd.get(size);
+                        int i = 0;
+                        for (Iterator<TrimPattern> iterator = Registry.TRIM_PATTERN.iterator(); iterator.hasNext();) {
+                            TrimPattern next = iterator.next();
+                            if (index == i) {
+                                trimPattern = next;
+                                break;
+                            }
+                            i++;
+                        }
+                    } else {
+                        trimPattern = Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(split[1]));
+                    }
+                    armorTrim = new ArmorTrim(Objects.requireNonNull(trimMaterial), Objects.requireNonNull(trimPattern));
                 }
                 ((ArmorMeta) meta).setTrim(armorTrim);
             }

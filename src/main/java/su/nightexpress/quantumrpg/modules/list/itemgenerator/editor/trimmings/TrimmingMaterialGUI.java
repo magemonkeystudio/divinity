@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.trimmings;
 
 import mc.promcteam.engine.manager.api.menu.Slot;
+import org.bukkit.Material;
 import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
@@ -29,13 +30,27 @@ public class TrimmingMaterialGUI extends AbstractEditorGUI {
                 this.setSlot(i, getPrevButton());
                 i++;
             } else if (i % 9 == 0) {i++;}
+            if (i == 1) {
+                setSlot(i, new Slot(createItem(Material.CRAFTING_TABLE,
+                        "&eAny")) {
+                    @Override
+                    public void onLeftClick() {
+                        itemGenerator.getConfig().remove(TrimmingListGUI.getPath(entry.getArmorTrim()));
+                        entry.setArmorTrim(new TrimmingListGUI.ArmorTrim(null, entry.getArmorTrim().getPattern()));
+                        itemGenerator.getConfig().set(TrimmingListGUI.getPath(entry.getArmorTrim()), entry.getWeight());
+                        saveAndReopen();
+                        close();
+                    }
+                });
+                i++;
+            }
             String name = material.getKey().getKey();
             setSlot(i, new Slot(createItem(TrimmingGUI.fromMaterial(material),
                     "&e" + name.substring(0, 1).toUpperCase() + name.substring(1))) {
                 @Override
                 public void onLeftClick() {
                     itemGenerator.getConfig().remove(TrimmingListGUI.getPath(entry.getArmorTrim()));
-                    entry.setArmorTrim(new ArmorTrim(material, entry.getArmorTrim().getPattern()));
+                    entry.setArmorTrim(new TrimmingListGUI.ArmorTrim(material, entry.getArmorTrim().getPattern()));
                     itemGenerator.getConfig().set(TrimmingListGUI.getPath(entry.getArmorTrim()), entry.getWeight());
                     saveAndReopen();
                     close();
