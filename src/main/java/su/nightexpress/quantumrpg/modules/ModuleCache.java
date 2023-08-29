@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules;
 
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -40,6 +41,7 @@ public class ModuleCache {
     private MoneyManager         moneyManager;
     private SetManager           setManager;
     private ItemGeneratorManager itemGeneratorManager;
+    @Getter
     private CustomItemsManager   customItemsManager;
 
     private ClassManager classManager;
