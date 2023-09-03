@@ -1,7 +1,5 @@
 package su.nightexpress.quantumrpg.modules.list.combatlog;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.api.task.ITask;
 import mc.promcteam.engine.utils.ClickText;
@@ -9,6 +7,8 @@ import mc.promcteam.engine.utils.MsgUT;
 import mc.promcteam.engine.utils.NumberUT;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -537,9 +537,9 @@ public class CombatLogManager extends QModule {
             if (list.isEmpty()) return;
 
             plugin.getServer().getScheduler().runTask(plugin, () -> {
-                Hologram holo = HologramsAPI.createHologram(plugin, loc);
+                Hologram holo = HolographicDisplaysAPI.get(plugin).createHologram(loc);
                 for (String line : list) {
-                    holo.appendTextLine(line);
+                    holo.getLines().appendText(line);
                 }
                 map.put(holo, 1);
             });
@@ -557,7 +557,7 @@ public class CombatLogManager extends QModule {
                     Hologram holo   = e.getKey();
                     int      yStack = e.getValue();
 
-                    holo.teleport(holo.getLocation().add(0, 0.11, 0));
+                    holo.setPosition(holo.getPosition().add(0, 0.11, 0));
                     if (yStack++ >= 20) {
                         map.remove(holo);
                         holo.delete();

@@ -1,12 +1,12 @@
 package su.nightexpress.quantumrpg.modules.list.loot;
 
-import com.gmail.filoghost.holographicdisplays.api.Hologram;
-import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import mc.promcteam.engine.manager.IListener;
 import mc.promcteam.engine.manager.api.task.ITask;
 import mc.promcteam.engine.modules.IModuleExecutor;
 import mc.promcteam.engine.utils.*;
 import mc.promcteam.engine.utils.random.Rnd;
+import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
+import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -472,16 +472,16 @@ public class LootHolder extends IListener<QuantumRPG> implements InventoryHolder
         private Hologram holo;
 
         public HologramExpansion() {
-            this.holo = HologramsAPI.createHologram(plugin, LocUT.getCenter(boxLoc.clone()).add(0, 1.25, 0));
+            this.holo = HolographicDisplaysAPI.get(plugin).createHologram(LocUT.getCenter(boxLoc.clone()).add(0, 1.25, 0));
             this.update();
         }
 
         public void update() {
             if (this.holo == null) return;
 
-            this.holo.clearLines();
+            this.holo.getLines().clear();
             for (String s : manager.getHoloText()) {
-                this.holo.appendTextLine(s
+                this.holo.getLines().appendText(s
                         .replace("%entity%", title)
                         .replace("%owner%", ownerName)
                         .replace("%time%", TimeUT.formatTimeLeft(LootHolder.this.despawnTime)));
