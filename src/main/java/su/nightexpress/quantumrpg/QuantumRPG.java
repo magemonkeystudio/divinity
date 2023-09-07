@@ -115,8 +115,8 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.listenerManager = new ListenerManager(this);
         this.listenerManager.setup();
 
-//        this.profileManager = new ProfileManager(this);
-//        this.profileManager.setup();
+        this.profileManager = new ProfileManager(this);
+        this.profileManager.setup();
 
         this.moduleCache = new ModuleCache(this);
         this.moduleCache.initialize();
