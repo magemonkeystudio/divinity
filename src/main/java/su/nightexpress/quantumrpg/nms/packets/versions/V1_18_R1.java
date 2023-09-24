@@ -132,12 +132,12 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
 
         Object p = packetParticlesClass.cast(packet);
 
-        Object j = Reflex.getFieldValue(p, "j");
-        if (j == null) return;
+        Object particleParam = Reflex.getFieldValue(p, "j");
+        if (particleParam == null) return;
 
         Method a = Reflex.getMethod(particleParamClass, "a"); //Get the namespace key of the particle being sent
 
-        String name = (String) Reflex.invokeMethod(a, j);
+        String name = (String) Reflex.invokeMethod(a, particleParam);
         if (name.contains("damage_indicator")) {
             Reflex.setFieldValue(p, "h", 20);
         }

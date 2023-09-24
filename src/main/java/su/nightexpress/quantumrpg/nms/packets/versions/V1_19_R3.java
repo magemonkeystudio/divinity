@@ -175,7 +175,7 @@ public class V1_19_R3 extends V1_19_R2 {
         if (list.size() > 13) {
             Object index3 = list.get(13);
 
-            Method bMethod = Reflex.getMethod(index3.getClass(), "b");
+            Method bMethod = Reflex.getMethod(index3.getClass(), "c");
 
             Object b = Reflex.invokeMethod(bMethod, index3);
             if (b == null || !b.getClass().equals(Boolean.class)) return;

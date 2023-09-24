@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
-public class V1_20_R1 extends V1_19_R3{
+public class V1_20_R1 extends V1_19_R3 {
     public V1_20_R1(@NotNull QuantumRPG plugin) {super(plugin);}
 
     @Override
@@ -61,8 +61,9 @@ public class V1_20_R1 extends V1_19_R3{
 
             if (nmsEntity == null) return;
 
-            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "ct");
-            Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            Method getUniqueId  = Reflex.getMethod(nmsEntityClass, "ct");
+            Entity bukkitEntity =
+                    NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 
             if (!(bukkitEntity instanceof LivingEntity)) return;
             if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)) return;
@@ -123,8 +124,9 @@ public class V1_20_R1 extends V1_19_R3{
             if (nmsEntity == null) return;
 
 
-            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "ct");
-            Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            Method getUniqueId  = Reflex.getMethod(nmsEntityClass, "ct");
+            Entity bukkitEntity =
+                    NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 
             if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;
 
