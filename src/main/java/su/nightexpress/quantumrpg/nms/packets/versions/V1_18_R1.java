@@ -43,7 +43,6 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
     @Override
     public void managePlayerPacket(@NotNull EnginePlayerPacketEvent e) {
         Class playoutParticles        = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutWorldParticles");
-        Class playoutSpawnEntity      = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutSpawnEntity");
         Class playoutUpdateAttributes = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutUpdateAttributes");
         Class playoutEntityMetadata   = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutEntityMetadata");
         Class playOutEntityEquipment  = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutEntityEquipment");
@@ -52,10 +51,6 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
 
         if (EngineCfg.PACKETS_REDUCE_COMBAT_PARTICLES && playoutParticles.isInstance(packet)) {
             this.manageDamageParticle(e, packet);
-            return;
-        }
-        if (EngineCfg.PACKETS_MOD_GLOW_COLOR && playoutSpawnEntity.isInstance(packet)) {
-            this.manageCustomGlow(e, packet);
             return;
         }
 
@@ -141,70 +136,6 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
         if (name.contains("damage_indicator")) {
             Reflex.setFieldValue(p, "h", 20);
         }
-    }
-
-    @Override
-    protected void manageCustomGlow(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
-        Object oId = Reflex.getFieldValue(packet, "d"); // Entity UUID
-        if (oId == null) return;
-
-        // Do a tick delay to let entity be spawned in the world before we can get it by UUID
-        plugin.getServer().getScheduler().runTask(plugin, () -> {
-            UUID id = (UUID) oId;
-
-            // Get entity and check if it's a dropped item
-            Entity entity = plugin.getServer().getEntity(id);
-            if (!(entity instanceof Item)) return;
-
-            // Check if Glow setting is applicable to this item stack.
-            Item             item        = (Item) entity;
-            ItemHintsManager hintManager = plugin.getModuleCache().getItemHintsManager();
-            if (hintManager == null || !hintManager.isGlow(item)) return;
-
-            // Set item custom hint via HintManager before apply glowing
-            //hintManager.setItemHint(item, 0);
-
-            // Get glowing color depends on hint color.
-            ChatColor cc   = ChatColor.WHITE;
-            String    name = ItemUT.getItemName(item.getItemStack());
-            if (name.length() > 2) {
-                String ss = String.valueOf(cc.getChar());
-                if (name.startsWith(String.valueOf(ChatColor.COLOR_CHAR))) {
-                    ss = name.substring(1, 2);
-                }
-                ChatColor c2 = ChatColor.getByChar(ss);
-                if (c2 != null && c2.isColor()) cc = c2;
-            }
-            try {
-                Player p = e.getReciever();
-
-                // Set team name for each color
-                String teamId = "GLOW_" + cc.name();
-                if (teamId.length() > 16) teamId = teamId.substring(0, 16);
-
-                // Get the scoreboard
-                Scoreboard board = p.getScoreboard() != null
-                        ? p.getScoreboard()
-                        : Bukkit.getScoreboardManager().getMainScoreboard();
-                if (board == null)
-                    board = Bukkit.getScoreboardManager().getNewScoreboard();
-
-                // Create team
-                Team team = board.getTeam(teamId) != null ? board.getTeam(teamId) : board.registerNewTeam(teamId);
-
-                team.addEntry(id.toString());
-                team.setColor(cc);
-                team.setDisplayName(teamId);
-
-                p.setScoreboard(board);
-
-                // Activate colored glowing
-                entity.setGlowing(true);
-            } catch (Exception err) { //IllegalAccessException | InvocationTargetException err) {
-                QuantumRPG.getInstance().getLogger().warning("Could not set entity glowing.");
-                err.printStackTrace();
-            }
-        });
     }
 
     @Override

@@ -2,13 +2,18 @@ package su.nightexpress.quantumrpg.modules.list.itemhints;
 
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.ItemMergeEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.EModule;
@@ -116,6 +121,7 @@ public class ItemHintsManager extends QModule {
     public void onItemSpawn(ItemSpawnEvent e) {
         Item item = e.getEntity();
         this.setItemHint(item, 0);
+        this.setGlow(item);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -124,6 +130,13 @@ public class ItemHintsManager extends QModule {
         Item target = e.getTarget();
 
         this.setItemHint(target, src.getItemStack().getAmount());
+        this.removeScoreboardEntry(src);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void itemPickup(PlayerPickupItemEvent e) {
+        Item item = e.getItem();
+        this.removeScoreboardEntry(item);
     }
 
     // Glow is added via packets
@@ -138,6 +151,67 @@ public class ItemHintsManager extends QModule {
         String name2 = format.replace("%name%", name).replace("%amount%", String.valueOf(amount));
         i.setCustomName(name2);
         i.setCustomNameVisible(true);
+    }
+
+    private ChatColor getItemColor(ItemStack item) {
+        ChatColor cc   = ChatColor.WHITE;
+        String    name = ItemUT.getItemName(item);
+        if (name.length() > 2) {
+            String ss = String.valueOf(cc.getChar());
+            if (name.startsWith(String.valueOf(ChatColor.COLOR_CHAR))) {
+                ss = name.substring(1, 2);
+            }
+            ChatColor c2 = ChatColor.getByChar(ss);
+            if (c2 != null && c2.isColor()) cc = c2;
+        }
+
+        return cc;
+    }
+
+    public void setGlow(Item item) {
+        if (!this.isGlow()) return;
+
+        ChatColor cc     = getItemColor(item.getItemStack());
+        String    teamId = "GLOW_" + cc.name();
+
+        // We'll add the item to every player's scoreboard
+        Bukkit.getServer().getOnlinePlayers().forEach(player -> {
+            Scoreboard scoreboard = player.getScoreboard() != null
+                    ? player.getScoreboard()
+                    : Bukkit.getScoreboardManager().getMainScoreboard();
+            if (scoreboard == null) {
+                scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+            }
+
+            Team team = scoreboard.getTeam(teamId) != null ? scoreboard.getTeam(teamId)
+                    : scoreboard.registerNewTeam(teamId);
+
+            team.setColor(cc);
+            team.addEntry(item.getUniqueId().toString());
+
+            player.setScoreboard(scoreboard);
+        });
+
+        item.setGlowing(true);
+    }
+
+    public void removeScoreboardEntry(Item item) {
+        if (!this.isGlow()) return;
+
+        Bukkit.getServer().getOnlinePlayers().forEach(player -> {
+            Scoreboard scoreboard = player.getScoreboard() != null
+                    ? player.getScoreboard()
+                    : Bukkit.getScoreboardManager().getMainScoreboard();
+            if (scoreboard == null) {
+                return;
+            }
+
+            Team team = scoreboard.getTeam("GLOW_" + getItemColor(item.getItemStack()).name());
+            if (team != null) {
+                team.removeEntry(item.getUniqueId().toString());
+                player.setScoreboard(scoreboard);
+            }
+        });
     }
 
     public boolean isGlow() {

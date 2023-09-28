@@ -43,7 +43,6 @@ public class UniversalPacketHandler implements IPacketHandler {
     @Override
     public void managePlayerPacket(@NotNull EnginePlayerPacketEvent e) {
         Class playoutParticles        = Reflex.getNMSClass("PacketPlayOutWorldParticles");
-        Class playoutSpawnEntity      = Reflex.getNMSClass("PacketPlayOutSpawnEntity");
         Class playoutUpdateAttributes = Reflex.getNMSClass("PacketPlayOutUpdateAttributes");
         Class playoutEntityMetadata   = Reflex.getNMSClass("PacketPlayOutEntityMetadata");
         Class playOutEntityEquipment  = Reflex.getNMSClass("PacketPlayOutEntityEquipment");
@@ -52,10 +51,6 @@ public class UniversalPacketHandler implements IPacketHandler {
 
         if (EngineCfg.PACKETS_REDUCE_COMBAT_PARTICLES && playoutParticles.isInstance(packet)) {
             this.manageDamageParticle(e, packet);
-            return;
-        }
-        if (EngineCfg.PACKETS_MOD_GLOW_COLOR && playoutSpawnEntity.isInstance(packet)) {
-            this.manageCustomGlow(e, packet);
             return;
         }
 
@@ -139,101 +134,6 @@ public class UniversalPacketHandler implements IPacketHandler {
         if (name.contains("damage_indicator")) {
             Reflex.setFieldValue(p, "h", 20);
         }
-    }
-
-    protected void manageCustomGlow(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
-        Object oId = Reflex.getFieldValue(packet, "b"); // Entity UUID
-        if (oId == null) return;
-
-        // Do a tick delay to let entity be spawned in the world before we can get it by UUID
-        plugin.getServer().getScheduler().runTask(plugin, () -> {
-            UUID id = (UUID) oId;
-
-            // Get entity and check if it's a dropped item
-            Entity entity = plugin.getServer().getEntity(id);
-            if (!(entity instanceof org.bukkit.entity.Item)) return;
-
-            // Check if Glow setting is applicable to this item stack.
-            Item             item        = (Item) entity;
-            ItemHintsManager hintManager = plugin.getModuleCache().getItemHintsManager();
-            if (hintManager == null || !hintManager.isGlow(item)) return;
-
-            // Get list of fake team entities to add our item into it
-            Object pTeam = Reflex.invokeConstructor(
-                    Reflex.getConstructor(Reflex.getNMSClass("PacketPlayOutScoreboardTeam")));
-            Object oEntities = Reflex.getFieldValue(pTeam, "h"); // List of team entities
-            if (oEntities == null) return;
-
-            @SuppressWarnings("unchecked")
-            Collection<String> entities = (Collection<String>) oEntities;
-            entities.add(id.toString());
-
-            // Set item custom hint via HintManager before apply glowing
-            //hintManager.setItemHint(item, 0);
-
-            // Get glowing color depends on hint color.
-            ChatColor cc   = ChatColor.WHITE;
-            String    name = ItemUT.getItemName(item.getItemStack());
-            if (name.length() > 2) {
-                String ss = String.valueOf(cc.getChar());
-                if (name.startsWith(String.valueOf(ChatColor.COLOR_CHAR))) {
-                    ss = name.substring(1, 2);
-                }
-                ChatColor c2 = ChatColor.getByChar(ss);
-                if (c2 != null && c2.isColor()) cc = c2;
-            }
-            Enum ec = Reflex.getEnum(Reflex.getNMSClass("EnumChatFormat"), cc.name());
-//            EnumChatFormat ec = EnumChatFormat.valueOf(cc.name());
-
-            Player p = e.getReciever();
-
-            // Check if team for this color is already created
-            // Also Check team per player in case of logout
-            boolean        newTeam = true;
-            Set<ChatColor> hash    = PacketManager.COLOR_CACHE.get(p);
-            if (hash != null) {
-                if (hash.contains(cc)) {
-                    newTeam = false;
-                }
-            } else {
-                hash = new HashSet<>();
-            }
-            hash.add(cc);
-            PacketManager.COLOR_CACHE.put(p, hash);
-
-            // Set team name for each color
-            String teamId = "GLOW_" + ec.name();
-            if (teamId.length() > 16) teamId = teamId.substring(0, 16);
-
-            // Set team fields
-            Reflex.setFieldValue(pTeam, "i", newTeam ? 0 : 3); // 0 = new team, 3 = add entity, 4 = remove entity
-            Reflex.setFieldValue(pTeam, "a", teamId); // Internal team name
-
-
-            Object team;
-            Object prefix;
-            if (ReflectionManager.MINOR_VERSION >= 19) {
-                Class<?> baseComp   = Reflex.getClass("net.minecraft.network.chat.IChatBaseComponent");
-                Method   chatMethod = Reflex.getMethod(baseComp, "b", String.class);
-                team = Reflex.invokeMethod(chatMethod, null, teamId);
-                prefix = Reflex.invokeMethod(chatMethod, null, "");
-            } else {
-                Class       chatComponentClass = Reflex.getNMSClass("ChatComponentText");
-                Constructor ctor               = Reflex.getConstructor(chatComponentClass, String.class);
-                team = Reflex.invokeConstructor(ctor, teamId);
-                prefix = Reflex.invokeConstructor(ctor, "");
-            }
-            if (newTeam) {
-                Reflex.setFieldValue(pTeam, "g", ec); // Team color
-                Reflex.setFieldValue(pTeam, "b", team); // Team display name
-                Reflex.setFieldValue(pTeam, "c", prefix); // Team prefix
-            }
-
-            // Send packet to a player
-            plugin.getPacketManager().sendPacket(e.getReciever(), pTeam);
-            // Activate colored glowing
-            entity.setGlowing(true);
-        });
     }
 
     protected void manageEntityNames(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {

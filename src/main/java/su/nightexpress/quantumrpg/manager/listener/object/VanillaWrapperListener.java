@@ -79,11 +79,11 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         // Prevent duplicated event call
         pj.setMetadata(META_PROJECTILE_EVENT_FIXER, new FixedMetadataValue(plugin, "true"));
 
-        QuantumProjectileLaunchEvent eve = new QuantumProjectileLaunchEvent(pj, pj.getLocation(), shooter, bow, power, true);
+        QuantumProjectileLaunchEvent eve =
+                new QuantumProjectileLaunchEvent(pj, pj.getLocation(), shooter, bow, power, true);
         plugin.getPluginManager().callEvent(eve);
         if (eve.isCancelled()) {
             e.setCancelled(true);
-            return;
         }
     }
 
@@ -110,18 +110,18 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         String          pjType = pp.getType().name();
         EntityEquipment eq     = shooter.getEquipment();
         if (eq != null) {
-            // Fix main hand damage when launched from off hand
+            // Fix main hand damage when launched from off-hand
             ItemStack off = eq.getItemInOffHand();
             if (ItemUT.isAir(off) || !off.getType().name().equalsIgnoreCase(pjType)) {
                 bow = eq.getItemInMainHand();
             }
         }
 
-        QuantumProjectileLaunchEvent eve = new QuantumProjectileLaunchEvent(e1, e1.getLocation(), shooter, bow, power, false);
+        QuantumProjectileLaunchEvent eve =
+                new QuantumProjectileLaunchEvent(e1, e1.getLocation(), shooter, bow, power, false);
         plugin.getPluginManager().callEvent(eve);
         if (eve.isCancelled()) {
             e.setCancelled(true);
-            return;
         }
     }
 
