@@ -11,8 +11,8 @@
     </parent>
 
     <properties>
-        <promccore.version>1.0.6-R0.3-SNAPSHOT</promccore.version>
-        <proskillapi.version>1.1.9-R0.1-SNAPSHOT</proskillapi.version>
+        <promccore.version>1.1.0-R0.1-SNAPSHOT</promccore.version>
+        <proskillapi.version>1.1.11-R0.11-SNAPSHOT</proskillapi.version>
     </properties>
 
     <groupId>com.promcteam</groupId>
@@ -66,6 +66,7 @@
         <dependency>
             <groupId>com.promcteam</groupId>
             <artifactId>promccore</artifactId>
+            <version>${promccore.version}</version>
         </dependency>
         <dependency>
             <groupId>com.promcteam</groupId>

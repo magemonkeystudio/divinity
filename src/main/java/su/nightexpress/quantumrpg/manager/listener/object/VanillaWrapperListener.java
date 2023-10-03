@@ -2,6 +2,7 @@ package su.nightexpress.quantumrpg.manager.listener.object;
 
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.IListener;
+import mc.promcteam.engine.registry.attribute.AttributeRegistry;
 import mc.promcteam.engine.utils.ItemUT;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -304,6 +305,8 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         final double damageStart2 = damageStart;
         damages.keySet().forEach((dmgAtt) -> damages.compute(dmgAtt, (dmgKey, dmgVal) -> dmgVal + damageStart2));
 
+        scaleValuesWithCore(damager, projectile, damages, defenses, victim);
+
         RPGDamageEvent.Start eventStart = new RPGDamageEvent.Start(victim, damager, projectile, damages, defenses,
                 stats, e, meta, exempt);
         plugin.getPluginManager().callEvent(eventStart);
@@ -337,5 +340,99 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         }
 
 //        QuantumRPG.getInstance().info("event took: " + (System.currentTimeMillis() - l1) + " millis");
+    }
+
+    /**
+     * <p>Scale damage and defense values with ProMCCore attributes.</p>
+     *
+     * <p>Without external plugins, this will do nothing, but does allow for other plugins
+     * to influence any of the ProRPGItems attributes as well as the basic
+     * physical, projectile, or melee attributes.</p>
+     *
+     * <p>It should be noted that projectile and melee adjustments will be made regardless of
+     * the ProRPGItems stat or if it's a 'physical-defense' or 'physical-damage'. This means that
+     * if the stat to be adjusted is 'physical-damage', the any 'physical-damage' modifiers
+     * will be applied, followed by either 'melee-damage' or 'projectile-damage'.</p>
+     *
+     * @param damager    The damager in the scenario, used for damage scaling
+     * @param projectile The projectile in the scenario, or null if it's a melee attack
+     * @param damages    The damage map to scale
+     * @param defenses   The defense map to scale
+     * @param victim     The victim in the scenario, used for defense scaling
+     */
+    private static void scaleValuesWithCore(LivingEntity damager,
+                                            Projectile projectile,
+                                            Map<DamageAttribute, Double> damages,
+                                            Map<DefenseAttribute, Double> defenses,
+                                            LivingEntity victim) {
+        // If they're a player, but not a CitizensNPC, then we'll
+        // apply attributes registered with ProMCCore
+        if (damager instanceof Player && !damager.getClass().getName().equals("PlayerNPC")) {
+            // Scale damages
+            damages.forEach((dmgAtt, value) -> {
+                if (dmgAtt == null) return;
+
+                String id = dmgAtt.getId();
+                if (id.equals("physical")) id = AttributeRegistry.PHYSICAL_DAMAGE;
+                else id = "rpgdamage-" + id;
+
+                double damage = value;
+                damage = AttributeRegistry.scaleAttribute(
+                        id,
+                        damager,
+                        damage
+                );
+
+                if (projectile != null) {
+                    damage = AttributeRegistry.scaleAttribute(
+                            AttributeRegistry.PROJECTILE_DAMAGE,
+                            damager,
+                            damage
+                    );
+                } else {
+                    damage = AttributeRegistry.scaleAttribute(
+                            AttributeRegistry.MELEE_DAMAGE,
+                            damager,
+                            damage
+                    );
+                }
+
+                damages.put(dmgAtt, damage);
+            });
+        }
+
+        if (victim instanceof Player && !victim.getClass().getName().equals("PlayerNPC")) {
+            // Scale defenses
+            defenses.forEach((defAtt, value) -> {
+                if (defAtt == null) return;
+
+                String id = defAtt.getId();
+                if (id.equals("physical")) id = AttributeRegistry.PHYSICAL_DEFENSE;
+                else id = "rpgdefense-" + id;
+
+                double defense = value;
+                defense = AttributeRegistry.scaleAttribute(
+                        id,
+                        victim,
+                        defense
+                );
+
+                if (projectile != null) {
+                    defense = AttributeRegistry.scaleAttribute(
+                            AttributeRegistry.PROJECTILE_DEFENSE,
+                            victim,
+                            defense
+                    );
+                } else {
+                    defense = AttributeRegistry.scaleAttribute(
+                            AttributeRegistry.MELEE_DEFENSE,
+                            victim,
+                            defense
+                    );
+                }
+
+                defenses.put(defAtt, defense);
+            });
+        }
     }
 }
