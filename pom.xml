@@ -17,7 +17,7 @@
 
     <groupId>com.promcteam</groupId>
     <artifactId>prorpgitems</artifactId>
-    <version>1.0.6-R0.14-SNAPSHOT</version>
+    <version>1.0.6-R0.15-SNAPSHOT</version>
     <name>ProRPGItems</name>
 
     <repositories>
