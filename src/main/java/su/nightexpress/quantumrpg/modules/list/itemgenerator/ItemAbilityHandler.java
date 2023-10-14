@@ -168,7 +168,6 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         if (!ItemUtils.isWeapon(item) && !ItemUtils.isBow(item) && item.getType() != Material.SHIELD) {
             e.setCancelled(true);
         }
-        this.useItem(player, item);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
