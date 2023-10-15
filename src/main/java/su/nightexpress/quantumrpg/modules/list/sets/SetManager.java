@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.sets;
 
+import mc.promcteam.engine.api.armor.ArmorEquipEvent;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.LoadableItem;
 import mc.promcteam.engine.utils.ItemUT;
@@ -14,11 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.ItemSpawnEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -163,7 +160,6 @@ public class SetManager extends QModule {
         entityStats.updateAll();
 
         entityStats.getEquipment().forEach(item -> this.updateItemSet(item, player));
-        player.updateInventory();
     }
 
     public void updateItemSet(@NotNull ItemStack item, @Nullable Player player) {
@@ -278,36 +274,23 @@ public class SetManager extends QModule {
     // EVENTS
 
     @EventHandler(ignoreCancelled = true)
-    public void onSetUpdateClick(InventoryClickEvent e) {
-        if (e.getInventory().getType() != InventoryType.CRAFTING) return;
-        if (e.getSlotType() == SlotType.CRAFTING) return;
-        final Player p = (Player) e.getWhoClicked();
+    public void onSetUpdateEquip(ArmorEquipEvent e) {
+        Player p = e.getPlayer();
+
         if (p.getGameMode() == GameMode.CREATIVE) return;
 
         boolean update = false;
 
-        ItemStack target = e.getCurrentItem();
-
-        if (target != null && this.hasSet(target)) {
-            this.updateItemSet(target, null);
-            if (e.getSlotType() == SlotType.ARMOR || e.isShiftClick()) update = true;
+        ItemStack oldPiece = e.getOldArmorPiece();
+        if (oldPiece != null && this.hasSet(oldPiece)) {
+            this.updateItemSet(oldPiece, null);
+            update = true;
         }
 
-        if (e.getSlotType() == SlotType.ARMOR) {
-            ItemStack cur = e.getCursor();
-            if (cur != null && this.hasSet(cur)) update = true;
-        }
+        ItemStack newPiece = e.getNewArmorPiece();
+        if (newPiece != null && this.hasSet(newPiece)) update = true;
 
         if (update) this.plugin.getServer().getScheduler().runTask(this.plugin, () -> this.updateSets(p));
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onSetUpdateHeld(PlayerItemHeldEvent e) {
-        Player p = e.getPlayer();
-        if (p.getGameMode() == GameMode.CREATIVE) return;
-
-        ItemStack target = p.getInventory().getItem(e.getNewSlot());
-        if (target != null && this.hasSet(target)) this.updateItemSet(target, null);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
