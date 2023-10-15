@@ -8,17 +8,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.EHook;
@@ -26,7 +26,6 @@ import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
-import su.nightexpress.quantumrpg.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,31 +143,6 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
 
     // ------------------------------------------------------------- //
     // E V E N T S
-
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
-    public void onItemConsume(PlayerInteractEvent e) {
-        if (e.useItemInHand() == Result.DENY) return;
-
-        EquipmentSlot hand = e.getHand();
-        if (hand == null) return;
-
-        ItemStack item = e.getItem();
-        if (item == null) return;
-
-        // Let use the natural consume animation.
-        if (item.getType().isEdible() || item.getType() == Material.POTION) return;
-
-        GeneratorItem aItem = this.itemGen.getModuleItem(item);
-        if (aItem == null) return;
-
-        Player player = e.getPlayer();
-        Action action = e.getAction();
-        if (action == Action.PHYSICAL) return;
-
-        if (!ItemUtils.isWeapon(item) && !ItemUtils.isBow(item) && item.getType() != Material.SHIELD) {
-            e.setCancelled(true);
-        }
-    }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onItemConsumeNatural(PlayerItemConsumeEvent e) {
