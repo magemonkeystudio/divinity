@@ -50,7 +50,7 @@ public class LoreGUI extends AbstractEditorGUI {
                             loreLine.isEmpty() ? "''" : loreLine,
                             "&6Left-Click: &eAdd to left",
                             "&6Right-Click: &eAdd to right",
-                            "&6Middle-Click: &eSet",
+                            "&6Shift-Left-Click: &eSet",
                             "&6Drop: &eRemove")) {
                         @Override
                         public void onLeftClick() {
@@ -77,7 +77,7 @@ public class LoreGUI extends AbstractEditorGUI {
                         }
 
                         @Override
-                        public void onMiddleClick() {
+                        public void onShiftLeftClick() {
                             sendSetMessage("lore line " + k,
                                     lore.get(k),
                                     s -> {
