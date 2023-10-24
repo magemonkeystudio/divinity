@@ -370,18 +370,18 @@ public class EntityStats {
 
     @NotNull
     public ItemStack getItemInMainHand() {
-        if (this.equipment == null || ItemUT.isAir(this.equipment.getItemInMainHand())) {
+        if (this.equipment == null) {
             return new ItemStack(Material.AIR);
         }
-        return new ItemStack(this.equipment.getItemInMainHand());
+        return this.equipment.getItemInMainHand();
     }
 
     @NotNull
     public ItemStack getItemInOffHand() {
-        if (this.equipment == null || ItemUT.isAir(this.equipment.getItemInOffHand())) {
+        if (this.equipment == null) {
             return new ItemStack(Material.AIR);
         }
-        return new ItemStack(this.equipment.getItemInOffHand());
+        return this.equipment.getItemInOffHand();
     }
 
     @NotNull

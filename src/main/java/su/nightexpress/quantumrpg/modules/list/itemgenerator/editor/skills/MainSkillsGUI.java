@@ -17,7 +17,7 @@ public class MainSkillsGUI extends AbstractEditorGUI {
         setSlot(0, new Slot(createItem(Material.BROWN_MUSHROOM,
                 "&eMinimum skills",
                 "&bCurrent: &a" + itemGenerator.getHandle().getAbilityGenerator().getMinAmount(),
-                "&6Middle-Click: &eSet",
+                "&6Shift-Left-Click: &eSet",
                 "&6Left-Click: &eDecrease",
                 "&6Right-Click: &eIncrease",
                 "&6Drop: &eSet to default value")) {
@@ -34,7 +34,7 @@ public class MainSkillsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onMiddleClick() {
+            public void onShiftLeftClick() {
                 sendSetMessage(ItemType.MINIMUM.name() + " skills",
                         String.valueOf(itemGenerator.getHandle().getAbilityGenerator().getMinAmount()),
                         s -> {
@@ -52,7 +52,7 @@ public class MainSkillsGUI extends AbstractEditorGUI {
         setSlot(1, new Slot(createItem(Material.RED_MUSHROOM,
                 "&eMaximum skills",
                 "&bCurrent: &a" + itemGenerator.getHandle().getAbilityGenerator().getMaxAmount(),
-                "&6Middle-Click: &eSet",
+                "&6Shift-Left-Click: &eSet",
                 "&6Left-Click: &eDecrease",
                 "&6Right-Click: &eIncrease",
                 "&6Drop: &eSet to default value")) {
@@ -69,7 +69,7 @@ public class MainSkillsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onMiddleClick() {
+            public void onShiftLeftClick() {
                 sendSetMessage(ItemType.MAXIMUM.name() + " skills",
                         String.valueOf(itemGenerator.getHandle().getAbilityGenerator().getMaxAmount()),
                         s -> {

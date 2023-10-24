@@ -85,7 +85,7 @@ public class EditorGUI extends AbstractEditorGUI {
         setSlot(3, new Slot(createItem(Material.END_CRYSTAL,
                 "&eCustom Model Data",
                 "&bCurrent: &a" + this.itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0),
-                "&6Middle-Click: &eSet",
+                "&6Shift-Left-Click: &eSet",
                 "&6Left-Click: &eDecrease",
                 "&6Right-Click: &eIncrease",
                 "&6Drop: &eSet to default value")) {
@@ -102,7 +102,7 @@ public class EditorGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onMiddleClick() {
+            public void onShiftLeftClick() {
                 sendSetMessage(ItemType.MODEL_DATA.getTitle(),
                         String.valueOf(itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0)),
                         s -> {
@@ -162,7 +162,7 @@ public class EditorGUI extends AbstractEditorGUI {
         setSlot(5, new Slot(createItem(Material.ANVIL,
                 "&eDurability",
                 "&bCurrent: &a" + this.itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0),
-                "&6Middle-Click: &eSet",
+                "&6Shift-Left-Click: &eSet",
                 "&6Left-Click: &eDecrease",
                 "&6Right-Click: &eIncrease",
                 "&6Drop: &eSet to default value")) {
@@ -179,7 +179,7 @@ public class EditorGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onMiddleClick() {
+            public void onShiftLeftClick() {
                 sendSetMessage(ItemType.DURABILITY.getTitle(),
                         String.valueOf(itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0)),
                         s -> {
@@ -346,7 +346,7 @@ public class EditorGUI extends AbstractEditorGUI {
         setSlot(20, new Slot(createItem(Material.EXPERIENCE_BOTTLE,
                 "&eMinimum Level",
                 "&bCurrent: &a" + itemGenerator.getConfig().getInt(ItemType.MIN_LEVEL.getPath()),
-                "&6Middle-Click: &eSet",
+                "&6Shift-Left-Click: &eSet",
                 "&6Left-Click: &eDecrease",
                 "&6Right-Click: &eIncrease",
                 "&6Drop: &eSet to default value")) {
@@ -363,7 +363,7 @@ public class EditorGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onMiddleClick() {
+            public void onShiftLeftClick() {
                 sendSetMessage(ItemType.MIN_LEVEL.getTitle(),
                         String.valueOf(itemGenerator.getHandle().getMinLevel()),
                         s -> {
@@ -386,7 +386,7 @@ public class EditorGUI extends AbstractEditorGUI {
         setSlot(21, new Slot(createItem(Material.EXPERIENCE_BOTTLE,
                 "&eMaximum Level",
                 "&bCurrent: &a" + itemGenerator.getConfig().getInt(ItemType.MAX_LEVEL.getPath()),
-                "&6Middle-Click: &eSet",
+                "&6Shift-Left-Click: &eSet",
                 "&6Left-Click: &eDecrease",
                 "&6Right-Click: &eIncrease",
                 "&6Drop: &eSet to default value")) {
@@ -403,7 +403,7 @@ public class EditorGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onMiddleClick() {
+            public void onShiftLeftClick() {
                 sendSetMessage(ItemType.MAX_LEVEL.getTitle(),
                         String.valueOf(itemGenerator.getHandle().getMaxLevel()),
                         s -> {

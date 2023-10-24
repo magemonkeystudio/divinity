@@ -21,7 +21,7 @@ public class MainStatsGUI extends AbstractEditorGUI {
         setSlot(0, new Slot(createItem(Material.BROWN_MUSHROOM,
                 "&eMinimum " + this.itemType.getTitle(),
                 "&bCurrent: &a" + itemGenerator.getConfig().getInt(ItemType.MINIMUM.getPath(this.itemType)),
-                "&6Middle-Click: &eSet",
+                "&6Shift-Left-Click: &eSet",
                 "&6Left-Click: &eDecrease",
                 "&6Right-Click: &eIncrease",
                 "&6Drop: &eSet to default value")) {
@@ -40,7 +40,7 @@ public class MainStatsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onMiddleClick() {
+            public void onShiftLeftClick() {
                 sendSetMessage(ItemType.MINIMUM.getPath() + " " + itemType.getTitle(),
                         String.valueOf(itemGenerator.getConfig().getInt(ItemType.MINIMUM.getPath(itemType))),
                         s -> {
@@ -63,7 +63,7 @@ public class MainStatsGUI extends AbstractEditorGUI {
         setSlot(1, new Slot(createItem(Material.RED_MUSHROOM,
                 "&eMaximum " + this.itemType.getTitle(),
                 "&bCurrent: &a" + itemGenerator.getConfig().getInt(ItemType.MAXIMUM.getPath(this.itemType)),
-                "&6Middle-Click: &eSet",
+                "&6Shift-Left-Click: &eSet",
                 "&6Left-Click: &eDecrease",
                 "&6Right-Click: &eIncrease",
                 "&6Drop: &eSet to default value")) {
@@ -82,7 +82,7 @@ public class MainStatsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onMiddleClick() {
+            public void onShiftLeftClick() {
                 sendSetMessage(ItemType.MAXIMUM.getPath() + " " + itemType.getTitle(),
                         String.valueOf(itemGenerator.getConfig().getInt(ItemType.MAXIMUM.getPath(itemType))),
                         s -> {
