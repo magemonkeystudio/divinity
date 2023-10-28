@@ -69,6 +69,13 @@ public class ItemDurabilityListener extends IListener<QuantumRPG> {
                 this.duraStat.reduceDurability(victim, armorItem, 1);
             }
             equipVictim.setArmorContents(armor);
+
+            if (e.getDamageMeta().isBlocked()) {
+                ItemStack shield = equipVictim.getItemInMainHand();
+                if (shield.getType() != Material.SHIELD) shield = equipVictim.getItemInOffHand();
+                if (shield.getType() == Material.SHIELD)
+                    this.duraStat.reduceDurability(victim, shield, 1);
+            }
         }
 
         // Reduce durability of attacker's weapon
@@ -78,7 +85,7 @@ public class ItemDurabilityListener extends IListener<QuantumRPG> {
         EntityEquipment equipDamager = damager.getEquipment();
         if (equipDamager != null) {
             ItemStack weapon = equipDamager.getItemInMainHand();
-            this.duraStat.reduceDurability(damager, weapon, 1);
+            if (weapon.getType() != Material.SHIELD) this.duraStat.reduceDurability(damager, weapon, 1);
         }
     }
 
