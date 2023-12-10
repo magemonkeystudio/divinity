@@ -130,7 +130,6 @@ public abstract class MockedTest {
     }
 
     public PlayerMock genPlayer(String name, boolean op) {
-//        PlayerMock pm = server.addPlayer(name);
         PlayerMock pm = new PlayerMock(server, name, UUID.randomUUID());
         server.addPlayer(pm);
         players.add(pm);
