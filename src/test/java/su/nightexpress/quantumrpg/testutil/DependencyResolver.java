@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.testutil;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +11,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class DependencyResolver {
-    private static Logger       log          = LoggerFactory.getLogger(DependencyResolver.class);
     private static List<String> repositories = List.of("https://s01.oss.sonatype.org/content/repositories/snapshots/", "https://repo1.maven.org/maven2");
 
     public static File resolve(String dependency) throws FileNotFoundException {
