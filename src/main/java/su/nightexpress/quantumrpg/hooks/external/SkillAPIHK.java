@@ -6,6 +6,7 @@ import com.sucy.skill.api.event.PlayerCastSkillEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
+import com.sucy.skill.api.player.PlayerSkill;
 import com.sucy.skill.api.skills.Skill;
 import com.sucy.skill.manager.AttributeManager;
 import mc.promcteam.engine.hooks.HookState;
@@ -80,12 +81,18 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
     @EventHandler
     public void onSkillCast(PlayerCastSkillEvent e) {
         if (!EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API) return;
+        SkillAPIHK skillAPIHK = this.plugin.getHook(SkillAPIHK.class);
+        if (skillAPIHK == null) return;
+
         Player    p    = e.getPlayer();
         ItemStack item = p.getInventory().getItemInMainHand();
+        PlayerSkill playerSkill = e.getSkill();
 
-        DurabilityStat duraStat = ItemStats.getStat(DurabilityStat.class);
-        if (duraStat != null) {
-            duraStat.reduceDurability(p, item, 1);
+        if (playerSkill.isExternal() && skillAPIHK.getAbilities(item).keySet().stream().anyMatch(s -> s.equalsIgnoreCase(playerSkill.getData().getKey()))) {
+            DurabilityStat duraStat = ItemStats.getStat(DurabilityStat.class);
+            if (duraStat != null) {
+                duraStat.reduceDurability(p, item, 1);
+            }
         }
     }
 
