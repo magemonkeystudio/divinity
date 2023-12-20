@@ -2,7 +2,7 @@ package su.nightexpress.quantumrpg.hooks.external;
 
 import com.sucy.skill.SkillAPI;
 import com.sucy.skill.api.enums.ExpSource;
-import com.sucy.skill.api.event.PlayerCastSkillEvent;
+import com.sucy.skill.api.event.DynamicTriggerEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
 import com.sucy.skill.api.event.SkillDamageEvent;
 import com.sucy.skill.api.player.PlayerData;
@@ -79,16 +79,22 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
     }
 
     @EventHandler
-    public void onSkillCast(PlayerCastSkillEvent e) {
-        if (!EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API) return;
-        SkillAPIHK skillAPIHK = this.plugin.getHook(SkillAPIHK.class);
-        if (skillAPIHK == null) return;
+    public void onSkillCast(DynamicTriggerEvent e) {
+        if (!EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API.contains(e.getTrigger().toLowerCase())) return;
 
-        Player    p    = e.getPlayer();
+        LivingEntity caster = e.getCaster();
+        if (!(caster instanceof Player)) return;
+        Player p = (Player) caster;
+        PlayerData playerData = SkillAPI.getPlayerData(p);
+        if (playerData == null) return;
+
+        String skillKey = e.getSkill().getKey();
+        PlayerSkill playerSkill = playerData.getSkill(skillKey);
+        if (playerSkill == null || !playerSkill.isExternal()) return;
+
         ItemStack item = p.getInventory().getItemInMainHand();
-        PlayerSkill playerSkill = e.getSkill();
 
-        if (playerSkill.isExternal() && skillAPIHK.getAbilities(item).keySet().stream().anyMatch(s -> s.equalsIgnoreCase(playerSkill.getData().getKey()))) {
+        if (getAbilities(item).keySet().stream().anyMatch(s -> s.equalsIgnoreCase(skillKey))) {
             DurabilityStat duraStat = ItemStats.getStat(DurabilityStat.class);
             if (duraStat != null) {
                 duraStat.reduceDurability(p, item, 1);

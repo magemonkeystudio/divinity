@@ -12,7 +12,7 @@
 
     <properties>
         <promccore.version>1.1.0-R0.1-SNAPSHOT</promccore.version>
-        <proskillapi.version>1.1.11-R0.11-SNAPSHOT</proskillapi.version>
+        <proskillapi.version>1.2.0-R0.3-SNAPSHOT</proskillapi.version>
     </properties>
 
     <groupId>com.promcteam</groupId>
