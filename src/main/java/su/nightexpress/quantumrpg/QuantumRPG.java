@@ -3,6 +3,7 @@ package su.nightexpress.quantumrpg;
 import mc.promcteam.engine.NexDataPlugin;
 import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.commands.api.IGeneralCommand;
+import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.hooks.Hooks;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -93,6 +94,8 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 
         String  coreVersion       = NexEngine.getEngine().getDescription().getVersion();
         boolean minCoreVersionMet = DependencyRequirement.meetsVersion(DependencyRequirement.MIN_CORE_VERSION, coreVersion);
+        JYML    profileConfig     = JYML.loadOrExtract(this, "/profiles/settings.yml");
+        boolean useProfiles = profileConfig.getBoolean("enabled", true);
 
         if (this.pms.get() == null || !minCoreVersionMet) {
             if (!minCoreVersionMet) {
@@ -115,8 +118,10 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.listenerManager = new ListenerManager(this);
         this.listenerManager.setup();
 
-        this.profileManager = new ProfileManager(this);
-        this.profileManager.setup();
+        if (useProfiles) {
+            this.profileManager = new ProfileManager(this);
+            this.profileManager.setup();
+        }
 
         this.moduleCache = new ModuleCache(this);
         this.moduleCache.initialize();

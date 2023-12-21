@@ -66,6 +66,7 @@ public class ProfileManager extends IListener<QuantumRPG> implements Loadable {
         this.plugin.getCommandManager().registerCommand(this.profileCommand = new ProfileCommand(this));
 
         this.registerListeners();
+        this.plugin.getLogger().info("Profile Manager has been enabled");
     }
 
     @Override
