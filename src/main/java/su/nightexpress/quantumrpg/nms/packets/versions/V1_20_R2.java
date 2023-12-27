@@ -68,7 +68,7 @@ public class V1_20_R2 extends V1_20_R1 {
                     NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 
             if (!(bukkitEntity instanceof LivingEntity)) return;
-            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)) return;
+            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity) || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
 
             EntityEquipmentChangeEvent event = new EntityEquipmentChangeEvent((LivingEntity) bukkitEntity);
             plugin.getServer().getPluginManager().callEvent(event);

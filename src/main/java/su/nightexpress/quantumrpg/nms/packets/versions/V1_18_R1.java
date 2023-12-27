@@ -113,7 +113,7 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
 
             Entity bukkitEntity = NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
             if (!(bukkitEntity instanceof LivingEntity)) return;
-            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)) return;
+            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity) || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
 
             EntityEquipmentChangeEvent event = new EntityEquipmentChangeEvent((LivingEntity) bukkitEntity);
             plugin.getServer().getPluginManager().callEvent(event);

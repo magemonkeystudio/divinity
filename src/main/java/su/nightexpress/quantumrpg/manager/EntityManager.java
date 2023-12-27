@@ -1,7 +1,6 @@
 package su.nightexpress.quantumrpg.manager;
 
 import mc.promcteam.engine.manager.IListener;
-import mc.promcteam.engine.manager.api.task.ITask;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -11,6 +10,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -28,11 +28,13 @@ import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class EntityManager extends IListener<QuantumRPG> {
 
-    private static final String                  PACKET_DUPLICATOR_FIXER = "PACKET_DUPLICATOR_FIXER";
-    private              EntityStatsTask         entityStatsTask;
+    private static final String                     PACKET_DUPLICATOR_FIXER = "PACKET_DUPLICATOR_FIXER";
+    private static final Map<UUID, EntityEquipment> previousEquipment       = new HashMap<>();
+    private              EntityStatsTask            entityStatsTask;
 
     public EntityManager(@NotNull QuantumRPG plugin) {
         super(plugin);
@@ -44,6 +46,31 @@ public class EntityManager extends IListener<QuantumRPG> {
             return true;
         }
         return false;
+    }
+
+    public static boolean isEquipmentNew(LivingEntity entity) {
+        EntityEquipment previous = previousEquipment.get(entity.getUniqueId());
+        if (previous == null) return true;
+        EntityEquipment current = entity.getEquipment();
+        if (current == null) return false;
+
+        ItemStack[] previousContents = previous.getArmorContents();
+        ItemStack[] armorContents    = current.getArmorContents();
+        for (int i = 0; i < previousContents.length; i++) {
+            if (previousContents[i] == null && armorContents[i] == null) continue;
+            if (previousContents[i] == null || armorContents[i] == null) return true;
+            if (!previousContents[i].isSimilar(armorContents[i])) return true;
+        }
+
+        ItemStack previousHand = previous.getItemInMainHand();
+        ItemStack hand         = current.getItemInMainHand();
+        boolean   handMatch    = previousHand.isSimilar(hand);
+
+        ItemStack previousOffhand = previous.getItemInOffHand();
+        ItemStack offhand         = current.getItemInOffHand();
+        boolean   offhandMatch    = previousOffhand.isSimilar(offhand);
+
+        return !handMatch || !offhandMatch;
     }
 
     public void setup() {
@@ -64,6 +91,7 @@ public class EntityManager extends IListener<QuantumRPG> {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onStatsDeath(EntityDeathEvent e) {
         LivingEntity entity = e.getEntity();
+        previousEquipment.remove(e.getEntity().getUniqueId());
         EntityStats.get(entity).handleDeath();
     }
 
@@ -77,6 +105,11 @@ public class EntityManager extends IListener<QuantumRPG> {
     public void onStatsJoin(PlayerJoinEvent e) {
         EntityStats.get(e.getPlayer());
         this.pushToUpdate(e.getPlayer(), 1D);
+    }
+
+    @EventHandler
+    public void quit(PlayerQuitEvent event) {
+        previousEquipment.remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -105,6 +138,8 @@ public class EntityManager extends IListener<QuantumRPG> {
     }
 
     private final void pushToUpdate(@NotNull LivingEntity entity, double time) {
+        EntityEquipment equip = new EntityEquipmentSnapshot(entity);
+        previousEquipment.put(entity.getUniqueId(), equip);
         if (time <= 0D) {
             plugin.getServer().getScheduler().runTask(plugin, () -> EntityStats.get(entity).updateAll());
             return;

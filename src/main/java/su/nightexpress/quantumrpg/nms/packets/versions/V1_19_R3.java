@@ -76,7 +76,7 @@ public class V1_19_R3 extends V1_19_R2 {
             }
 
             if (!(bukkitEntity instanceof LivingEntity)) return;
-            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)) return;
+            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity) || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
 
             EntityEquipmentChangeEvent event = new EntityEquipmentChangeEvent((LivingEntity) bukkitEntity);
             plugin.getServer().getPluginManager().callEvent(event);
