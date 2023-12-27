@@ -5,7 +5,6 @@ import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.utils.Reflex;
-import net.minecraft.server.dedicated.DedicatedServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
