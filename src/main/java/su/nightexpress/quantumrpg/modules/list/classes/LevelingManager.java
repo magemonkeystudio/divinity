@@ -14,6 +14,7 @@ import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -87,7 +88,15 @@ public class LevelingManager extends IListener<QuantumRPG> implements Loadable {
 
     @Override
     public void setup() {
-        this.cfg = JYML.loadOrExtract(this.plugin, this.classManager.getPath() + "leveling.yml");
+        try {
+            this.cfg = JYML.loadOrExtract(this.plugin, this.classManager.getPath() + "leveling.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load leveling config (" + this.classManager.getPath()
+                    + "leveling.yml): Configuration error");
+            e.printStackTrace();
+            shutdown();
+            return;
+        }
         this.mmHook = plugin.getHook(AbstractMythicMobsHK.class);
 
         this.lvlWorlds = new HashMap<>();
@@ -230,7 +239,8 @@ public class LevelingManager extends IListener<QuantumRPG> implements Loadable {
         String  type   = mythic ? this.mmHook.getMythicNameByEntity(from) : from.getType().name();
 
         Map<String, ExpObject> expMap    = mythic ? this.expSrcMythic : this.expSrcVanilla;
-        ExpObject              expObject = expMap.getOrDefault(type.toLowerCase(), expMap.getOrDefault(JStrings.DEFAULT.toLowerCase(), null));
+        ExpObject              expObject =
+                expMap.getOrDefault(type.toLowerCase(), expMap.getOrDefault(JStrings.DEFAULT.toLowerCase(), null));
 
         return expObject == null ? 0 : expObject.getExp();
     }

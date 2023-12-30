@@ -2,6 +2,7 @@ package su.nightexpress.quantumrpg.modules;
 
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.StringUT;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -21,7 +22,7 @@ public class LimitedItem extends LeveledItem {
 
     // Creating new config
     @Deprecated
-    public LimitedItem(QuantumRPG plugin, String path, QModuleDrop<?> module) {
+    public LimitedItem(QuantumRPG plugin, String path, QModuleDrop<?> module) throws InvalidConfigurationException {
         super(plugin, path, module);
     }
 

@@ -11,6 +11,7 @@ import mc.promcteam.engine.utils.random.Rnd;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -51,7 +52,16 @@ public class WorthManager implements Loadable {
 
     @Override
     public void setup() {
-        JYML cfg = JYML.loadOrExtract(plugin, "worth.yml");
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(plugin, "worth.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load worth config (worth.yml): Configuration error");
+            e.printStackTrace();
+            shutdown();
+            return;
+        }
+
         this.priceItemMaterial = new HashMap<>();
         this.priceItemStats = new HashMap<>();
         this.priceRefineLvl = new TreeMap<>();

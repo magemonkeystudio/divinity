@@ -3,6 +3,7 @@ package su.nightexpress.quantumrpg.modules.api.socketing.merchant;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.manager.api.Loadable;
 import mc.promcteam.engine.modules.IModuleExecutor;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.Perms;
@@ -31,7 +32,14 @@ public class MerchantSocket implements Loadable {
 
     @Override
     public void setup() {
-        this.cfg = JYML.loadOrExtract(plugin, this.moduleSocket.getPath() + "merchant.yml");
+        try {
+            this.cfg = JYML.loadOrExtract(plugin, this.moduleSocket.getPath() + "merchant.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load merchant config (" + this.moduleSocket.getPath() + "merchant.yml): Configuration error");
+            e.printStackTrace();
+            shutdown();
+            return;
+        }
 
         String path = "socketing.";
         this.socketChanceBonusAmount = cfg.getInt(path + "chance.merchant-bonus.amount", 15);

@@ -3,6 +3,7 @@ package su.nightexpress.quantumrpg.modules;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.random.Rnd;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -19,7 +20,7 @@ public abstract class RatedItem extends LimitedItem {
 
     // Creating new config
     @Deprecated
-    public RatedItem(QuantumRPG plugin, String path, ModuleSocket<?> module) {
+    public RatedItem(QuantumRPG plugin, String path, ModuleSocket<?> module) throws InvalidConfigurationException {
         super(plugin, path, module);
     }
 

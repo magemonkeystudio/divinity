@@ -5,6 +5,7 @@ import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.hooks.NHook;
 import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.HookClass;
@@ -28,7 +29,7 @@ public class EngineCfg {
     private QuantumRPG plugin;
     private JYML       cfg;
 
-    public EngineCfg(@NotNull QuantumRPG plugin) {
+    public EngineCfg(@NotNull QuantumRPG plugin) throws InvalidConfigurationException {
         this.plugin = plugin;
         this.cfg = JYML.loadOrExtract(plugin, "engine.yml");
     }

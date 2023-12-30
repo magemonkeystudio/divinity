@@ -5,6 +5,7 @@ import mc.promcteam.engine.manager.api.gui.*;
 import mc.promcteam.engine.utils.NumberUT;
 import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -43,14 +44,24 @@ public class AspectManager {
     public void setup() {
         this.aspects = new HashMap<>();
 
-        JYML cfg = JYML.loadOrExtract(this.plugin, this.classManager.getPath() + "aspects.yml");
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(this.plugin, this.classManager.getPath() + "aspects.yml");
+        } catch (InvalidConfigurationException e) {
+            this.classManager.error("Failed to load aspects config (" + this.classManager.getPath()
+                    + "/aspects.yml): Configuration error");
+            e.printStackTrace();
+            shutdown();
+            return;
+        }
         for (String aspectId : cfg.getSection("aspects")) {
             String path2 = "aspects." + aspectId + ".";
 
             String   name     = cfg.getString(path2 + "name", aspectId);
             Material material = Material.getMaterial(cfg.getString(path2 + "material", "").toUpperCase());
             if (material == null) {
-                this.classManager.error("Invalid material for aspect: '" + aspectId + "' in '" + cfg.getFile().getName() + "' !");
+                this.classManager.error(
+                        "Invalid material for aspect: '" + aspectId + "' in '" + cfg.getFile().getName() + "' !");
                 continue;
             }
 

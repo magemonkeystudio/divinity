@@ -5,6 +5,7 @@ import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.commands.api.IGeneralCommand;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.hooks.Hooks;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
 import org.jetbrains.annotations.NotNull;
@@ -92,10 +93,22 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.pms = new PMSManager(this);
         this.pms.setup();
 
-        String  coreVersion       = NexEngine.getEngine().getDescription().getVersion();
-        boolean minCoreVersionMet = DependencyRequirement.meetsVersion(DependencyRequirement.MIN_CORE_VERSION, coreVersion);
-        JYML    profileConfig     = JYML.loadOrExtract(this, "/profiles/settings.yml");
-        boolean useProfiles = profileConfig.getBoolean("enabled", true);
+        String coreVersion = NexEngine.getEngine().getDescription().getVersion();
+        boolean minCoreVersionMet =
+                DependencyRequirement.meetsVersion(DependencyRequirement.MIN_CORE_VERSION, coreVersion);
+
+        boolean useProfiles;
+        try {
+            JYML profileConfig = JYML.loadOrExtract(this, "/profiles/settings.yml");
+            useProfiles = profileConfig.getBoolean("enabled", true);
+        } catch (InvalidConfigurationException e) {
+            this.error("Failed to load profile settings (" + this.getName()
+                    + "/profiles/settings.yml): Configuration error");
+            this.error("Disabling profiles...");
+            e.printStackTrace();
+            useProfiles = false;
+
+        }
 
         if (this.pms.get() == null || !minCoreVersionMet) {
             if (!minCoreVersionMet) {
@@ -162,8 +175,16 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.config = new Config(this);
         this.config.setup();
 
-        this.engineCfg = new EngineCfg(this);
-        this.engineCfg.setup();
+        try {
+            this.engineCfg = new EngineCfg(this);
+            this.engineCfg.setup();
+        } catch (InvalidConfigurationException e) {
+            this.error("Failed to load engine config (" + this.getName() + "/engine.yml): Configuration error");
+            this.error("Disabling...");
+            e.printStackTrace();
+            this.getPluginManager().disablePlugin(this);
+            return;
+        }
 
         this.lang = new Lang(this);
         this.lang.setup();

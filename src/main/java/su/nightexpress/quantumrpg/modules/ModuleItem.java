@@ -10,6 +10,7 @@ import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -48,7 +49,8 @@ public abstract class ModuleItem extends LoadableItem {
 
     // Creating new config
     @Deprecated
-    public ModuleItem(@NotNull QuantumRPG plugin, String path, QModuleDrop<?> module) {
+    public ModuleItem(@NotNull QuantumRPG plugin, String path, QModuleDrop<?> module) throws
+            InvalidConfigurationException {
         super(plugin, path);
         this.module = module;
         this.plugin = plugin;
@@ -162,11 +164,11 @@ public abstract class ModuleItem extends LoadableItem {
         return this.lore;
     }
 
-    public int[] getColor() { return Arrays.copyOf(color, 3); }
+    public int[] getColor() {return Arrays.copyOf(color, 3);}
 
-    public Set<ItemFlag> getFlags() { return new HashSet<>(this.flags); }
+    public Set<ItemFlag> getFlags() {return new HashSet<>(this.flags);}
 
-    public boolean isUnbreakable() { return isUnbreakable; }
+    public boolean isUnbreakable() {return isUnbreakable;}
 
     @NotNull
     public QModuleDrop<?> getModule() {

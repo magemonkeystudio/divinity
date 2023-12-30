@@ -11,7 +11,7 @@
     </parent>
 
     <properties>
-        <promccore.version>1.1.0-R0.2-SNAPSHOT</promccore.version>
+        <promccore.version>1.1.1-R0.4-SNAPSHOT</promccore.version>
         <proskillapi.version>1.2.0-R0.3-SNAPSHOT</proskillapi.version>
     </properties>
 

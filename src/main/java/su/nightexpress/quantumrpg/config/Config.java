@@ -6,6 +6,7 @@ import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.constants.JStrings;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -73,7 +74,15 @@ public class Config extends IConfigTemplate {
     }
 
     private void setupDamages() {
-        JYML cfg = JYML.loadOrExtract(plugin, "/item_stats/damage.yml");
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/damage.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load damage config (" + this.plugin.getName()
+                    + "/item_stats/damage.yml): Configuration error");
+            e.printStackTrace();
+            return;
+        }
 
         for (String dmgId : cfg.getSection("")) {
             String path = dmgId + ".";
@@ -123,7 +132,15 @@ public class Config extends IConfigTemplate {
     }
 
     private void setupDefense() {
-        JYML cfg = JYML.loadOrExtract(plugin, "/item_stats/defense.yml");
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/defense.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load defense config (" + this.plugin.getName()
+                    + "/item_stats/defense.yml): Configuration error");
+            e.printStackTrace();
+            return;
+        }
 
         for (String defId : cfg.getSection("")) {
             String path = defId + ".";
@@ -154,7 +171,15 @@ public class Config extends IConfigTemplate {
     }
 
     private void setupStats() {
-        JYML cfg = JYML.loadOrExtract(plugin, "/item_stats/stats.yml");
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/stats.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load stats config (" + this.plugin.getName()
+                    + "/item_stats/stats.yml): Configuration error");
+            e.printStackTrace();
+            return;
+        }
 
         for (AbstractStat.Type statType : AbstractStat.Type.values()) {
             String path2 = statType.name() + ".";
@@ -183,7 +208,15 @@ public class Config extends IConfigTemplate {
     }
 
     private void setupHand() {
-        JYML cfg = JYML.loadOrExtract(plugin, "/item_stats/hand.yml");
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/hand.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load hand config (" + this.plugin.getName()
+                    + "/item_stats/hand.yml): Configuration error");
+            e.printStackTrace();
+            return;
+        }
 
         for (HandAttribute.Type handType : HandAttribute.Type.values()) {
             String path2 = handType.name() + ".";
@@ -200,7 +233,15 @@ public class Config extends IConfigTemplate {
     }
 
     private void setupAmmo() {
-        JYML cfg = JYML.loadOrExtract(plugin, "/item_stats/ammo.yml");
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/ammo.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load ammo config (" + this.plugin.getName()
+                    + "/item_stats/ammo.yml): Configuration error");
+            e.printStackTrace();
+            return;
+        }
 
         for (AmmoAttribute.Type ammoType : AmmoAttribute.Type.values()) {
             String path2 = ammoType.name() + ".";
@@ -217,7 +258,15 @@ public class Config extends IConfigTemplate {
     }
 
     private void setupSockets() {
-        JYML cfg = JYML.loadOrExtract(plugin, "/item_stats/sockets.yml");
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/sockets.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load sockets config (" + this.plugin.getName()
+                    + "/item_stats/sockets.yml): Configuration error");
+            e.printStackTrace();
+            return;
+        }
 
         for (SocketAttribute.Type type : SocketAttribute.Type.values()) {
             String path = type.name() + ".";
@@ -286,7 +335,7 @@ public class Config extends IConfigTemplate {
     @Nullable
     public static ItemSubType getItemSubType(@NotNull String mat) {
         Optional<ItemSubType> opt = ITEM_SUB_TYPES.values().stream().filter(type -> type.isItemOfThis(mat))
-                                                  .findFirst();
+                .findFirst();
         return opt.isPresent() ? opt.get() : null;
     }
 
