@@ -1,3 +1,5 @@
+enabled: true
+
 profile:
   select-on-join: false
   change-cooldown: 60

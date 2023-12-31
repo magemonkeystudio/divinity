@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
-public class V1_20_R2 extends V1_20_R1 {
+public class V1_20_R3 extends V1_20_R2 {
     private Class  playoutUpdateAttributes = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutUpdateAttributes");
     private Class  craftServerClass        = Reflex.getCraftClass("CraftServer");
     private Class  nmsEntityClass          = Reflex.getClass("net.minecraft.world.entity", "Entity");
@@ -30,7 +30,7 @@ public class V1_20_R2 extends V1_20_R1 {
     private Method getEntity               = Reflex.getMethod(worldServerClass, "a", int.class);
     private Method getServer               = Reflex.getMethod(craftServerClass, "getServer");
 
-    public V1_20_R2(@NotNull QuantumRPG plugin) {super(plugin);}
+    public V1_20_R3(@NotNull QuantumRPG plugin) {super(plugin);}
 
     @Override
     public void manageEquipmentChanges(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
@@ -50,7 +50,7 @@ public class V1_20_R2 extends V1_20_R1 {
             );
 
             Iterable<?> worlds = (Iterable<?>) Reflex.invokeMethod(
-                    Reflex.getMethod(dedicatedServer.getClass(), "F"), // Get worlds (getAllLevels)
+                    Reflex.getMethod(dedicatedServer.getClass(), "H"), // Get worlds (getAllLevels)
                     dedicatedServer
             );
 
@@ -63,7 +63,7 @@ public class V1_20_R2 extends V1_20_R1 {
 
             if (nmsEntity == null) return;
 
-            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cv");
+            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cw");
             Entity bukkitEntity =
                     NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 
@@ -111,7 +111,7 @@ public class V1_20_R2 extends V1_20_R1 {
             );
 
             Iterable<?> worlds = (Iterable<?>) Reflex.invokeMethod(
-                    Reflex.getMethod(dedicatedServer.getClass(), "F"), //Get worlds (getAllLevels)
+                    Reflex.getMethod(dedicatedServer.getClass(), "H"), //Get worlds (getAllLevels)
                     dedicatedServer
             );
 
@@ -126,7 +126,7 @@ public class V1_20_R2 extends V1_20_R1 {
             if (nmsEntity == null) return;
 
 
-            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cv");
+            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cw");
             Entity bukkitEntity =
                     NexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 

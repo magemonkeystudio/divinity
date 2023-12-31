@@ -5,6 +5,7 @@ import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.IListener;
 import mc.promcteam.engine.manager.api.Loadable;
 import mc.promcteam.engine.utils.constants.JStrings;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,7 +43,15 @@ public class ProfileManager extends IListener<QuantumRPG> implements Loadable {
 
     @Override
     public void setup() {
-        this.cfg = JYML.loadOrExtract(plugin, "/profiles/settings.yml");
+        try {
+            this.cfg = JYML.loadOrExtract(plugin, "/profiles/settings.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load profiles config (" + this.plugin.getName()
+                    + "/profiles/settings.yml): Configuration error");
+            e.printStackTrace();
+            shutdown();
+            return;
+        }
 
         this.selectOnJoin = cfg.getBoolean("profile.select-on-join", false);
         this.changeCooldown = cfg.getInt("profile.change-cooldown");
@@ -57,15 +66,40 @@ public class ProfileManager extends IListener<QuantumRPG> implements Loadable {
         if (this.getChangeCooldown() > 0) {
             this.profileCooldown = new HashMap<>();
         }
-        this.profileCreation = Collections.newSetFromMap(new WeakHashMap<Player, Boolean>());
+        this.profileCreation = Collections.newSetFromMap(new WeakHashMap<>());
 
-        this.guiSettings = new SettingsGUI(this, JYML.loadOrExtract(plugin, "/profiles/gui.settings.yml"));
-        this.guiProfile = new ProfileGUI(this, JYML.loadOrExtract(plugin, "/profiles/gui.profile.yml"));
-        this.guiProfiles = new ProfilesGUI(this, JYML.loadOrExtract(plugin, "/profiles/gui.profiles.yml"));
+        try {
+            this.guiSettings = new SettingsGUI(this, JYML.loadOrExtract(plugin, "/profiles/gui.settings.yml"));
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load profiles config (" + this.plugin.getName()
+                    + "/profiles/gui.settings.yml): Configuration error");
+            e.printStackTrace();
+            shutdown();
+            return;
+        }
+        try {
+            this.guiProfile = new ProfileGUI(this, JYML.loadOrExtract(plugin, "/profiles/gui.profile.yml"));
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load profiles config (" + this.plugin.getName()
+                    + "/profiles/gui.profile.yml): Configuration error");
+            e.printStackTrace();
+            shutdown();
+            return;
+        }
+        try {
+            this.guiProfiles = new ProfilesGUI(this, JYML.loadOrExtract(plugin, "/profiles/gui.profiles.yml"));
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load profiles config (" + this.plugin.getName()
+                    + "/profiles/gui.profiles.yml): Configuration error");
+            e.printStackTrace();
+            shutdown();
+            return;
+        }
 
         this.plugin.getCommandManager().registerCommand(this.profileCommand = new ProfileCommand(this));
 
         this.registerListeners();
+        this.plugin.getLogger().info("Profile Manager has been enabled");
     }
 
     @Override

@@ -13,6 +13,7 @@ import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Result;
@@ -73,7 +74,14 @@ public class ComboManager extends IListener<QuantumRPG> implements Loadable {
     public void setup() {
         this.comboStop = new HashSet<>();
         this.comboUser = new WeakHashMap<>();
-        this.cfg = JYML.loadOrExtract(plugin, classManager.getPath() + "combo.yml");
+        try {
+            this.cfg = JYML.loadOrExtract(plugin, classManager.getPath() + "combo.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load combo config (" + classManager.getPath() + "combo.yml): Configuration error");
+            e.printStackTrace();
+            shutdown();
+            return;
+        }
 
         String path = "settings.";
         if (!cfg.contains(path + "allowed-items")) {

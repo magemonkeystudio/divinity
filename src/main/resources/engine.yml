@@ -52,7 +52,10 @@ attributes:
       # When enabled, all mobs equipment will be affected to the durability stat.
       mobs: true
       # When enabled, casting SkillAPI skills will reduce the durability of an item in hand.
-      skill-api-skills: true
+      skill-api-skills:
+        cast: true
+        left_click: true
+        right_click: true
   # When enabled, mobs will be able to use all the plugin attributes: dealing custom damage, protecting by custom defense, etc.
   effective-for-mobs: true
   # When enabled, attributes from an offhand item will have effect as well.

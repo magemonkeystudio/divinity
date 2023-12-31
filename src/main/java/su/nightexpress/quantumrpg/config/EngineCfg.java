@@ -1,8 +1,11 @@
 package su.nightexpress.quantumrpg.config;
 
+import com.sucy.skill.dynamic.ComponentRegistry;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.hooks.NHook;
 import mc.promcteam.engine.utils.StringUT;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.HookClass;
@@ -26,7 +29,7 @@ public class EngineCfg {
     private QuantumRPG plugin;
     private JYML       cfg;
 
-    public EngineCfg(@NotNull QuantumRPG plugin) {
+    public EngineCfg(@NotNull QuantumRPG plugin) throws InvalidConfigurationException {
         this.plugin = plugin;
         this.cfg = JYML.loadOrExtract(plugin, "engine.yml");
     }
@@ -46,7 +49,7 @@ public class EngineCfg {
 
     public static boolean ATTRIBUTES_DURABILITY_BREAK_ITEMS;
     public static boolean ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS;
-    public static boolean ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API;
+    public static Set<String> ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API;
 
 
     public static double  COMBAT_SHIELD_BLOCK_BONUS_RATE;
@@ -176,7 +179,28 @@ public class EngineCfg {
         path = "attributes.durability.";
         EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS = cfg.getBoolean(path + "break-items-on-zero");
         EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS = cfg.getBoolean(path + "effective-for.mobs");
-        EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API = cfg.getBoolean(path + "effective-for.skill-api-skills");
+        {
+            Object skills = cfg.get(path + "effective-for.skill-api-skills");
+            if (skills instanceof Boolean) {
+                cfg.remove(path + "effective-for.skill-api-skills");
+                cfg.set(path + "effective-for.skill-api-skills"+".cast", skills);
+                cfg.set(path + "effective-for.skill-api-skills"+".left_click", skills);
+                cfg.set(path + "effective-for.skill-api-skills"+".right_click", skills);
+            }
+        }
+        cfg.addMissing(path + "effective-for.skill-api-skills"+".initialize", false);
+        cfg.addMissing(path + "effective-for.skill-api-skills"+".cleanup", false);
+        if (Bukkit.getPluginManager().isPluginEnabled("ProSkillAPI")) {
+            for (String triggerKey : ComponentRegistry.getTriggers().keySet()) {
+                cfg.addMissing(path + "effective-for.skill-api-skills"+'.'+triggerKey.toLowerCase(), false);
+            }
+        }
+        EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API = new HashSet<>();
+        for (String key : cfg.getSection(path + "effective-for.skill-api-skills")) {
+            if (cfg.getBoolean(path + "effective-for.skill-api-skills"+'.'+key)) {
+                EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API.add(key.toLowerCase());
+            }
+        }
 
         // C O M B A T //
 

@@ -8,6 +8,7 @@ import mc.promcteam.engine.utils.eval.Evaluator;
 import mc.promcteam.engine.utils.random.Rnd;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,8 @@ public abstract class LeveledItem extends ModuleItem {
 
     // Creating new config
     @Deprecated
-    public LeveledItem(@NotNull QuantumRPG plugin, String path, QModuleDrop<?> module) {
+    public LeveledItem(@NotNull QuantumRPG plugin, String path, QModuleDrop<?> module) throws
+            InvalidConfigurationException {
         super(plugin, path, module);
     }
 

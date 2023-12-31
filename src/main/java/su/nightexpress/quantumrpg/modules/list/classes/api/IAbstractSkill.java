@@ -8,6 +8,7 @@ import mc.promcteam.engine.utils.NumberUT;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.TimeUT;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -156,6 +157,10 @@ public abstract class IAbstractSkill extends IListener<QuantumRPG> {
 
             this.setup();
             this.registerListeners();
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load skill '" + this.getId() + "': Configuration error");
+            e.printStackTrace();
+            this.shutdown();
         } catch (Exception ex) {
             throw ex;
         }

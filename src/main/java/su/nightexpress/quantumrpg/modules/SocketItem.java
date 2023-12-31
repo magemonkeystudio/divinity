@@ -4,6 +4,7 @@ import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.NumberUT;
 import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -21,7 +22,8 @@ public abstract class SocketItem extends RatedItem {
 
     // Creating new config
     @Deprecated
-    public SocketItem(@NotNull QuantumRPG plugin, @NotNull String path, @NotNull ModuleSocket<?> module) {
+    public SocketItem(@NotNull QuantumRPG plugin, @NotNull String path, @NotNull ModuleSocket<?> module) throws
+            InvalidConfigurationException {
         super(plugin, path, module);
     }
 
