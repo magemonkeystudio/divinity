@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: github.event.commits[0].author.name != 'Auto Bot'
 
     steps:
       - uses: actions/checkout@v3
@@ -37,6 +36,12 @@ jobs:
           mvn clean deploy -P gpg,publish -DcreateChecksum=true 2>&1 | tee log.txt
           result_code=${PIPESTATUS[0]}
           exit $result_code
+      - name: Tag release version
+        run: |
+          git add .
+          git commit -m "[ci skip] Deploy dev version $version"
+          version=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
+          git tag -a $version -m "Dev $version"
       - name: Update version
         run: python ./.github/update_version.py true
       - name: Push to git
@@ -45,5 +50,6 @@ jobs:
           git reset settings.xml log.txt
           git commit -m "Update dev version"
           git push
+          git push --tags
       - name: Notify Discord
         run: pip install simplejson && python ./.github/notify_published.py ${{ secrets.WEBHOOK_URL }} true
