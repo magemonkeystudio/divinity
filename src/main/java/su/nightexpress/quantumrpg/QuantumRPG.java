@@ -46,7 +46,7 @@ import java.io.File;
 import java.sql.SQLException;
 
 /**
- * @author © 2023 «Фогус-Мультимедиа»
+ * @author © 2024 ProMCTeam
  */
 public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 
