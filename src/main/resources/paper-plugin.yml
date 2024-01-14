@@ -66,6 +66,8 @@ load-after:
   - name: ProMCCore
     boostrap: false
   - name: ProSkillAPI
+    boostrap: falsed
+  - name: SkillAPI
     boostrap: false
   - name: Magic
     boostrap: false

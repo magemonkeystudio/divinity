@@ -4,7 +4,7 @@ name: ${project.name}
 authors: [ Travja, goflish ]
 description: The most advanced, customizable and configurable RPG-Core plugin!
 depend: [ ProMCCore ]
-loadafter: [ Magic, ProSkillAPI ]
+loadafter: [ Magic, ProSkillAPI, SkillAPI ]
 provides: [ QuantumRPG ]
 softdepend:
   - Citizens

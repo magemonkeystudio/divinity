@@ -34,6 +34,7 @@ import su.nightexpress.quantumrpg.nms.engine.PMS;
 import su.nightexpress.quantumrpg.nms.engine.PMSManager;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
+import su.nightexpress.quantumrpg.utils.ProRpgItemsProvider;
 import su.nightexpress.quantumrpg.utils.actions.conditions.CEntityLevel;
 import su.nightexpress.quantumrpg.utils.actions.executors.ActionDamage;
 import su.nightexpress.quantumrpg.utils.actions.executors.ActionParticleLine;
@@ -141,6 +142,8 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 
         this.worthManager = new WorthManager(this);
         this.worthManager.setup();
+
+        NexEngine.getEngine().getItemManager().registerProvider("PRORPGITEMS", new ProRpgItemsProvider());
     }
 
     @Override
