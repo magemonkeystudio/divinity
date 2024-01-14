@@ -40,16 +40,11 @@ jobs:
           mvn clean deploy -P gpg,publish -DcreateChecksum=true 2>&1 | tee log.txt
           result_code=${PIPESTATUS[0]}
           exit $result_code
-      - name: Update version
-        run: python ./.github/update_version.py
-      - name: Update version
-        run: python ./.github/update_version.py true
       - name: Update README
         run: python ./.github/update_readme.py
-      - name: Push to git
+      - name: Tag release version
         run: |
           git add .
-          git reset settings.xml log.txt
           git commit -m "[ci skip] Update release version"
           version=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
           git tag -a $version -m "Release $version"
