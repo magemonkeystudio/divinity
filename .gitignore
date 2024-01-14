@@ -1,6 +1,8 @@
 /.idea/
 target/
 *.iml
+log.txt
+settings.xml
 
 # Compiled class file
 *.class
