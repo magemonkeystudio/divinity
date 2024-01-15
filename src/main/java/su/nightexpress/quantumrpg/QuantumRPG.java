@@ -143,7 +143,7 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.worthManager = new WorthManager(this);
         this.worthManager.setup();
 
-        NexEngine.getEngine().getItemManager().registerProvider("PRORPGITEMS", new ProRpgItemsProvider());
+        NexEngine.getEngine().getItemManager().registerProvider(ProRpgItemsProvider.NAMESPACE, new ProRpgItemsProvider());
     }
 
     @Override

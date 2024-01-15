@@ -1,10 +1,14 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials;
 
+import mc.promcteam.engine.NexEngine;
+import mc.promcteam.engine.items.exception.MissingItemException;
+import mc.promcteam.engine.items.exception.MissingProviderException;
 import mc.promcteam.engine.manager.api.menu.Slot;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import su.nightexpress.quantumrpg.config.Config;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
@@ -62,29 +66,31 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
         });
     }
 
-    static Material getMaterial(String string) {
+    static ItemStack getMaterial(String string) {
         try {
-            return Material.valueOf(string.toUpperCase());
+            return NexEngine.get().getItemManager().getItemType(string).create();
+        } catch (MissingProviderException | MissingItemException ignored) {}
+
+        try {
+            return new ItemStack(Material.valueOf(string.toUpperCase()));
         } catch (IllegalArgumentException ignored) {}
 
-        boolean isWildCard = string.startsWith(JStrings.MASK_ANY) || string.endsWith(JStrings.MASK_ANY);
-        if (isWildCard) {string = string.replace(JStrings.MASK_ANY, "");}
-        try {
-            return Material.valueOf(string.toUpperCase());
-        } catch (IllegalArgumentException ignored) {}
-
-        if (isWildCard) {
-            for (Material material : Config.getAllRegisteredMaterials()) {
-                String materialName = material.name();
-                if (materialName.startsWith(string) || materialName.endsWith(string)) {
-                    return material;
-                }
+        int i = string.indexOf(JStrings.MASK_ANY);
+        if (i >= 0 && i == string.lastIndexOf(JStrings.MASK_ANY)) { // Only accept 1 occurrence
+            for (mc.promcteam.engine.items.ItemType material : Config.getAllRegisteredMaterials()) {
+                String materialName = material.getNamespacedID();
+                if (i == 0 && materialName.endsWith(string.substring(JStrings.MASK_ANY.length()).toUpperCase())
+                || i == string.length()-1 && materialName.startsWith(string.substring(0, string.length()-JStrings.MASK_ANY.length()).toUpperCase())) return material.create();
             }
         }
-        return Material.STONE;
+        return new ItemStack(Material.STONE);
     }
 
-    static Material getMaterialGroup(String materialGroup) {
+    static ItemStack getMaterialGroup(String materialGroup) {
+        try {
+            return NexEngine.get().getItemManager().getItemType(materialGroup).create();
+        } catch (MissingProviderException | MissingItemException ignored) {}
+
         ItemSubType subType = Config.getSubTypeById(materialGroup);
         if (subType != null) {
             return getMaterial(subType.getMaterials().stream().findAny().orElse("STONE"));

@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public enum ItemGroup {
 
@@ -41,7 +42,6 @@ public enum ItemGroup {
     public void setMaterials(@NotNull Set<String> mats) {
         this.mats.clear();
         this.mats.addAll(mats);
-        this.mats.forEach(mat -> mat.toUpperCase());
     }
 
     public boolean isItemOfThis(@NotNull ItemStack item) {

@@ -1,7 +1,11 @@
 package su.nightexpress.quantumrpg.config;
 
+import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.config.api.IConfigTemplate;
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.items.ItemType;
+import mc.promcteam.engine.items.exception.MissingItemException;
+import mc.promcteam.engine.items.exception.MissingProviderException;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.constants.JStrings;
@@ -340,15 +344,14 @@ public class Config extends IConfigTemplate {
     }
 
     @NotNull
-    public static Set<Material> getAllRegisteredMaterials() {
-        Set<Material> set = new HashSet<>();
+    public static Set<ItemType> getAllRegisteredMaterials() {
+        Set<ItemType> set = new HashSet<>();
 
         for (ItemGroup group : ItemGroup.values()) {
             for (String materialName : group.getMaterials()) {
-                Material material = Material.getMaterial(materialName.toUpperCase());
-                if (material != null) {
-                    set.add(material);
-                }
+                try {
+                    set.add(NexEngine.get().getItemManager().getItemType(materialName));
+                } catch (MissingProviderException | MissingItemException ignored) {}
             }
         }
 

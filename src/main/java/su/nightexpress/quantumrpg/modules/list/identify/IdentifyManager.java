@@ -1,6 +1,10 @@
 package su.nightexpress.quantumrpg.modules.list.identify;
 
+import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.items.ItemType;
+import mc.promcteam.engine.items.providers.IProItemProvider;
+import mc.promcteam.engine.items.providers.VanillaProvider;
 import mc.promcteam.engine.modules.IModule;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
@@ -158,7 +162,10 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
         if (uItem.getResultModule() instanceof ItemGeneratorManager && generatorManager != null) {
             GeneratorItem result = generatorManager.getItemById(uItem.getResultId());
             if (result != null) {
-                unlock = result.create(lvl, -1, unknown.getType());
+                unlock = result.create(lvl, -1, NexEngine.get().getItemManager().getItemTypes(unknown).stream()
+                        .filter(itemType -> itemType.getCategory() != IProItemProvider.Category.PRO)
+                        .max(Comparator.comparing(ItemType::getCategory))
+                        .orElseGet(() -> new VanillaProvider.VanillaItemType(unknown.getType())));
             }
         } else {
             unlock = QuantumAPI.getItemByModule(uItem.getResultModule(), uItem.getResultId(), lvl, -1, -1);
