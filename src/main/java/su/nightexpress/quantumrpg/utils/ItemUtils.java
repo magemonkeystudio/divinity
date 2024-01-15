@@ -109,7 +109,7 @@ public class ItemUtils {
         if (isArmor(item) || !EngineCfg.ATTRIBUTES_EFFECTIVE_IN_OFFHAND) {
             return new EquipmentSlot[]{getEquipmentSlotByItemType(item)};
         }
-        return new EquipmentSlot[]{EquipmentSlot.HAND, EquipmentSlot.OFF_HAND};
+        return EquipmentSlot.values();
     }
 
     // Input: axe, sword, weapon, armor, etc
