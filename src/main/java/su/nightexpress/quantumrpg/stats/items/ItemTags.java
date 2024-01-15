@@ -28,6 +28,7 @@ public class ItemTags {
     public static final String TAG_REQ_ITEM_TIER   = "QRPG_REQ_ITEM_TIER";
 
 
+    public static final String PLACEHOLDER_BASE_LORE         = "%BASE_LORE%";
     public static final String PLACEHOLDER_ITEM_NAME         = "%ITEM_NAME%";
     public static final String PLACEHOLDER_ITEM_LORE         = "%ITEM_LORE%";
     public static final String PLACEHOLDER_ITEM_CHARGES      = "%ITEM_CHARGES%";

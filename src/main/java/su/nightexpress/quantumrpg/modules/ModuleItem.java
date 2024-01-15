@@ -200,7 +200,16 @@ public abstract class ModuleItem extends LoadableItem {
         if (meta == null) return item;
 
         meta.setDisplayName(this.name);
-        meta.setLore(this.lore);
+        List<String> baseLore = meta.getLore();
+        List<String> modifiedLore;
+        if (baseLore == null || baseLore.isEmpty()) {
+            modifiedLore = new ArrayList<>(this.lore);
+            modifiedLore.remove(ItemTags.PLACEHOLDER_BASE_LORE);
+        } else {
+            modifiedLore = StringUT.replace(this.lore, ItemTags.PLACEHOLDER_BASE_LORE, baseLore);
+        }
+
+        meta.setLore(modifiedLore);
 
         if (this.modelData > 0) {
             meta.setCustomModelData(this.modelData);
