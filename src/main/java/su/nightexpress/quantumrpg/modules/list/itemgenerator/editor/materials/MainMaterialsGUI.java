@@ -75,12 +75,12 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
             return new ItemStack(Material.valueOf(string.toUpperCase()));
         } catch (IllegalArgumentException ignored) {}
 
-        int i = string.indexOf(JStrings.MASK_ANY);
-        if (i >= 0 && i == string.lastIndexOf(JStrings.MASK_ANY)) { // Only accept 1 occurrence
+        String[] split = string.toUpperCase().split('\\'+JStrings.MASK_ANY, 2);
+        if (split.length == 2) { // We have a wildcard
             for (mc.promcteam.engine.items.ItemType material : Config.getAllRegisteredMaterials()) {
-                String materialName = material.getNamespacedID();
-                if (i == 0 && materialName.endsWith(string.substring(JStrings.MASK_ANY.length()).toUpperCase())
-                || i == string.length()-1 && materialName.startsWith(string.substring(0, string.length()-JStrings.MASK_ANY.length()).toUpperCase())) return material.create();
+                String materialName = material.getNamespacedID().toUpperCase();
+                if (split[0].isEmpty() && materialName.endsWith(split[1])
+                || split[1].isEmpty() && materialName.startsWith(split[0])) return material.create();
             }
         }
         return new ItemStack(Material.STONE);

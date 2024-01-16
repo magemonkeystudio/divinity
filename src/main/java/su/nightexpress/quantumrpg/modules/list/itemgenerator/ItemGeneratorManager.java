@@ -6,7 +6,6 @@ import mc.promcteam.engine.core.Version;
 import mc.promcteam.engine.items.ItemType;
 import mc.promcteam.engine.items.exception.MissingItemException;
 import mc.promcteam.engine.items.exception.MissingProviderException;
-import mc.promcteam.engine.items.providers.VanillaProvider;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
@@ -203,10 +202,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 Set<String> endWildcards = new HashSet<>();
 
                 for (String mat : cfg.getStringList(path + "materials.black-list")) {
-                    int i = mat.indexOf(JStrings.MASK_ANY);
-                    if (i >= 0 && i == mat.lastIndexOf(JStrings.MASK_ANY)) { // Only accept 1 occurrence
-                        if (i == 0) startWildcards.add(mat.substring(JStrings.MASK_ANY.length()).toUpperCase());
-                        if (i == mat.length()-1) endWildcards.add(mat.substring(0, mat.length()-JStrings.MASK_ANY.length()).toUpperCase());
+                    String[] split = mat.split('\\'+JStrings.MASK_ANY, 2);
+                    if (split.length == 2) { // We have a wildcard
+                        if (split[0].isEmpty()) startWildcards.add(split[1].toUpperCase());
+                        else if (split[1].isEmpty()) endWildcards.add(split[0].toUpperCase());
                         continue;
                     }
                     try {
@@ -227,11 +226,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 Set<String> materials = new HashSet<>(cfg.getStringList(path + "materials.black-list"));
                 this.materialsList.removeIf(matAll -> {
                     String namespacedID = matAll.getNamespacedID();
+                    String upperCaseNamespacedID = namespacedID.toUpperCase();
                     for (String mat : materials) {
-                        int i = mat.indexOf(JStrings.MASK_ANY);
-                        if (i >= 0 && i == mat.lastIndexOf(JStrings.MASK_ANY)) { // Only accept 1 occurrence
-                            if (i == 0 && namespacedID.toUpperCase().endsWith(mat.substring(JStrings.MASK_ANY.length()).toUpperCase())) return true;
-                            if (i == mat.length()-1 && namespacedID.toUpperCase().startsWith(mat.substring(0, mat.length()-JStrings.MASK_ANY.length()).toUpperCase())) return true;
+                        String[] split = mat.split('\\'+JStrings.MASK_ANY, 2);
+                        if (split.length == 2 ) { // We have a wildcard
+                            if (split[0].isEmpty() && upperCaseNamespacedID.endsWith(split[1])) return true;
+                            else if (split[1].isEmpty() && upperCaseNamespacedID.startsWith(split[0])) return true;
                         }
                         if (namespacedID.equals(mat)) return true;
                     }
