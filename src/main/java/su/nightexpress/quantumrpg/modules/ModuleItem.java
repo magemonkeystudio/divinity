@@ -171,7 +171,7 @@ public abstract class ModuleItem extends LoadableItem {
         return this.lore;
     }
 
-    public int[] getColor() {return Arrays.copyOf(color, 3);}
+    public int[] getColor() {return this.color == null ? null : Arrays.copyOf(color, 3);}
 
     public Set<ItemFlag> getFlags() {return new HashSet<>(this.flags);}
 

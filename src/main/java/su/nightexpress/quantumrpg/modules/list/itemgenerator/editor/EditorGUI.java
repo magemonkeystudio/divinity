@@ -123,24 +123,33 @@ public class EditorGUI extends AbstractEditorGUI {
             }
         });
         int[] color = itemGenerator.getHandle().getColor();
-        ItemStack itemStack = createItem(Material.POTION,
-                "&eColor",
-                "&bCurrent: &a" + color[0] + "," + color[1] + "," + color[2],
-                "&6Left-Click: &eSet",
-                "&6Drop: &eSet to default value");
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta instanceof PotionMeta) {
-            int r = color[0] >= 0 ? color[0] : Rnd.get(255);
-            int g = color[1] >= 0 ? color[1] : Rnd.get(255);
-            int b = color[2] >= 0 ? color[2] : Rnd.get(255);
-            ((PotionMeta) meta).setColor(Color.fromRGB(r, g, b));
-            itemStack.setItemMeta(meta);
+        ItemStack itemStack;
+        if (color == null) {
+            itemStack = createItem(Material.GLASS_BOTTLE,
+                    "&eColor",
+                    "&bCurrent: &anull",
+                    "&6Left-Click: &eSet",
+                    "&6Drop: &eRemove");
+        } else {
+            itemStack = createItem(Material.POTION,
+                    "&eColor",
+                    "&bCurrent: &a" + color[0] + "," + color[1] + "," + color[2],
+                    "&6Left-Click: &eSet",
+                    "&6Drop: &eRemove");
+            ItemMeta meta = itemStack.getItemMeta();
+            if (meta instanceof PotionMeta) {
+                int r = color[0] >= 0 ? color[0] : Rnd.get(255);
+                int g = color[1] >= 0 ? color[1] : Rnd.get(255);
+                int b = color[2] >= 0 ? color[2] : Rnd.get(255);
+                ((PotionMeta) meta).setColor(Color.fromRGB(r, g, b));
+                itemStack.setItemMeta(meta);
+            }
         }
         setSlot(4, new Slot(itemStack) {
             @Override
             public void onLeftClick() {
                 sendSetMessage(ItemType.COLOR.getTitle(),
-                        color[0] + "," + color[1] + "," + color[2],
+                        color == null ? "null" : color[0] + "," + color[1] + "," + color[2],
                         s -> {
                             String[] splitString = s.split(",");
                             if (splitString.length != 3) {throw new IllegalArgumentException();}
@@ -155,7 +164,7 @@ public class EditorGUI extends AbstractEditorGUI {
 
             @Override
             public void onDrop() {
-                setDefault(ItemType.COLOR.getPath());
+                itemGenerator.getConfig().remove(ItemType.COLOR.getPath());
                 saveAndReopen();
             }
         });
