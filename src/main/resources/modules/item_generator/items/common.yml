@@ -8,7 +8,7 @@ lore:
 - '%ENCHANTS%'
 - ''
 - '%USER_CLASS%'
-- '%USER_BANNED_CLASS'
+- '%USER_BANNED_CLASS%'
 - '%USER_LEVEL%'
 - ''
 - '%ITEM_SET%'
