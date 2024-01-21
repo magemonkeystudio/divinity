@@ -1,12 +1,11 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.stats;
 
-import mc.promcteam.engine.manager.api.menu.Slot;
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.api.menu.Slot;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.hooks.EHook;
 import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
@@ -44,37 +43,29 @@ public class StatListGUI extends AbstractEditorGUI {
                 i++;
             } else if (i % 9 == 0) {i++;}
 
-            Material material        = null;
-            Integer  customModelData = null;
+            ItemStack itemStack = null;
             switch (this.itemType) {
                 case DAMAGE_TYPES: {
-                    material = Material.IRON_SWORD;
+                    itemStack = new ItemStack(Material.IRON_SWORD);
                     break;
                 }
                 case DEFENSE_TYPES: {
-                    material = Material.IRON_CHESTPLATE;
+                    itemStack = new ItemStack(Material.IRON_CHESTPLATE);
                     break;
                 }
                 case SKILLAPI_ATTRIBUTES: {
                     SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
-                    if (skillAPIHK != null) {
-                        ItemStack indicator = skillAPIHK.getAttributeIndicator(entry);
-                        material = indicator.getType();
-                        ItemMeta meta = indicator.getItemMeta();
-                        if (meta != null && meta.hasCustomModelData()) {
-                            customModelData = meta.getCustomModelData();
-                        }
-                    }
+                    if (skillAPIHK != null) itemStack = skillAPIHK.getAttributeIndicator(entry);
                     break;
                 }
             }
-            if (material == null) {material = Material.PAPER;}
+            if (itemStack == null) {itemStack = new ItemStack(Material.PAPER);}
             String path = MainStatsGUI.ItemType.LIST.getPath(this.itemType) + '.' + entry + '.';
             String roundDisplay = this.itemType == EditorGUI.ItemType.SKILLAPI_ATTRIBUTES
                     ? ""
                     : "&bRound: &a" + cfg.getBoolean(path + "round", false);
 
-            ItemStack itemStack = createItem(material,
+            createItem(itemStack,
                     "&e" + entry,
                     "&bCurrent:",
                     "&bChance: &a" + cfg.getDouble(path + "chance"),
@@ -85,13 +76,6 @@ public class StatListGUI extends AbstractEditorGUI {
                     roundDisplay,
                     "",
                     "&6Left-Click: &eModify");
-            if (customModelData != null) {
-                ItemMeta meta = itemStack.getItemMeta();
-                if (meta != null) {
-                    meta.setCustomModelData(customModelData);
-                    itemStack.setItemMeta(meta);
-                }
-            }
             setSlot(i, new Slot(itemStack) {
                 @Override
                 public void onLeftClick() {

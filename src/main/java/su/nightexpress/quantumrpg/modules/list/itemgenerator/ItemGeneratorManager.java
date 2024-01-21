@@ -6,6 +6,8 @@ import mc.promcteam.engine.core.Version;
 import mc.promcteam.engine.items.ItemType;
 import mc.promcteam.engine.items.exception.MissingItemException;
 import mc.promcteam.engine.items.exception.MissingProviderException;
+import mc.promcteam.engine.items.providers.IProItemProvider;
+import mc.promcteam.engine.items.providers.VanillaProvider;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
@@ -533,8 +535,6 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return item;
 
-            String itemMaterial = item.getType().name();
-
             List<Integer> dataValues = new ArrayList<>();
             for (Map.Entry<String, List<Integer>> e : this.modelDataSpecial.entrySet()) {
                 if (ItemUtils.compareItemGroup(item, e.getKey())) {
@@ -563,6 +563,11 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             String itemGroupId   = ItemUtils.getItemGroupIdFor(item);
             String itemGroupName = ItemUtils.getItemGroupNameFor(item.getType());
+
+            String itemMaterial = NexEngine.get().getItemManager().getItemTypes(item).stream()
+                    .filter(itemType -> itemType.getCategory() != IProItemProvider.Category.PRO)
+                    .max(Comparator.comparing(ItemType::getCategory))
+                    .orElseGet(() -> new VanillaProvider.VanillaItemType(item.getType())).getNamespacedID();
 
             if (Rnd.get(true) <= prefixChance) {
                 prefixTier = Rnd.get(resourceManager.getPrefix(ResourceCategory.TIER, this.getTier().getId()));
