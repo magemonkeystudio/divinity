@@ -1,9 +1,9 @@
 package su.nightexpress.quantumrpg.utils;
 
 import mc.promcteam.engine.items.ItemType;
+import mc.promcteam.engine.items.ProItemManager;
 import mc.promcteam.engine.items.providers.IProItemProvider;
 import mc.promcteam.engine.modules.IModule;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -28,12 +28,21 @@ public class ProRpgItemsProvider implements IProItemProvider<ProRpgItemsProvider
 
     @Override
     public ProRPGItemsItemType getItem(String id) {
-        for (IModule<?> module : QuantumRPG.getInstance().getModuleManager().getModules()) {
-            if (!(module instanceof QModuleDrop)) continue;
+        id = ProItemManager.stripPrefix(NAMESPACE, id).replaceAll("[ -]", "_");
+        String[] split = id.split(":", 2);
+        if (split.length == 2) { // Module name
+            IModule<?> module = QuantumRPG.getInstance().getModuleManager().getModule(split[0]);
+            if (!(module instanceof QModuleDrop)) return null;
+            ModuleItem moduleItem = ((QModuleDrop<?>) module).getItemById(split[1]);
+            return moduleItem == null ? null : new ProRPGItemsItemType(moduleItem);
+        } else { // Look in all modules
+            for (IModule<?> module : QuantumRPG.getInstance().getModuleManager().getModules()) {
+                if (!(module instanceof QModuleDrop)) continue;
 
-            ModuleItem item = ((QModuleDrop<? extends ModuleItem>) module).getItemById(id);
-            if (item != null) {
-                return new ProRPGItemsItemType(item);
+                ModuleItem item = ((QModuleDrop<? extends ModuleItem>) module).getItemById(id);
+                if (item != null) {
+                    return new ProRPGItemsItemType(item);
+                }
             }
         }
 
@@ -55,8 +64,7 @@ public class ProRpgItemsProvider implements IProItemProvider<ProRpgItemsProvider
 
     @Override
     public boolean isCustomItemOfId(ItemStack item, String id) {
-        String[] split = id.split("_", 2);
-        id = split.length == 2 && split[0].equalsIgnoreCase(NAMESPACE) ? split[1] : id;
+        id = ProItemManager.stripPrefix(NAMESPACE, id);
 
         String itemId = ItemStats.getId(item);
         return itemId != null && itemId.equals(id);
