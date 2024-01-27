@@ -28,7 +28,10 @@ public class ProRpgItemsProvider implements IProItemProvider<ProRpgItemsProvider
 
     @Override
     public ProRPGItemsItemType getItem(String id) {
+        if (id == null || id.isBlank()) return null;
+
         id = ProItemManager.stripPrefix(NAMESPACE, id).replaceAll("[ -]", "_");
+
         String[] split = id.split(":", 2);
         if (split.length == 2) { // Module name
             IModule<?> module = QuantumRPG.getInstance().getModuleManager().getModule(split[0]);
