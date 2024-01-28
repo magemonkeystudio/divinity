@@ -562,7 +562,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             String suffixItemType = "";
 
             String itemGroupId   = ItemUtils.getItemGroupIdFor(item);
-            String itemGroupName = ItemUtils.getItemGroupNameFor(item.getType());
+            String itemGroupName = ItemUtils.getItemGroupNameFor(item);
 
             String itemMaterial = NexEngine.get().getItemManager().getItemTypes(item).stream()
                     .filter(itemType -> itemType.getCategory() != IProItemProvider.Category.PRO)

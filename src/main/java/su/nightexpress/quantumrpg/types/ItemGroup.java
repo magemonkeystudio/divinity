@@ -1,14 +1,18 @@
 package su.nightexpress.quantumrpg.types;
 
+import mc.promcteam.engine.NexEngine;
+import mc.promcteam.engine.items.ItemType;
+import mc.promcteam.engine.items.exception.ProItemException;
+import mc.promcteam.engine.items.providers.VanillaProvider;
 import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import su.nightexpress.quantumrpg.QuantumRPG;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public enum ItemGroup {
 
@@ -17,8 +21,8 @@ public enum ItemGroup {
     TOOL("Tool"),
     ;
 
-    private String      name;
-    private Set<String> mats;
+    private String        name;
+    private Set<ItemType> mats;
 
     private ItemGroup(@NotNull String name) {
         this.setName(name);
@@ -35,36 +39,53 @@ public enum ItemGroup {
     }
 
     @NotNull
-    public Set<String> getMaterials() {
+    public Set<ItemType> getMaterials() {
         return this.mats;
     }
 
     public void setMaterials(@NotNull Set<String> mats) {
         this.mats.clear();
-        this.mats.addAll(mats);
+        for (String mat : mats) {
+            try {
+                this.mats.add(NexEngine.get().getItemManager().getItemType(mat));
+            } catch (ProItemException e) {
+                QuantumRPG.getInstance().warn("Unknown item group: \""+mat+'\"');
+            }
+        }
     }
 
     public boolean isItemOfThis(@NotNull ItemStack item) {
-        return this.isItemOfThis(item.getType());
+        return this.mats.stream().anyMatch(itemType -> itemType.isInstance(item));
     }
 
+    @Deprecated
     public boolean isItemOfThis(@NotNull Material mat) {
-        return this.isItemOfThis(mat.name());
+        return this.mats.contains(new VanillaProvider.VanillaItemType(mat));
     }
 
     public boolean isItemOfThis(@NotNull String mat) {
-        String n = mat.toUpperCase();
-        return this.mats.contains(n);
+        return this.mats.stream().anyMatch(itemType -> itemType.getNamespacedID().equalsIgnoreCase(mat));
     }
 
     @Nullable
     public static ItemGroup getItemGroup(@NotNull ItemStack item) {
-        return getItemGroup(item.getType());
+        for (ItemGroup ig : ItemGroup.values()) {
+            if (ig.isItemOfThis(item)) {
+                return ig;
+            }
+        }
+        return null;
     }
 
+    @Deprecated
     @Nullable
     public static ItemGroup getItemGroup(@NotNull Material material) {
-        return getItemGroup(material.name());
+        for (ItemGroup ig : ItemGroup.values()) {
+            if (ig.isItemOfThis(material)) {
+                return ig;
+            }
+        }
+        return null;
     }
 
     @Nullable

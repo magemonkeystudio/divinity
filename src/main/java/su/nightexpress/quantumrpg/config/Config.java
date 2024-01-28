@@ -1,11 +1,8 @@
 package su.nightexpress.quantumrpg.config;
 
-import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.config.api.IConfigTemplate;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.items.ItemType;
-import mc.promcteam.engine.items.exception.MissingItemException;
-import mc.promcteam.engine.items.exception.MissingProviderException;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.constants.JStrings;
@@ -328,9 +325,11 @@ public class Config extends IConfigTemplate {
 
     @Nullable
     public static ItemSubType getItemSubType(@NotNull ItemStack item) {
-        return getItemSubType(item.getType());
+        return ITEM_SUB_TYPES.values().stream().filter(itemSubType -> itemSubType.isItemOfThis(item))
+                .findFirst().orElse(null);
     }
 
+    @Deprecated
     @Nullable
     public static ItemSubType getItemSubType(@NotNull Material material) {
         return getItemSubType(material.name());
@@ -338,9 +337,7 @@ public class Config extends IConfigTemplate {
 
     @Nullable
     public static ItemSubType getItemSubType(@NotNull String mat) {
-        Optional<ItemSubType> opt = ITEM_SUB_TYPES.values().stream().filter(type -> type.isItemOfThis(mat))
-                .findFirst();
-        return opt.isPresent() ? opt.get() : null;
+        return ITEM_SUB_TYPES.values().stream().filter(type -> type.isItemOfThis(mat)).findFirst().orElse(null);
     }
 
     @NotNull
@@ -348,11 +345,7 @@ public class Config extends IConfigTemplate {
         Set<ItemType> set = new HashSet<>();
 
         for (ItemGroup group : ItemGroup.values()) {
-            for (String materialName : group.getMaterials()) {
-                try {
-                    set.add(NexEngine.get().getItemManager().getItemType(materialName));
-                } catch (MissingProviderException | MissingItemException ignored) {}
-            }
+            set.addAll(group.getMaterials());
         }
 
         return set;

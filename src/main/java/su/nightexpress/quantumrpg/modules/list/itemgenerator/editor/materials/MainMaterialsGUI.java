@@ -3,6 +3,8 @@ package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials;
 import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.items.exception.MissingItemException;
 import mc.promcteam.engine.items.exception.MissingProviderException;
+import mc.promcteam.engine.items.exception.ProItemException;
+import mc.promcteam.engine.items.providers.VanillaProvider;
 import mc.promcteam.engine.manager.api.menu.Slot;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
@@ -77,6 +79,18 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
 
         String[] split = string.toUpperCase().split('\\'+JStrings.MASK_ANY, 2);
         if (split.length == 2) { // We have a wildcard
+            // First attempt to look literally
+            if (split[0].isEmpty()) {
+                try {
+                    return NexEngine.get().getItemManager().getItemType(split[1]).create();
+                } catch (ProItemException ignored) {}
+            } else if (split[1].isEmpty()) {
+                try {
+                    return NexEngine.get().getItemManager().getItemType(split[0]).create();
+                } catch (ProItemException ignored) {}
+            }
+
+            // If not found, find first thing that matches
             for (mc.promcteam.engine.items.ItemType material : Config.getAllRegisteredMaterials()) {
                 String materialName = material.getNamespacedID().toUpperCase();
                 if (split[0].isEmpty() && materialName.endsWith(split[1])
@@ -93,12 +107,11 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
 
         ItemSubType subType = Config.getSubTypeById(materialGroup);
         if (subType != null) {
-            return getMaterial(subType.getMaterials().stream().findAny().orElse("STONE"));
+            return subType.getMaterials().stream().findAny().orElse(new VanillaProvider.VanillaItemType(Material.STONE)).create();
         }
 
         try {
-            ItemGroup itemGroup = ItemGroup.valueOf(materialGroup.toUpperCase());
-            return getMaterial(itemGroup.getMaterials().stream().findAny().orElse("STONE"));
+            return ItemGroup.valueOf(materialGroup.toUpperCase()).getMaterials().stream().findAny().orElse(new VanillaProvider.VanillaItemType(Material.STONE)).create();
         } catch (IllegalArgumentException ignored) {}
 
         return getMaterial(materialGroup.toUpperCase());

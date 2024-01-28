@@ -22,6 +22,11 @@ public class ProRpgItemsProvider implements IProItemProvider<ProRpgItemsProvider
     }
 
     @Override
+    public String getNamespace() {
+        return NAMESPACE;
+    }
+
+    @Override
     public Category getCategory() {
         return Category.PRO;
     }
