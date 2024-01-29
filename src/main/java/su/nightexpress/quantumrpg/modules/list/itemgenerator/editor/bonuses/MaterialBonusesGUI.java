@@ -1,13 +1,14 @@
-package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials;
+package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.bonuses;
 
-import mc.promcteam.engine.manager.api.menu.Slot;
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.api.menu.Slot;
 import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials.MainMaterialsGUI;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
@@ -15,10 +16,10 @@ import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 
 import java.util.*;
 
-public class MainStatModifiersGUI extends AbstractEditorGUI {
+public class MaterialBonusesGUI extends AbstractEditorGUI {
 
-    public MainStatModifiersGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(), itemGenerator);
+    public MaterialBonusesGUI(Player player, ItemGeneratorReference itemGenerator) {
+        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.BONUSES.getTitle(), itemGenerator);
     }
 
     @Override
@@ -26,11 +27,11 @@ public class MainStatModifiersGUI extends AbstractEditorGUI {
         JYML                      cfg                 = this.itemGenerator.getConfig();
         Map<String, List<String>> map                 = new HashMap<>();
         List<String>              list                = new ArrayList<>();
-        ConfigurationSection      statModifierSection = cfg.getConfigurationSection(MainMaterialsGUI.ItemType.STAT_MODIFIERS.getPath());
-        if (statModifierSection != null) {
-            for (String key : statModifierSection.getKeys(false)) {
+        ConfigurationSection      bonusesSection = cfg.getConfigurationSection(MainBonusesGUI.ItemType.MATERIAL.getPath());
+        if (bonusesSection != null) {
+            for (String key : bonusesSection.getKeys(false)) {
                 List<String>         lore    = new ArrayList<>();
-                ConfigurationSection section = statModifierSection.getConfigurationSection(key + ".damage-types");
+                ConfigurationSection section = bonusesSection.getConfigurationSection(key + ".damage-types");
                 if (section != null) {
                     Set<String> keys = section.getKeys(false);
                     if (!keys.isEmpty()) {
@@ -50,7 +51,7 @@ public class MainStatModifiersGUI extends AbstractEditorGUI {
                         }
                     }
                 }
-                section = statModifierSection.getConfigurationSection(key + ".defense-types");
+                section = bonusesSection.getConfigurationSection(key + ".defense-types");
                 if (section != null) {
                     Set<String> keys = section.getKeys(false);
                     if (!keys.isEmpty()) {
@@ -70,7 +71,7 @@ public class MainStatModifiersGUI extends AbstractEditorGUI {
                         }
                     }
                 }
-                section = statModifierSection.getConfigurationSection(key + ".item-stats");
+                section = bonusesSection.getConfigurationSection(key + ".item-stats");
                 if (section != null) {
                     Set<String> keys = section.getKeys(false);
                     if (!keys.isEmpty()) {
@@ -110,7 +111,7 @@ public class MainStatModifiersGUI extends AbstractEditorGUI {
                             sendSetMessage("material or item group",
                                     null,
                                     s -> {
-                                        String path = MainMaterialsGUI.ItemType.STAT_MODIFIERS.getPath() + '.' + s;
+                                        String path = MainBonusesGUI.ItemType.MATERIAL.getPath() + '.' + s;
                                         cfg.set(path, cfg.createSection(path));
                                         saveAndReopen();
                                     });
@@ -124,12 +125,12 @@ public class MainStatModifiersGUI extends AbstractEditorGUI {
                                     "&6Drop: &eRemove"))) {
                         @Override
                         public void onLeftClick() {
-                            openSubMenu(new StatModifiersGUI(player, itemGenerator, group));
+                            openSubMenu(new BonusesGUI(player, itemGenerator, MainBonusesGUI.ItemType.MATERIAL.getPath() + '.' + group));
                         }
 
                         @Override
                         public void onDrop() {
-                            cfg.remove(MainMaterialsGUI.ItemType.STAT_MODIFIERS.getPath() + '.' + group);
+                            cfg.remove(MainBonusesGUI.ItemType.MATERIAL.getPath() + '.' + group);
                             saveAndReopen();
                         }
                     });

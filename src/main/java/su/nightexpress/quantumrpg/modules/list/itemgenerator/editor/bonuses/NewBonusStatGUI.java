@@ -1,4 +1,4 @@
-package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials;
+package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.bonuses;
 
 import mc.promcteam.engine.manager.api.menu.Slot;
 import org.bukkit.Material;
@@ -16,13 +16,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class NewStatModifierGUI extends AbstractEditorGUI {
-    private final String group;
-    private final StatModifierTypeGUI.ItemType statType;
+public class NewBonusStatGUI extends AbstractEditorGUI {
+    private final String                    path;
+    private final BonusStatTypeGUI.ItemType statType;
 
-    public NewStatModifierGUI(Player player, ItemGeneratorReference itemGenerator, String group, StatModifierTypeGUI.ItemType statType) {
+    public NewBonusStatGUI(Player player, ItemGeneratorReference itemGenerator, String path, BonusStatTypeGUI.ItemType statType) {
         super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(), itemGenerator);
-        this.group = group;
+        this.path = path;
         this.statType = statType;
     }
 
@@ -111,6 +111,6 @@ public class NewStatModifierGUI extends AbstractEditorGUI {
     }
 
     private String getPath() {
-        return MainMaterialsGUI.ItemType.STAT_MODIFIERS.getPath() + '.' + this.group + '.' + this.statType.getPath();
+        return path + '.' + this.statType.getPath();
     }
 }

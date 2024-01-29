@@ -18,6 +18,7 @@ import org.bukkit.Registry;
 import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -250,10 +251,20 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 this.modelDataSpecial.put(specGroup.toLowerCase(), specList);
             }
 
-            // Load Attribute Bonus Maps depends on Item Group.
-            path = "generator.materials.stat-modifiers.";
+            // Load Bonuses
+
+            // Migrate old Stat Modifiers to Material Bonuses
+            if (cfg.isConfigurationSection("generator.materials.stat-modifiers")) {
+                ConfigurationSection section = cfg.getConfigurationSection("generator.materials.stat-modifiers");
+                cfg.remove("generator.materials.stat-modifiers");
+                cfg.set("generator.bonuses.material", section);
+                cfg.save();
+            }
+
+            // Load Material bonuses
+            path = "generator.bonuses.material.";
             this.materialsModifiers = new HashMap<>();
-            for (String group : cfg.getSection("generator.materials.stat-modifiers")) {
+            for (String group : cfg.getSection("generator.bonuses.material")) {
                 if (!ItemUtils.parseItemGroup(group)) {
                     error("Invalid item group provided: '" + group + "' in '" + path + "'. File: " + cfg.getFile()
                             .getName());

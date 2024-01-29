@@ -58,17 +58,9 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
                 openSubMenu(new MainModelDataGUI(player, itemGenerator));
             }
         });
-        setSlot(3, new Slot(createItem(Material.OAK_SIGN,
-                "&eStat Modifiers",
-                "&6Left-Click: &eModify")) {
-            @Override
-            public void onLeftClick() {
-                openSubMenu(new MainStatModifiersGUI(player, itemGenerator));
-            }
-        });
     }
 
-    static ItemStack getMaterial(String string) {
+    public static ItemStack getMaterial(String string) {
         try {
             return NexEngine.get().getItemManager().getItemType(string).create();
         } catch (MissingProviderException | MissingItemException ignored) {}
@@ -100,7 +92,7 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
         return new ItemStack(Material.STONE);
     }
 
-    static ItemStack getMaterialGroup(String materialGroup) {
+    public static ItemStack getMaterialGroup(String materialGroup) {
         try {
             return NexEngine.get().getItemManager().getItemType(materialGroup).create();
         } catch (MissingProviderException | MissingItemException ignored) {}
@@ -121,7 +113,6 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
         REVERSE("reverse"),
         LIST("black-list"),
         MODEL_DATA("model-data"),
-        STAT_MODIFIERS("stat-modifiers"),
         ;
 
         private final String path;

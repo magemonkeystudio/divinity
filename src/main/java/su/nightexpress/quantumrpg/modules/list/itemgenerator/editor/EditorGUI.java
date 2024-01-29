@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.bonuses.MainBonusesGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.enchantments.EnchantmentsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials.MainMaterialsGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.requirements.MainRequirementsGUI;
@@ -352,6 +353,14 @@ public class EditorGUI extends AbstractEditorGUI {
                 saveAndReopen();
             }
         });
+        setSlot(15, new Slot(createItem(Material.GOLD_INGOT,
+                "&eStat Bonuses",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new MainBonusesGUI(player, itemGenerator));
+            }
+        });
         setSlot(20, new Slot(createItem(Material.EXPERIENCE_BOTTLE,
                 "&eMinimum Level",
                 "&bCurrent: &a" + itemGenerator.getConfig().getInt(ItemType.MIN_LEVEL.getPath()),
@@ -581,6 +590,7 @@ public class EditorGUI extends AbstractEditorGUI {
         ITEM_FLAGS("item-flags"),
         ENCHANTED("enchanted"),
         SKULL_HASH("skull-hash"),
+        BONUSES("generator.bonuses"),
         MIN_LEVEL("level.min"),
         MAX_LEVEL("level.max"),
         TIER("tier"),

@@ -1,7 +1,7 @@
-package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials;
+package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.bonuses;
 
-import mc.promcteam.engine.manager.api.menu.Slot;
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.api.menu.Slot;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StatModifiersGUI extends AbstractEditorGUI {
-    private final String group;
+public class BonusesGUI extends AbstractEditorGUI {
+    private final String path;
 
-    public StatModifiersGUI(Player player, ItemGeneratorReference itemGenerator, String group) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(), itemGenerator);
-        this.group = group;
+    public BonusesGUI(Player player, ItemGeneratorReference itemGenerator, String path) {
+        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.BONUSES.getTitle(), itemGenerator);
+        this.path = path;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class StatModifiersGUI extends AbstractEditorGUI {
         JYML                 cfg                  = this.itemGenerator.getConfig();
         Map<String, String>  map                  = new HashMap<>();
         List<String>         list                 = new ArrayList<>();
-        ConfigurationSection configurationSection = cfg.getConfigurationSection(MainMaterialsGUI.ItemType.STAT_MODIFIERS.getPath() + '.' + group);
+        ConfigurationSection configurationSection = cfg.getConfigurationSection(this.path);
         if (configurationSection != null) {
             ConfigurationSection section = configurationSection.getConfigurationSection("damage-types");
             if (section != null) {
@@ -66,10 +66,10 @@ public class StatModifiersGUI extends AbstractEditorGUI {
                 i++;
             } else if (i % 9 == 0) {i++;}
             if (stat == null) {
-                setSlot(i, new Slot(createItem(Material.REDSTONE, "&eAdd new stat modifier")) {
+                setSlot(i, new Slot(createItem(Material.REDSTONE, "&eAdd new stat bonus")) {
                     @Override
                     public void onLeftClick() {
-                        openSubMenu(new StatModifierTypeGUI(player, itemGenerator, group));
+                        openSubMenu(new BonusStatTypeGUI(player, itemGenerator, path));
                     }
                 });
             } else {
@@ -89,7 +89,7 @@ public class StatModifiersGUI extends AbstractEditorGUI {
                     material = Material.OAK_SIGN;
                     id = stat;
                 }
-                String path = MainMaterialsGUI.ItemType.STAT_MODIFIERS.getPath() + '.' + this.group + '.' + stat;
+                String path = this.path + '.' + stat;
                 setSlot(i, new Slot(createItem(material,
                         "&e" + id,
                         "&bCurrent: &a" + value,
