@@ -4,14 +4,17 @@ import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.utils.NumberUT;
 import mc.promcteam.engine.utils.StringUT;
 import org.jetbrains.annotations.NotNull;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
+import su.nightexpress.quantumrpg.hooks.EHook;
+import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.*;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -19,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class BonusMap {
 
-    private Map<ItemLoreStat<?>, BiFunction<Boolean, Double, Double>> bonus;
+    private final Map<ItemLoreStat<?>, BiFunction<Boolean, Double, Double>> bonus;
 
     public BonusMap() {
         this.bonus = new HashMap<>();
@@ -27,9 +30,7 @@ public class BonusMap {
 
     public BonusMap(@NotNull BonusMap from) {
         this();
-        from.bonus.forEach((bool, map) -> {
-            BonusMap.this.bonus.put(bool, map);
-        });
+        BonusMap.this.bonus.putAll(from.bonus);
     }
 
     public void clear() {
@@ -47,29 +48,44 @@ public class BonusMap {
 
     @NotNull
     public Map<SimpleStat, BiFunction<Boolean, Double, Double>> getStatBonuses() {
-        Map<SimpleStat, BiFunction<Boolean, Double, Double>> map = this.bonus.entrySet().stream().filter(entry -> {
-            return entry.getKey() instanceof SimpleStat;
-        }).collect(Collectors.toMap(key -> (SimpleStat) key.getKey(), val -> val.getValue(), (has, add) -> has));
-
-        return map;
+        return this.bonus.entrySet().stream()
+                .filter(entry -> entry.getKey() instanceof SimpleStat)
+                .collect(Collectors.toMap(key -> (SimpleStat) key.getKey(), Map.Entry::getValue, (has, add) -> has));
     }
 
     @NotNull
     public Map<DamageAttribute, BiFunction<Boolean, Double, Double>> getDamageBonuses() {
-        Map<DamageAttribute, BiFunction<Boolean, Double, Double>> map = this.bonus.entrySet().stream().filter(entry -> {
-            return entry.getKey() instanceof DamageAttribute;
-        }).collect(Collectors.toMap(key -> (DamageAttribute) key.getKey(), val -> val.getValue(), (has, add) -> has));
-
-        return map;
+        return this.bonus.entrySet().stream()
+                .filter(entry -> entry.getKey() instanceof DamageAttribute)
+                .collect(Collectors.toMap(key -> (DamageAttribute) key.getKey(), Map.Entry::getValue, (has, add) -> has));
     }
 
     @NotNull
     public Map<DefenseAttribute, BiFunction<Boolean, Double, Double>> getDefenseBonuses() {
-        Map<DefenseAttribute, BiFunction<Boolean, Double, Double>> map = this.bonus.entrySet().stream().filter(entry -> {
-            return entry.getKey() instanceof DefenseAttribute;
-        }).collect(Collectors.toMap(key -> (DefenseAttribute) key.getKey(), val -> val.getValue(), (has, add) -> has));
+        return this.bonus.entrySet().stream()
+                .filter(entry -> entry.getKey() instanceof DefenseAttribute)
+                .collect(Collectors.toMap(key -> (DefenseAttribute) key.getKey(), Map.Entry::getValue, (has, add) -> has));
+    }
 
-        return map;
+    @NotNull
+    public Map<SkillAPIAttribute, BiFunction<Boolean, Double, Double>> getSkillAPIAttributeBonuses() {
+        return this.bonus.entrySet().stream()
+                .filter(entry -> entry.getKey() instanceof SkillAPIAttribute)
+                .collect(Collectors.toMap(key -> (SkillAPIAttribute) key.getKey(), Map.Entry::getValue, (has, add) -> has));
+    }
+
+    @NotNull
+    public Map<AmmoAttribute, BiFunction<Boolean, Double, Double>> getAmmoBonuses() {
+        return this.bonus.entrySet().stream()
+                .filter(entry -> entry.getKey() instanceof AmmoAttribute)
+                .collect(Collectors.toMap(key -> (AmmoAttribute) key.getKey(), Map.Entry::getValue, (has, add) -> has));
+    }
+
+    @NotNull
+    public Map<HandAttribute, BiFunction<Boolean, Double, Double>> getHandBonuses() {
+        return this.bonus.entrySet().stream()
+                .filter(entry -> entry.getKey() instanceof HandAttribute)
+                .collect(Collectors.toMap(key -> (HandAttribute) key.getKey(), Map.Entry::getValue, (has, add) -> has));
     }
 
     public BiFunction<Boolean, Double, Double> getBonus(@NotNull ItemLoreStat<?> stat) {
@@ -92,9 +108,7 @@ public class BonusMap {
             boolean perc = sVal.contains("%");
             double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
 
-            BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> {
-                return perc == isBonus ? apply + val : apply;
-            };
+            BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
             this.bonus.put(stat, func);
         }
     }
@@ -111,9 +125,7 @@ public class BonusMap {
             double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
             //if (val == 0) continue;
 
-            BiFunction<Boolean, Double, Double> func = (bonus, apply) -> {
-                return perc == bonus ? apply + val : apply;
-            };
+            BiFunction<Boolean, Double, Double> func = (bonus, apply) -> perc == bonus ? apply + val : apply;
             this.bonus.put(dt, func);
         }
     }
@@ -130,10 +142,72 @@ public class BonusMap {
             double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
             //if (val == 0) continue;
 
-            BiFunction<Boolean, Double, Double> func = (bonus, apply) -> {
-                return perc == bonus ? apply + val : apply;
-            };
+            BiFunction<Boolean, Double, Double> func = (bonus, apply) -> perc == bonus ? apply + val : apply;
             this.bonus.put(dt, func);
+        }
+    }
+
+    public void loadSkillAPIAttributes(@NotNull JYML cfg, @NotNull String path) {
+        for (String id : cfg.getSection(path)) {
+            SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+            if (skillAPIHK == null) continue;
+            Collection<SkillAPIAttribute> attributes = skillAPIHK.getAttributes();
+
+            SkillAPIAttribute stat = attributes.stream()
+                    .filter(attribute -> attribute.getId().equalsIgnoreCase(id))
+                    .findAny().orElse(null);
+            if (stat == null) continue;
+
+            String sVal = cfg.getString(path + "." + id);
+            if (sVal == null) continue;
+
+            boolean perc = sVal.contains("%");
+            double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
+
+            BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
+            this.bonus.put(stat, func);
+        }
+    }
+
+    public void loadAmmo(@NotNull JYML cfg, @NotNull String path) {
+        for (String id : cfg.getSection(path)) {
+            AmmoAttribute stat;
+            try {
+                stat = ItemStats.getAmmo(AmmoAttribute.Type.valueOf(id.toUpperCase()));
+                if (stat == null) continue;
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
+
+            String sVal = cfg.getString(path + "." + id);
+            if (sVal == null) continue;
+
+            boolean perc = sVal.contains("%");
+            double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
+
+            BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
+            this.bonus.put(stat, func);
+        }
+    }
+
+    public void loadHands(@NotNull JYML cfg, @NotNull String path) {
+        for (String id : cfg.getSection(path)) {
+            HandAttribute stat;
+            try {
+                stat = ItemStats.getHand(HandAttribute.Type.valueOf(id.toUpperCase()));
+                if (stat == null) continue;
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
+
+            String sVal = cfg.getString(path + "." + id);
+            if (sVal == null) continue;
+
+            boolean perc = sVal.contains("%");
+            double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
+
+            BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
+            this.bonus.put(stat, func);
         }
     }
 

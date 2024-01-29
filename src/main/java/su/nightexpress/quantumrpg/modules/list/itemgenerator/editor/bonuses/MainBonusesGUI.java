@@ -19,16 +19,24 @@ public class MainBonusesGUI extends AbstractEditorGUI {
                 "&6Left-Click: &eModify")) {
             @Override
             public void onLeftClick() {
-                openSubMenu(new MaterialBonusesGUI(player, itemGenerator));
+                openSubMenu(new BonusCategoryGUI(player, itemGenerator, ItemType.MATERIAL));
             }
         });
     }
 
     public enum ItemType {
-        MATERIAL,
-        CLASS, // TODO
+        MATERIAL("material or group"),
+        CLASS("class"), // TODO
         ;
 
+        private final String description;
+
+        ItemType(String description) {
+            this.description = description;
+        }
+
         public String getPath() {return "generator.bonuses." + name().toLowerCase();}
+
+        public String getDescription() {return description;}
     }
 }

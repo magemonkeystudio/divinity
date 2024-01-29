@@ -28,28 +28,20 @@ public class BonusesGUI extends AbstractEditorGUI {
         List<String>         list                 = new ArrayList<>();
         ConfigurationSection configurationSection = cfg.getConfigurationSection(this.path);
         if (configurationSection != null) {
-            ConfigurationSection section = configurationSection.getConfigurationSection("damage-types");
-            if (section != null) {
-                for (String damageType : section.getKeys(false)) {
-                    String path = "damage-types." + damageType;
-                    map.put(path, section.getString(damageType));
-                    list.add(path);
-                }
-            }
-            section = configurationSection.getConfigurationSection("defense-types");
-            if (section != null) {
-                for (String defenseType : section.getKeys(false)) {
-                    String path = "defense-types." + defenseType;
-                    map.put(path, section.getString(defenseType));
-                    list.add(path);
-                }
-            }
-            section = configurationSection.getConfigurationSection("item-stats");
-            if (section != null) {
-                for (String stat : section.getKeys(false)) {
-                    String path = "item-stats." + stat;
-                    map.put(path, section.getString(stat));
-                    list.add(path);
+            for (String path : new String[]{
+                    BonusCategoryGUI.ItemType.DAMAGE.getPath(),
+                    BonusCategoryGUI.ItemType.DEFENSE.getPath(),
+                    BonusCategoryGUI.ItemType.ITEM_STAT.getPath(),
+                    BonusCategoryGUI.ItemType.SKILLAPI_ATTRIBUTE.getPath(),
+                    BonusCategoryGUI.ItemType.AMMO.getPath(),
+                    BonusCategoryGUI.ItemType.HAND.getPath()}) {
+                ConfigurationSection section = configurationSection.getConfigurationSection(path);
+                if (section != null) {
+                    for (String id : section.getKeys(false)) {
+                        String path2 = path + '.' + id;
+                        map.put(path2, section.getString(id));
+                        list.add(path2);
+                    }
                 }
             }
         }
@@ -76,15 +68,24 @@ public class BonusesGUI extends AbstractEditorGUI {
                 Material material;
                 String   id;
                 String   value = map.get(stat);
-                if (stat.startsWith("damage-types.")) {
+                if (stat.startsWith(BonusCategoryGUI.ItemType.DAMAGE.getPath())) {
                     material = Material.IRON_SWORD;
-                    id = stat.substring("damage-types.".length())+" damage";
-                } else if (stat.startsWith("defense-types.")) {
+                    id = stat.substring(BonusCategoryGUI.ItemType.DAMAGE.getPath().length()+1)+" damage";
+                } else if (stat.startsWith(BonusCategoryGUI.ItemType.DEFENSE.getPath())) {
                     material = Material.IRON_CHESTPLATE;
-                    id = stat.substring("defense-types.".length())+" defense";
-                } else if (stat.startsWith("item-stats.")) {
+                    id = stat.substring(BonusCategoryGUI.ItemType.DEFENSE.getPath().length()+1)+" defense";
+                } else if (stat.startsWith(BonusCategoryGUI.ItemType.ITEM_STAT.getPath())) {
                     material = Material.OAK_SIGN;
-                    id = stat.substring("item-stats.".length())+" stat";
+                    id = stat.substring(BonusCategoryGUI.ItemType.ITEM_STAT.getPath().length()+1)+" stat";
+                } else if (stat.startsWith(BonusCategoryGUI.ItemType.SKILLAPI_ATTRIBUTE.getPath())) {
+                    material = Material.BOOK;
+                    id = stat.substring(BonusCategoryGUI.ItemType.SKILLAPI_ATTRIBUTE.getPath().length()+1)+" SkillAPI attribute";
+                } else if (stat.startsWith(BonusCategoryGUI.ItemType.AMMO.getPath())) {
+                    material = Material.ARROW;
+                    id = stat.substring(BonusCategoryGUI.ItemType.AMMO.getPath().length()+1)+" ammo";
+                } else if (stat.startsWith(BonusCategoryGUI.ItemType.HAND.getPath())) {
+                    material = Material.STICK;
+                    id = stat.substring(BonusCategoryGUI.ItemType.HAND.getPath().length()+1)+" hand";
                 } else {
                     material = Material.OAK_SIGN;
                     id = stat;

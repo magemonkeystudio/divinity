@@ -4,11 +4,13 @@ import mc.promcteam.engine.manager.api.menu.Slot;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.hooks.EHook;
+import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.*;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
 
 import java.util.ArrayList;
@@ -18,9 +20,9 @@ import java.util.Set;
 
 public class NewBonusStatGUI extends AbstractEditorGUI {
     private final String                    path;
-    private final BonusStatTypeGUI.ItemType statType;
+    private final BonusCategoryGUI.ItemType statType;
 
-    public NewBonusStatGUI(Player player, ItemGeneratorReference itemGenerator, String path, BonusStatTypeGUI.ItemType statType) {
+    public NewBonusStatGUI(Player player, ItemGeneratorReference itemGenerator, String path, BonusCategoryGUI.ItemType statType) {
         super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(), itemGenerator);
         this.path = path;
         this.statType = statType;
@@ -72,6 +74,51 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
                         }
                     }
                     if (!exists) {list.add(itemStat.name());}
+                }
+                break;
+            }
+            case SKILLAPI_ATTRIBUTE: {
+                material = Material.BOOK;
+                SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+                if (skillAPIHK != null) {
+                    for (SkillAPIAttribute skillAPIAttribute : skillAPIHK.getAttributes()) {
+                        boolean exists = false;
+                        for (String existingKey : existingKeys) {
+                            if (existingKey.equalsIgnoreCase(skillAPIAttribute.getId())) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {list.add(skillAPIAttribute.getId());}
+                    }
+                }
+                break;
+            }
+            case HAND: {
+                material = Material.STICK;
+                for (HandAttribute handAttribute : ItemStats.getHands()) {
+                    boolean exists = false;
+                    for (String existingKey : existingKeys) {
+                        if (existingKey.equalsIgnoreCase(handAttribute.getId())) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {list.add(handAttribute.getId());}
+                }
+                break;
+            }
+            case AMMO: {
+                material = Material.ARROW;
+                for (AmmoAttribute ammoAttribute : ItemStats.getAmmos()) {
+                    boolean exists = false;
+                    for (String existingKey : existingKeys) {
+                        if (existingKey.equalsIgnoreCase(ammoAttribute.getId())) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {list.add(ammoAttribute.getId());}
                 }
                 break;
             }

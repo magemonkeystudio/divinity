@@ -71,7 +71,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
             }
 
             double chance = cfg.getDouble(path2 + "chance");
-            if (chance <= 0) return;
+            //if (chance <= 0) return; Removed so that Bonuses can be applied
 
             double            m1         = cfg.getDouble(path2 + "min", 0D);
             double            m2         = cfg.getDouble(path2 + "max", 0D);

@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.AbstractAttributeGenerator;
+import su.nightexpress.quantumrpg.stats.bonus.BonusCalculator;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
@@ -37,7 +38,7 @@ public class SingleAttributeGenerator<A extends ItemLoreStat<String>> extends Ab
         this.attributes = new HashMap<>();
         attributesAll.forEach(att -> {
             double chance = cfg.getDouble(path + att.getId().toUpperCase());
-            if (chance <= 0) return;
+            //if (chance <= 0) return; Removed so that Bonuses can be applied
 
             this.attributes.put(att, chance);
         });
@@ -54,10 +55,14 @@ public class SingleAttributeGenerator<A extends ItemLoreStat<String>> extends Ab
             LoreUT.replacePlaceholder(item, this.placeholder, null);
             return;
         }
-
-        @Nullable A handAtt = Rnd.getRandomItem(this.attributes, true);
-        if (handAtt != null) {
-            handAtt.add(item, handAtt.getName(), -1);
+        Map<A, Double> copy = new HashMap<>();
+        for (Map.Entry<A, Double> entry : this.attributes.entrySet()) {
+            double weight = BonusCalculator.CALC_FULL.apply(entry.getValue(), List.of(generatorItem.getMaterialModifier(item, entry.getKey())));
+            if (weight > 0) copy.put(entry.getKey(), weight);
+        }
+        @Nullable A att = Rnd.getRandomItem(copy, true);
+        if (att != null) {
+            att.add(item, att.getName(), -1);
         }
         LoreUT.replacePlaceholder(item, this.placeholder, null);
     }

@@ -19,33 +19,39 @@ public class BonusStatTypeGUI extends AbstractEditorGUI {
         setSlot(0, new Slot(createItem(Material.IRON_SWORD, "&eAdd new damage type")) {
             @Override
             public void onLeftClick() {
-                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, ItemType.DAMAGE));
+                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.DAMAGE));
             }
         });
         setSlot(1, new Slot(createItem(Material.IRON_CHESTPLATE, "&eAdd new defense type")) {
             @Override
             public void onLeftClick() {
-                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, ItemType.DEFENSE));
+                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.DEFENSE));
             }
         });
         setSlot(2, new Slot(createItem(Material.OAK_SIGN, "&eAdd new item stat")) {
             @Override
             public void onLeftClick() {
-                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, ItemType.ITEM_STAT));
+                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.ITEM_STAT));
+            }
+        });
+        setSlot(3, new Slot(createItem(Material.BOOK, "&eAdd new SkillAPIAttribute stat")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.SKILLAPI_ATTRIBUTE));
+            }
+        });
+        setSlot(4, new Slot(createItem(Material.ARROW, "&eAdd new ammo stat")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.AMMO));
+            }
+        });
+        setSlot(5, new Slot(createItem(Material.STICK, "&eAdd new hand stat")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.HAND));
             }
         });
     }
 
-    public enum ItemType {
-        DAMAGE("damage-types"),
-        DEFENSE("defense-types"),
-        ITEM_STAT("item-stats"),
-        ;
-
-        private final String path;
-
-        ItemType(String path) {this.path = path;}
-
-        public String getPath() {return path;}
-    }
 }

@@ -276,6 +276,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 bMap.loadDamages(cfg, path2 + "damage-types");
                 bMap.loadDefenses(cfg, path2 + "defense-types");
                 bMap.loadStats(cfg, path2 + "item-stats");
+                bMap.loadSkillAPIAttributes(cfg, path2 + "skillapi-attributes");
+                bMap.loadAmmo(cfg, path2 + "ammo");
+                bMap.loadHands(cfg, path2 + "hands");
 
                 this.materialsModifiers.put(group.toLowerCase(), bMap);
             }
