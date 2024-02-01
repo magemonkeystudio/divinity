@@ -37,17 +37,26 @@ public class ItemStats {
     private static final Map<String, ItemLoreStat<?>>            ATTRIBUTES       = new HashMap<>();
     private static final Map<String, DuplicableItemLoreStat<?>>  MULTI_ATTRIBUTES = new HashMap<>();
     private static final QuantumRPG                              plugin           = QuantumRPG.getInstance();
-    private static final NamespacedKey                           KEY_ID           = new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID);
-    private static final NamespacedKey                           KEY_MODULE       = new NamespacedKey(plugin, ItemTags.TAG_ITEM_MODULE);
-    private static final NamespacedKey                           KEY_LEVEL        = new NamespacedKey(plugin, ItemTags.TAG_ITEM_LEVEL);
-    private static final NamespacedKey                           KEY_SOCKET       = new NamespacedKey(plugin, ItemTags.TAG_ITEM_SOCKET_RATE);
-    private static final NamespacedKey                           KEY_ID2          = NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_ID.toLowerCase());
-    private static final NamespacedKey                           KEY_MODULE2      = NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_MODULE.toLowerCase());
-    private static final NamespacedKey                           KEY_LEVEL2       = NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_LEVEL.toLowerCase());
-    private static final NamespacedKey                           KEY_SOCKET2      = NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase());
+    private static final NamespacedKey                           KEY_ID           =
+            new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID);
+    private static final NamespacedKey                           KEY_MODULE       =
+            new NamespacedKey(plugin, ItemTags.TAG_ITEM_MODULE);
+    private static final NamespacedKey                           KEY_LEVEL        =
+            new NamespacedKey(plugin, ItemTags.TAG_ITEM_LEVEL);
+    private static final NamespacedKey                           KEY_SOCKET       =
+            new NamespacedKey(plugin, ItemTags.TAG_ITEM_SOCKET_RATE);
+    private static final NamespacedKey                           KEY_ID2          =
+            NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_ID.toLowerCase());
+    private static final NamespacedKey                           KEY_MODULE2      =
+            NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_MODULE.toLowerCase());
+    private static final NamespacedKey                           KEY_LEVEL2       =
+            NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_LEVEL.toLowerCase());
+    private static final NamespacedKey                           KEY_SOCKET2      =
+            NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase());
     private static       DamageAttribute                         DAMAGE_DEFAULT;
     private static       DefenseAttribute                        DEFENSE_DEFAULT;
 
+    private static final double DEFAULT_ATTACK_SPEED = 4D;
 
     // TODO Register logs
 
@@ -305,10 +314,10 @@ public class ItemStats {
             value = 0.1 * (1D + value / 100D) - 0.1;
         } else if (att == NBTAttribute.ATTACK_SPEED) {
             value /= 100D;
-            double baseSpeed = getStat(item, AbstractStat.Type.BASE_ATTACK_SPEED) + AbstractStat.getDefaultAttackSpeed(item);
-            double defaultSpeed = AbstractStat.getDefaultAttackSpeed(item);
-            double extra     = baseSpeed * value;
-            value = baseSpeed + extra - defaultSpeed;
+
+            double baseSpeed      = getStat(item, AbstractStat.Type.BASE_ATTACK_SPEED) + DEFAULT_ATTACK_SPEED;
+            double weaponModifier = AbstractStat.getDefaultAttackSpeed(item);
+            value = (baseSpeed + weaponModifier) * (1 + value) - DEFAULT_ATTACK_SPEED;
         }
 
         for (EquipmentSlot slot : ItemUtils.getItemSlots(item)) {
