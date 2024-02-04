@@ -9,6 +9,7 @@ provides: [ QuantumRPG ]
 softdepend:
   - Citizens
   - HolographicDisplays
+  - LevelledMobs
   - LorinthsRpgMobs
   - MangoQuest
   - mcMMO

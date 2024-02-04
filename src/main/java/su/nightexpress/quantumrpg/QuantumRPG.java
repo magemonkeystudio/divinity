@@ -57,7 +57,7 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
     private Lang      lang;
     private EngineCfg engineCfg;
 
-    private RPGUserData         dataHandler;
+    private RPGUserData dataHandler;
 
     private InteractionManager interactionManager;
     private WorthManager       worthManager;
@@ -143,7 +143,9 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         this.worthManager = new WorthManager(this);
         this.worthManager.setup();
 
-        NexEngine.getEngine().getItemManager().registerProvider(ProRpgItemsProvider.NAMESPACE, new ProRpgItemsProvider());
+        NexEngine.getEngine()
+                .getItemManager()
+                .registerProvider(ProRpgItemsProvider.NAMESPACE, new ProRpgItemsProvider());
     }
 
     @Override
@@ -202,6 +204,7 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
     @Override
     public void registerHooks() {
         this.registerHook(EHook.CRACK_SHOT, CrackShotHK.class);
+        this.registerHook(EHook.LEVELLED_MOBS, LevelledMobsHK.class);
         this.registerHook(EHook.LORINTHS_RPG_MOBS, LorinthsRpgMobsHK.class);
         this.registerHook(EHook.MAGIC, MagicHK.class);
         this.registerHook(EHook.MCMMO, McmmoHK.class);

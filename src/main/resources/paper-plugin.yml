@@ -29,6 +29,9 @@ dependencies:
   - name: HolographicDisplays
     required: false
     bootstrap: true
+  - name: LevelledMobs
+    required: false
+    bootstrap: true
   - name: LorinthsRpgMobs
     required: false
     bootstrap: true
