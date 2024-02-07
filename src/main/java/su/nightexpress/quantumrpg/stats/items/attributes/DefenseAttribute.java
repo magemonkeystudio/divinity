@@ -5,6 +5,7 @@ import mc.promcteam.engine.utils.constants.JStrings;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager.Gem;
 import su.nightexpress.quantumrpg.modules.list.refine.RefineManager;
@@ -66,13 +67,13 @@ public class DefenseAttribute extends ItemLoreStat<Double> {
         }
 
         // Support for Refine Module
-        RefineManager refine = plugin.getModuleCache().getRefineManager();
+        RefineManager refine = QuantumRPG.getInstance().getModuleCache().getRefineManager();
         if (refine != null && has) {
             bonuses.add(refine.getRefinedBonus(item, this));
         }
 
         // Support for filled socket Gems.
-        GemManager gems = plugin.getModuleCache().getGemManager();
+        GemManager gems = QuantumRPG.getInstance().getModuleCache().getGemManager();
         if (gems != null) {
             for (Entry<Gem, Integer> e : gems.getItemSockets(item)) {
                 BonusMap bMap = e.getKey().getBonusMap(e.getValue());
@@ -95,11 +96,11 @@ public class DefenseAttribute extends ItemLoreStat<Double> {
     }
 
     public static double getVanillaArmor(@NotNull ItemStack item) {
-        return plugin.getPMS().getDefaultArmor(item);
+        return QuantumRPG.getInstance().getPMS().getDefaultArmor(item);
     }
 
     public static double getVanillaToughness(@NotNull ItemStack item) {
-        return plugin.getPMS().getDefaultToughness(item);
+        return QuantumRPG.getInstance().getPMS().getDefaultToughness(item);
     }
 
     public boolean isDefault() {

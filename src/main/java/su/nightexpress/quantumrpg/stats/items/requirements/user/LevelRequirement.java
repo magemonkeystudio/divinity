@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.Perms;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.requirements.api.DynamicUserRequirement;
@@ -64,6 +65,6 @@ public class LevelRequirement extends DynamicUserRequirement<int[]> {
     @Override
     @NotNull
     public ILangMsg getDenyMessage(@NotNull Player p, @NotNull ItemStack src) {
-        return plugin.lang().Module_Item_Interact_Error_Level;
+        return QuantumRPG.getInstance().lang().Module_Item_Interact_Error_Level;
     }
 }

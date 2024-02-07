@@ -2,30 +2,30 @@ package su.nightexpress.quantumrpg.stats.items;
 
 public class ItemTags {
 
-    public static final String TAG_ITEM_MODULE        = "QRPG_ITEM_MODULE";
-    public static final String TAG_ITEM_ID            = "QRPG_ITEM_ID";
-    public static final String TAG_ITEM_LEVEL         = "QRPG_ITEM_LEVEL";
-    public static final String TAG_ITEM_SOCKET_RATE   = "QRPG_ITEM_SOCKET_RATE";
-    public static final String TAG_ITEM_SOCKET        = "QRPG_ITEM_SOCKET_";
-    public static final String TAG_ITEM_AMMO          = "QRPG_ITEM_AMMO";
-    public static final String TAG_ITEM_HAND          = "QRPG_ITEM_HAND";
-    public static final String TAG_ITEM_CHARGES       = "QRPG_ITEM_CHARGES";
-    public static final String TAG_ITEM_STAT          = "QRPG_ITEM_STAT_";
-    public static final String TAG_ITEM_DAMAGE        = "QRPG_ITEM_DAMAGE_";
-    public static final String TAG_ITEM_DEFENSE       = "QRPG_ITEM_DEFENSE_";
-    public static final String TAG_ITEM_SKILLAPI_ATTR = "QRPG_ITEM_SKILLAPI_ATTR_";
+    public static final String TAG_ITEM_MODULE        = "ITEM_MODULE";
+    public static final String TAG_ITEM_ID            = "ITEM_ID";
+    public static final String TAG_ITEM_LEVEL         = "ITEM_LEVEL";
+    public static final String TAG_ITEM_SOCKET_RATE   = "ITEM_SOCKET_RATE";
+    public static final String TAG_ITEM_SOCKET        = "ITEM_SOCKET_";
+    public static final String TAG_ITEM_AMMO          = "ITEM_AMMO";
+    public static final String TAG_ITEM_HAND          = "ITEM_HAND";
+    public static final String TAG_ITEM_CHARGES       = "ITEM_CHARGES";
+    public static final String TAG_ITEM_STAT          = "ITEM_STAT_";
+    public static final String TAG_ITEM_DAMAGE        = "ITEM_DAMAGE_";
+    public static final String TAG_ITEM_DEFENSE       = "ITEM_DEFENSE_";
+    public static final String TAG_ITEM_SKILLAPI_ATTR = "ITEM_SKILLAPI_ATTR_";
 
 
-    public static final String TAG_REQ_USER_LEVEL        = "QRPG_ITEM_USER_LEVEL";
-    public static final String TAG_REQ_USER_CLASS        = "QRPG_ITEM_USER_CLASS";
-    public static final String TAG_REQ_USER_BANNED_CLASS = "QRPG_ITEM_USER_BANNED_CLASS";
-    public static final String TAG_REQ_USER_OWNER        = "QRPG_ITEM_USER_UUID";
+    public static final String TAG_REQ_USER_LEVEL        = "ITEM_USER_LEVEL";
+    public static final String TAG_REQ_USER_CLASS        = "ITEM_USER_CLASS";
+    public static final String TAG_REQ_USER_BANNED_CLASS = "ITEM_USER_BANNED_CLASS";
+    public static final String TAG_REQ_USER_OWNER        = "ITEM_USER_UUID";
 
 
-    public static final String TAG_REQ_ITEM_TYPE   = "QRPG_REQ_ITEM_TYPE";
-    public static final String TAG_REQ_ITEM_LEVEL  = "QRPG_REQ_ITEM_LEVEL";
-    public static final String TAG_REQ_ITEM_SOCKET = "QRPG_REQ_ITEM_SOCKET";
-    public static final String TAG_REQ_ITEM_TIER   = "QRPG_REQ_ITEM_TIER";
+    public static final String TAG_REQ_ITEM_TYPE   = "REQ_ITEM_TYPE";
+    public static final String TAG_REQ_ITEM_LEVEL  = "REQ_ITEM_LEVEL";
+    public static final String TAG_REQ_ITEM_SOCKET = "REQ_ITEM_SOCKET";
+    public static final String TAG_REQ_ITEM_TIER   = "REQ_ITEM_TIER";
 
 
     public static final String PLACEHOLDER_BASE_LORE         = "%BASE_LORE%";

@@ -248,10 +248,9 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
         List<Entry<I, Integer>> sockets = new ArrayList<>();
 
         ItemMeta     meta = item.getItemMeta();
-        List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : null;
 
         for (SocketAttribute socket : ItemStats.getSockets(this.getSocketType())) {
-            for (String[] v : this.getFilledSocketKeys(meta, lore, socket.getId()).values()) {
+            for (String[] v : this.getFilledSocketKeys(meta, socket.getId()).values()) {
                 String      id    = v[0];
                 @Nullable I mItem = this.getItemById(id);
                 if (mItem == null) continue;
@@ -271,7 +270,7 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
         ItemMeta     meta = item.getItemMeta();
         List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : null;
         for (SocketAttribute socket : ItemStats.getSockets(this.getSocketType())) {
-            for (String[] values : this.getFilledSocketKeys(meta, lore, socket.getId()).values()) {
+            for (String[] values : this.getFilledSocketKeys(meta, socket.getId()).values()) {
                 String id = values[0];
                 if (id.equalsIgnoreCase(itemId)) {
                     return true;
@@ -316,12 +315,12 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
     }
 
     @NotNull
-    public final Map<Integer, String[]> getFilledSocketKeys(ItemMeta meta, List<String> lore, String socketId) {
+    public final Map<Integer, String[]> getFilledSocketKeys(ItemMeta meta, String socketId) {
         Map<Integer, String[]> sockets = new TreeMap<>();
 
         SocketAttribute socket = ItemStats.getSocket(this.getSocketType(), socketId);
         if (socket != null) {
-            int total = socket.getAmount(meta, lore); // Total amount of empty and filled
+            int total = socket.getAmount(meta); // Total amount of empty and filled
             for (int index = 0; index < total; index++) {
                 String[] values = socket.getRaw(meta, index);
                 if (values != null && !socket.isEmpty(values)) {

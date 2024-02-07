@@ -37,22 +37,22 @@ public class ItemStats {
     private static final Map<String, ItemLoreStat<?>>            ATTRIBUTES       = new HashMap<>();
     private static final Map<String, DuplicableItemLoreStat<?>>  MULTI_ATTRIBUTES = new HashMap<>();
     private static final QuantumRPG                              plugin           = QuantumRPG.getInstance();
-    private static final NamespacedKey                           KEY_ID           =
-            new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID);
-    private static final NamespacedKey                           KEY_MODULE       =
-            new NamespacedKey(plugin, ItemTags.TAG_ITEM_MODULE);
-    private static final NamespacedKey                           KEY_LEVEL        =
-            new NamespacedKey(plugin, ItemTags.TAG_ITEM_LEVEL);
-    private static final NamespacedKey                           KEY_SOCKET       =
-            new NamespacedKey(plugin, ItemTags.TAG_ITEM_SOCKET_RATE);
-    private static final NamespacedKey                           KEY_ID2          =
-            NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_ID.toLowerCase());
-    private static final NamespacedKey                           KEY_MODULE2      =
-            NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_MODULE.toLowerCase());
-    private static final NamespacedKey                           KEY_LEVEL2       =
-            NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_LEVEL.toLowerCase());
-    private static final NamespacedKey                           KEY_SOCKET2      =
-            NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase());
+    private static final List<NamespacedKey>                     KEY_ID           = List.of(
+            new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID),
+            new NamespacedKey(plugin, "qrpg_"+ItemTags.TAG_ITEM_ID),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_"+ItemTags.TAG_ITEM_ID.toLowerCase())));
+    private static final List<NamespacedKey>                     KEY_MODULE       = List.of(
+            new NamespacedKey(plugin, ItemTags.TAG_ITEM_MODULE),
+            new NamespacedKey(plugin, "qrpg_"+ItemTags.TAG_ITEM_MODULE),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_MODULE.toLowerCase())));
+    private static final List<NamespacedKey>                     KEY_LEVEL        = List.of(
+            new NamespacedKey(plugin, ItemTags.TAG_ITEM_LEVEL),
+            new NamespacedKey(plugin, "qrpg_"+ItemTags.TAG_ITEM_LEVEL),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())));
+    private static final List<NamespacedKey>                     KEY_SOCKET       = List.of(
+            new NamespacedKey(plugin, ItemTags.TAG_ITEM_SOCKET_RATE),
+            new NamespacedKey(plugin, "qrpg_"+ItemTags.TAG_ITEM_SOCKET_RATE),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())));
     private static       DamageAttribute                         DAMAGE_DEFAULT;
     private static       DefenseAttribute                        DEFENSE_DEFAULT;
 
@@ -263,7 +263,6 @@ public class ItemStats {
 
     // ----------------------------------------------------------------- //
 
-    @NotNull
     public static void updateVanillaAttributes(@NotNull ItemStack item) {
         double hp    = getStat(item, AbstractStat.Type.MAX_HEALTH);
         double speed = getStat(item, AbstractStat.Type.ATTACK_SPEED);
@@ -287,7 +286,6 @@ public class ItemStats {
         item.setItemMeta(im);
     }
 
-    @NotNull
     private static void addAttribute(@NotNull ItemStack item, @NotNull NBTAttribute att, double value) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
@@ -435,42 +433,50 @@ public class ItemStats {
         return map.values();
     }
 
-
     public static void setId(@NotNull ItemStack item, @NotNull String id) {
-        DataUT.setData(item, KEY_ID, id);
+        DataUT.setData(item, KEY_ID.get(0), id);
     }
 
     @Nullable
     public static String getId(@NotNull ItemStack item) {
-        String data = DataUT.getStringData(item, KEY_ID2);
-        return data != null ? data : DataUT.getStringData(item, KEY_ID);
+        for (NamespacedKey key : KEY_ID) {
+            String data = DataUT.getStringData(item, key);
+            if (data != null) return data;
+        }
+        return null;
     }
 
-    @NotNull
     public static void setLevel(@NotNull ItemStack item, int lvl) {
         if (lvl < 1) {
-            DataUT.removeData(item, KEY_LEVEL);
-            DataUT.removeData(item, KEY_LEVEL2);
+            for (NamespacedKey key : KEY_LEVEL) {
+                DataUT.removeData(item, key);
+            }
             return;
         }
-        DataUT.setData(item, KEY_LEVEL, lvl);
+        DataUT.setData(item, KEY_LEVEL.get(0), lvl);
     }
 
     public static int getLevel(@NotNull ItemStack item) {
-        int data = DataUT.getIntData(item, KEY_LEVEL2);
-        return data != 0 ? data : DataUT.getIntData(item, KEY_LEVEL);
+        for (NamespacedKey key : KEY_LEVEL) {
+            int data = DataUT.getIntData(item, key);
+            if (data != 0) return data;
+        }
+        return 0;
     }
 
     // ======================================================== //
 
     public static void setModule(@NotNull ItemStack item, @NotNull String mod) {
-        DataUT.setData(item, KEY_MODULE, mod);
+        DataUT.setData(item, KEY_MODULE.get(0), mod);
     }
 
     @Nullable
     public static QModuleDrop<?> getModule(@NotNull ItemStack item) {
-        String data = DataUT.getStringData(item, KEY_MODULE2);
-        if (data == null) data = DataUT.getStringData(item, KEY_MODULE);
+        String data = null;
+        for (NamespacedKey key : KEY_MODULE) {
+            data = DataUT.getStringData(item, key);
+            if (data != null) break;
+        }
         if (data == null) return null;
 
         IModule<?> mod = plugin.getModuleManager().getModule(data);
@@ -481,11 +487,14 @@ public class ItemStats {
     }
 
     public static void setSocketRate(@NotNull ItemStack item, int rate) {
-        DataUT.setData(item, KEY_SOCKET, rate);
+        DataUT.setData(item, KEY_SOCKET.get(0), rate);
     }
 
     public static int getSocketRate(@NotNull ItemStack item) {
-        int data = DataUT.getIntData(item, KEY_SOCKET2);
-        return data != 0 ? data : DataUT.getIntData(item, KEY_SOCKET);
+        for (NamespacedKey key : KEY_SOCKET) {
+            int data = DataUT.getIntData(item, key);
+            if (data != 0) return data;
+        }
+        return 0;
     }
 }

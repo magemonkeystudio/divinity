@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager.Gem;
@@ -87,7 +88,7 @@ public class DamageAttribute extends ItemLoreStat<double[]> {
     }
 
     public static double getVanillaDamage(@NotNull ItemStack item) {
-        return plugin.getPMS().getDefaultDamage(item);
+        return QuantumRPG.getInstance().getPMS().getDefaultDamage(item);
     }
 
     public double getMinOrMax(@NotNull ItemStack item, int i) {
@@ -127,13 +128,13 @@ public class DamageAttribute extends ItemLoreStat<double[]> {
         List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
 
         // Support for Refined attributes.
-        RefineManager refineManager = plugin.getModuleCache().getRefineManager();
+        RefineManager refineManager = QuantumRPG.getInstance().getModuleCache().getRefineManager();
         if (refineManager != null && has) {
             bonuses.add(refineManager.getRefinedBonus(item, this));
         }
 
         // Support for filled socket Gems.
-        GemManager gems = plugin.getModuleCache().getGemManager();
+        GemManager gems = QuantumRPG.getInstance().getModuleCache().getGemManager();
         if (gems != null) {
             for (Entry<Gem, Integer> e : gems.getItemSockets(item)) {
                 BonusMap bMap = e.getKey().getBonusMap(e.getValue());

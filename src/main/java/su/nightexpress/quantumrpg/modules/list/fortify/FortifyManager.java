@@ -28,9 +28,11 @@ import java.util.*;
 
 public class FortifyManager extends QModuleDrop<FortifyItem> {
 
-    private static final String        LORE_KEY_FORTIFY  = "qrpg_fortify";
-    private static final NamespacedKey META_KEY_FORTIFY  = new NamespacedKey(QuantumRPG.getInstance(), "QRPG_FORTIFY_PROTECTION");
-    private static final NamespacedKey META_KEY_FORTIFY2 = NamespacedKey.fromString("quantumrpg:qrpg_fortify_protection");
+    private static final List<String>        LORE_KEY_FORTIFY  = List.of("fortify", "qrpg_fortify");
+    private static final List<NamespacedKey> META_KEY_FORTIFY  = List.of(
+            new NamespacedKey(QuantumRPG.getInstance(), "FORTIFY_PROTECTION"),
+            new NamespacedKey(QuantumRPG.getInstance(), "QRPG_FORTIFY_PROTECTION"),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_fortify_protection")));
     private              boolean       formatNameAsPrefix;
     private              String        formatNameText;
     private              List<String>  formatLoreFormat;
@@ -94,8 +96,11 @@ public class FortifyManager extends QModuleDrop<FortifyItem> {
 
     @NotNull
     public String getNameDeformatted(@NotNull ItemStack item, @NotNull String name) {
-        String storedName = ItemUT.getNameTag(item, LORE_KEY_FORTIFY);
-        return storedName == null ? name : name.replace(storedName, "");
+        for (String key : LORE_KEY_FORTIFY) {
+            String storedName = ItemUT.getNameTag(item, key);
+            if (storedName != null) return name.replace(storedName, "");
+        }
+        return name;
     }
 
     @NotNull
@@ -168,10 +173,10 @@ public class FortifyManager extends QModuleDrop<FortifyItem> {
         item.setItemMeta(meta);
 
         String tagValue = stoneId + ":" + stoneLvl;
-        DataUT.setData(item, META_KEY_FORTIFY, tagValue);
+        DataUT.setData(item, META_KEY_FORTIFY.get(0), tagValue);
 
-        ItemUT.addLoreTag(item, LORE_KEY_FORTIFY, loreTag.toString());
-        ItemUT.addNameTag(item, LORE_KEY_FORTIFY, name2.replace(name, ""));
+        ItemUT.addLoreTag(item, LORE_KEY_FORTIFY.get(0), loreTag.toString());
+        ItemUT.addNameTag(item, LORE_KEY_FORTIFY.get(0), name2.replace(name, ""));
     }
 
     @NotNull
@@ -183,9 +188,13 @@ public class FortifyManager extends QModuleDrop<FortifyItem> {
         meta.setDisplayName(name);
         item.setItemMeta(meta);
 
-        ItemUT.delLore(item, LORE_KEY_FORTIFY);
-        ItemUT.delNameTag(item, LORE_KEY_FORTIFY);
-        DataUT.removeData(item, META_KEY_FORTIFY);
+        for (String key : LORE_KEY_FORTIFY) {
+            ItemUT.delLore(item, key);
+            ItemUT.delNameTag(item, key);
+        }
+        for (NamespacedKey key : META_KEY_FORTIFY) {
+            DataUT.removeData(item, key);
+        }
     }
 
     public boolean tryFortify(@NotNull ItemStack item) {
@@ -217,22 +226,22 @@ public class FortifyManager extends QModuleDrop<FortifyItem> {
 
     @Nullable
     public String getFortifyId(@NotNull ItemStack item) {
-        String data = DataUT.getStringData(item, META_KEY_FORTIFY);
-        if (data == null)
-            data = DataUT.getStringData(item, META_KEY_FORTIFY2);
-        if (data == null) return null;
-
-        return data.split(":")[0];
+        for (NamespacedKey key : META_KEY_FORTIFY) {
+            String data = DataUT.getStringData(item, key);
+            if (data != null) return data.split(":")[0];
+        }
+        return null;
     }
 
     public int getFortifyLevel(@NotNull ItemStack item) {
-        String data = DataUT.getStringData(item, META_KEY_FORTIFY);
-        if (data == null)
-            data = DataUT.getStringData(item, META_KEY_FORTIFY2);
-        if (data == null) return -1;
-
-        String[] split = data.split(":");
-        return split.length < 2 ? -1 : StringUT.getInteger(split[1], -1);
+        for (NamespacedKey key : META_KEY_FORTIFY) {
+            String data = DataUT.getStringData(item, key);
+            if (data != null) {
+                String[] split = data.split(":");
+                return split.length < 2 ? -1 : StringUT.getInteger(split[1], -1);
+            }
+        }
+        return -1;
     }
 
     @Override

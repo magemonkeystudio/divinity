@@ -6,6 +6,7 @@ import mc.promcteam.engine.utils.DataUT;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.modules.api.QModule;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
@@ -48,7 +49,7 @@ public class ItemModuleRequirement extends ItemRequirement<String[]> {
         String[] arr = this.getRaw(src);
         if (arr == null) throw new IllegalStateException("Item does not have stat!");
 
-        return plugin.lang().Module_Item_Apply_Error_Module.replace("%value%", this.formatValue(src, arr));
+        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Module.replace("%value%", this.formatValue(src, arr));
     }
 
     @Override
@@ -56,7 +57,7 @@ public class ItemModuleRequirement extends ItemRequirement<String[]> {
     public String formatValue(@NotNull ItemStack item, @NotNull String[] values) {
         List<String> valid = new ArrayList<>();
         for (String module : values) {
-            IModule<?> mod = plugin.getModuleManager().getModule(module);
+            IModule<?> mod = QuantumRPG.getInstance().getModuleManager().getModule(module);
             if (mod == null || !(mod instanceof QModuleDrop<?>)) continue;
 
             valid.add(mod.name());

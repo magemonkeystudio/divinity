@@ -4,6 +4,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager.Gem;
 import su.nightexpress.quantumrpg.modules.list.refine.RefineManager;
@@ -44,7 +45,7 @@ public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
     }
 
     public static double getDefaultAttackSpeed(@NotNull ItemStack item) {
-        return plugin.getPMS().getDefaultSpeed(item);
+        return QuantumRPG.getInstance().getPMS().getDefaultSpeed(item);
     }
 
     @NotNull
@@ -117,7 +118,7 @@ public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
             }
 
             // Support for Gems adding values.
-            GemManager gems = plugin.getModuleCache().getGemManager();
+            GemManager gems = QuantumRPG.getInstance().getModuleCache().getGemManager();
             if (gems != null) {
                 for (Entry<Gem, Integer> e : gems.getItemSockets(item)) {
                     BonusMap bMap = e.getKey().getBonusMap(e.getValue());
@@ -136,7 +137,7 @@ public abstract class AbstractStat<Z> extends ItemLoreStat<Z> {
         }
 
         // Support for Refined attributes.
-        RefineManager refine = plugin.getModuleCache().getRefineManager();
+        RefineManager refine = QuantumRPG.getInstance().getModuleCache().getRefineManager();
         if (refine != null && has) {
             bonuses.add(refine.getRefinedBonus(item, this));
         }

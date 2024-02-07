@@ -2,10 +2,12 @@ package su.nightexpress.quantumrpg.stats.items.requirements.user;
 
 import mc.promcteam.engine.config.api.ILangMsg;
 import mc.promcteam.engine.utils.DataUT;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.Perms;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.hooks.HookClass;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
@@ -16,12 +18,13 @@ import su.nightexpress.quantumrpg.utils.LoreUT;
 public class BannedClassRequirement extends DynamicUserRequirement<String[]> {
 
     public BannedClassRequirement(@NotNull String name, @NotNull String format) {
-        super("banned-class",
+        super("banned_class",
                 name,
                 format,
                 ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS,
                 ItemTags.TAG_REQ_USER_BANNED_CLASS,
                 DataUT.STRING_ARRAY);
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_user_banned_classbanned-class"));
     }
 
     @Override
@@ -61,6 +64,6 @@ public class BannedClassRequirement extends DynamicUserRequirement<String[]> {
     @Override
     @NotNull
     public ILangMsg getDenyMessage(@NotNull Player p, @NotNull ItemStack src) {
-        return plugin.lang().Module_Item_Interact_Error_Class;
+        return QuantumRPG.getInstance().lang().Module_Item_Interact_Error_Class;
     }
 }

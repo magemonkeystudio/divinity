@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.Perms;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.hooks.HookClass;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
@@ -64,6 +65,6 @@ public class ClassRequirement extends DynamicUserRequirement<String[]> {
     @Override
     @NotNull
     public ILangMsg getDenyMessage(@NotNull Player p, @NotNull ItemStack src) {
-        return plugin.lang().Module_Item_Interact_Error_Class;
+        return QuantumRPG.getInstance().lang().Module_Item_Interact_Error_Class;
     }
 }

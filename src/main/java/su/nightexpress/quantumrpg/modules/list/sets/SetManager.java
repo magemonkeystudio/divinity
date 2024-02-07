@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 
 public class SetManager extends QModule {
 
-    private static final String               SET_LORE_TAG = "qrpg_set_cache";
+    private static final List<String>         SET_LORE_TAG = List.of("set_cache", "qrpg_set_cache");
     private              String               formatElementActive;
     private              String               formatElementInactive;
     private              List<String>         formatLore;
@@ -169,7 +169,11 @@ public class SetManager extends QModule {
         if (lore == null) return;
 
         StringBuilder loreTag     = new StringBuilder();
-        String        storedTag   = ItemUT.getLoreTag(item, SET_LORE_TAG);
+        String        storedTag = null;
+        for (String key : SET_LORE_TAG) {
+            storedTag = ItemUT.getLoreTag(item, key);
+            if (storedTag != null) break;
+        }
         String[]      storedLines = storedTag != null ? storedTag.split(LoreUT.TAG_SPLITTER) : new String[]{};
 
         int pos = lore.indexOf(ItemTags.PLACEHOLDER_ITEM_SET);
@@ -250,7 +254,7 @@ public class SetManager extends QModule {
         meta.setLore(lore);
         item.setItemMeta(meta);
 
-        ItemUT.addLoreTag(item, SET_LORE_TAG, loreTag.toString());
+        ItemUT.addLoreTag(item, SET_LORE_TAG.get(0), loreTag.toString());
     }
 
     @NotNull

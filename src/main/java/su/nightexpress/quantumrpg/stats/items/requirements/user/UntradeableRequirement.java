@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.Perms;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.soulbound.SoulboundManager;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 
@@ -42,7 +43,7 @@ public class UntradeableRequirement extends AbstractOwnerRequirement {
         if (value.equals(DUMMY_ID)) {
             return SoulboundManager.UNTRADE_FORMAT_FREE;
         }
-        String user = plugin.getServer().getOfflinePlayer(value).getName();
+        String user = QuantumRPG.getInstance().getServer().getOfflinePlayer(value).getName();
         if (user == null) user = "null";
 
         return SoulboundManager.UNTRADE_FORMAT_APPLIED.replace("%player%", user);
@@ -54,9 +55,9 @@ public class UntradeableRequirement extends AbstractOwnerRequirement {
         UUID   value = this.getRaw(src);
         String user  = "null";
         if (value != null) {
-            String name = plugin.getServer().getOfflinePlayer(value).getName();
+            String name = QuantumRPG.getInstance().getServer().getOfflinePlayer(value).getName();
             if (name != null) user = name;
         }
-        return plugin.lang().Module_Item_Interact_Error_Owner.replace("%owner%", user);
+        return QuantumRPG.getInstance().lang().Module_Item_Interact_Error_Owner.replace("%owner%", user);
     }
 }

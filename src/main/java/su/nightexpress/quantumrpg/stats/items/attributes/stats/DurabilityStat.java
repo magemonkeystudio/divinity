@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.RPGItemDamageEvent;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
@@ -74,7 +75,7 @@ public class DurabilityStat extends DoubleStat {
 
         // Custom item damage event
         RPGItemDamageEvent eve = new RPGItemDamageEvent(item, li);
-        plugin.getPluginManager().callEvent(eve);
+        QuantumRPG.getInstance().getPluginManager().callEvent(eve);
         if (eve.isCancelled()) return false;
 
         double max  = durability[1];
