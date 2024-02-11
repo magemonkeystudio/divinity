@@ -447,7 +447,8 @@ public class EntityStats {
 
     @NotNull
     public List<BiFunction<Boolean, Double, Double>> getBonuses(@NotNull ItemLoreStat<?> stat) {
-        List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>(this.bonuses.computeIfAbsent(stat, list -> new ArrayList<>()));
+        List<BiFunction<Boolean, Double, Double>> bonuses =
+                new ArrayList<>(this.bonuses.computeIfAbsent(stat, list -> new ArrayList<>()));
 
         BonusMap arrowBonus = this.arrowBonus != null ? this.arrowBonus.getBonusMap(this.arrowLevel) : null;
         if (arrowBonus != null) {
@@ -556,7 +557,8 @@ public class EntityStats {
 
         if (value == 0D) return;
 
-        AttributeModifier am = new AttributeModifier(ATTRIBUTE_BONUS_UUID, att.getNmsName(), value, Operation.ADD_NUMBER);
+        AttributeModifier am =
+                new AttributeModifier(ATTRIBUTE_BONUS_UUID, att.getNmsName(), value, Operation.ADD_NUMBER);
         attInst.addModifier(am);
     }
 
@@ -693,9 +695,17 @@ public class EntityStats {
 
             double statVal = stat.get(item);
 
-            if (statVal != 0)
-                value += statVal
-                        - (type == AbstractStat.Type.CRITICAL_DAMAGE ? 1D : 0);
+            if (statVal != 0) {
+                if (type == AbstractStat.Type.CRITICAL_DAMAGE) {
+                    if (!stat.isMainItem(item)) { // This stat should be applied as a percent
+                        value *= (1D + statVal / 100);
+                    } else {
+                        value += statVal - 1D;
+                    }
+                } else {
+                    value += statVal;
+                }
+            }
         }
 
         // Get Sets bonuses
