@@ -290,10 +290,6 @@ public class ItemStats {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
-        // Remove attribute before update with new value
-        meta.removeAttributeModifier(att.getAttribute());
-        item.setItemMeta(meta);
-
         // Bows not needed damage tag at all.
         if (att == NBTAttribute.ATTACK_DAMAGE && ItemUtils.isBow(item)) {
             return;
