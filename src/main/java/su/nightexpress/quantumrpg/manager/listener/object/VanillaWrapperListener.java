@@ -4,6 +4,7 @@ import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.IListener;
 import mc.promcteam.engine.registry.attribute.AttributeRegistry;
 import mc.promcteam.engine.utils.ItemUT;
+import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -220,7 +221,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
 
                 // Anti-weapon damage bug, when shot was from a bow,
                 // but user swap his weapon to replace bow stats/damage.
-                if (weapon != null && !weapon.isSimilar(statsDamager.getItemInMainHand())) {
+                if (weapon != null && weapon.getType() != Material.TRIDENT && !weapon.isSimilar(statsDamager.getItemInMainHand())) {
                     damageStart = 1D;
                     break labelFullDamage;
                 }

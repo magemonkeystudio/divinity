@@ -2,6 +2,7 @@ package su.nightexpress.quantumrpg.stats;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Trident;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,9 @@ public class ProjectileStats {
 
     @Nullable
     public static ItemStack getSrcWeapon(@NotNull Projectile e) {
+        if (e instanceof Trident) {
+            return ((Trident) e).getItem();
+        }
         if (!e.hasMetadata(PROJECTILE_SOURCE_WEAPON)) return null;
 
         Object val = e.getMetadata(PROJECTILE_SOURCE_WEAPON).get(0).value();
