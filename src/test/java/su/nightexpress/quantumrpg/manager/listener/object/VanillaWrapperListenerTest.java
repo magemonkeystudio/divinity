@@ -6,12 +6,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
 import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import su.nightexpress.quantumrpg.api.event.RPGDamageEvent;
 import su.nightexpress.quantumrpg.testutil.MockedTest;
 
 import static org.junit.Assert.assertEquals;
 
+@Disabled("Waiting for MockBukkit PRs")
 public class VanillaWrapperListenerTest extends MockedTest {
     private Player damager;
     private Player target;
