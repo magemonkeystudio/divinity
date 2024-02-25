@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.manager.listener.object;
 
+import com.sucy.skill.api.DefaultCombatProtection;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.IListener;
 import mc.promcteam.engine.registry.attribute.AttributeRegistry;
@@ -129,6 +130,11 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onVanillaDamage(EntityDamageEvent e) {
+        boolean isEde = e instanceof EntityDamageByEntityEvent;
+        if (isEde) {
+            EntityDamageByEntityEvent ede = (EntityDamageByEntityEvent) e;
+            if (DefaultCombatProtection.isFakeDamageEvent(ede)) return;
+        }
 //        long l1 = System.currentTimeMillis();
 
         Entity eVictim = e.getEntity();
@@ -154,7 +160,6 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         DamageMeta meta = new DamageMeta(victim, damager, weapon, cause);
         statsVictim.setLastDamageMeta(meta);
 
-        boolean isEde        = e instanceof EntityDamageByEntityEvent;
         boolean isFullDamage = false;
 
         SkillAPIHK skillApi = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
@@ -221,7 +226,8 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
 
                 // Anti-weapon damage bug, when shot was from a bow,
                 // but user swap his weapon to replace bow stats/damage.
-                if (weapon != null && weapon.getType() != Material.TRIDENT && !weapon.isSimilar(statsDamager.getItemInMainHand())) {
+                if (weapon != null && weapon.getType() != Material.TRIDENT
+                        && !weapon.isSimilar(statsDamager.getItemInMainHand())) {
                     damageStart = 1D;
                     break labelFullDamage;
                 }
