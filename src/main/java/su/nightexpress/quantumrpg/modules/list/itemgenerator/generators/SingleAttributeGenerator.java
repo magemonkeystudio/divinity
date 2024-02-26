@@ -57,7 +57,7 @@ public class SingleAttributeGenerator<A extends ItemLoreStat<String>> extends Ab
         }
         Map<A, Double> copy = new HashMap<>();
         for (Map.Entry<A, Double> entry : this.attributes.entrySet()) {
-            double weight = BonusCalculator.CALC_FULL.apply(entry.getValue(), List.of(generatorItem.getMaterialModifier(item, entry.getKey())));
+            double weight = BonusCalculator.SIMPLE_FULL.apply(entry.getValue(), List.of(generatorItem.getMaterialModifier(item, entry.getKey())));
             if (weight > 0) copy.put(entry.getKey(), weight);
         }
         @Nullable A att = Rnd.getRandomItem(copy, true);

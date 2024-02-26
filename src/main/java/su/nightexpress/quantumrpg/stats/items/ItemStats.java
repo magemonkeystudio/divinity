@@ -6,6 +6,7 @@ import mc.promcteam.engine.utils.DataUT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
@@ -19,9 +20,9 @@ import su.nightexpress.quantumrpg.stats.items.api.DuplicableItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.*;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute.Type;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.DoubleStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 
 import java.util.*;
@@ -29,9 +30,9 @@ import java.util.*;
 public class ItemStats {
 
     private static final Map<String, DamageAttribute>            DAMAGES          = new LinkedHashMap<>();
-    private static final Map<String, DefenseAttribute>           DEFENSES         = new LinkedHashMap<>();
-    private static final Map<AbstractStat.Type, AbstractStat<?>> STATS            = new HashMap<>();
-    private static final Map<AmmoAttribute.Type, AmmoAttribute>  AMMO             = new HashMap<>();
+    private static final Map<String, DefenseAttribute>          DEFENSES = new LinkedHashMap<>();
+    private static final Map<SimpleStat.Type, TypedStat>    STATS        = new HashMap<>();
+    private static final Map<AmmoAttribute.Type, AmmoAttribute> AMMO     = new HashMap<>();
     private static final Map<HandAttribute.Type, HandAttribute>  HANDS            = new HashMap<>();
     private static final Map<Type, Map<String, SocketAttribute>> SOCKETS          = new HashMap<>();
     private static final Map<String, ItemLoreStat<?>>            ATTRIBUTES       = new HashMap<>();
@@ -91,7 +92,7 @@ public class ItemStats {
         ItemStats.updateDefenseByDefault();
     }
 
-    public static void registerStat(@NotNull AbstractStat<?> stat) {
+    public static void registerStat(@NotNull TypedStat stat) {
         if (stat.getCapability() == 0) return; // TODO Log
 
         STATS.put(stat.getType(), stat);
@@ -150,34 +151,26 @@ public class ItemStats {
         return DAMAGE_DEFAULT;
     }
 
-    public static boolean hasDamage(@NotNull ItemStack item) {
-        return ItemStats.getDamages().stream().anyMatch(dmg -> ItemStats.hasDamage(item, dmg));
+    public static boolean hasDamage(@NotNull ItemStack item, @Nullable Player player) {
+        return ItemStats.getDamages().stream().anyMatch(dmg -> ItemStats.hasDamage(item, player, dmg));
     }
 
-    public static boolean hasDamage(@NotNull ItemStack item, @NotNull String id) {
+    public static boolean hasDamage(@NotNull ItemStack item, @Nullable Player player, @NotNull String id) {
         DamageAttribute dmgType = getDamageById(id);
         if (dmgType == null) return false;
 
-        return ItemStats.hasDamage(item, dmgType);
+        return ItemStats.hasDamage(item, player, dmgType);
     }
 
-    public static boolean hasDamage(@NotNull ItemStack item, @NotNull DamageAttribute dmgType) {
-        double[] arr = dmgType.getRaw(item);
-        return arr != null && arr.length == 2 && arr[0] > 0 && arr[1] > 0;
+    public static boolean hasDamage(@NotNull ItemStack item, @Nullable Player player, @NotNull DamageAttribute dmgType) {
+        return dmgType.getTotal(item, player)[1] > 0;
     }
 
-    public static double getDamageMinOrMax(@NotNull ItemStack item, @NotNull String id, int index) {
+    public static double getDamageMinOrMax(@NotNull ItemStack item, @Nullable Player player, @NotNull String id, int index) {
         DamageAttribute dmgType = getDamageById(id);
         if (dmgType == null) return 0D;
 
-        return dmgType.getMinOrMax(item, index);
-    }
-
-    public static double getDamage(@NotNull ItemStack item, @NotNull String id) {
-        DamageAttribute dmgType = getDamageById(id);
-        if (dmgType == null) return 0D;
-
-        return dmgType.get(item);
+        return dmgType.getTotal(item, player)[index];
     }
 
     @NotNull
@@ -190,16 +183,15 @@ public class ItemStats {
         return DEFENSES.get(id.toLowerCase());
     }
 
-    public static boolean hasDefense(@NotNull ItemStack item, @NotNull String id) {
+    public static boolean hasDefense(@NotNull ItemStack item, @Nullable Player player, @NotNull String id) {
         DefenseAttribute defType = getDefenseById(id);
         if (defType == null) return false;
 
-        return ItemStats.hasDefense(item, defType);
+        return ItemStats.hasDefense(item, player, defType);
     }
 
-    public static boolean hasDefense(@NotNull ItemStack item, @NotNull DefenseAttribute defType) {
-        Double d = defType.getRaw(item);
-        return d != null && d != 0D;
+    public static boolean hasDefense(@NotNull ItemStack item, @Nullable Player player, @NotNull DefenseAttribute defType) {
+        return defType.getTotal(item, player) != 0;
     }
 
     @Nullable
@@ -207,35 +199,40 @@ public class ItemStats {
         return DEFENSE_DEFAULT;
     }
 
-    public static double getDefense(@NotNull ItemStack item, @NotNull String id) {
+    public static double getDefense(@NotNull ItemStack item, @Nullable Player player, @NotNull String id) {
         DefenseAttribute defType = getDefenseById(id);
         if (defType == null) return 0D;
 
-        return defType.get(item);
+        return defType.getTotal(item, player);
     }
 
     @NotNull
-    public static Collection<AbstractStat<?>> getStats() {
+    public static Collection<TypedStat> getStats() {
         return STATS.values();
     }
 
     @Nullable
-    public static AbstractStat<?> getStat(@NotNull AbstractStat.Type type) {
+    public static TypedStat getStat(@NotNull SimpleStat.Type type) {
         return STATS.get(type);
     }
 
-    public static double getStat(@NotNull ItemStack item, @NotNull AbstractStat.Type type) {
-        AbstractStat<?> stat = getStat(type);
-        if (stat == null) return 0D;
-
-        return stat.get(item);
+    public static double getStat(@NotNull ItemStack item, @Nullable Player player, @NotNull SimpleStat.Type type) {
+        TypedStat stat = getStat(type);
+        if (stat instanceof SimpleStat) {
+            return ((SimpleStat) stat).getTotal(item, player);
+        }
+        if (stat instanceof DurabilityStat) {
+            double[] arr = ((DurabilityStat) stat).getRaw(item);
+            return arr == null ? 0 : arr[0];
+        }
+        return 0;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Nullable
-    public static <T extends AbstractStat<?>> T getStat(@NotNull Class<T> clazz) {
-        for (AbstractStat<?> stat : ItemStats.getStats()) {
-            Class<? extends AbstractStat> clazz2 = stat.getClass();
+    public static <T extends TypedStat> T getStat(@NotNull Class<T> clazz) {
+        for (TypedStat stat : ItemStats.getStats()) {
+            Class<? extends TypedStat> clazz2 = stat.getClass();
             if (clazz.isAssignableFrom(clazz2)) {
                 return (T) stat;
             }
@@ -243,50 +240,50 @@ public class ItemStats {
         return null;
     }
 
-    public static boolean hasStat(@NotNull ItemStack item, @NotNull AbstractStat.Type type) {
-        AbstractStat<?> stat = ItemStats.getStat(type);
+    public static boolean hasStat(@NotNull ItemStack item, @Nullable Player player, @NotNull SimpleStat.Type type) {
+        TypedStat stat = ItemStats.getStat(type);
         if (stat == null) return false;
 
         if (stat instanceof SimpleStat) {
             SimpleStat rs = (SimpleStat) stat;
-            Double     d  = rs.getRaw(item);
-            return d != null && d != 0D;
+            double     d  = rs.getTotal(item, player);
+            return d != 0D;
         }
-        if (stat instanceof DoubleStat) {
-            DoubleStat rs  = (DoubleStat) stat;
+        if (stat instanceof DurabilityStat) {
+            DurabilityStat rs  = (DurabilityStat) stat;
             double[]   arr = rs.getRaw(item);
             return arr != null && arr.length == 2;// && arr[0] != 0D;
         }
 
-        return stat.getRaw(item) != null;
+        return false;
     }
 
     // ----------------------------------------------------------------- //
 
-    public static void updateVanillaAttributes(@NotNull ItemStack item) {
-        double hp    = getStat(item, AbstractStat.Type.MAX_HEALTH);
-        double speed = getStat(item, AbstractStat.Type.ATTACK_SPEED);
-        double move  = getStat(item, AbstractStat.Type.MOVEMENT_SPEED);
+    public static void updateVanillaAttributes(@NotNull ItemStack item, @Nullable Player player) {
+        double hp    = getStat(item, player, TypedStat.Type.MAX_HEALTH);
+        double speed = getStat(item, player, TypedStat.Type.ATTACK_SPEED);
+        double move  = getStat(item, player, TypedStat.Type.MOVEMENT_SPEED);
 
-        addAttribute(item, NBTAttribute.MAX_HEALTH, hp);
-        addAttribute(item, NBTAttribute.MOVEMENT_SPEED, move);
-        addAttribute(item, NBTAttribute.ATTACK_SPEED, speed);
+        addAttribute(item, player, NBTAttribute.MAX_HEALTH, hp);
+        addAttribute(item, player, NBTAttribute.MOVEMENT_SPEED, move);
+        addAttribute(item, player, NBTAttribute.ATTACK_SPEED, speed);
 
 //        if (ItemUtils.isWeapon(item)) {
         double vanilla = DamageAttribute.getVanillaDamage(item);
         if (vanilla > 1)
-            addAttribute(item, NBTAttribute.ATTACK_DAMAGE, vanilla - 1); // -1 because it adds instead of set
+            addAttribute(item, player, NBTAttribute.ATTACK_DAMAGE, vanilla - 1); // -1 because it adds instead of set
 //        }
         if (ItemUtils.isArmor(item)) {
-            addAttribute(item, NBTAttribute.ARMOR, DefenseAttribute.getVanillaArmor(item));
-            addAttribute(item, NBTAttribute.ARMOR_TOUGHNESS, DefenseAttribute.getVanillaToughness(item));
+            addAttribute(item, player, NBTAttribute.ARMOR, DefenseAttribute.getVanillaArmor(item));
+            addAttribute(item, player, NBTAttribute.ARMOR_TOUGHNESS, DefenseAttribute.getVanillaToughness(item));
         }
         ItemMeta im = item.getItemMeta();
         im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(im);
     }
 
-    private static void addAttribute(@NotNull ItemStack item, @NotNull NBTAttribute att, double value) {
+    private static void addAttribute(@NotNull ItemStack item, @Nullable Player player, @NotNull NBTAttribute att, double value) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
@@ -309,8 +306,8 @@ public class ItemStats {
         } else if (att == NBTAttribute.ATTACK_SPEED) {
             value /= 100D;
 
-            double baseSpeed      = getStat(item, AbstractStat.Type.BASE_ATTACK_SPEED) + DEFAULT_ATTACK_SPEED;
-            double weaponModifier = AbstractStat.getDefaultAttackSpeed(item);
+            double baseSpeed      = getStat(item, player, TypedStat.Type.BASE_ATTACK_SPEED) + DEFAULT_ATTACK_SPEED;
+            double weaponModifier = SimpleStat.getDefaultAttackSpeed(item);
             value = (baseSpeed + weaponModifier) * (1 + value) - DEFAULT_ATTACK_SPEED;
         }
 

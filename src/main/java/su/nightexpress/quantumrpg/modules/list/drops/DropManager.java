@@ -33,7 +33,7 @@ import su.nightexpress.quantumrpg.modules.list.drops.commands.DropsDropCmd;
 import su.nightexpress.quantumrpg.modules.list.drops.commands.DropsGiveCmd;
 import su.nightexpress.quantumrpg.modules.list.drops.object.*;
 import su.nightexpress.quantumrpg.stats.EntityStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -215,7 +215,7 @@ public class DropManager extends QModule {
             multGroup += ((this.dropModifier.get(group) - 1f) * 100f);
         }
 
-        multStat += EntityStats.get(player).getItemStat(AbstractStat.Type.LOOT_RATE, false);
+        multStat += EntityStats.get(player).getItemStat(TypedStat.Type.LOOT_RATE, false);
         mult = 1f + ((multGroup + multStat) / 100f);
 
         return mult;

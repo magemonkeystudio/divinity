@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
 import java.util.ArrayList;
@@ -195,7 +195,7 @@ public abstract class ItemLoreStat<Z> {
         }
 
 //		if (this instanceof SimpleStat) {
-        ItemStats.updateVanillaAttributes(item);
+        ItemStats.updateVanillaAttributes(item, null);
 //		}
         return !isEmpty;
     }
@@ -227,8 +227,8 @@ public abstract class ItemLoreStat<Z> {
 
             item.setItemMeta(meta);
 
-            if (this instanceof SimpleStat) {
-                ItemStats.updateVanillaAttributes(item);
+            if (this instanceof TypedStat) {
+                ItemStats.updateVanillaAttributes(item, null);
             }
         }
 
@@ -269,7 +269,6 @@ public abstract class ItemLoreStat<Z> {
     }
 
     public final int getLoreIndex(@NotNull ItemStack item) {
-        this.validateMethod();
         if (this instanceof DuplicableItemLoreStat) {
             int amount = ((DuplicableItemLoreStat <?>) this).getAmount(item);
             for (NamespacedKey key : this.keys) {

@@ -11,7 +11,8 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEdit
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.*;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,7 +66,7 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
             }
             case ITEM_STAT: {
                 material = Material.OAK_SIGN;
-                for (AbstractStat.Type itemStat : AbstractStat.Type.values()) {
+                for (SimpleStat.Type itemStat : TypedStat.Type.values()) {
                     boolean exists = false;
                     for (String existingKey : existingKeys) {
                         if (existingKey.equalsIgnoreCase(itemStat.name())) {

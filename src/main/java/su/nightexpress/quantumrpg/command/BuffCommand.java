@@ -12,7 +12,7 @@ import su.nightexpress.quantumrpg.data.api.RPGUser;
 import su.nightexpress.quantumrpg.manager.effects.buffs.SavedBuff;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -121,9 +121,9 @@ public class BuffCommand extends ISubCommand<QuantumRPG> {
             stat = ItemStats.getDefenseById(statId);
             userBuffs = user.getActiveProfile().getDefenseBuffs();
         } else if (type.equalsIgnoreCase("stat")) {
-            AbstractStat.Type statType = AbstractStat.Type.getByName(statId);
+            TypedStat.Type statType = TypedStat.Type.getByName(statId);
             if (statType != null) {
-                stat = ItemStats.getStat(statType);
+                stat = (ItemLoreStat<?>) ItemStats.getStat(statType);
                 userBuffs = user.getActiveProfile().getItemStatBuffs();
             }
         }

@@ -11,8 +11,8 @@ import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.*;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -94,10 +94,10 @@ public class BonusMap {
 
     public void loadStats(@NotNull JYML cfg, @NotNull String path) {
         for (String id : cfg.getSection(path)) {
-            AbstractStat.Type dt = AbstractStat.Type.getByName(id);
+            SimpleStat.Type dt = TypedStat.Type.getByName(id);
             if (dt == null) continue;
 
-            AbstractStat<?> mainStat = ItemStats.getStat(dt);
+            TypedStat mainStat = ItemStats.getStat(dt);
             if (!(mainStat instanceof SimpleStat)) continue;
 
             SimpleStat stat = (SimpleStat) mainStat;

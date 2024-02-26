@@ -16,7 +16,7 @@ import su.nightexpress.quantumrpg.modules.list.arrows.ArrowManager.QArrow;
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,8 +30,8 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
     protected Projectile   projectile;
 
     protected Map<DamageAttribute, Double>   damageMap;
-    protected Map<DefenseAttribute, Double>  defenseMap;
-    protected Map<AbstractStat.Type, Double> damagerItemStatsMap;
+    protected Map<DefenseAttribute, Double> defenseMap;
+    protected Map<SimpleStat.Type, Double>  damagerItemStatsMap;
 
     protected DamageMeta        meta;
     protected EntityDamageEvent eventOrig;
@@ -151,11 +151,11 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
     }
 
     @NotNull
-    public Map<AbstractStat.Type, Double> getDamagerItemStatsMap() {
+    public Map<SimpleStat.Type, Double> getDamagerItemStatsMap() {
         return damagerItemStatsMap;
     }
 
-    public double getDamagerItemStat(@NotNull AbstractStat.Type type) {
+    public double getDamagerItemStat(@NotNull SimpleStat.Type type) {
         return this.getDamagerItemStatsMap().getOrDefault(type, 0D);
     }
 
@@ -202,7 +202,7 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
                 @Nullable Projectile projectile,
                 @NotNull Map<DamageAttribute, Double> damageMap,
                 @NotNull Map<DefenseAttribute, Double> defenseMap,
-                @NotNull Map<AbstractStat.Type, Double> statsMap,
+                @NotNull Map<SimpleStat.Type, Double> statsMap,
                 @NotNull EntityDamageEvent eventOrig,
                 @NotNull DamageMeta meta,
                 boolean exempt

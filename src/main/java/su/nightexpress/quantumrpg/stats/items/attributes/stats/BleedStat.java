@@ -6,7 +6,8 @@ import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.manager.effects.main.BleedEffect;
 import su.nightexpress.quantumrpg.stats.EntityStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 import java.util.function.Function;
 
@@ -26,7 +27,7 @@ public class BleedStat extends SimpleStat {
             double duration
     ) {
 
-        super(AbstractStat.Type.BLEED_RATE, name, format, cap);
+        super(TypedStat.Type.BLEED_RATE, name, format, cap);
         this.damageFormula = damageFormula;
         this.ofMaxHealth = ofMaxHealth;
         this.duration = duration;

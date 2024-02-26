@@ -17,7 +17,8 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials.Ma
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 import java.util.*;
 import java.util.function.Function;
@@ -70,25 +71,10 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
                     if (!keys.isEmpty()) {
                         lore.add("&2Item Stats:");
                         loadLore(section, lore, s -> {
-                            AbstractStat.Type type = AbstractStat.Type.getByName(s);
+                            TypedStat.Type type = TypedStat.Type.getByName(s);
                             if (type != null) {
-                                AbstractStat<?> stat = ItemStats.getStat(type);
-                                if (stat != null) return stat.getFormat();
-                            }
-                            return "&f" + s + ": &6%value%";
-                        });
-                    }
-                }
-                section = bonusesSection.getConfigurationSection(key + '.' + ItemType.SKILLAPI_ATTRIBUTE.getPath());
-                if (section != null) {
-                    Set<String> keys = section.getKeys(false);
-                    if (!keys.isEmpty()) {
-                        lore.add("&2SkillAPI Attributes:");
-                        loadLore(section, lore, s -> {
-                            SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
-                            if (skillAPIHK != null) {
-                                ProAttribute proAttribute = SkillAPI.getAttributeManager().getAttribute(s);
-                                if (proAttribute != null) return proAttribute.getName()+": &6%value%";
+                                TypedStat stat = ItemStats.getStat(type);
+                                if (stat instanceof SimpleStat) return ((SimpleStat) stat).getFormat();
                             }
                             return "&f" + s + ": &6%value%";
                         });
@@ -98,6 +84,21 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
                 // Only permanent bonuses should handle these (i.e. class bonuses are applied dynamically)
                 switch (this.category) {
                     case MATERIAL: {
+                        section = bonusesSection.getConfigurationSection(key + '.' + ItemType.SKILLAPI_ATTRIBUTE.getPath());
+                        if (section != null) {
+                            Set<String> keys = section.getKeys(false);
+                            if (!keys.isEmpty()) {
+                                lore.add("&2SkillAPI Attributes:");
+                                loadLore(section, lore, s -> {
+                                    SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+                                    if (skillAPIHK != null) {
+                                        ProAttribute proAttribute = SkillAPI.getAttributeManager().getAttribute(s);
+                                        if (proAttribute != null) return proAttribute.getName()+": &6%value%";
+                                    }
+                                    return "&f" + s + ": &6%value%";
+                                });
+                            }
+                        }
                         section = bonusesSection.getConfigurationSection(key + '.' + ItemType.AMMO.getPath());
                         if (section != null) {
                             Set<String> keys = section.getKeys(false);

@@ -13,6 +13,7 @@ import su.nightexpress.quantumrpg.utils.LoreUT;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
 
@@ -160,6 +161,23 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
             if (container.has(key, this.dataType)) return container.get(key, this.dataType);
         }
         return null;
+    }
+
+    @NotNull
+    public final List<Z> getAllRaw(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return List.of();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        return container.getKeys().stream()
+                .filter(namespacedKey -> {
+                    for (NamespacedKey key : this.keys) {
+                        if (namespacedKey.toString().startsWith(key.toString()) && container.has(namespacedKey, this.dataType)) return true;
+                    }
+                    return false;
+                })
+                .map(key -> container.get(key, dataType))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     public final int getAmount(@NotNull ItemStack item) {

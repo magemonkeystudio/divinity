@@ -32,7 +32,7 @@ import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.list.repair.RepairManager.RepairItem;
 import su.nightexpress.quantumrpg.modules.list.repair.command.RepairOpenCmd;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 
 import java.util.*;
@@ -183,7 +183,7 @@ public class RepairManager extends QModuleDrop<RepairItem> {
         }
 
         if (target != null && target.getType() != Material.AIR) {
-            if (!ItemStats.hasStat(target, AbstractStat.Type.DURABILITY)) {
+            if (!ItemStats.hasStat(target, null, TypedStat.Type.DURABILITY)) {
                 plugin.lang().Repair_Error_NoDurability
                         .replace("%item%", ItemUT.getItemName(target))
                         .send(player);
@@ -355,7 +355,7 @@ public class RepairManager extends QModuleDrop<RepairItem> {
             @NotNull InventoryClickEvent e) {
 
         double arr[] = this.duraStat.getRaw(target);
-        if (arr == null || !ItemStats.hasStat(target, AbstractStat.Type.DURABILITY)) return false;
+        if (arr == null || !ItemStats.hasStat(target, null, TypedStat.Type.DURABILITY)) return false;
 
         if (!this.duraStat.isDamaged(target)) {
             plugin.lang().Repair_Error_NotDamaged.replace("%item%", ItemUT.getItemName(target))

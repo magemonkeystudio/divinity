@@ -34,7 +34,7 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityG
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.SkillAPIAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 
 import java.util.*;
@@ -110,7 +110,7 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
         Player player = e.getPlayerData().getPlayer();
         if (player == null) return;
 
-        double regen = 1D + EntityStats.get(player).getItemStat(AbstractStat.Type.MANA_REGEN, false) / 100D;
+        double regen = 1D + EntityStats.get(player).getItemStat(TypedStat.Type.MANA_REGEN, false) / 100D;
         if (regen > 0) {
             e.setAmount(e.getAmount() * regen);
         }

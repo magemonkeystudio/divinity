@@ -2,9 +2,14 @@ package su.nightexpress.quantumrpg.stats.items.attributes;
 
 import mc.promcteam.engine.utils.NumberUT;
 import mc.promcteam.engine.utils.constants.JStrings;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager.Gem;
@@ -13,7 +18,8 @@ import su.nightexpress.quantumrpg.stats.bonus.BonusCalculator;
 import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
-import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
+import su.nightexpress.quantumrpg.stats.items.api.DuplicableItemLoreStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.StatBonus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +27,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-public class DefenseAttribute extends ItemLoreStat<Double> {
+public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> {
 
     private int         priority;
     private Set<String> blockDamageType;
@@ -35,7 +41,7 @@ public class DefenseAttribute extends ItemLoreStat<Double> {
             @NotNull Set<String> blockDamageType,
             double protectionFactor
     ) {
-        super(id, name, format, "%DEFENSE_" + id + "%", ItemTags.TAG_ITEM_DEFENSE, PersistentDataType.DOUBLE);
+        super(id, name, format, "%DEFENSE_" + id + "%", ItemTags.TAG_ITEM_DEFENSE, StatBonus.DATA_TYPE);
         this.priority = priority;
         this.blockDamageType = blockDamageType;
         this.protectionFactor = protectionFactor;
@@ -54,16 +60,56 @@ public class DefenseAttribute extends ItemLoreStat<Double> {
         return protectionFactor;
     }
 
-    public double get(@NotNull ItemStack item) {
-        double  value = 0D;
-        boolean has   = false;
+    public double getTotal(@NotNull ItemStack item, @Nullable Player player) {
+        return BonusCalculator.SIMPLE_FULL.apply(0D, get(item, player));
+    }
 
+    @NotNull
+    public List<BiFunction<Boolean, Double, Double>> get(@NotNull ItemStack item, @Nullable Player player) {
         List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
+        double  base    = 0;
+        double  percent = 0;
+        boolean has     = false;
 
-        Double rawValue = this.getRaw(item);
-        if (rawValue != null) {
-            value = rawValue.doubleValue();
-            has = true;
+        // Get from old format
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            PersistentDataContainer container = meta.getPersistentDataContainer();
+            for (NamespacedKey key : this.keys) {
+                if (container.has(key, PersistentDataType.DOUBLE)) {
+                    Double value = container.get(key, PersistentDataType.DOUBLE);
+                    if (value != null) {
+                        base += value;
+                        has = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (StatBonus bonus : this.getAllRaw(item)) {
+            if (!bonus.meetsRequirements(player)) continue;
+            double[] value = bonus.getValue();
+            if (value.length == 1) {
+                if (bonus.isPercent()) percent += value[0];
+            } else {
+                base += value[0];
+                has = true;
+            }
+        }
+
+        // Add default item armor value for default defense type, if no custom defense applied
+        if (base == 0 && this.isDefault() && ItemStats.getDefenses().stream()
+                .filter(defenseAttribute -> !defenseAttribute.isDefault())
+                .noneMatch(defenseAttribute -> ItemStats.hasDefense(item, player, defenseAttribute))) {
+            base += DefenseAttribute.getVanillaArmor(item);
+        }
+
+        {
+            double finalBase = base;
+            bonuses.add((isPercent, input) -> isPercent ? input : input + finalBase);
+            double finalPercent = percent;
+            bonuses.add((isPercent, input) -> isPercent ? input + finalPercent : input);
         }
 
         // Support for Refine Module
@@ -83,16 +129,7 @@ public class DefenseAttribute extends ItemLoreStat<Double> {
             }
         }
 
-        // Multiply value by additional percent bonus.
-        value = BonusCalculator.CALC_FULL.apply(value, bonuses);
-
-        // Return default item armor value
-        // for default defense type, if no custom defense applied
-        if (value == 0D && this.isDefault()) {
-            return DefenseAttribute.getVanillaArmor(item);
-        }
-
-        return value;
+        return bonuses;
     }
 
     public static double getVanillaArmor(@NotNull ItemStack item) {
@@ -110,7 +147,7 @@ public class DefenseAttribute extends ItemLoreStat<Double> {
 
     @Override
     @NotNull
-    public String formatValue(@NotNull ItemStack item, Double values) {
-        return NumberUT.format(values.doubleValue());
+    public String formatValue(@NotNull ItemStack item, @NotNull StatBonus statBonus) {
+        return NumberUT.format(statBonus.getValue()[0])+(statBonus.isPercent() ? "%" : "");
     }
 }

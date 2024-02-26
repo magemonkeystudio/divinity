@@ -35,7 +35,7 @@ import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.AmmoAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 
 import java.util.HashMap;
@@ -252,9 +252,9 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         // | For melee damage we're use damager's stats for full|
         // | damage, or a default attribute with event damage.  |
         // +----------------------------------------------------+
-        final Map<DamageAttribute, Double>   damages  = new HashMap<>();
-        final Map<AbstractStat.Type, Double> stats    = new HashMap<>();
-        final Map<DefenseAttribute, Double>  defenses = new HashMap<>();
+        final Map<DamageAttribute, Double>  damages  = new HashMap<>();
+        final Map<SimpleStat.Type, Double>  stats    = new HashMap<>();
+        final Map<DefenseAttribute, Double> defenses = new HashMap<>();
 
         // Pre-cache damager damage types.
         if (isFullDamage && !exempt) {

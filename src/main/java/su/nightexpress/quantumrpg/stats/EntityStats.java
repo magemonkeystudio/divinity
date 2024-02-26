@@ -5,6 +5,7 @@ import mc.promcteam.engine.api.meta.NBTAttribute;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.utils.EntityUT;
 import mc.promcteam.engine.utils.ItemUT;
+import mc.promcteam.engine.utils.random.Rnd;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -49,8 +50,8 @@ import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 
 import java.util.*;
@@ -61,9 +62,9 @@ import java.util.function.DoubleUnaryOperator;
 public class EntityStats {
 
     private static final Map<String, EntityStats> STATS;
-    private static final UUID                     ATTRIBUTE_BONUS_UUID;
-    private static final AbstractStat.Type[]      ATTRIBUTE_BONUS_STATS;
-    private static final NBTAttribute[]           ATTRIBUTE_BONUS_NBT;
+    private static final UUID              ATTRIBUTE_BONUS_UUID;
+    private static final SimpleStat.Type[] ATTRIBUTE_BONUS_STATS;
+    private static final NBTAttribute[]    ATTRIBUTE_BONUS_NBT;
     private static final double                   DEFAULT_ATTACK_POWER = 1D;
     private static final QuantumRPG               plugin               = QuantumRPG.getInstance();
 
@@ -71,10 +72,10 @@ public class EntityStats {
         STATS = Collections.synchronizedMap(new HashMap<>());
 
         ATTRIBUTE_BONUS_UUID = UUID.fromString("11f1173c-6666-4444-8888-02cb0285f9c1");
-        ATTRIBUTE_BONUS_STATS = new AbstractStat.Type[]{
-                AbstractStat.Type.MAX_HEALTH,
-                AbstractStat.Type.ATTACK_SPEED,
-                AbstractStat.Type.MOVEMENT_SPEED
+        ATTRIBUTE_BONUS_STATS = new SimpleStat.Type[]{
+                TypedStat.Type.MAX_HEALTH,
+                TypedStat.Type.ATTACK_SPEED,
+                TypedStat.Type.MOVEMENT_SPEED
         };
         ATTRIBUTE_BONUS_NBT = new NBTAttribute[]{
                 NBTAttribute.MAX_HEALTH,
@@ -512,12 +513,13 @@ public class EntityStats {
         }
 
         for (int i = 0; i < ATTRIBUTE_BONUS_STATS.length; i++) {
-            AbstractStat.Type statType = ATTRIBUTE_BONUS_STATS[i];
-            NBTAttribute      nbt      = ATTRIBUTE_BONUS_NBT[i];
+            SimpleStat.Type statType = ATTRIBUTE_BONUS_STATS[i];
+            NBTAttribute    nbt      = ATTRIBUTE_BONUS_NBT[i];
 
             // Get Gems bonuses
-            AbstractStat<?> stat = ItemStats.getStat(statType);
-            if (stat == null) continue;
+            TypedStat typedStat = ItemStats.getStat(statType);
+            if (!(typedStat instanceof SimpleStat)) continue;
+            SimpleStat stat = (SimpleStat) typedStat;
 
             List<BiFunction<Boolean, Double, Double>> bonuses = this.getBonuses(stat);
 
@@ -526,7 +528,7 @@ public class EntityStats {
             }
 
             double attBase = EntityUT.getAttributeBase(entity, nbt.getAttribute());
-            double value   = BonusCalculator.CALC_BONUS.apply(attBase, bonuses);
+            double value   = BonusCalculator.SIMPLE_BONUS.apply(attBase, bonuses);
             value = this.getEffectBonus(stat, false).applyAsDouble(value);
 
             this.applyBonusAttribute(nbt, value);
@@ -608,9 +610,9 @@ public class EntityStats {
         List<ItemStack>              equip = this.getEquipment();
 
         for (DamageAttribute dmgAtt : ItemStats.getDamages()) {
-            double value = 0D;
+            List<BiFunction<Boolean, double[], double[]>> bonuses = new ArrayList<>();
             for (ItemStack item : equip) {
-                value += dmgAtt.get(item);
+                bonuses.addAll(dmgAtt.get(item, player));
             }
 
             // Check for empty map before add default damage.
@@ -620,7 +622,13 @@ public class EntityStats {
             //    value = 1D; // Default hand damage for default damage type.
             //}
 
-            value = BonusCalculator.CALC_FULL.apply(value, this.getBonuses(dmgAtt));
+            for (BiFunction<Boolean, Double, Double> bonus : this.getBonuses(dmgAtt)) {
+                bonuses.add((isPercent, input) -> new double[]{
+                        bonus.apply(isPercent, input[0]),
+                        bonus.apply(isPercent, input[1])});
+            }
+            double[] range = BonusCalculator.RANGE_FULL.apply(new double[]{0, 0}, bonuses);
+            double value = Rnd.getDouble(range[0], range[1]);
             value *= dmgAtt.getDamageModifierByBiome(bio); // Multiply by Biome
             value = this.getEffectBonus(dmgAtt, safe).applyAsDouble(value);
 
@@ -642,13 +650,13 @@ public class EntityStats {
         Map<DefenseAttribute, Double> map   = new HashMap<>();
 
         for (DefenseAttribute dt : ItemStats.getDefenses()) {
-            double value = 0D;
-
+            List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
             for (ItemStack item : equip) {
-                value += ItemStats.getDefense(item, dt.getId());
+                bonuses.addAll(dt.get(item, player));
             }
+            bonuses.addAll(this.getBonuses(dt));
 
-            value = BonusCalculator.CALC_FULL.apply(value, this.getBonuses(dt));
+            double value = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
             value = this.getEffectBonus(dt, safe).applyAsDouble(value);
             if (value > 0D) {
                 map.put(dt, value);
@@ -658,14 +666,14 @@ public class EntityStats {
         return map;
     }
 
-    public Map<AbstractStat.Type, Double> getItemStats(boolean safe) {
+    public Map<SimpleStat.Type, Double> getItemStats(boolean safe) {
         if ((!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer())) {
             return Collections.emptyMap();
         }
 
-        Map<AbstractStat.Type, Double> map = new HashMap<>();
+        Map<SimpleStat.Type, Double> map = new HashMap<>();
 
-        for (AbstractStat.Type type : AbstractStat.Type.values()) {
+        for (SimpleStat.Type type : TypedStat.Type.values()) {
             double value = this.getItemStat(type, safe);
 
             if (value > 0D) {
@@ -676,7 +684,7 @@ public class EntityStats {
         return map;
     }
 
-    public double getItemStat(@NotNull AbstractStat.Type type, boolean safe) {
+    public double getItemStat(@NotNull SimpleStat.Type type, boolean safe) {
         if ((!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer()) || !type.isGlobal()) {
             return 0D;
         }
@@ -685,31 +693,17 @@ public class EntityStats {
         if (stat == null) return 0D;
 
         List<ItemStack> equip = this.getEquipment();
-        double          value = 0;
-        // If we're getting the Crit Damage attribute, adjust, so we're only adding increase
-        if (type == AbstractStat.Type.CRITICAL_DAMAGE)
-            value = 1D;
+        List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
 
         for (ItemStack item : equip) {
             if (item == null || item.getType().isAir()) continue;
-
-            double statVal = stat.get(item);
-
-            if (statVal != 0) {
-                if (type == AbstractStat.Type.CRITICAL_DAMAGE) {
-                    if (!stat.isMainItem(item)) { // This stat should be applied as a percent
-                        value *= (1D + statVal / 100);
-                    } else {
-                        value += statVal - 1D;
-                    }
-                } else {
-                    value += statVal;
-                }
-            }
+            bonuses.addAll(stat.get(item, player));
         }
 
+        bonuses.addAll(this.getBonuses(stat));
+
         // Get Sets bonuses
-        value = BonusCalculator.CALC_FULL.apply(value, this.getBonuses(stat));
+        double value = BonusCalculator.SIMPLE_FULL.apply(type == TypedStat.Type.CRITICAL_DAMAGE ? 1D : 0D, bonuses);
         value = this.getEffectBonus(stat, safe).applyAsDouble(value);
 
         if (stat.getCapability() >= 0) {

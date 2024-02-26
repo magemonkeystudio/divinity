@@ -46,12 +46,14 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEdit
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.SingleAttributeGenerator;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.TypedStatGenerator;
 import su.nightexpress.quantumrpg.modules.list.sets.SetManager;
 import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
@@ -396,7 +398,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     "generator.defense-types.",
                     ItemStats.getDefenses(),
                     ItemGeneratorManager.PLACE_GEN_DEFENSE));
-            this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
+            this.addAttributeGenerator(new TypedStatGenerator(this.plugin,
                     this,
                     "generator.item-stats.",
                     ItemStats.getStats(),
@@ -773,7 +775,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             lore = meta.getLore();
             if (lore == null) return item;
 
-            for (ItemLoreStat<?> at : ItemStats.getStats()) {
+            for (TypedStat at : ItemStats.getStats()) {
                 lore.remove(at.getPlaceholder());
             }
             for (ItemLoreStat<?> at : ItemStats.getDamages()) {

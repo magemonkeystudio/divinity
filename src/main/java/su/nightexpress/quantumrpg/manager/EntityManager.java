@@ -24,7 +24,7 @@ import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.EntityStatsTask;
 import su.nightexpress.quantumrpg.stats.ProjectileStats;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -118,7 +118,7 @@ public class EntityManager extends IListener<QuantumRPG> {
         if (!(e1 instanceof LivingEntity)) return;
 
         LivingEntity entity = (LivingEntity) e1;
-        double       regen  = 1D + EntityStats.get(entity).getItemStat(AbstractStat.Type.HEALTH_REGEN, false) / 100D;
+        double       regen  = 1D + EntityStats.get(entity).getItemStat(TypedStat.Type.HEALTH_REGEN, false) / 100D;
         e.setAmount(e.getAmount() * regen);
     }
 

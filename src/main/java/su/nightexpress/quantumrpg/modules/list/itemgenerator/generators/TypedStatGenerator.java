@@ -10,32 +10,31 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
-import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.DamageInformation;
 import su.nightexpress.quantumrpg.stats.bonus.BonusCalculator;
+import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.SkillAPIAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.StatBonus;
-import su.nightexpress.quantumrpg.utils.ItemUtils;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
-public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttributeGenerator {
+public class TypedStatGenerator extends AbstractAttributeGenerator {
 
-    protected Map<A, DamageInformation> attributes;
+    protected Map<TypedStat, DamageInformation> attributes;
 
-    public AttributeGenerator(
+    public TypedStatGenerator(
             @NotNull QuantumRPG plugin,
-            @NotNull GeneratorItem generatorItem,
+            @NotNull ItemGeneratorManager.GeneratorItem generatorItem,
             @NotNull String path,
-            @NotNull Collection<A> attributesAll,
+            @NotNull Collection<TypedStat> attributesAll,
             @NotNull String placeholder
     ) {
         super(plugin, generatorItem, placeholder);
@@ -92,18 +91,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
         boolean isSocket = false;
         boolean isValid  = true;
 
-        Optional<A> opt = this.getAttributes().keySet().stream().findFirst();
-        if (opt.isPresent()) {
-            A check = opt.get();
-            if (check instanceof DefenseAttribute && !ItemUtils.isArmor(item)) {
-                isValid = false;
-            } else if (check instanceof DamageAttribute && ItemUtils.isArmor(item)) {
-                isValid = false;
-            }
-            isSocket = check instanceof SocketAttribute;
-        }
-
-        Map<A, DamageInformation> stats = this.getAttributes();
+        Map<TypedStat, DamageInformation> stats = this.getAttributes();
 
         int generatorPos = lore.indexOf(this.placeholder);
         int min          = this.getMinAmount();
@@ -134,7 +122,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
         int     roll           = Rnd.get((isMaxUnlimited ? rollMax : rollMin), rollMax);
         // Get random amount of stats
         // in range of min and max
-		
+
 		/*System.out.println("-------------------------------------");
 		System.out.println(this.placeholder);
 		System.out.println("isMaxUnlimited: " + isMaxUnlimited);
@@ -152,7 +140,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
         }
 
         // Create a map with a chances for each stat
-        Map<A, Double> mapChance = new HashMap<>();
+        Map<TypedStat, Double> mapChance = new HashMap<>();
         stats.forEach((stat, values) -> mapChance.put(stat, values.getChance()));
 
         boolean noStats = true;
@@ -162,9 +150,9 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
 
             // If min. stats are not added yet, DEFINITELY picked one of them from a map by a chance.
             // If min. stats are ADDED, picks random stat and check it chance manually.
-            @Nullable A stat;
+            @Nullable TypedStat stat;
             if (count < rollMin) { // Let's roll only 100% until we have our minimum or all the 100s are used.
-                Map<A, Double> filtered = mapChance.keySet().stream()
+                Map<TypedStat, Double> filtered = mapChance.keySet().stream()
                         .filter(a -> mapChance.get(a) >= 100D).collect(Collectors.toMap(a -> a, mapChance::get, (a1, b) -> b));
                 stat = filtered.isEmpty() ? Rnd.getRandomItem(mapChance) : Rnd.getRandomItem(filtered);
             } else
@@ -202,55 +190,35 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                 noStats = false;
             }
 
-            if (stat instanceof SocketAttribute) {
-                SocketAttribute socketAtt = (SocketAttribute) stat;
-                int             sPos      = -1; // Negative value = auto-find placeholder.
-                // This needs to apply socket after the existent one.
-                // Returns slot before the same socket in lore.
-                if (!stat.hasPlaceholder(item)) {
-                    sPos = socketAtt.getLoreIndex(item, 0);
-                }
-                socketAtt.add(item, socketAtt.getDefaultValue(), sPos);
-                // Continue to avoid socket remove from the map.
-                // We don't want to remove it, as item may have more than 1 of this.
-                continue;
-            } else {
-                if (stat.hasPlaceholder(item)) {
-                    BiFunction<Boolean, Double, Double> vMod = generatorItem.getMaterialModifier(item, stat);
+            if (stat.hasPlaceholder(item)) {
+                BiFunction<Boolean, Double, Double> vMod = generatorItem.getMaterialModifier(item, (ItemLoreStat<?>) stat);
 
-                    double vScale = generatorItem.getScaleOfLevel(values.getScaleByLevel(), itemLevel);
-                    double vMin   = BonusCalculator.SIMPLE_FULL.apply(values.getMin(), Arrays.asList(vMod)) * vScale;
-                    //(values[1]) * vScale * (1D + vMod[1] / 100D);
-                    double vMax = BonusCalculator.SIMPLE_FULL.apply(values.getMax(), Arrays.asList(vMod)) * vScale;
-                    // (values[2]) * vScale * (1D + vMod[1] / 100D);
+                double vScale = generatorItem.getScaleOfLevel(values.getScaleByLevel(), itemLevel);
+                double vMin   = BonusCalculator.SIMPLE_FULL.apply(values.getMin(), Arrays.asList(vMod)) * vScale;
+                //(values[1]) * vScale * (1D + vMod[1] / 100D);
+                double vMax = BonusCalculator.SIMPLE_FULL.apply(values.getMax(), Arrays.asList(vMod)) * vScale;
+                // (values[2]) * vScale * (1D + vMod[1] / 100D);
 
-                    if (stat instanceof DamageAttribute) {
-                        DamageAttribute dmgAtt = (DamageAttribute) stat;
-                        double          rndV1  = vMin;
-                        double          rndV2  = vMax;
 
-                        if (!values.isFlatRange()) {
-                            rndV1 = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                            rndV2 = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                            if (values.isRound()) {
-                                rndV1 = Math.round(rndV1);
-                                rndV2 = Math.round(rndV2);
-                            }
-                        }
+                double vFin = NumberUT.round(Rnd.getDouble(vMin, vMax));
+                if (stat instanceof SimpleStat) {
+                    SimpleStat rStat = (SimpleStat) stat;
+                    rStat.add(item, new StatBonus(new double[]{vFin}, false, List.of()), -1);
 
-                        double vFinMin = Math.min(rndV1, rndV2);
-                        double vFinMax = Math.max(rndV1, rndV2);
-                        dmgAtt.add(item, new StatBonus(new double[]{vFinMin, vFinMax}, false, List.of()), -1);
-                    } else {
-                        double vFin = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                        if (stat instanceof DefenseAttribute) {
-                            DefenseAttribute defAtt = (DefenseAttribute) stat;
-                            defAtt.add(item, new StatBonus(new double[]{vFin}, false, List.of()), -1);
-                        } else if (stat instanceof SkillAPIAttribute) {
-                            SkillAPIAttribute skillAPIAttribute = (SkillAPIAttribute) stat;
-                            skillAPIAttribute.add(item, (int) Math.floor(vFin), -1);
+                    // Add depending stats.
+                    SimpleStat.Type depend = rStat.getDependStat();
+                    if (depend != null && rStat.isMainItem(item)) {
+                        @SuppressWarnings("unchecked")
+                        TypedStat dStat = ItemStats.getStat(depend);
+                        if (dStat != null && !dStat.isApplied(item)) {
+                            mapChance.put(dStat, 100D);
+                            // Make depend stat to be 100% rolled.
+                            count--;
                         }
                     }
+                } else if (stat instanceof DurabilityStat) {
+                    DurabilityStat rStat = (DurabilityStat) stat;
+                    rStat.add(item, new double[]{vFin, vFin}, -1);
                 }
             }
             mapChance.remove(stat);
@@ -261,7 +229,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
     }
 
     @NotNull
-    public Map<A, DamageInformation> getAttributes() {
+    public Map<TypedStat, DamageInformation> getAttributes() {
         return attributes;
     }
 }

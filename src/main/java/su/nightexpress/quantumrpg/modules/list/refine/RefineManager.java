@@ -28,7 +28,8 @@ import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.StatBonus;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
@@ -360,22 +361,15 @@ public class RefineManager extends QModuleDrop<RefineItem> {
 
         Map<ItemLoreStat<?>, Double> refineValues = new HashMap<>();
         bMap.getStatBonuses().forEach((bStat, bFunc) -> {
-            Double has = bStat.getRaw(item);
-            if (has == null) return;
-            refineValues.put(bStat, BonusCalculator.CALC_BONUS.apply(has, Arrays.asList(bFunc)));
+            refineValues.put(bStat, BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Arrays.asList(bFunc)));
         });
 
         bMap.getDamageBonuses().forEach((bStat, bFunc) -> {
-            double[] arr = bStat.getRaw(item);
-            if (arr == null) return;
-            double has = arr[1]; // Take always max. possible damage
-            refineValues.put(bStat, BonusCalculator.CALC_BONUS.apply(has, Arrays.asList(bFunc)));
+            refineValues.put(bStat, BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null)[1], Arrays.asList(bFunc)));
         });
 
         bMap.getDefenseBonuses().forEach((bStat, bFunc) -> {
-            Double has = bStat.getRaw(item);
-            if (has == null) return;
-            refineValues.put(bStat, BonusCalculator.CALC_BONUS.apply(has, Arrays.asList(bFunc)));
+            refineValues.put(bStat, BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Arrays.asList(bFunc)));
         });
 
         Map<ItemLoreStat<?>, String> statTags = new HashMap<>();
@@ -400,7 +394,7 @@ public class RefineManager extends QModuleDrop<RefineItem> {
 
         // Fix NBT attributes in case if refine modifies them
         this.setRefineLevel(item, stone, refineLvl);
-        ItemStats.updateVanillaAttributes(item);
+        ItemStats.updateVanillaAttributes(item, null);
         ItemUT.addNameTag(item, TAG_REFINE_NAME, preName);
         ItemUT.addLoreTag(item, TAG_REFINE_LORE, loreTag.toString());
 
@@ -445,37 +439,33 @@ public class RefineManager extends QModuleDrop<RefineItem> {
 
         // Remove ALL possible refined stats even if it was removed from RefineStone config
         ItemStats.getStats().forEach((stat) -> {
-            int pos = stat.getLoreIndex(item);
-            if (pos < 0) return;
-
             if (stat instanceof SimpleStat) {
                 SimpleStat simpleStat = (SimpleStat) stat;
-
-                Double value = simpleStat.getRaw(item);
-                if (value == null) return;
-
-                simpleStat.add(item, value, pos);
+                int i = 0;
+                for (StatBonus bonus : simpleStat.getAllRaw(item)) {
+                    int pos = simpleStat.getLoreIndex(item, i);
+                    if (pos >= 0) simpleStat.add(item, bonus, pos);
+                    i++;
+                }
             }
         });
 
         ItemStats.getDamages().forEach((stat) -> {
-            int pos = stat.getLoreIndex(item);
-            if (pos < 0) return;
-
-            double[] value = stat.getRaw(item);
-            if (value == null) return;
-
-            stat.add(item, value, pos);
+            int i = 0;
+            for (StatBonus bonus : stat.getAllRaw(item)) {
+                int pos = stat.getLoreIndex(item, i);
+                if (pos >= 0) stat.add(item, bonus, pos);
+                i++;
+            }
         });
 
         ItemStats.getDefenses().forEach((stat) -> {
-            int pos = stat.getLoreIndex(item);
-            if (pos < 0) return;
-
-            Double value = stat.getRaw(item);
-            if (value == null) return;
-
-            stat.add(item, value, pos);
+            int i = 0;
+            for (StatBonus bonus : stat.getAllRaw(item)) {
+                int pos = stat.getLoreIndex(item, i);
+                if (pos >= 0) stat.add(item, bonus, pos);
+                i++;
+            }
         });
 
         if (fortifyManager != null) {
@@ -483,7 +473,7 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         }
 
         this.setRefineLevel(item, stone, 0);
-        ItemStats.updateVanillaAttributes(item);
+        ItemStats.updateVanillaAttributes(item, null);
         ItemUT.delLoreTag(item, TAG_REFINE_LORE);
         ItemUT.delNameTag(item, TAG_REFINE_NAME);
     }
