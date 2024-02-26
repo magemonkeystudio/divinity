@@ -57,6 +57,9 @@ public abstract class ItemLoreStat<Z> {
     }
 
     @NotNull
+    public abstract Class<Z> getParameterClass();
+
+    @NotNull
     public final String getId() {
         return this.id;
     }
@@ -99,7 +102,7 @@ public abstract class ItemLoreStat<Z> {
     }
 
     @NotNull
-    protected final NamespacedKey getKey() {
+    public final NamespacedKey getKey() {
         this.validateMethod();
         return this.keys.get(0);
     }
@@ -151,7 +154,7 @@ public abstract class ItemLoreStat<Z> {
             if (container.has(key, this.dataType)) container.remove(key);
         }
 
-        String[] format  = StringUT.colorFix(this.getFormat(item, value)).split("\n");
+        String[] format  = StringUT.colorFix(this instanceof DynamicStat ? ((DynamicStat<Z>) this).getFormat(null, item, value) : this.getFormat(item, value)).split("\n");
         boolean  isEmpty = true;
         for (String formatLine : format) {
             if (!formatLine.isEmpty()) {

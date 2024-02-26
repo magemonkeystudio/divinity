@@ -47,6 +47,12 @@ public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements
         this.formatValueFilled = this.getTier().format(StringUT.color(formatValueFilled).replace("%name%", this.getName()));
     }
 
+    @Override
+    @NotNull
+    public Class<String[]> getParameterClass() {
+        return String[].class;
+    }
+
     public static enum Type {
 
         GEM,

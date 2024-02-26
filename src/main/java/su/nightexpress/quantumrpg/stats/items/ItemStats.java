@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.stats.items.api.DuplicableItemLoreStat;
+import su.nightexpress.quantumrpg.stats.items.api.DynamicStat;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.*;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute.Type;
@@ -30,13 +31,14 @@ import java.util.*;
 public class ItemStats {
 
     private static final Map<String, DamageAttribute>            DAMAGES          = new LinkedHashMap<>();
-    private static final Map<String, DefenseAttribute>          DEFENSES = new LinkedHashMap<>();
-    private static final Map<SimpleStat.Type, TypedStat>    STATS        = new HashMap<>();
-    private static final Map<AmmoAttribute.Type, AmmoAttribute> AMMO     = new HashMap<>();
+    private static final Map<String, DefenseAttribute>           DEFENSES         = new LinkedHashMap<>();
+    private static final Map<SimpleStat.Type, TypedStat>         STATS            = new HashMap<>();
+    private static final Map<AmmoAttribute.Type, AmmoAttribute>  AMMO             = new HashMap<>();
     private static final Map<HandAttribute.Type, HandAttribute>  HANDS            = new HashMap<>();
     private static final Map<Type, Map<String, SocketAttribute>> SOCKETS          = new HashMap<>();
     private static final Map<String, ItemLoreStat<?>>            ATTRIBUTES       = new HashMap<>();
     private static final Map<String, DuplicableItemLoreStat<?>>  MULTI_ATTRIBUTES = new HashMap<>();
+    private static final Set<DynamicStat>                        DYNAMIC_STATS    = new HashSet<>();
     private static final QuantumRPG                              plugin           = QuantumRPG.getInstance();
     private static final List<NamespacedKey>                     KEY_ID           = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID),
@@ -105,6 +107,14 @@ public class ItemStats {
 
     public static void registerHand(@NotNull HandAttribute hand) {
         HANDS.put(hand.getType(), hand);
+    }
+
+    public static void registerDynamicStat(@NotNull DynamicStat stat) {
+        DYNAMIC_STATS.add(stat);
+    }
+
+    public static Collection<DynamicStat> getDynamicStats() {
+        return Collections.unmodifiableSet(DYNAMIC_STATS);
     }
 
     private static void updateDefenseByDefault() {

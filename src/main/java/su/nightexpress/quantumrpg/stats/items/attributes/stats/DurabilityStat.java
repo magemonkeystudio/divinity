@@ -37,6 +37,12 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
 
     @Override
     @NotNull
+    public Class<double[]> getParameterClass() {
+        return double[].class;
+    }
+
+    @Override
+    @NotNull
     public SimpleStat.Type getType() {
         return TypedStat.Type.DURABILITY;
     }

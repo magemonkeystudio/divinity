@@ -28,17 +28,22 @@ public class LevelRequirement extends DynamicUserRequirement<int[]> {
 
     @Override
     @NotNull
+    public Class<int[]> getParameterClass() {
+        return int[].class;
+    }
+
+    @Override
+    @NotNull
     public String getBypassPermission() {
         return Perms.BYPASS_REQ_USER_LEVEL;
     }
 
     @Override
-    public boolean canUse(@NotNull Player player, @NotNull ItemStack item) {
-        int[] arr = this.getRaw(item);
-        if (arr == null) return true;
+    public boolean canUse(@NotNull Player player, int[] value) {
+        if (value == null) return true;
 
-        int min       = arr[0];
-        int max       = arr.length == 2 ? arr[1] : min;
+        int min = value[0];
+        int max = value.length == 2 ? value[1] : min;
         int userLevel = EngineCfg.HOOK_PLAYER_LEVEL_PLUGIN.getLevel(player);
 
         return min == max ? (userLevel >= min) : (userLevel >= min && userLevel <= max);

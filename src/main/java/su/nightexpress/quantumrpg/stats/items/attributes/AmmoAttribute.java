@@ -22,6 +22,12 @@ public class AmmoAttribute extends ItemLoreStat<String> {
         this.type = type;
     }
 
+    @Override
+    @NotNull
+    public Class<String> getParameterClass() {
+        return String.class;
+    }
+
     public static enum Type {
 
         ARROW(Arrow.class, EntityType.ARROW),

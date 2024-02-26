@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
+import su.nightexpress.quantumrpg.manager.listener.object.DynamicStatListener;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.LimitedItem;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
@@ -27,7 +28,6 @@ import su.nightexpress.quantumrpg.modules.list.identify.event.PlayerIdentifyItem
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
 
 import java.util.*;
 
@@ -215,7 +215,7 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
             lost.setAmount(target.getAmount() - 1);
         }
 
-        ItemRequirements.updateItem(player, unlock);
+        DynamicStatListener.updateItem(player, unlock);
         e.setCurrentItem(unlock);
 
         if (lost != null) {

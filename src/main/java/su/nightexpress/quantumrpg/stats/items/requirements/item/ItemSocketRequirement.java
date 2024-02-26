@@ -27,6 +27,12 @@ public class ItemSocketRequirement extends ItemRequirement<String[]> {
     }
 
     @Override
+    @NotNull
+    public Class<String[]> getParameterClass() {
+        return String[].class;
+    }
+
+    @Override
     public boolean canApply(@NotNull ItemStack src, @NotNull ItemStack target) {
         String[] req = this.getRaw(src);
         if (req == null || req.length != 2 || req[0].isEmpty() || req[1].isEmpty()) return false;

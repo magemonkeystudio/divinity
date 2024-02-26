@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 
 public abstract class UserRequirement<Z> extends ItemLoreStat<Z> {
@@ -27,7 +28,11 @@ public abstract class UserRequirement<Z> extends ItemLoreStat<Z> {
     @NotNull
     public abstract String getBypassPermission();
 
-    public abstract boolean canUse(@NotNull Player player, @NotNull ItemStack item);
+    public boolean canUse(@NotNull Player player, @NotNull ItemStack item) {
+        return this.canUse(player, this.getRaw(item));
+    }
+
+    public abstract boolean canUse(@NotNull Player player, @Nullable Z value);
 
     @NotNull
     public abstract ILangMsg getDenyMessage(@NotNull Player player, @NotNull ItemStack src);

@@ -1,6 +1,8 @@
 package su.nightexpress.quantumrpg.stats.items.attributes;
 
+import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -11,15 +13,17 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager.Gem;
 import su.nightexpress.quantumrpg.modules.list.refine.RefineManager;
 import su.nightexpress.quantumrpg.stats.bonus.BonusCalculator;
 import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.api.DuplicableItemLoreStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.StatBonus;
+import su.nightexpress.quantumrpg.stats.items.api.DynamicStat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +31,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> {
+public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implements DynamicStat<StatBonus> {
 
     private int         priority;
     private Set<String> blockDamageType;
@@ -45,6 +49,14 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> {
         this.priority = priority;
         this.blockDamageType = blockDamageType;
         this.protectionFactor = protectionFactor;
+
+        ItemStats.registerDynamicStat(this);
+    }
+
+    @Override
+    @NotNull
+    public Class<StatBonus> getParameterClass() {
+        return StatBonus.class;
     }
 
     public int getPriority() {
@@ -88,7 +100,7 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> {
         }
 
         for (StatBonus bonus : this.getAllRaw(item)) {
-            if (!bonus.meetsRequirements(player)) continue;
+            if (!bonus.meetsRequirement(player)) continue;
             double[] value = bonus.getValue();
             if (value.length == 1) {
                 if (bonus.isPercent()) percent += value[0];
@@ -149,5 +161,48 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> {
     @NotNull
     public String formatValue(@NotNull ItemStack item, @NotNull StatBonus statBonus) {
         return NumberUT.format(statBonus.getValue()[0])+(statBonus.isPercent() ? "%" : "");
+    }
+
+    @Override
+    @NotNull
+    public String getFormat(@Nullable Player p, @NotNull ItemStack item, @NotNull StatBonus value) {
+        String format = super.getFormat(item, value);
+        StatBonus.Condition<?> condition = value.getCondition();
+        return StringUT.colorFix(format.replace("%condition%", condition == null || !EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE
+                ? ""
+                : condition.getFormat(p, item).replace("%state%", EngineCfg.getDynamicRequirementState(p != null && value.meetsRequirement(p)))));
+    }
+
+    @Override
+    @NotNull
+    public ItemStack updateItem(@Nullable Player p, @NotNull ItemStack item) {
+        int amount = this.getAmount(item);
+        if (amount == 0) return item;
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
+        List<String> lore = meta.getLore();
+        if (lore == null) return item;
+
+        for (int i = 0; i < amount; i++) {
+            int loreIndex = -1;
+            String metaId = "";
+            for (NamespacedKey key : this.keys) {
+                metaId = key.getKey()+i;
+                loreIndex = ItemUT.getLoreIndex(item, metaId);
+                if (loreIndex >= 0) break;
+            }
+            if (loreIndex < 0) continue;
+
+            @Nullable StatBonus arr = this.getRaw(item, i);
+            if (arr == null) continue;
+            String formatNew = this.getFormat(p, item, arr);
+            lore.set(loreIndex, formatNew);
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+            ItemUT.addLoreTag(item, metaId, formatNew);
+        }
+
+        return item;
     }
 }

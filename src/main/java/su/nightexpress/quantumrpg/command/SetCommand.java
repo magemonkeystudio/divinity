@@ -10,10 +10,10 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.*;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
@@ -242,7 +242,7 @@ public class SetCommand extends ISubCommand<QuantumRPG> {
                     return;
                 }
 
-                dt.add(item, new StatBonus(new double[]{val1, val2}, false, List.of()), line);
+                dt.add(item, new StatBonus(new double[]{val1, val2}, false, null), line);
                 player.getInventory().setItemInMainHand(item);
 
                 break;
@@ -266,7 +266,7 @@ public class SetCommand extends ISubCommand<QuantumRPG> {
                     return;
                 }
 
-                dt.add(item, new StatBonus(new double[]{amount}, false, List.of()), line);
+                dt.add(item, new StatBonus(new double[]{amount}, false, null), line);
                 player.getInventory().setItemInMainHand(item);
 
                 break;
@@ -355,7 +355,7 @@ public class SetCommand extends ISubCommand<QuantumRPG> {
 
                 if (stat instanceof SimpleStat) {
                     SimpleStat rs = (SimpleStat) stat;
-                    rs.add(item, new StatBonus(new double[]{val}, false, List.of()), line);
+                    rs.add(item, new StatBonus(new double[]{val}, false, null), line);
                 } else {
                     DurabilityStat ms = (DurabilityStat) stat;
                     ms.add(item, new double[]{val, val}, line);

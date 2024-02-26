@@ -12,72 +12,24 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDispenseArmorEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
-import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 public class ItemRequirementListener extends IListener<QuantumRPG> {
 
     public ItemRequirementListener(@NotNull QuantumRPG plugin) {
         super(plugin);
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onDynamicRequirementUpdateDrop(PlayerDropItemEvent e) {
-        ItemStack item = e.getItemDrop().getItemStack();
-        ItemRequirements.updateItem(null, item);
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onDynamicRequirementUpdatePick(EntityPickupItemEvent e) {
-        LivingEntity entity = e.getEntity();
-        if (!(entity instanceof Player)) return;
-
-        Player    player = (Player) entity;
-        ItemStack cursor = e.getItem().getItemStack();
-        ItemRequirements.updateItem(player, cursor);
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onDynamicRequirementUpdateInvOpen(InventoryOpenEvent e) {
-        List<ItemStack> list   = new ArrayList<>();
-        Player          player = (Player) e.getPlayer();
-
-        list.addAll(Arrays.asList(e.getInventory().getContents()));
-        list.addAll(Arrays.asList(player.getInventory().getArmorContents()));
-        list.forEach(item -> {
-            if (item != null) {
-                ItemRequirements.updateItem(player, item);
-            }
-        });
-    }
-
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onDynamicRequirementUpdateInvClose(InventoryCloseEvent e) {
-        if (e.getInventory().getType() != InventoryType.CRAFTING) return;
-        Player player = (Player) e.getPlayer();
-
-        List<ItemStack> list = new ArrayList<>();
-        list.addAll(Arrays.asList(player.getInventory().getContents()));
-        list.addAll(Arrays.asList(player.getInventory().getArmorContents()));
-        list.forEach(item -> {
-            if (item != null) {
-                ItemRequirements.updateItem(player, item);
-            }
-        });
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

@@ -25,11 +25,11 @@ import su.nightexpress.quantumrpg.modules.list.refine.command.DowngradeCmd;
 import su.nightexpress.quantumrpg.modules.list.refine.command.RefineCmd;
 import su.nightexpress.quantumrpg.stats.bonus.BonusCalculator;
 import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.StatBonus;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 

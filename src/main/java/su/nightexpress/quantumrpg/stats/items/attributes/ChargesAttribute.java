@@ -17,6 +17,12 @@ public class ChargesAttribute extends ItemLoreStat<int[]> {
     }
 
     @Override
+    @NotNull
+    public Class<int[]> getParameterClass() {
+        return int[].class;
+    }
+
+    @Override
     protected boolean isSingle() {
         return true;
     }

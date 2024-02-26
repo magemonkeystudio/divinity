@@ -4,6 +4,7 @@ import mc.promcteam.engine.config.api.ILangMsg;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.soulbound.SoulboundManager;
@@ -32,9 +33,8 @@ public class SoulboundRequirement extends AbstractOwnerRequirement {
     }
 
     @Override
-    public boolean canUse(@NotNull Player player, @NotNull ItemStack item) {
-        UUID uuid = this.getRaw(item);
-        return uuid == null || player.getUniqueId().equals(uuid);
+    public boolean canUse(@NotNull Player player, @Nullable UUID value) {
+        return value == null || player.getUniqueId().equals(value);
     }
 
     @Override

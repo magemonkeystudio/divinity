@@ -34,6 +34,12 @@ public class ItemModuleRequirement extends ItemRequirement<String[]> {
     }
 
     @Override
+    @NotNull
+    public Class<String[]> getParameterClass() {
+        return String[].class;
+    }
+
+    @Override
     public boolean canApply(@NotNull ItemStack src, @NotNull ItemStack target) {
         String[] modules = this.getRaw(src);
         if (modules == null || modules.length == 0) return true;

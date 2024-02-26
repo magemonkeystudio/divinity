@@ -13,11 +13,11 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.DamageInformation;
 import su.nightexpress.quantumrpg.stats.bonus.BonusCalculator;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 import su.nightexpress.quantumrpg.utils.LoreUT;
@@ -203,7 +203,7 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
                 double vFin = NumberUT.round(Rnd.getDouble(vMin, vMax));
                 if (stat instanceof SimpleStat) {
                     SimpleStat rStat = (SimpleStat) stat;
-                    rStat.add(item, new StatBonus(new double[]{vFin}, false, List.of()), -1);
+                    rStat.add(item, new StatBonus(new double[]{vFin}, false, null), -1);
 
                     // Add depending stats.
                     SimpleStat.Type depend = rStat.getDependStat();

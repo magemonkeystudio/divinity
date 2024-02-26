@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
@@ -29,20 +30,25 @@ public class BannedClassRequirement extends DynamicUserRequirement<String[]> {
 
     @Override
     @NotNull
+    public Class<String[]> getParameterClass() {
+        return String[].class;
+    }
+
+    @Override
+    @NotNull
     public String getBypassPermission() {
         return Perms.BYPASS_REQ_USER_CLASS;
     }
 
     @Override
-    public boolean canUse(@NotNull Player p, @NotNull ItemStack item) {
+    public boolean canUse(@NotNull Player player, @Nullable String[] value) {
         HookClass classPlugin = EngineCfg.HOOK_PLAYER_CLASS_PLUGIN;
         if (classPlugin == null) return true;
 
-        String[] itemClass = this.getRaw(item);
-        if (itemClass == null || itemClass.length == 0) return true;
+        if (value == null || value.length == 0) return true;
 
-        String playerClass = classPlugin.getClass(p);
-        for (String reqClass : itemClass) {
+        String playerClass = classPlugin.getClass(player);
+        for (String reqClass : value) {
             if (playerClass.equalsIgnoreCase(reqClass)) {
                 return false;
             }

@@ -5,6 +5,7 @@ import mc.promcteam.engine.utils.DataUT;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
@@ -30,20 +31,25 @@ public class ClassRequirement extends DynamicUserRequirement<String[]> {
 
     @Override
     @NotNull
+    public Class<String[]> getParameterClass() {
+        return String[].class;
+    }
+
+    @Override
+    @NotNull
     public String getBypassPermission() {
         return Perms.BYPASS_REQ_USER_CLASS;
     }
 
     @Override
-    public boolean canUse(@NotNull Player p, @NotNull ItemStack item) {
+    public boolean canUse(@NotNull Player player, @Nullable String[] value) {
         HookClass classPlugin = EngineCfg.HOOK_PLAYER_CLASS_PLUGIN;
         if (classPlugin == null) return true;
 
-        String[] itemClass = this.getRaw(item);
-        if (itemClass == null || itemClass.length == 0) return true;
+        if (value == null || value.length == 0) return true;
 
-        String playerClass = classPlugin.getClass(p);
-        for (String reqClass : itemClass) {
+        String playerClass = classPlugin.getClass(player);
+        for (String reqClass : value) {
             if (playerClass.equalsIgnoreCase(reqClass)) {
                 return true;
             }
@@ -53,13 +59,13 @@ public class ClassRequirement extends DynamicUserRequirement<String[]> {
 
     @Override
     @NotNull
-    public String formatValue(@NotNull ItemStack item, @NotNull String[] values) {
-        if (values.length == 0 || values[0].isEmpty()) return "";
+    public String formatValue(@NotNull ItemStack item, @NotNull String[] value) {
+        if (value.length == 0 || value[0].isEmpty()) return "";
 
         String sep   = EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR;
         String color = EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR;
 
-        return LoreUT.getStrSeparated(values, sep, color, EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX, EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE);
+        return LoreUT.getStrSeparated(value, sep, color, EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX, EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE);
     }
 
     @Override

@@ -14,12 +14,12 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.DamageInformation;
 import su.nightexpress.quantumrpg.stats.bonus.BonusCalculator;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SkillAPIAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.StatBonus;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
@@ -240,12 +240,12 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
 
                         double vFinMin = Math.min(rndV1, rndV2);
                         double vFinMax = Math.max(rndV1, rndV2);
-                        dmgAtt.add(item, new StatBonus(new double[]{vFinMin, vFinMax}, false, List.of()), -1);
+                        dmgAtt.add(item, new StatBonus(new double[]{vFinMin, vFinMax}, false, null), -1);
                     } else {
                         double vFin = NumberUT.round(Rnd.getDouble(vMin, vMax));
                         if (stat instanceof DefenseAttribute) {
                             DefenseAttribute defAtt = (DefenseAttribute) stat;
-                            defAtt.add(item, new StatBonus(new double[]{vFin}, false, List.of()), -1);
+                            defAtt.add(item, new StatBonus(new double[]{vFin}, false, null), -1);
                         } else if (stat instanceof SkillAPIAttribute) {
                             SkillAPIAttribute skillAPIAttribute = (SkillAPIAttribute) stat;
                             skillAPIAttribute.add(item, (int) Math.floor(vFin), -1);

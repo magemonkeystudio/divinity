@@ -49,6 +49,7 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.SingleAt
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.TypedStatGenerator;
 import su.nightexpress.quantumrpg.modules.list.sets.SetManager;
 import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
@@ -56,7 +57,6 @@ import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequirement;
@@ -577,7 +577,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                         list.add(new StatBonus(
                                 new double[]{Double.parseDouble(split[0])},
                                 split.length == 2 && split[1].isEmpty(),
-                                List.of(new StatBonus.ClassCondition(new String[]{entry.getKey()}))));
+                                new StatBonus.Condition<>(ItemRequirements.getUserRequirement(ClassRequirement.class), new String[]{entry.getKey()})));
                     }
                 }
             }

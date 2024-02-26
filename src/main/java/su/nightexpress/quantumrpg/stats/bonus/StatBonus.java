@@ -1,21 +1,19 @@
-package su.nightexpress.quantumrpg.stats.items.attributes.api;
+package su.nightexpress.quantumrpg.stats.bonus;
 
 import mc.promcteam.engine.utils.DataUT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
-import su.nightexpress.quantumrpg.config.EngineCfg;
-import su.nightexpress.quantumrpg.hooks.HookClass;
-
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
+import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
+import su.nightexpress.quantumrpg.stats.items.requirements.api.DynamicUserRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.api.UserRequirement;
+import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 
 public class StatBonus {
     private static final NamespacedKey VALUE           = new NamespacedKey(QuantumRPG.getInstance(), "value");
@@ -45,10 +43,9 @@ public class StatBonus {
                 container.set(VALUE, DataUT.DOUBLE_ARRAY, complex.value);
             }
             if (complex.percent) container.set(PERCENT, BOOLEAN, true);
-            for (Predicate<Player> condition : complex.userConditions) {
-                if (condition instanceof ClassCondition) {
-                    Set<String> classes = new LinkedHashSet<>(((ClassCondition) condition).getClasses());
-                    container.set(CLASS_CONDITION, DataUT.STRING_ARRAY, classes.toArray(new String[classes.size()]));
+            if (complex.condition != null) {
+                if (complex.condition.requirement instanceof ClassRequirement) {
+                    container.set(complex.condition.requirement.getKey(), DataUT.STRING_ARRAY, (String[]) complex.condition.value);
                 }
             }
             return container;
@@ -67,22 +64,30 @@ public class StatBonus {
             }
             if (array == null) array = new double[] {0, 0};
 
-            List<Predicate<Player>> conditions = new ArrayList<>();
+            Condition<?> condition = null;
+            for (UserRequirement<?> requirement : ItemRequirements.getUserRequirements()) {
+                if (!(requirement instanceof DynamicUserRequirement)) continue;
+                if (primitive.has(requirement.getKey())) {
+                }
+            }
+
+
             if (primitive.has(CLASS_CONDITION, DataUT.STRING_ARRAY)) {
                 String[] classCondition = primitive.get(CLASS_CONDITION, DataUT.STRING_ARRAY);
                 if (classCondition != null) {
-                    conditions.add(new ClassCondition(classCondition));
+                    condition = new Condition<>(ItemRequirements.getUserRequirement(ClassRequirement.class), classCondition);
                 }
             }
-            return new StatBonus(array, array.length == 1 ? primitive.getOrDefault(PERCENT, BOOLEAN, false) : false, conditions);
+            return new StatBonus(array, array.length == 1 ? primitive.getOrDefault(PERCENT, BOOLEAN, false) : false, condition);
         }
     };
 
     private final double[] value;
-    private final boolean  percent;
-    private final List<Predicate<Player>> userConditions;
+    private final boolean      percent;
+    @Nullable
+    private final Condition<?> condition;
 
-    public StatBonus(double[] value, boolean percent, List<Predicate<Player>> userConditions) {
+    public StatBonus(double[] value, boolean percent, @Nullable Condition<?> condition) {
         if (value.length == 2) {
             if (value[0] == value[1]) {
                 this.value = new double[]{value[0]};
@@ -93,32 +98,38 @@ public class StatBonus {
             this.value = new double[]{value[0]};
         } else throw new IllegalArgumentException();
         this.percent = percent;
-        this.userConditions = List.copyOf(userConditions);
+        this.condition = condition;
     }
 
     public double[] getValue() {return value;}
 
     public boolean isPercent() {return percent;}
 
-    public boolean meetsRequirements(Player player) {
-        return userConditions.stream().allMatch(playerPredicate -> playerPredicate.test(player));
+    @Nullable
+    public Condition<?> getCondition() {
+        return this.condition;
     }
 
-    public static final class ClassCondition implements Predicate<Player> {
-        private final List<String> classes;
+    public boolean meetsRequirement(@Nullable Player player) {
+        return this.condition == null || (player != null && this.condition.meetsRequirement(player));
+    }
 
-        public ClassCondition(String[] classes) {
-            this.classes = List.of(classes);
+    public static final class Condition<Z> {
+        private final DynamicUserRequirement<Z> requirement;
+        private final Z                         value;
+
+        public Condition(DynamicUserRequirement<Z> requirement, Z value) {
+            this.requirement = requirement;
+            this.value = value;
         }
 
-        public List<String> getClasses() {return this.classes;}
+        public boolean meetsRequirement(@NotNull Player p) {
+            return this.requirement.canUse(p, this.value);
+        }
 
-        @Override
-        public boolean test(Player player) {
-            HookClass classPlugin = EngineCfg.HOOK_PLAYER_CLASS_PLUGIN;
-            if (classPlugin == null) return false;
-            String playerClass = classPlugin.getClass(player);
-            return this.classes.stream().anyMatch(playerClass::equalsIgnoreCase);
+        @NotNull
+        public String getFormat(@Nullable Player p, @NotNull ItemStack item) {
+            return this.requirement.getFormat(p, item, this.value);
         }
     }
 }

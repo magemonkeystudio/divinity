@@ -26,6 +26,12 @@ public class ItemLevelRequirement extends ItemRequirement<int[]> {
     }
 
     @Override
+    @NotNull
+    public Class<int[]> getParameterClass() {
+        return int[].class;
+    }
+
+    @Override
     public boolean canApply(@NotNull ItemStack src, @NotNull ItemStack target) {
         int[] arr = this.getRaw(src);
         if (arr == null) return true;

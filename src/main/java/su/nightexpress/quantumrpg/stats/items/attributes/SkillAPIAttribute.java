@@ -18,6 +18,12 @@ public class SkillAPIAttribute extends ItemLoreStat<Integer> {
     }
 
     @Override
+    @NotNull
+    public Class<Integer> getParameterClass() {
+        return Integer.class;
+    }
+
+    @Override
     public @NotNull String formatValue(@NotNull ItemStack item, @NotNull Integer value) {
         return (value > 0 ? EngineCfg.LORE_CHAR_POSITIVE : EngineCfg.LORE_CHAR_NEGATIVE) + NumberUT.format(value);
     }

@@ -28,6 +28,12 @@ public class ItemTypeRequirement extends ItemRequirement<String[]> {
     }
 
     @Override
+    @NotNull
+    public Class<String[]> getParameterClass() {
+        return String[].class;
+    }
+
+    @Override
     public boolean canApply(@NotNull ItemStack src, @NotNull ItemStack target) {
         String[] types = this.getRaw(src);
         if (types == null || types.length == 0) return true;

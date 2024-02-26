@@ -28,6 +28,12 @@ public abstract class AbstractOwnerRequirement extends DynamicUserRequirement<UU
         );
     }
 
+    @Override
+    @NotNull
+    public Class<UUID> getParameterClass() {
+        return UUID.class;
+    }
+
     public boolean add(@NotNull ItemStack item, int line) {
         return this.add(item, DUMMY_ID, line);
     }

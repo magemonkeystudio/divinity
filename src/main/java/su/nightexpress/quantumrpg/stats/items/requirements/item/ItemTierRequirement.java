@@ -25,6 +25,12 @@ public class ItemTierRequirement extends ItemRequirement<String> {
     }
 
     @Override
+    @NotNull
+    public Class<String> getParameterClass() {
+        return String.class;
+    }
+
+    @Override
     public boolean canApply(@NotNull ItemStack src, @NotNull ItemStack target) {
         String tierId = this.getRaw(src);
         if (tierId == null) return true;
