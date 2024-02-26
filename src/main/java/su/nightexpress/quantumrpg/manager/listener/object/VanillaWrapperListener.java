@@ -1,6 +1,5 @@
 package su.nightexpress.quantumrpg.manager.listener.object;
 
-import com.sucy.skill.api.DefaultCombatProtection;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.IListener;
 import mc.promcteam.engine.registry.attribute.AttributeRegistry;
@@ -131,9 +130,10 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onVanillaDamage(EntityDamageEvent e) {
         boolean isEde = e instanceof EntityDamageByEntityEvent;
-        if (isEde) {
-            EntityDamageByEntityEvent ede = (EntityDamageByEntityEvent) e;
-            if (DefaultCombatProtection.isFakeDamageEvent(ede)) return;
+        if (isEde && plugin.getPluginManager().isPluginEnabled("SkillAPI")) {
+            EntityDamageByEntityEvent ede        = (EntityDamageByEntityEvent) e;
+            SkillAPIHK                skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
+            if (skillAPIHK.isFakeDamage(ede)) return;
         }
 //        long l1 = System.currentTimeMillis();
 

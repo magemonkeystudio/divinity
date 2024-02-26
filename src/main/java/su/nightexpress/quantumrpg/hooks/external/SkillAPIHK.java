@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.hooks.external;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.DefaultCombatProtection;
 import com.sucy.skill.api.enums.ExpSource;
 import com.sucy.skill.api.event.DynamicTriggerEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -280,5 +282,9 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
                 }
             }
         }.runTask(plugin);
+    }
+
+    public boolean isFakeDamage(EntityDamageByEntityEvent event) {
+        return DefaultCombatProtection.isFakeDamageEvent(event);
     }
 }
