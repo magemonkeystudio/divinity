@@ -251,6 +251,10 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                             skillAPIAttribute.add(item, (int) Math.floor(vFin), -1);
                         }
                     }
+
+                    for (StatBonus statBonus : generatorItem.getClassBonuses(stat)) {
+                        ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
+                    }
                 }
             }
             mapChance.remove(stat);

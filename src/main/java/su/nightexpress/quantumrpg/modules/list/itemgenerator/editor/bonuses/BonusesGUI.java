@@ -101,7 +101,10 @@ public class BonusesGUI extends AbstractEditorGUI {
                         sendSetMessage(id + " value",
                                 itemGenerator.getConfig().getString(path),
                                 s -> {
-                                    cfg.set(path, Double.parseDouble(s));
+                                    String[] split = s.split("%", 2);
+                                    if (split.length == 2 && !split[1].isEmpty()) throw new IllegalArgumentException();
+                                    Double.parseDouble(split[0]);
+                                    cfg.set(path, s);
                                     saveAndReopen();
                                 });
                     }

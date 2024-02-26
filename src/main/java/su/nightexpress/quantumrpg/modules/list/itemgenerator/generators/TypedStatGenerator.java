@@ -220,6 +220,10 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
                     DurabilityStat rStat = (DurabilityStat) stat;
                     rStat.add(item, new double[]{vFin, vFin}, -1);
                 }
+
+                for (StatBonus statBonus : generatorItem.getClassBonuses((ItemLoreStat<?>) stat)) {
+                    ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
+                }
             }
             mapChance.remove(stat);
         }

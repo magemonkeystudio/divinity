@@ -127,7 +127,12 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> {
             if (!bonus.meetsRequirements(player)) continue;
             double[] value = bonus.getValue();
             if (value.length == 1) {
-                if (bonus.isPercent()) percent += value[0];
+                if (bonus.isPercent()) {
+                    percent += value[0];
+                } else {
+                    base[0] += value[0];
+                    base[1] += value[0];
+                }
             } else {
                 base[0] += value[0];
                 base[1] += value[1];
@@ -145,7 +150,10 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> {
             has = true;
         }
 
-        bonuses.add((isPercent, input) -> isPercent ? input : new double[]{input[0]+base[0], input[1]+base[1]});
+        bonuses.add((isPercent, input) -> isPercent ? input : (
+                input.length == 2
+                ? new double[]{input[0]+base[0], input[1]+base[1]}
+                : new double[]{input[0]+base[0], input[0]+base[1]}));
         {
             double finalPercent = percent;
             bonuses.add((isPercent, input) -> isPercent ? new double[]{input[0] + finalPercent} : input);

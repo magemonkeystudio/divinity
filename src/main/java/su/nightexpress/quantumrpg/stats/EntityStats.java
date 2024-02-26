@@ -623,9 +623,12 @@ public class EntityStats {
             //}
 
             for (BiFunction<Boolean, Double, Double> bonus : this.getBonuses(dmgAtt)) {
-                bonuses.add((isPercent, input) -> new double[]{
-                        bonus.apply(isPercent, input[0]),
-                        bonus.apply(isPercent, input[1])});
+                bonuses.add((isPercent, input) -> input.length == 2
+                        ? new double[]{
+                                bonus.apply(isPercent, input[0]),
+                                bonus.apply(isPercent, input[1])}
+                        : new double[]{
+                                bonus.apply(isPercent, input[0])});
             }
             double[] range = BonusCalculator.RANGE_FULL.apply(new double[]{0, 0}, bonuses);
             double value = Rnd.getDouble(range[0], range[1]);

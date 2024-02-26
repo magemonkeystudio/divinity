@@ -52,7 +52,11 @@ import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequirement;
@@ -177,6 +181,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private Map<String, List<Integer>> modelDataSpecial;
 
         private Map<String, BonusMap> materialsModifiers;
+        private Map<String, Map<ItemLoreStat<?>, String>> classModifiers;
 
         private TreeMap<Integer, String[]> reqUserLvl;
         private TreeMap<Integer, String[]> reqUserClass;
@@ -283,6 +288,62 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 bMap.loadHands(cfg, path2 + "hands");
 
                 this.materialsModifiers.put(group.toLowerCase(), bMap);
+            }
+
+            // Load Class bonuses
+            path = "generator.bonuses.class.";
+            this.classModifiers = new HashMap<>();
+            for (String group : cfg.getSection("generator.bonuses.class")) {
+                Map<ItemLoreStat<?>, String> statMap = new HashMap<>();
+
+                String path2 = path + group + ".damage-types";
+                for (String id : cfg.getSection(path2)) {
+                    DamageAttribute dt = ItemStats.getDamageById(id);
+                    if (dt == null) continue;
+
+                    String sVal = cfg.getString(path2 + "." + id);
+                    if (sVal == null) continue;
+
+                    String[] split = sVal.split("%", 2);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double  val  = StringUT.getDouble(split[0], 0, true);
+
+                    statMap.put(dt, val+(perc ? "%" : ""));
+                }
+
+                path2 = path + group + ".defense-types";
+                for (String id : cfg.getSection(path2)) {
+                    DefenseAttribute dt = ItemStats.getDefenseById(id);
+                    if (dt == null) continue;
+
+                    String sVal = cfg.getString(path2 + "." + id);
+                    if (sVal == null) continue;
+
+                    String[] split = sVal.split("%", 2);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double  val  = StringUT.getDouble(split[0], 0, true);
+
+                    statMap.put(dt, val+(perc ? "%" : ""));
+                }
+
+                path2 = path + group + ".item-stats";
+                for (String id : cfg.getSection(path2)) {
+                    SimpleStat.Type dt = TypedStat.Type.getByName(id);
+                    if (dt == null) continue;
+
+                    ItemLoreStat<?> mainStat = (ItemLoreStat<?>) ItemStats.getStat(dt);
+
+                    String sVal = cfg.getString(path2 + "." + id);
+                    if (sVal == null) continue;
+
+                    String[] split = sVal.split("%", 2);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double  val  = StringUT.getDouble(split[0], 0, true);
+
+                    statMap.put(mainStat, val+(perc ? "%" : ""));
+                }
+
+                this.classModifiers.put(group.toLowerCase(), statMap);
             }
 
             // Load User Requirements.
@@ -504,6 +565,23 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 }
             }
             return (isBonus, result) -> result;
+        }
+
+        public Collection<StatBonus> getClassBonuses(ItemLoreStat<?> stat) {
+            List<StatBonus> list = new ArrayList<>();
+            for (Map.Entry<String, Map<ItemLoreStat<?>, String>> entry : this.classModifiers.entrySet()) {
+                for (Map.Entry<ItemLoreStat<?>, String> entry1 : entry.getValue().entrySet()) {
+                    if (entry1.getKey().equals(stat)) {
+                        String sVal = entry1.getValue();
+                        String[] split = sVal.split("%", 2);
+                        list.add(new StatBonus(
+                                new double[]{Double.parseDouble(split[0])},
+                                split.length == 2 && split[1].isEmpty(),
+                                List.of(new StatBonus.ClassCondition(new String[]{entry.getKey()}))));
+                    }
+                }
+            }
+            return list;
         }
 
         @NotNull

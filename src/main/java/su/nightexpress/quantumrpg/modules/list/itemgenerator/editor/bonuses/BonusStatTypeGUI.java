@@ -34,24 +34,26 @@ public class BonusStatTypeGUI extends AbstractEditorGUI {
                 openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.ITEM_STAT));
             }
         });
-        setSlot(3, new Slot(createItem(Material.BOOK, "&eAdd new SkillAPIAttribute stat")) {
-            @Override
-            public void onLeftClick() {
-                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.SKILLAPI_ATTRIBUTE));
-            }
-        });
-        setSlot(4, new Slot(createItem(Material.ARROW, "&eAdd new ammo stat")) {
-            @Override
-            public void onLeftClick() {
-                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.AMMO));
-            }
-        });
-        setSlot(5, new Slot(createItem(Material.STICK, "&eAdd new hand stat")) {
-            @Override
-            public void onLeftClick() {
-                openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.HAND));
-            }
-        });
+        if (this.path.startsWith(MainBonusesGUI.ItemType.MATERIAL.getPath())) {
+            setSlot(3, new Slot(createItem(Material.BOOK, "&eAdd new SkillAPIAttribute stat")) {
+                @Override
+                public void onLeftClick() {
+                    openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.SKILLAPI_ATTRIBUTE));
+                }
+            });
+            setSlot(4, new Slot(createItem(Material.ARROW, "&eAdd new ammo stat")) {
+                @Override
+                public void onLeftClick() {
+                    openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.AMMO));
+                }
+            });
+            setSlot(5, new Slot(createItem(Material.STICK, "&eAdd new hand stat")) {
+                @Override
+                public void onLeftClick() {
+                    openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.HAND));
+                }
+            });
+        }
     }
 
 }

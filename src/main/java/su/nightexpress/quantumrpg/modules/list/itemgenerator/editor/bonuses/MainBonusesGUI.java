@@ -22,11 +22,19 @@ public class MainBonusesGUI extends AbstractEditorGUI {
                 openSubMenu(new BonusCategoryGUI(player, itemGenerator, ItemType.MATERIAL));
             }
         });
+        setSlot(1, new Slot(createItem(Material.JACK_O_LANTERN,
+                "&eClass bonuses",
+                "&6Left-Click: &eModify")) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new BonusCategoryGUI(player, itemGenerator, ItemType.CLASS));
+            }
+        });
     }
 
     public enum ItemType {
         MATERIAL("material or group"),
-        CLASS("class"), // TODO
+        CLASS("class"),
         ;
 
         private final String description;

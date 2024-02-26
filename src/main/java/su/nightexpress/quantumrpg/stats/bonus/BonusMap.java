@@ -97,19 +97,17 @@ public class BonusMap {
             SimpleStat.Type dt = TypedStat.Type.getByName(id);
             if (dt == null) continue;
 
-            TypedStat mainStat = ItemStats.getStat(dt);
-            if (!(mainStat instanceof SimpleStat)) continue;
-
-            SimpleStat stat = (SimpleStat) mainStat;
+            ItemLoreStat<?> mainStat = (ItemLoreStat<?>) ItemStats.getStat(dt);
 
             String sVal = cfg.getString(path + "." + id);
             if (sVal == null) continue;
 
-            boolean perc = sVal.contains("%");
-            double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
+            String[] split = sVal.split("%", 2);
+            boolean perc = split.length == 2 && split[1].isEmpty();
+            double  val  = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
-            this.bonus.put(stat, func);
+            this.bonus.put(mainStat, func);
         }
     }
 
@@ -121,9 +119,9 @@ public class BonusMap {
             String sVal = cfg.getString(path + "." + id);
             if (sVal == null) continue;
 
-            boolean perc = sVal.contains("%");
-            double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
-            //if (val == 0) continue;
+            String[] split = sVal.split("%", 2);
+            boolean perc = split.length == 2 && split[1].isEmpty();
+            double  val  = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (bonus, apply) -> perc == bonus ? apply + val : apply;
             this.bonus.put(dt, func);
@@ -138,9 +136,9 @@ public class BonusMap {
             String sVal = cfg.getString(path + "." + id);
             if (sVal == null) continue;
 
-            boolean perc = sVal.contains("%");
-            double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
-            //if (val == 0) continue;
+            String[] split = sVal.split("%", 2);
+            boolean perc = split.length == 2 && split[1].isEmpty();
+            double  val  = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (bonus, apply) -> perc == bonus ? apply + val : apply;
             this.bonus.put(dt, func);
@@ -161,8 +159,9 @@ public class BonusMap {
             String sVal = cfg.getString(path + "." + id);
             if (sVal == null) continue;
 
-            boolean perc = sVal.contains("%");
-            double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
+            String[] split = sVal.split("%", 2);
+            boolean perc = split.length == 2 && split[1].isEmpty();
+            double  val  = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
             this.bonus.put(stat, func);
@@ -182,8 +181,9 @@ public class BonusMap {
             String sVal = cfg.getString(path + "." + id);
             if (sVal == null) continue;
 
-            boolean perc = sVal.contains("%");
-            double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
+            String[] split = sVal.split("%", 2);
+            boolean perc = split.length == 2 && split[1].isEmpty();
+            double  val  = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
             this.bonus.put(stat, func);
@@ -203,8 +203,9 @@ public class BonusMap {
             String sVal = cfg.getString(path + "." + id);
             if (sVal == null) continue;
 
-            boolean perc = sVal.contains("%");
-            double  val  = StringUT.getDouble(sVal.replace("%", ""), 0, true);
+            String[] split = sVal.split("%", 2);
+            boolean perc = split.length == 2 && split[1].isEmpty();
+            double  val  = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
             this.bonus.put(stat, func);

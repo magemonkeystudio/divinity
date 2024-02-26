@@ -147,7 +147,10 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
                     sendSetMessage(stat + ' ' + statType.name().replace('_', ' ').toLowerCase() + " value",
                             null,
                             s -> {
-                                itemGenerator.getConfig().set(getPath() + '.' + stat, Double.parseDouble(s));
+                                String[] split = s.split("%", 2);
+                                if (split.length == 2 && !split[1].isEmpty()) throw new IllegalArgumentException();
+                                Double.parseDouble(split[0]);
+                                itemGenerator.getConfig().set(getPath() + '.' + stat, s);
                                 saveAndReopen();
                                 close(2);
                             });

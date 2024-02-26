@@ -74,7 +74,7 @@ public class StatBonus {
                     conditions.add(new ClassCondition(classCondition));
                 }
             }
-            return new StatBonus(array, array.length > 1 ? primitive.getOrDefault(PERCENT, BOOLEAN, false) : false, conditions);
+            return new StatBonus(array, array.length == 1 ? primitive.getOrDefault(PERCENT, BOOLEAN, false) : false, conditions);
         }
     };
 
