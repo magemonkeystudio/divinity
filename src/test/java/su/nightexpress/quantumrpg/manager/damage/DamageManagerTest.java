@@ -16,9 +16,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@Disabled
 class DamageManagerTest extends MockedTest {
-
     private PlayerMock player;
 
     @BeforeEach
