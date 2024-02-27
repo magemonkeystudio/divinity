@@ -10,8 +10,10 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -33,8 +35,8 @@ import java.util.UUID;
 
 public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadable {
 
-    private final ItemGeneratorManager                           itemGen;
-    private final List<UUID>                                     noSpam       = new ArrayList<>();
+    private final ItemGeneratorManager itemGen;
+    private final List<UUID>           noSpam = new ArrayList<>();
 
     ItemAbilityHandler(@NotNull ItemGeneratorManager itemGen) {
         super(itemGen.plugin);
@@ -64,31 +66,61 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerJoin(PlayerJoinEvent event) {
         SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
-        if (skillAPIHK != null) {skillAPIHK.updateSkills(event.getPlayer());}
+        if (skillAPIHK != null) {
+            skillAPIHK.updateSkills(event.getPlayer());
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onItemHeldEvent(PlayerItemHeldEvent event) {
         SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
-        if (skillAPIHK != null) {skillAPIHK.updateSkills(event.getPlayer());}
+        if (skillAPIHK != null) {
+            skillAPIHK.updateSkills(event.getPlayer());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onDrop(PlayerDropItemEvent event) {
+        SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
+        if (skillAPIHK != null) {
+            skillAPIHK.updateSkills(event.getPlayer());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onDrop(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
+        if (skillAPIHK != null) {
+            skillAPIHK.updateSkills(player);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onArmorEquip(ArmorEquipEvent event) {
         SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
-        if (skillAPIHK != null) {skillAPIHK.updateSkills(event.getPlayer());}
+        if (skillAPIHK != null) {
+            skillAPIHK.updateSkills(event.getPlayer());
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
         InventoryView view = event.getView();
         for (Inventory inventory : new Inventory[]{view.getTopInventory(), view.getBottomInventory()}) {
-            if (!(inventory instanceof PlayerInventory)) { continue; }
+            if (!(inventory instanceof PlayerInventory)) {
+                continue;
+            }
             PlayerInventory playerInventory = (PlayerInventory) inventory;
-            HumanEntity humanEntity = playerInventory.getHolder();
-            if (!(humanEntity instanceof Player)) { return; }
+            HumanEntity     humanEntity     = playerInventory.getHolder();
+            if (!(humanEntity instanceof Player)) {
+                return;
+            }
             SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
-            if (skillAPIHK != null) {skillAPIHK.updateSkills((Player) humanEntity);}
+            if (skillAPIHK != null) {
+                skillAPIHK.updateSkills((Player) humanEntity);
+            }
         }
     }
 
@@ -96,12 +128,18 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
     public void onInventoryDrag(InventoryDragEvent event) {
         InventoryView view = event.getView();
         for (Inventory inventory : new Inventory[]{view.getTopInventory(), view.getBottomInventory()}) {
-            if (!(inventory instanceof PlayerInventory)) { continue; }
+            if (!(inventory instanceof PlayerInventory)) {
+                continue;
+            }
             PlayerInventory playerInventory = (PlayerInventory) inventory;
-            HumanEntity humanEntity = playerInventory.getHolder();
-            if (!(humanEntity instanceof Player)) { return; }
+            HumanEntity     humanEntity     = playerInventory.getHolder();
+            if (!(humanEntity instanceof Player)) {
+                return;
+            }
             SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
-            if (skillAPIHK != null) {skillAPIHK.updateSkills((Player) humanEntity);}
+            if (skillAPIHK != null) {
+                skillAPIHK.updateSkills((Player) humanEntity);
+            }
         }
     }
 
@@ -151,7 +189,7 @@ public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadabl
         GeneratorItem aItem = this.itemGen.getModuleItem(item);
         if (aItem == null) return;
 
-        Player    player = e.getPlayer();
+        Player player = e.getPlayer();
 
         e.setCancelled(true);
 
