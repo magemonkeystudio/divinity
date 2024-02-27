@@ -11,14 +11,11 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
-
-    private final Map<Integer, NamespacedKey> keys;
-    private final Map<Integer, NamespacedKey> keys2;
 
     public DuplicableItemLoreStat(
             @NotNull String id,
@@ -29,28 +26,20 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
             @NotNull PersistentDataType<?, Z> dataType
     ) {
         super(id, name, format, placeholder, uniqueTag, dataType);
-        this.keys = new HashMap<>();
-        this.keys2 = new HashMap<>();
+    }
+
+    @NotNull
+    protected final List<NamespacedKey> getKeys(int index) {
+        List<NamespacedKey> indexedKeys = new ArrayList<>();
+        for (NamespacedKey key : this.keys) {
+            indexedKeys.add(NamespacedKey.fromString(key.toString()+index));
+        }
+        return indexedKeys;
     }
 
     @NotNull
     protected final NamespacedKey getKey(int index) {
-        NamespacedKey key = this.keys.get(index);
-        if (key == null) {
-            key = new NamespacedKey(plugin, this.getMetaTag() + this.getId() + index);
-            this.keys.put(index, key);
-        }
-        return key;
-    }
-
-    @NotNull
-    protected final NamespacedKey getKey2(int index) {
-        NamespacedKey key2 = this.keys2.get(index);
-        if (key2 == null) {
-            key2 = NamespacedKey.fromString("quantumrpg:" + this.getMetaTag() + this.getId() + index);
-            this.keys2.put(index, key2);
-        }
-        return key2;
+        return Objects.requireNonNull(NamespacedKey.fromString(this.keys.get(0).toString() + index));
     }
 
     @Override
@@ -71,7 +60,9 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         // or delete it in case of requirement removal.
         if (format.isEmpty()) {
             LoreUT.replacePlaceholder(item, this.getPlaceholder(), null);
-            ItemUT.delLoreTag(item, this.getMetaId(item, index));
+            for (NamespacedKey key : keys) {
+                ItemUT.delLoreTag(item, key.getKey()+index);
+            }
         } else {
             LoreUT.replacePlaceholder(item, this.getPlaceholder(), format);
 
@@ -107,15 +98,15 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         }
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(this.getKey(index), this.dataType)) {
-            container.remove(this.getKey(index));
-        } else if (container.has(this.getKey2(index), this.dataType)) {
-            container.remove(this.getKey2(index));
+        for (NamespacedKey key : this.getKeys(index)) {
+            if (container.has(key, this.dataType)) container.remove(key);
         }
 
         item.setItemMeta(meta);
 
-        ItemUT.delLoreTag(item, this.getMetaId(item, index));
+        for (NamespacedKey key : this.keys) {
+            ItemUT.delLoreTag(item, key.getKey()+index);
+        }
 
         if (!onlyTag) {
             this.reorderTags(item);
@@ -131,38 +122,21 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
     private final void reorderTags(@NotNull ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
-
-        int                     amountLeft = this.getAmount(item);
         PersistentDataContainer container  = meta.getPersistentDataContainer();
-
         List<Z> valuesLeft = new ArrayList<>();
 
-        //System.out.println("Reordering: " + amountLeft + " Left");
-
-        int index = 0;
-        while (valuesLeft.size() < amountLeft) {
-            //System.out.println("Index: " + index + "/" + amountLeft);
-            NamespacedKey key  = this.getKey(index++);
-            NamespacedKey key2 = this.getKey2(index++);
-
-            if (container.has(key, this.dataType)) {
-                //System.out.println("Key found, saving value...");
-                @Nullable Z val = container.get(key, this.dataType);
-                if (val != null) {
-                    valuesLeft.add(val);
-                }
-            } else if (container.has(key2, this.dataType)) {
-                //System.out.println("Key found, saving value...");
-                @Nullable Z val = container.get(key2, this.dataType);
-                if (val != null) {
-                    valuesLeft.add(val);
-                }
-            }
-            if (index > this.keys.size()) {
-                plugin.warn("Stat keys reordering: Interrupted potential infinity loop! Contact the plugin dev!");
-                break;
-            }
-        }
+        container.getKeys().stream()
+                .filter(namespacedKey -> {
+                    for (NamespacedKey key : this.keys) {
+                        if (namespacedKey.toString().startsWith(key.toString()) && container.has(namespacedKey, this.dataType)) return true;
+                    }
+                    return false;
+                }).forEach(namespacedKey -> {
+                    @Nullable Z val = container.get(namespacedKey, this.dataType);
+                    if (val != null) {
+                        valuesLeft.add(val);
+                    }
+                });
 
         //System.out.println("Applying new values...");
         for (int newIndex = 0; newIndex < valuesLeft.size(); newIndex++) {
@@ -183,31 +157,43 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         if (meta == null) return null;
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(this.getKey(index), this.dataType)) {
-            return container.get(this.getKey(index), this.dataType);
-        } else if (container.has(this.getKey2(index), this.dataType)) {
-            return container.get(this.getKey2(index), this.dataType);
+        for (NamespacedKey key : this.getKeys(index)) {
+            if (container.has(key, this.dataType)) return container.get(key, this.dataType);
         }
         return null;
     }
 
-    public final int getAmount(@NotNull ItemStack item) {
-        ItemMeta     meta = item.getItemMeta();
-        List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : null;
-
-        return getAmount(meta, lore);
+    @NotNull
+    public final List<Z> getAllRaw(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return List.of();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        return container.getKeys().stream()
+                .filter(namespacedKey -> {
+                    for (NamespacedKey key : this.keys) {
+                        if (namespacedKey.toString().startsWith(key.toString()) && container.has(namespacedKey, this.dataType)) return true;
+                    }
+                    return false;
+                })
+                .map(key -> container.get(key, dataType))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
-    public final int getAmount(ItemMeta meta, List<String> lore) {
-        if (meta == null || lore == null || lore.isEmpty()) return 0;
-        int                     value     = 0;
-        PersistentDataContainer container = meta.getPersistentDataContainer();
+    public final int getAmount(@NotNull ItemStack item) {
+        return getAmount(item.getItemMeta());
+    }
 
-        for (int index = 0; index < lore.size(); index++) {
-            if (container.has(this.getKey(index), this.dataType)
-                    || container.has(this.getKey2(index), this.dataType)) value++;
-        }
-        return value;
+    public final int getAmount(ItemMeta meta) {
+        if (meta == null) return 0;
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        return (int) container.getKeys().stream()
+                .filter(namespacedKey -> {
+                    for (NamespacedKey key : this.keys) {
+                        if (namespacedKey.toString().startsWith(key.toString()) && container.has(namespacedKey, this.dataType)) return true;
+                    }
+                    return false;
+                }).count();
     }
 
     public final int getLoreIndex(@NotNull ItemStack item, int index) {
@@ -220,8 +206,11 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         if (lore == null) return -1;
 
         for (int i = 0; i < lore.size(); i++) {
-            String id    = this.getMetaId(item, i);
-            int    found = ItemUT.getLoreIndex(item, id);
+            int found = 0;
+            for (NamespacedKey key : this.keys) {
+                found = ItemUT.getLoreIndex(item, key.getKey()+i);
+                if (found != 0) break;
+            }
 
             if (found >= 0 && index == count++) {
                 return found;

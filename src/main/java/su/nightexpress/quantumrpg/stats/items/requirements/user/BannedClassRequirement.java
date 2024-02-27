@@ -2,10 +2,13 @@ package su.nightexpress.quantumrpg.stats.items.requirements.user;
 
 import mc.promcteam.engine.config.api.ILangMsg;
 import mc.promcteam.engine.utils.DataUT;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.Perms;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.hooks.HookClass;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
@@ -16,12 +19,19 @@ import su.nightexpress.quantumrpg.utils.LoreUT;
 public class BannedClassRequirement extends DynamicUserRequirement<String[]> {
 
     public BannedClassRequirement(@NotNull String name, @NotNull String format) {
-        super("banned-class",
+        super("banned_class",
                 name,
                 format,
                 ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS,
                 ItemTags.TAG_REQ_USER_BANNED_CLASS,
                 DataUT.STRING_ARRAY);
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_user_banned_classbanned-class"));
+    }
+
+    @Override
+    @NotNull
+    public Class<String[]> getParameterClass() {
+        return String[].class;
     }
 
     @Override
@@ -31,15 +41,14 @@ public class BannedClassRequirement extends DynamicUserRequirement<String[]> {
     }
 
     @Override
-    public boolean canUse(@NotNull Player p, @NotNull ItemStack item) {
+    public boolean canUse(@NotNull Player player, @Nullable String[] value) {
         HookClass classPlugin = EngineCfg.HOOK_PLAYER_CLASS_PLUGIN;
         if (classPlugin == null) return true;
 
-        String[] itemClass = this.getRaw(item);
-        if (itemClass == null || itemClass.length == 0) return true;
+        if (value == null || value.length == 0) return true;
 
-        String playerClass = classPlugin.getClass(p);
-        for (String reqClass : itemClass) {
+        String playerClass = classPlugin.getClass(player);
+        for (String reqClass : value) {
             if (playerClass.equalsIgnoreCase(reqClass)) {
                 return false;
             }
@@ -61,6 +70,6 @@ public class BannedClassRequirement extends DynamicUserRequirement<String[]> {
     @Override
     @NotNull
     public ILangMsg getDenyMessage(@NotNull Player p, @NotNull ItemStack src) {
-        return plugin.lang().Module_Item_Interact_Error_Class;
+        return QuantumRPG.getInstance().lang().Module_Item_Interact_Error_Class;
     }
 }

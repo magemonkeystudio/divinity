@@ -4,7 +4,9 @@ import mc.promcteam.engine.config.api.ILangMsg;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.Perms;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.list.soulbound.SoulboundManager;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 
@@ -31,9 +33,8 @@ public class SoulboundRequirement extends AbstractOwnerRequirement {
     }
 
     @Override
-    public boolean canUse(@NotNull Player player, @NotNull ItemStack item) {
-        UUID uuid = this.getRaw(item);
-        return uuid == null || player.getUniqueId().equals(uuid);
+    public boolean canUse(@NotNull Player player, @Nullable UUID value) {
+        return value == null || player.getUniqueId().equals(value);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class SoulboundRequirement extends AbstractOwnerRequirement {
         if (value.equals(DUMMY_ID)) {
             return SoulboundManager.SOULBOUND_FORMAT_FREE;
         }
-        String user = plugin.getServer().getOfflinePlayer(value).getName();
+        String user = QuantumRPG.getInstance().getServer().getOfflinePlayer(value).getName();
         if (user == null) user = "null";
 
         return SoulboundManager.SOULBOUND_FORMAT_APPLIED.replace("%player%", user);
@@ -52,14 +53,14 @@ public class SoulboundRequirement extends AbstractOwnerRequirement {
     @NotNull
     public ILangMsg getDenyMessage(@NotNull Player p, @NotNull ItemStack src) {
         if (this.isRequired(src)) {
-            return plugin.lang().Module_Item_Interact_Error_Soulbound;
+            return QuantumRPG.getInstance().lang().Module_Item_Interact_Error_Soulbound;
         }
         UUID   value = this.getRaw(src);
         String user  = "null";
         if (value != null) {
-            String name = plugin.getServer().getOfflinePlayer(value).getName();
+            String name = QuantumRPG.getInstance().getServer().getOfflinePlayer(value).getName();
             if (name != null) user = name;
         }
-        return plugin.lang().Module_Item_Interact_Error_Owner.replace("%owner%", user);
+        return QuantumRPG.getInstance().lang().Module_Item_Interact_Error_Owner.replace("%owner%", user);
     }
 }

@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.modules.list.combatlog;
 
+import com.sucy.skill.api.DefaultCombatProtection;
 import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.api.task.ITask;
 import mc.promcteam.engine.utils.ClickText;
@@ -18,6 +19,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.inventory.ItemStack;
@@ -84,18 +86,23 @@ public class CombatLogManager extends QModule {
 
             String path2 = "general.logging.format.";
             this.genLogFormatTime = DateTimeFormatter.ofPattern(cfg.getString(path2 + "time", "HH:mm"));
-            this.genLogFormatText = StringUT.color(cfg.getString(path2 + "text", "&6[%time%] &r%message% %damage% %defense% %details% %weapon%"));
+            this.genLogFormatText = StringUT.color(cfg.getString(path2 + "text",
+                    "&6[%time%] &r%message% %damage% %defense% %details% %weapon%"));
 
-            this.genLogFormatButtonDamageName = StringUT.color(cfg.getString(path2 + "buttons.damage.name", "&c&l[Damage]"));
+            this.genLogFormatButtonDamageName =
+                    StringUT.color(cfg.getString(path2 + "buttons.damage.name", "&c&l[Damage]"));
             this.genLogFormatButtonDamageText = StringUT.color(cfg.getStringList(path2 + "buttons.damage.text"));
 
-            this.genLogFormatButtonDefenseName = StringUT.color(cfg.getString(path2 + "buttons.defense.name", "&b&l[Defense]"));
+            this.genLogFormatButtonDefenseName =
+                    StringUT.color(cfg.getString(path2 + "buttons.defense.name", "&b&l[Defense]"));
             this.genLogFormatButtonDefenseText = StringUT.color(cfg.getStringList(path2 + "buttons.defense.text"));
 
-            this.genLogFormatButtonDetailsName = StringUT.color(cfg.getString(path2 + "buttons.details.name", "&e&l[Details]"));
+            this.genLogFormatButtonDetailsName =
+                    StringUT.color(cfg.getString(path2 + "buttons.details.name", "&e&l[Details]"));
             this.genLogFormatButtonDetailsText = StringUT.color(cfg.getStringList(path2 + "buttons.details.text"));
 
-            this.genLogFormatButtonWeaponName = StringUT.color(cfg.getString(path2 + "buttons.weapon.name", "&d&l[Weapon]"));
+            this.genLogFormatButtonWeaponName =
+                    StringUT.color(cfg.getString(path2 + "buttons.weapon.name", "&d&l[Weapon]"));
 
             this.moduleCommand.addSubCommand(new LogCommand(this));
         }
@@ -269,7 +276,8 @@ public class CombatLogManager extends QModule {
                 List<String> damageDetails = new ArrayList<>(genLogFormatButtonDetailsText);
                 for (int i = 0; i < damageDetails.size(); i++) {
                     String line = damageDetails.get(i)
-                            .replace("%enchantment_protection_factor%", NumberUT.format(meta.getEnchantProtectionModifier()))
+                            .replace("%enchantment_protection_factor%",
+                                    NumberUT.format(meta.getEnchantProtectionModifier()))
                             .replace("%pvpe_modifier%", NumberUT.format(meta.getPvEDamageModifier()))
                             .replace("%penetrate_modifier%", NumberUT.format(meta.getPenetrateModifier()))
                             .replace("%block_modifier%", NumberUT.format(meta.getBlockModifier()))
@@ -391,7 +399,8 @@ public class CombatLogManager extends QModule {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDamageIndicator(EntityDamageEvent ex) {
-        if (ex.isCancelled()) return;
+        if (ex.isCancelled() || (ex instanceof EntityDamageByEntityEvent
+                && DefaultCombatProtection.isFakeDamageEvent((EntityDamageByEntityEvent) ex))) return;
         if (!(ex.getEntity() instanceof LivingEntity)) return;
         LivingEntity zertva = (LivingEntity) ex.getEntity();
 

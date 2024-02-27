@@ -169,7 +169,7 @@ public class ItemHintsManager extends QModule {
     }
 
     public void setGlow(Item item) {
-        if (!this.isGlow()) return;
+        if (!this.isGlow(item)) return;
 
         ChatColor cc     = getItemColor(item.getItemStack());
         String    teamId = "GLOW_" + cc.name();
@@ -196,7 +196,7 @@ public class ItemHintsManager extends QModule {
     }
 
     public void removeScoreboardEntry(Item item) {
-        if (!this.isGlow()) return;
+        if (!this.isGlow(item)) return;
 
         Bukkit.getServer().getOnlinePlayers().forEach(player -> {
             Scoreboard scoreboard = player.getScoreboard() != null
@@ -214,12 +214,8 @@ public class ItemHintsManager extends QModule {
         });
     }
 
-    public boolean isGlow() {
-        return this.glowEnabled;
-    }
-
     public boolean isGlow(@NotNull Item item) {
-        return this.isGlow() && this.isAffected(item, true);
+        return this.glowEnabled && this.isAffected(item, true);
     }
 
     public boolean isHint(@NotNull Item item) {

@@ -15,7 +15,8 @@ import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 public class PlaceholderAPIHK extends NHook<QuantumRPG> {
 
@@ -67,7 +68,7 @@ public class PlaceholderAPIHK extends NHook<QuantumRPG> {
             if (tmp.startsWith("itemstat_")) {
                 String tt = tmp.replace("itemstat_", "");
                 try {
-                    AbstractStat.Type type = AbstractStat.Type.valueOf(tt.toUpperCase());
+                    SimpleStat.Type type = TypedStat.Type.valueOf(tt.toUpperCase());
                     return String.valueOf(NumberUT.round(EntityStats.get(player).getItemStat(type, true)));
                 } catch (IllegalArgumentException ex) {
                     return NULL;

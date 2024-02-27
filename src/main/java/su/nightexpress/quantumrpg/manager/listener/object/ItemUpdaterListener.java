@@ -6,6 +6,8 @@ import mc.promcteam.engine.utils.DataUT;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,6 +20,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 
@@ -33,23 +36,25 @@ public class ItemUpdaterListener extends IListener<QuantumRPG> {
         ItemStack item   = event.getCurrentItem();
         ItemStack cursor = event.getCursor();
 
-        update(item);
-        update(cursor);
+        update(item, null);
+        HumanEntity entity = event.getWhoClicked();
+        update(cursor, entity instanceof Player ? (Player) entity : null);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void interact(PlayerInteractEvent event) {
-        update(event.getItem());
+        update(event.getItem(), event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void drop(PlayerDropItemEvent event) {
-        update(event.getItemDrop().getItemStack());
+        update(event.getItemDrop().getItemStack(), null);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void pickup(EntityPickupItemEvent event) {
-        update(event.getItem().getItemStack());
+        LivingEntity entity = event.getEntity();
+        update(event.getItem().getItemStack(), entity instanceof Player ? (Player) entity : null);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -60,19 +65,19 @@ public class ItemUpdaterListener extends IListener<QuantumRPG> {
         if (at instanceof Player) {
             Player player = (Player) at;
             for (ItemStack armor : player.getInventory().getArmorContents()) {
-                update(armor);
+                update(armor, player);
             }
         }
 
         if (damaged instanceof Player) {
             Player player = (Player) damaged;
             for (ItemStack armor : player.getInventory().getArmorContents()) {
-                update(armor);
+                update(armor, player);
             }
         }
     }
 
-    public void update(ItemStack item) {
+    public void update(ItemStack item, @Nullable Player player) {
         if (item == null || item.getType() == Material.AIR) return;
 
         NamespacedKey key   = NamespacedKey.fromString("rpgpro.fixed_damage");
@@ -84,9 +89,9 @@ public class ItemUpdaterListener extends IListener<QuantumRPG> {
             item.setItemMeta(meta);
         }
 
-        if (ItemStats.hasDamage(item, NBTAttribute.ATTACK_DAMAGE.getNmsName())
-                && ItemStats.getDamage(item, NBTAttribute.ATTACK_DAMAGE.getNmsName()) <= 0) {
-            ItemStats.updateVanillaAttributes(item);
+        if (ItemStats.hasDamage(item, null, NBTAttribute.ATTACK_DAMAGE.getNmsName())
+                && ItemStats.getDamageMinOrMax(item, null, NBTAttribute.ATTACK_DAMAGE.getNmsName(), 1) <= 0) {
+            ItemStats.updateVanillaAttributes(item, player);
 //            DataUT.setData(item, key, true);
         }
 

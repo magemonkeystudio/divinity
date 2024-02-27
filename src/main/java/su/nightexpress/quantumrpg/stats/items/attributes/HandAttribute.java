@@ -19,6 +19,12 @@ public class HandAttribute extends ItemLoreStat<String> {
         this.type = type;
     }
 
+    @Override
+    @NotNull
+    public Class<String> getParameterClass() {
+        return String.class;
+    }
+
     public static enum Type {
         ONE,
         TWO,

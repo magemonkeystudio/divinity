@@ -2,7 +2,12 @@ package su.nightexpress.quantumrpg.utils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.items.ItemType;
+import mc.promcteam.engine.items.exception.ProItemException;
+import mc.promcteam.engine.items.providers.IProItemProvider;
+import mc.promcteam.engine.items.providers.VanillaProvider;
 import mc.promcteam.engine.utils.CollectionsUT;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -33,6 +38,7 @@ import su.nightexpress.quantumrpg.types.ItemGroup;
 import su.nightexpress.quantumrpg.types.ItemSubType;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -109,7 +115,7 @@ public class ItemUtils {
         if (isArmor(item) || !EngineCfg.ATTRIBUTES_EFFECTIVE_IN_OFFHAND) {
             return new EquipmentSlot[]{getEquipmentSlotByItemType(item)};
         }
-        return new EquipmentSlot[]{EquipmentSlot.HAND, EquipmentSlot.OFF_HAND};
+        return EquipmentSlot.values();
     }
 
     // Input: axe, sword, weapon, armor, etc
@@ -138,6 +144,7 @@ public class ItemUtils {
      * @param id Item material name.
      * @return ItemSubType name, ItemGroup name, or localized Material name.
      */
+    @Deprecated
     @NotNull
     public static String getItemGroupNameFor(@NotNull Material id) {
         ItemSubType itemSubType = Config.getItemSubType(id);
@@ -151,6 +158,25 @@ public class ItemUtils {
         }
 
         return plugin.lang().getEnum(id);
+    }
+
+    /**
+     * @param item Item to get the group name for
+     * @return ItemSubType name, ItemGroup name, or localized Material name.
+     */
+    @NotNull
+    public static String getItemGroupNameFor(@NotNull ItemStack item) {
+        ItemSubType itemSubType = Config.getItemSubType(item);
+        if (itemSubType != null) {
+            return itemSubType.getName();
+        }
+
+        ItemGroup itemGroup = ItemGroup.getItemGroup(item);
+        if (itemGroup != null) {
+            return itemGroup.getName();
+        }
+
+        return plugin.lang().getEnum(item.getType());
     }
 
     /**
@@ -169,21 +195,23 @@ public class ItemUtils {
             return ig.name();
         }
 
-        return item.getType().name();
+        return NexEngine.get().getItemManager().getItemTypes(item).stream()
+                .filter(itemType -> itemType.getCategory() != IProItemProvider.Category.PRO)
+                .max(Comparator.comparing(ItemType::getCategory))
+                .orElseGet(() -> new VanillaProvider.VanillaItemType(item.getType())).getNamespacedID();
     }
 
     public static boolean compareItemGroup(@NotNull ItemStack item, @NotNull String group) {
-        ItemSubType ist = Config.getItemSubType(item);
-        if (ist != null && ist.getId().equalsIgnoreCase(group)) {
+        ItemSubType ist = Config.getSubTypeById(group);
+        if (ist != null && ist.isItemOfThis(item)) {
             return true;
         }
 
-        ItemGroup ig = ItemGroup.getItemGroup(item);
-        if (ig != null && ig.name().equalsIgnoreCase(group)) {
-            return true;
-        }
+        try {
+            if (ItemGroup.valueOf(group.toUpperCase()).isItemOfThis(item)) return true;
+        } catch (IllegalArgumentException ignored) {}
 
-        return item.getType().name().equalsIgnoreCase(group);
+        return NexEngine.get().getItemManager().isCustomItemOfId(item, group);
     }
 
     public static boolean compareItemGroup(@NotNull ItemStack item, @NotNull String[] group) {
@@ -197,7 +225,10 @@ public class ItemUtils {
             return true;
         }
 
-        return ArrayUtils.contains(group, item.getType().name().toLowerCase());
+        for (String gr : group) {
+            if (NexEngine.get().getItemManager().isCustomItemOfId(item, gr)) return true;
+        }
+        return false;
     }
 
     public static boolean parseItemGroup(@NotNull String group) {
@@ -207,12 +238,12 @@ public class ItemUtils {
         try {
             ItemGroup.valueOf(group.toUpperCase());
             return true;
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException ignored) {}
 
-        }
-
-        Material m = Material.getMaterial(group.toUpperCase());
-        return m != null;
+        try {
+            if (NexEngine.get().getItemManager().getItemType(group) != null) return true;
+        } catch (ProItemException ignored) {}
+        return false;
     }
 
     public static boolean checkEnchantConflict(@NotNull ItemStack item, @NotNull Enchantment ee) {

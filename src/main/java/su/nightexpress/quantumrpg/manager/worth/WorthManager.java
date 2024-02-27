@@ -26,7 +26,8 @@ import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,9 +38,9 @@ public class WorthManager implements Loadable {
 
     private final QuantumRPG                                         plugin;
     private final Map<ItemStack, Double>                             worthCache = new HashMap<>();
-    private       Map<String, Double>                                priceItemMaterial;
-    private       Map<AbstractStat.Type, Double>                     priceItemStats;
-    private       TreeMap<Integer, Double>                           priceRefineLvl;
+    private       Map<String, Double>          priceItemMaterial;
+    private       Map<SimpleStat.Type, Double> priceItemStats;
+    private       TreeMap<Integer, Double>     priceRefineLvl;
     private       Map<String, Double>                                priceDefenseTypes;
     private       Map<String, Double>                                priceDamageTypes;
     private       Map<SocketAttribute.Type, Map<String, Double>>     priceSocketTypes;
@@ -74,7 +75,7 @@ public class WorthManager implements Loadable {
         String path = "worth-calculator.";
 
         //double defPrice = 0D;
-        for (AbstractStat.Type type : AbstractStat.Type.values()) {
+        for (SimpleStat.Type type : TypedStat.Type.values()) {
             cfg.addMissing(path + "by-item-stats." + type.name(), Rnd.get(1, 11));
         }
         for (DamageAttribute dmgAtt : ItemStats.getDamages()) {
@@ -116,7 +117,7 @@ public class WorthManager implements Loadable {
         }
 
         for (String sId : cfg.getSection(path + "by-item-stats")) {
-            AbstractStat.Type type = CollectionsUT.getEnum(sId, AbstractStat.Type.class);
+            SimpleStat.Type type = CollectionsUT.getEnum(sId, SimpleStat.Type.class);
             if (type == null) {
                 this.plugin.error("[Worth] Invalid stat type: '" + sId + "' !");
                 continue;
@@ -344,14 +345,14 @@ public class WorthManager implements Loadable {
     private double getItemAttributesPrice(@NotNull ItemStack item) {
         double cost = 0D;
 
-        for (Map.Entry<AbstractStat.Type, Double> e : this.priceItemStats.entrySet()) {
-            cost += (e.getValue() * ItemStats.getStat(item, e.getKey()));
+        for (Map.Entry<SimpleStat.Type, Double> e : this.priceItemStats.entrySet()) {
+            cost += (e.getValue() * ItemStats.getStat(item, null, e.getKey()));
         }
         for (Map.Entry<String, Double> e : this.priceDamageTypes.entrySet()) {
-            cost += (e.getValue() * ItemStats.getDamageMinOrMax(item, e.getKey(), 1));
+            cost += (e.getValue() * ItemStats.getDamageMinOrMax(item, null, e.getKey(), 1));
         }
         for (Map.Entry<String, Double> e : this.priceDefenseTypes.entrySet()) {
-            cost += (e.getValue() * ItemStats.getDefense(item, e.getKey()));
+            cost += (e.getValue() * ItemStats.getDefense(item, null, e.getKey()));
         }
 
         return cost;
@@ -416,7 +417,7 @@ public class WorthManager implements Loadable {
             cost += this.getItemSocketPrice(item);
 
 
-            cost *= (1D + ItemStats.getStat(item, AbstractStat.Type.SALE_PRICE) / 100D);
+            cost *= (1D + ItemStats.getStat(item, null, TypedStat.Type.SALE_PRICE) / 100D);
             cost *= item.getAmount();
         }
 

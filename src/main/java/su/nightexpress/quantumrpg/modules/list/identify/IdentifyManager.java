@@ -1,6 +1,10 @@
 package su.nightexpress.quantumrpg.modules.list.identify;
 
+import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.items.ItemType;
+import mc.promcteam.engine.items.providers.IProItemProvider;
+import mc.promcteam.engine.items.providers.VanillaProvider;
 import mc.promcteam.engine.modules.IModule;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
@@ -14,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.QuantumAPI;
+import su.nightexpress.quantumrpg.manager.listener.object.DynamicStatListener;
 import su.nightexpress.quantumrpg.modules.EModule;
 import su.nightexpress.quantumrpg.modules.LimitedItem;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
@@ -23,7 +28,6 @@ import su.nightexpress.quantumrpg.modules.list.identify.event.PlayerIdentifyItem
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
 
 import java.util.*;
 
@@ -158,7 +162,10 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
         if (uItem.getResultModule() instanceof ItemGeneratorManager && generatorManager != null) {
             GeneratorItem result = generatorManager.getItemById(uItem.getResultId());
             if (result != null) {
-                unlock = result.create(lvl, -1, unknown.getType());
+                unlock = result.create(lvl, -1, NexEngine.get().getItemManager().getItemTypes(unknown).stream()
+                        .filter(itemType -> itemType.getCategory() != IProItemProvider.Category.PRO)
+                        .max(Comparator.comparing(ItemType::getCategory))
+                        .orElseGet(() -> new VanillaProvider.VanillaItemType(unknown.getType())));
             }
         } else {
             unlock = QuantumAPI.getItemByModule(uItem.getResultModule(), uItem.getResultId(), lvl, -1, -1);
@@ -208,7 +215,7 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
             lost.setAmount(target.getAmount() - 1);
         }
 
-        ItemRequirements.updateItem(player, unlock);
+        DynamicStatListener.updateItem(player, unlock);
         e.setCurrentItem(unlock);
 
         if (lost != null) {

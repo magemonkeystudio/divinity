@@ -35,7 +35,8 @@ import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.BleedStat;
 
 import java.util.*;
@@ -287,9 +288,9 @@ public class DamageManager extends IListener<QuantumRPG> {
             @NotNull DamageMeta meta
     ) {
 
-        double dodgeRate = statsVictim.getItemStat(AbstractStat.Type.DODGE_RATE, false);
+        double dodgeRate = statsVictim.getItemStat(TypedStat.Type.DODGE_RATE, false);
         if (dodgeRate > 0D) {
-            double accurRate = event.getDamagerItemStat(AbstractStat.Type.ACCURACY_RATE);
+            double accurRate = event.getDamagerItemStat(TypedStat.Type.ACCURACY_RATE);
             if (Rnd.get(true) < dodgeRate && Rnd.get(true) >= accurRate) {
 
                 RPGDamageEvent.Dodge qDodge = new RPGDamageEvent.Dodge(victim, damager, projectile, e, meta);
@@ -304,25 +305,25 @@ public class DamageManager extends IListener<QuantumRPG> {
         }
 
         double critModifier = 1D;
-        double critRate     = event.getDamagerItemStat(AbstractStat.Type.CRITICAL_RATE);
+        double critRate     = event.getDamagerItemStat(TypedStat.Type.CRITICAL_RATE);
         if (critRate > 0 && Rnd.get(true) < critRate) {
-            critModifier = event.getDamagerItemStat(AbstractStat.Type.CRITICAL_DAMAGE);
+            critModifier = event.getDamagerItemStat(TypedStat.Type.CRITICAL_DAMAGE);
             if (critModifier == 0D) {
                 critModifier = 1D;
             }
         }
         meta.setCriticalModifier(critModifier);
 
-        AbstractStat.Type pvpDefenseType = AbstractStat.Type.PVE_DEFENSE;
-        AbstractStat.Type pvpDamageType  = AbstractStat.Type.PVE_DAMAGE;
+        SimpleStat.Type pvpDefenseType = TypedStat.Type.PVE_DEFENSE;
+        SimpleStat.Type pvpDamageType  = TypedStat.Type.PVE_DAMAGE;
 
         if (statsVictim.isPlayer() && statsDamager.isPlayer()) {
-            pvpDefenseType = AbstractStat.Type.PVP_DEFENSE;
-            pvpDamageType = AbstractStat.Type.PVP_DAMAGE;
+            pvpDefenseType = TypedStat.Type.PVP_DEFENSE;
+            pvpDamageType = TypedStat.Type.PVP_DAMAGE;
         }
 
         double directPercent = /*event.getDamagerItemStat(AbstractStat.Type.DIRECT_DAMAGE)*/0D / 100D;
-        double penetration   = 1D - event.getDamagerItemStat(AbstractStat.Type.PENETRATION) / 100D;
+        double penetration   = 1D - event.getDamagerItemStat(TypedStat.Type.PENETRATION) / 100D;
 
         double pvpeDefense = 1D + statsVictim.getItemStat(pvpDefenseType, false) / 100D;
         double pvpeDamage  = 1D + event.getDamagerItemStat(pvpDamageType) / 100D;
@@ -332,8 +333,8 @@ public class DamageManager extends IListener<QuantumRPG> {
         meta.setDirectModifier(directPercent);
         meta.setPenetrateModifier(penetration);
 
-        double blockModifier = statsVictim.getItemStat(AbstractStat.Type.BLOCK_DAMAGE, false);
-        double blockRate     = statsVictim.getItemStat(AbstractStat.Type.BLOCK_RATE, false);
+        double blockModifier = statsVictim.getItemStat(TypedStat.Type.BLOCK_DAMAGE, false);
+        double blockRate     = statsVictim.getItemStat(TypedStat.Type.BLOCK_RATE, false);
 
         Player  player           = statsVictim.getPlayer();
         boolean isVanillaBlocked = false;
@@ -393,7 +394,7 @@ public class DamageManager extends IListener<QuantumRPG> {
             @NotNull DamageMeta meta
     ) {
 
-        final double aoe = event.getDamagerItemStat(AbstractStat.Type.AOE_DAMAGE);
+        final double aoe = event.getDamagerItemStat(TypedStat.Type.AOE_DAMAGE);
         if (aoe > 0D && e.getCause() != DamageCause.ENTITY_SWEEP_ATTACK) {
             if (statsVictim.isIgnoreAOE()) {
                 statsVictim.setIgnoreAOE(false);
@@ -418,22 +419,22 @@ public class DamageManager extends IListener<QuantumRPG> {
 
         double dmgTotal = meta.getTotalDamage();
 
-        double disarm = event.getDamagerItemStat(AbstractStat.Type.DISARM_RATE);
+        double disarm = event.getDamagerItemStat(TypedStat.Type.DISARM_RATE);
         if (disarm > 0D && Rnd.get(true) < disarm) {
             DisarmEffect disarmEffect = new DisarmEffect();
             disarmEffect.applyTo(victim);
         }
 
-        double burn = event.getDamagerItemStat(AbstractStat.Type.BURN_RATE);
+        double burn = event.getDamagerItemStat(TypedStat.Type.BURN_RATE);
         if (burn > 0D && Rnd.get(true) < burn) victim.setFireTicks(100);
 
-        double bleed = event.getDamagerItemStat(AbstractStat.Type.BLEED_RATE);
+        double bleed = event.getDamagerItemStat(TypedStat.Type.BLEED_RATE);
         if (bleed > 0D && Rnd.get(true) < bleed) {
             BleedStat bleedStat = ItemStats.getStat(BleedStat.class);
             if (bleedStat != null) bleedStat.bleed(victim, dmgTotal);
         }
 
-        double vamp = Math.max(0, dmgTotal * (event.getDamagerItemStat(AbstractStat.Type.VAMPIRISM) / 100D));
+        double vamp = Math.max(0, dmgTotal * (event.getDamagerItemStat(TypedStat.Type.VAMPIRISM) / 100D));
         if (vamp > 0D) {
             EntityRegainHealthEvent eventRegain = new EntityRegainHealthEvent(damager, vamp, RegainReason.CUSTOM);
             plugin.getPluginManager().callEvent(eventRegain);
@@ -443,7 +444,7 @@ public class DamageManager extends IListener<QuantumRPG> {
             }
         }
 
-        double thorn = statsVictim.getItemStat(AbstractStat.Type.THORNMAIL, false) / 100D;
+        double thorn = statsVictim.getItemStat(TypedStat.Type.THORNMAIL, false) / 100D;
         if (thorn > 0D) damager.damage(dmgTotal * thorn);
 
         return true;

@@ -15,6 +15,7 @@ public class ListenerManager implements Loadable {
     private       ItemDurabilityListener  lisDurability;
     private       ItemHandListener        lisHand;
     private       ItemRequirementListener lisReq;
+    private       DynamicStatListener     lisDynamic;
     private       ItemUpdaterListener     updater;
     private       VanillaWrapperListener  lisQuantum;
     private       HookListener            hookListener;
@@ -40,6 +41,9 @@ public class ListenerManager implements Loadable {
             this.lisReq = new ItemRequirementListener(this.plugin);
             this.lisReq.registerListeners();
         }
+
+        this.lisDynamic = new DynamicStatListener(this.plugin);
+        this.lisDynamic.registerListeners();
 
         this.lisQuantum = new VanillaWrapperListener(this.plugin);
         this.lisQuantum.registerListeners();

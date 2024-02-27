@@ -1,5 +1,9 @@
 package su.nightexpress.quantumrpg.modules.command;
 
+import mc.promcteam.engine.NexEngine;
+import mc.promcteam.engine.items.ItemType;
+import mc.promcteam.engine.items.exception.MissingItemException;
+import mc.promcteam.engine.items.exception.MissingProviderException;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.random.Rnd;
 import org.bukkit.Material;
@@ -61,7 +65,7 @@ public class MGetCmd extends MCmd<QModuleDrop<?>> {
             GeneratorItem        generatorItem        = itemGeneratorManager.getItemById(args[1]);
             if (generatorItem != null) {
                 List<String> list = generatorItem.getMaterialsList().stream()
-                        .map(Material::name).collect(Collectors.toList());
+                        .map(ItemType::getNamespacedID).collect(Collectors.toList());
                 return list;
             }
         }
@@ -95,7 +99,12 @@ public class MGetCmd extends MCmd<QModuleDrop<?>> {
         Player    p    = (Player) sender;
         ItemStack item = null;
 
-        Material             material      = args.length >= 5 ? Material.getMaterial(args[4].toUpperCase()) : null;
+        ItemType material;
+        try {
+            material = args.length >= 5 ? NexEngine.get().getItemManager().getItemType(args[4].toUpperCase()) : null;
+        } catch (MissingProviderException | MissingItemException e) {
+            material = null;
+        }
         ItemGeneratorManager itemGenerator = this.module instanceof ItemGeneratorManager ? (ItemGeneratorManager) this.module : null;
         GeneratorItem        generatorItem = itemGenerator != null ? itemGenerator.getItemById(id) : null;
 

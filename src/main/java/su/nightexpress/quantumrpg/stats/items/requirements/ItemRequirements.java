@@ -5,8 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import su.nightexpress.quantumrpg.config.EngineCfg;
-import su.nightexpress.quantumrpg.stats.items.requirements.api.DynamicUserRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.api.ItemRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.api.UserRequirement;
 
@@ -87,17 +85,6 @@ public class ItemRequirements {
             }
         }
         return null;
-    }
-
-    public static void updateItem(@Nullable Player p, @NotNull ItemStack item) {
-        if (!EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE) return;
-
-        for (UserRequirement<?> req : getUserRequirements()) {
-            if (req.isDynamic()) {
-                DynamicUserRequirement<?> dReq = (DynamicUserRequirement<?>) req;
-                dReq.updateItem(p, item);
-            }
-        }
     }
 
     public static boolean canApply(

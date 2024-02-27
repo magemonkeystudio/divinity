@@ -1,28 +1,31 @@
-package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials;
+package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.bonuses;
 
 import mc.promcteam.engine.manager.api.menu.Slot;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.hooks.EHook;
+import su.nightexpress.quantumrpg.hooks.external.SkillAPIHK;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.*;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class NewStatModifierGUI extends AbstractEditorGUI {
-    private final String group;
-    private final StatModifierTypeGUI.ItemType statType;
+public class NewBonusStatGUI extends AbstractEditorGUI {
+    private final String                    path;
+    private final BonusCategoryGUI.ItemType statType;
 
-    public NewStatModifierGUI(Player player, ItemGeneratorReference itemGenerator, String group, StatModifierTypeGUI.ItemType statType) {
+    public NewBonusStatGUI(Player player, ItemGeneratorReference itemGenerator, String path, BonusCategoryGUI.ItemType statType) {
         super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(), itemGenerator);
-        this.group = group;
+        this.path = path;
         this.statType = statType;
     }
 
@@ -63,7 +66,7 @@ public class NewStatModifierGUI extends AbstractEditorGUI {
             }
             case ITEM_STAT: {
                 material = Material.OAK_SIGN;
-                for (AbstractStat.Type itemStat : AbstractStat.Type.values()) {
+                for (SimpleStat.Type itemStat : TypedStat.Type.values()) {
                     boolean exists = false;
                     for (String existingKey : existingKeys) {
                         if (existingKey.equalsIgnoreCase(itemStat.name())) {
@@ -72,6 +75,51 @@ public class NewStatModifierGUI extends AbstractEditorGUI {
                         }
                     }
                     if (!exists) {list.add(itemStat.name());}
+                }
+                break;
+            }
+            case SKILLAPI_ATTRIBUTE: {
+                material = Material.BOOK;
+                SkillAPIHK skillAPIHK = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+                if (skillAPIHK != null) {
+                    for (SkillAPIAttribute skillAPIAttribute : skillAPIHK.getAttributes()) {
+                        boolean exists = false;
+                        for (String existingKey : existingKeys) {
+                            if (existingKey.equalsIgnoreCase(skillAPIAttribute.getId())) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {list.add(skillAPIAttribute.getId());}
+                    }
+                }
+                break;
+            }
+            case HAND: {
+                material = Material.STICK;
+                for (HandAttribute handAttribute : ItemStats.getHands()) {
+                    boolean exists = false;
+                    for (String existingKey : existingKeys) {
+                        if (existingKey.equalsIgnoreCase(handAttribute.getId())) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {list.add(handAttribute.getId());}
+                }
+                break;
+            }
+            case AMMO: {
+                material = Material.ARROW;
+                for (AmmoAttribute ammoAttribute : ItemStats.getAmmos()) {
+                    boolean exists = false;
+                    for (String existingKey : existingKeys) {
+                        if (existingKey.equalsIgnoreCase(ammoAttribute.getId())) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    if (!exists) {list.add(ammoAttribute.getId());}
                 }
                 break;
             }
@@ -99,7 +147,10 @@ public class NewStatModifierGUI extends AbstractEditorGUI {
                     sendSetMessage(stat + ' ' + statType.name().replace('_', ' ').toLowerCase() + " value",
                             null,
                             s -> {
-                                itemGenerator.getConfig().set(getPath() + '.' + stat, Double.parseDouble(s));
+                                String[] split = s.split("%", 2);
+                                if (split.length == 2 && !split[1].isEmpty()) throw new IllegalArgumentException();
+                                Double.parseDouble(split[0]);
+                                itemGenerator.getConfig().set(getPath() + '.' + stat, s);
                                 saveAndReopen();
                                 close(2);
                             });
@@ -111,6 +162,6 @@ public class NewStatModifierGUI extends AbstractEditorGUI {
     }
 
     private String getPath() {
-        return MainMaterialsGUI.ItemType.STAT_MODIFIERS.getPath() + '.' + this.group + '.' + this.statType.getPath();
+        return path + '.' + this.statType.getPath();
     }
 }

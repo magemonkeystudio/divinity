@@ -14,15 +14,12 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.ItemGeneratorManage
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.api.DamageInformation;
 import su.nightexpress.quantumrpg.stats.bonus.BonusCalculator;
-import su.nightexpress.quantumrpg.stats.items.ItemStats;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SkillAPIAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.DoubleStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
@@ -71,7 +68,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
             }
 
             double chance = cfg.getDouble(path2 + "chance");
-            if (chance <= 0) return;
+            //if (chance <= 0) return; Removed so that Bonuses can be applied
 
             double            m1         = cfg.getDouble(path2 + "min", 0D);
             double            m2         = cfg.getDouble(path2 + "max", 0D);
@@ -222,61 +219,41 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                     BiFunction<Boolean, Double, Double> vMod = generatorItem.getMaterialModifier(item, stat);
 
                     double vScale = generatorItem.getScaleOfLevel(values.getScaleByLevel(), itemLevel);
-                    double vMin   = BonusCalculator.CALC_FULL.apply(values.getMin(), Arrays.asList(vMod)) * vScale;
+                    double vMin   = BonusCalculator.SIMPLE_FULL.apply(values.getMin(), Arrays.asList(vMod)) * vScale;
                     //(values[1]) * vScale * (1D + vMod[1] / 100D);
-                    double vMax = BonusCalculator.CALC_FULL.apply(values.getMax(), Arrays.asList(vMod)) * vScale;
+                    double vMax = BonusCalculator.SIMPLE_FULL.apply(values.getMax(), Arrays.asList(vMod)) * vScale;
                     // (values[2]) * vScale * (1D + vMod[1] / 100D);
 
-                    // Skip zero stats and decrease the counter to allow other stats
-                    // to be generated instead of these ones.
-                    if (vMin == 0 && vMax == 0) {
-                        count--;
-                    } else {
-                        if (stat instanceof DamageAttribute) {
-                            DamageAttribute dmgAtt = (DamageAttribute) stat;
-                            double          rndV1  = vMin;
-                            double          rndV2  = vMax;
+                    if (stat instanceof DamageAttribute) {
+                        DamageAttribute dmgAtt = (DamageAttribute) stat;
+                        double          rndV1  = vMin;
+                        double          rndV2  = vMax;
 
-                            if (!values.isFlatRange()) {
-                                rndV1 = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                                rndV2 = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                                if (values.isRound()) {
-                                    rndV1 = Math.round(rndV1);
-                                    rndV2 = Math.round(rndV2);
-                                }
-                            }
-
-                            double vFinMin = Math.min(rndV1, rndV2);
-                            double vFinMax = Math.max(rndV1, rndV2);
-                            dmgAtt.add(item, new double[]{vFinMin, vFinMax}, -1);
-                        } else {
-                            double vFin = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                            if (stat instanceof DefenseAttribute) {
-                                DefenseAttribute defAtt = (DefenseAttribute) stat;
-                                defAtt.add(item, vFin, -1);
-                            } else if (stat instanceof SimpleStat) {
-                                SimpleStat rStat = (SimpleStat) stat;
-                                rStat.add(item, vFin, -1);
-
-                                // Add depending stats.
-                                AbstractStat.Type depend = rStat.getDependStat();
-                                if (depend != null && rStat.isMainItem(item)) {
-                                    @SuppressWarnings("unchecked")
-                                    A dStat = (A) ItemStats.getStat(depend);
-                                    if (dStat != null && !dStat.isApplied(item)) {
-                                        mapChance.put(dStat, 100D);
-                                        // Make depend stat to be 100% rolled.
-                                        count--;
-                                    }
-                                }
-                            } else if (stat instanceof DoubleStat) {
-                                DoubleStat rStat = (DoubleStat) stat;
-                                rStat.add(item, new double[]{vFin, vFin}, -1);
-                            } else if (stat instanceof SkillAPIAttribute) {
-                                SkillAPIAttribute skillAPIAttribute = (SkillAPIAttribute) stat;
-                                skillAPIAttribute.add(item, (int) Math.floor(vFin), -1);
+                        if (!values.isFlatRange()) {
+                            rndV1 = NumberUT.round(Rnd.getDouble(vMin, vMax));
+                            rndV2 = NumberUT.round(Rnd.getDouble(vMin, vMax));
+                            if (values.isRound()) {
+                                rndV1 = Math.round(rndV1);
+                                rndV2 = Math.round(rndV2);
                             }
                         }
+
+                        double vFinMin = Math.min(rndV1, rndV2);
+                        double vFinMax = Math.max(rndV1, rndV2);
+                        dmgAtt.add(item, new StatBonus(new double[]{vFinMin, vFinMax}, false, null), -1);
+                    } else {
+                        double vFin = NumberUT.round(Rnd.getDouble(vMin, vMax));
+                        if (stat instanceof DefenseAttribute) {
+                            DefenseAttribute defAtt = (DefenseAttribute) stat;
+                            defAtt.add(item, new StatBonus(new double[]{vFin}, false, null), -1);
+                        } else if (stat instanceof SkillAPIAttribute) {
+                            SkillAPIAttribute skillAPIAttribute = (SkillAPIAttribute) stat;
+                            skillAPIAttribute.add(item, (int) Math.floor(vFin), -1);
+                        }
+                    }
+
+                    for (StatBonus statBonus : generatorItem.getClassBonuses(stat)) {
+                        ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
                     }
                 }
             }

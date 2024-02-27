@@ -1,8 +1,8 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
+import mc.promcteam.engine.items.ItemType;
 import mc.promcteam.engine.manager.api.Loadable;
 import mc.promcteam.engine.utils.FileUT;
-import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.config.Config;
 import su.nightexpress.quantumrpg.stats.tiers.Tier;
@@ -30,7 +30,7 @@ public class ResourceManager implements Loadable {
         this.createMissingResources();
 
         this.load(ResourceCategory.MATERIAL, Config.getAllRegisteredMaterials()
-                .stream().map(mat -> mat.name().toLowerCase()).collect(Collectors.toSet()));
+                .stream().map(ItemType::getNamespacedID).collect(Collectors.toSet()));
 
         this.load(ResourceCategory.SUBTYPE, Config.getSubTypeIds());
 
@@ -63,8 +63,8 @@ public class ResourceManager implements Loadable {
                         FileUT.create(f);
                     }
                 } else if (cat == ResourceCategory.MATERIAL) {
-                    for (Material m : Config.getAllRegisteredMaterials()) {
-                        File f = new File(path, m.name().toLowerCase() + ".txt");
+                    for (ItemType m : Config.getAllRegisteredMaterials()) {
+                        File f = new File(path, m.getNamespacedID() + ".txt");
                         FileUT.create(f);
                     }
                 } else if (cat == ResourceCategory.SUBTYPE) {

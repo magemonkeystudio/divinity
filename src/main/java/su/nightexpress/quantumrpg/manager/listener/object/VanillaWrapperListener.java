@@ -4,6 +4,7 @@ import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.manager.IListener;
 import mc.promcteam.engine.registry.attribute.AttributeRegistry;
 import mc.promcteam.engine.utils.ItemUT;
+import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -34,7 +35,7 @@ import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.AmmoAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 
 import java.util.HashMap;
@@ -128,6 +129,12 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onVanillaDamage(EntityDamageEvent e) {
+        boolean isEde = e instanceof EntityDamageByEntityEvent;
+        if (isEde && plugin.getPluginManager().isPluginEnabled("SkillAPI")) {
+            EntityDamageByEntityEvent ede        = (EntityDamageByEntityEvent) e;
+            SkillAPIHK                skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
+            if (skillAPIHK.isFakeDamage(ede)) return;
+        }
 //        long l1 = System.currentTimeMillis();
 
         Entity eVictim = e.getEntity();
@@ -153,7 +160,6 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         DamageMeta meta = new DamageMeta(victim, damager, weapon, cause);
         statsVictim.setLastDamageMeta(meta);
 
-        boolean isEde        = e instanceof EntityDamageByEntityEvent;
         boolean isFullDamage = false;
 
         SkillAPIHK skillApi = (SkillAPIHK) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
@@ -220,7 +226,8 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
 
                 // Anti-weapon damage bug, when shot was from a bow,
                 // but user swap his weapon to replace bow stats/damage.
-                if (weapon != null && !weapon.isSimilar(statsDamager.getItemInMainHand())) {
+                if (weapon != null && weapon.getType() != Material.TRIDENT
+                        && !weapon.isSimilar(statsDamager.getItemInMainHand())) {
                     damageStart = 1D;
                     break labelFullDamage;
                 }
@@ -245,9 +252,9 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         // | For melee damage we're use damager's stats for full|
         // | damage, or a default attribute with event damage.  |
         // +----------------------------------------------------+
-        final Map<DamageAttribute, Double>   damages  = new HashMap<>();
-        final Map<AbstractStat.Type, Double> stats    = new HashMap<>();
-        final Map<DefenseAttribute, Double>  defenses = new HashMap<>();
+        final Map<DamageAttribute, Double>  damages  = new HashMap<>();
+        final Map<SimpleStat.Type, Double>  stats    = new HashMap<>();
+        final Map<DefenseAttribute, Double> defenses = new HashMap<>();
 
         // Pre-cache damager damage types.
         if (isFullDamage && !exempt) {

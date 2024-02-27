@@ -5,6 +5,7 @@ import mc.promcteam.engine.utils.DataUT;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.requirements.api.ItemRequirement;
@@ -27,6 +28,12 @@ public class ItemTypeRequirement extends ItemRequirement<String[]> {
     }
 
     @Override
+    @NotNull
+    public Class<String[]> getParameterClass() {
+        return String[].class;
+    }
+
+    @Override
     public boolean canApply(@NotNull ItemStack src, @NotNull ItemStack target) {
         String[] types = this.getRaw(src);
         if (types == null || types.length == 0) return true;
@@ -39,7 +46,7 @@ public class ItemTypeRequirement extends ItemRequirement<String[]> {
         String[] arr = this.getRaw(src);
         if (arr == null) throw new IllegalStateException("Item does not have stat!");
 
-        return plugin.lang().Module_Item_Apply_Error_Type.replace("%value%", this.formatValue(src, arr));
+        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Type.replace("%value%", this.formatValue(src, arr));
     }
 
     @Override

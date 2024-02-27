@@ -10,11 +10,12 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.Perms;
 import su.nightexpress.quantumrpg.QuantumRPG;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.*;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.DoubleStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement;
@@ -82,7 +83,7 @@ public class SetCommand extends ISubCommand<QuantumRPG> {
                 return list;
             }
             if (arg.equalsIgnoreCase(ARGS[5])) {
-                return CollectionsUT.getEnumsList(AbstractStat.Type.class);
+                return CollectionsUT.getEnumsList(SimpleStat.Type.class);
             }
             if (arg.equalsIgnoreCase(ARGS[6])) {
                 return CollectionsUT.getEnumsList(AmmoAttribute.Type.class);
@@ -241,7 +242,7 @@ public class SetCommand extends ISubCommand<QuantumRPG> {
                     return;
                 }
 
-                dt.add(item, new double[]{val1, val2}, line);
+                dt.add(item, new StatBonus(new double[]{val1, val2}, false, null), line);
                 player.getInventory().setItemInMainHand(item);
 
                 break;
@@ -265,7 +266,7 @@ public class SetCommand extends ISubCommand<QuantumRPG> {
                     return;
                 }
 
-                dt.add(item, amount, line);
+                dt.add(item, new StatBonus(new double[]{amount}, false, null), line);
                 player.getInventory().setItemInMainHand(item);
 
                 break;
@@ -334,13 +335,13 @@ public class SetCommand extends ISubCommand<QuantumRPG> {
                     return;
                 }
 
-                AbstractStat.Type at = AbstractStat.Type.getByName(args[2]);
+                TypedStat.Type at = TypedStat.Type.getByName(args[2]);
                 if (at == null) {
-                    this.errType(sender, AbstractStat.Type.class);
+                    this.errType(sender, SimpleStat.Type.class);
                     return;
                 }
 
-                AbstractStat<?> stat = su.nightexpress.quantumrpg.stats.items.ItemStats.getStat(at);
+                TypedStat stat = su.nightexpress.quantumrpg.stats.items.ItemStats.getStat(at);
                 if (stat == null) {
                     sender.sendMessage("Stat is not registered!");
                     return;
@@ -354,9 +355,9 @@ public class SetCommand extends ISubCommand<QuantumRPG> {
 
                 if (stat instanceof SimpleStat) {
                     SimpleStat rs = (SimpleStat) stat;
-                    rs.add(item, val, line);
+                    rs.add(item, new StatBonus(new double[]{val}, false, null), line);
                 } else {
-                    DoubleStat ms = (DoubleStat) stat;
+                    DurabilityStat ms = (DurabilityStat) stat;
                     ms.add(item, new double[]{val, val}, line);
                 }
 

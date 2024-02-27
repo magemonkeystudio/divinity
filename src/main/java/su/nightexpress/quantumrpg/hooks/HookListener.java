@@ -22,6 +22,10 @@ public class HookListener extends IListener<QuantumRPG> {
     @EventHandler
     public void onPluginEnable(PluginEnableEvent event) {
         switch (event.getPlugin().getName()) {
+            case "LevelledMobs": {
+                this.plugin.registerHook(EHook.LEVELLED_MOBS, LevelledMobsHK.class);
+                break;
+            }
             case "LorinthsRpgMobs": {
                 this.plugin.registerHook(EHook.LORINTHS_RPG_MOBS, LorinthsRpgMobsHK.class);
                 break;
@@ -41,8 +45,11 @@ public class HookListener extends IListener<QuantumRPG> {
                 } catch (ClassNotFoundException classNotFoundException) {
                     mythic4 = false;
                 }
-                if (mythic4) {this.plugin.registerHook(Hooks.MYTHIC_MOBS, MythicMobsHK.class);}
-                else {this.plugin.registerHook(Hooks.MYTHIC_MOBS, MythicMobsHKv5.class);}
+                if (mythic4) {
+                    this.plugin.registerHook(Hooks.MYTHIC_MOBS, MythicMobsHK.class);
+                } else {
+                    this.plugin.registerHook(Hooks.MYTHIC_MOBS, MythicMobsHKv5.class);
+                }
                 break;
             }
             case "PlaceholderAPI": {
@@ -57,10 +64,14 @@ public class HookListener extends IListener<QuantumRPG> {
                 this.plugin.registerHook(EHook.SKILL_API, SkillAPIHK.class);
                 this.plugin.setConfig();
                 PartyManager partyManager = this.plugin.getModuleManager().getModule(PartyManager.class);
-                if (partyManager != null) {partyManager.reload();}
+                if (partyManager != null) {
+                    partyManager.reload();
+                }
                 SkillAPIHK skillAPIHK = (SkillAPIHK) this.plugin.getHook(EHook.SKILL_API);
                 if (skillAPIHK != null) {
-                    for (Player player : Bukkit.getServer().getOnlinePlayers()) {skillAPIHK.updateSkills(player);}
+                    for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                        skillAPIHK.updateSkills(player);
+                    }
                 }
                 break;
             }

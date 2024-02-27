@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.stats.items.attributes.stats;
 
+import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.random.Rnd;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -8,19 +9,80 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.RPGItemDamageEvent;
 import su.nightexpress.quantumrpg.config.EngineCfg;
-import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.DoubleStat;
+import su.nightexpress.quantumrpg.stats.items.ItemTags;
+import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
-public class DurabilityStat extends DoubleStat {
+public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat {
+    private   double          cap;
 
     public DurabilityStat(
-            @NotNull Type statType,
             @NotNull String name,
             @NotNull String format,
             double cap) {
-        super(statType, name, format, cap);
+        super(
+                TypedStat.Type.DURABILITY.name(),
+                name,
+                format,
+                "%ITEM_STAT_" + TypedStat.Type.DURABILITY.name() + "%",
+                ItemTags.TAG_ITEM_STAT,
+                DataUT.DOUBLE_ARRAY);
+        this.cap = cap;
+    }
+
+    @Override
+    @NotNull
+    public Class<double[]> getParameterClass() {
+        return double[].class;
+    }
+
+    @Override
+    @NotNull
+    public SimpleStat.Type getType() {
+        return TypedStat.Type.DURABILITY;
+    }
+
+    @Override
+    public double getCapability() {
+        return this.cap;
+    }
+
+    @Override
+    public void setCapability(double cap) {
+        this.cap = cap;
+    }
+
+    @Override
+    @NotNull
+    public SimpleStat.ItemType getItemType() {
+        return TypedStat.Type.DURABILITY.getItemType();
+    }
+
+    @Override
+    public boolean isPercent() {
+        return TypedStat.Type.DURABILITY.isPercent();
+    }
+
+    @Override
+    public boolean canBeNegative() {
+        return TypedStat.Type.DURABILITY.canBeNegative();
+    }
+
+    @Override
+    @Deprecated
+    public boolean isMainItem(@NotNull ItemStack item) {
+        return true;
+    }
+
+    @Override
+    @Nullable
+    public SimpleStat.Type getDependStat() {
+        return null;
     }
 
     public boolean isUnbreakable(@NotNull ItemStack item) {
@@ -33,9 +95,6 @@ public class DurabilityStat extends DoubleStat {
     }
 
     public boolean isDamaged(@NotNull ItemStack item) {
-        if (!ItemStats.hasStat(item, this.statType)) {
-            return false;
-        }
         if (this.isUnbreakable(item)) {
             return false;
         }
@@ -44,15 +103,16 @@ public class DurabilityStat extends DoubleStat {
     }
 
     public boolean isBroken(@NotNull ItemStack item) {
-        return ItemStats.hasStat(item, this.statType) && this.get(item) == 0
-                && !EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS;
+        if (!EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS) return false;
+        double[] durability = this.getRaw(item);
+        return durability != null && durability[0] == 0;
     }
 
     public boolean reduceDurability(
             @NotNull LivingEntity li, @NotNull ItemStack item, int amount) {
 
         if (!(li instanceof Player) && !EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS) return false;
-        if (!ItemStats.hasStat(item, this.statType) || this.isUnbreakable(item)) return false;
+        if (this.isUnbreakable(item)) return false;
 
         ItemMeta meta = item.getItemMeta();
 
@@ -65,16 +125,15 @@ public class DurabilityStat extends DoubleStat {
             }
         }
 
-        // Stop if item is already broken
-        double current = this.get(item);
-        if (current == 0) return false;
-
         double[] durability = this.getRaw(item);
         if (durability == null) return false;
+        double current = durability[0];
+        // Stop if item is already broken
+        if (current == 0) return false;
 
         // Custom item damage event
         RPGItemDamageEvent eve = new RPGItemDamageEvent(item, li);
-        plugin.getPluginManager().callEvent(eve);
+        QuantumRPG.getInstance().getPluginManager().callEvent(eve);
         if (eve.isCancelled()) return false;
 
         double max  = durability[1];

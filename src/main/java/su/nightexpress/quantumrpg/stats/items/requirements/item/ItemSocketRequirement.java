@@ -5,6 +5,7 @@ import mc.promcteam.engine.utils.DataUT;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
@@ -26,6 +27,12 @@ public class ItemSocketRequirement extends ItemRequirement<String[]> {
     }
 
     @Override
+    @NotNull
+    public Class<String[]> getParameterClass() {
+        return String[].class;
+    }
+
+    @Override
     public boolean canApply(@NotNull ItemStack src, @NotNull ItemStack target) {
         String[] req = this.getRaw(src);
         if (req == null || req.length != 2 || req[0].isEmpty() || req[1].isEmpty()) return false;
@@ -41,7 +48,7 @@ public class ItemSocketRequirement extends ItemRequirement<String[]> {
 
     @Override
     public ILangMsg getApplyMessage(@NotNull ItemStack src, @NotNull ItemStack target) {
-        ILangMsg msg = plugin.lang().Module_Item_Apply_Error_Socket;
+        ILangMsg msg = QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Socket;
 
         String[] arr = this.getRaw(src);
         if (arr == null || ArrayUtils.isEmpty(arr) || arr.length != 2) return msg;
@@ -59,19 +66,19 @@ public class ItemSocketRequirement extends ItemRequirement<String[]> {
     @NotNull
     public String formatValue(@NotNull ItemStack item, @NotNull String[] arr) {
         if (ArrayUtils.isEmpty(arr) || arr.length != 2) {
-            plugin.error("Empty/Incomplete arguments for Socket Requirement!");
+            QuantumRPG.getInstance().error("Empty/Incomplete arguments for Socket Requirement!");
             return "";
         }
 
         SocketAttribute.Type type = SocketAttribute.Type.getByName(arr[0]);
         if (type == null) {
-            plugin.error("Invalid Socket Type '" + arr[0] + "' for Socket Requirement!");
+            QuantumRPG.getInstance().error("Invalid Socket Type '" + arr[0] + "' for Socket Requirement!");
             return "";
         }
 
         SocketAttribute socket = ItemStats.getSocket(type, arr[1]);
         if (socket == null) {
-            plugin.error("Invalid Socket Attribute Id '" + arr[1] + "' for Socket Requirement!");
+            QuantumRPG.getInstance().error("Invalid Socket Attribute Id '" + arr[1] + "' for Socket Requirement!");
             return "";
         }
 

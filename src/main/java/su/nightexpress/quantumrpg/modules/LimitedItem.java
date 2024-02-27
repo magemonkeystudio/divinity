@@ -5,6 +5,7 @@ import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.list.identify.IdentifyManager;
@@ -74,7 +75,12 @@ public class LimitedItem extends LeveledItem {
 
     @NotNull
     protected ItemStack build(int lvl, int uses) {
-        ItemStack item = super.build(lvl);
+        return build(null, lvl, uses);
+    }
+
+    @NotNull
+    protected ItemStack build(@Nullable ItemStack item, int lvl, int uses) {
+        item = item == null ? super.build(lvl) : super.build(item, lvl);
 
         ChargesAttribute charges = ItemStats.getAttribute(ChargesAttribute.class);
         if (charges != null) {

@@ -4,6 +4,7 @@ import mc.promcteam.engine.config.api.ILangMsg;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.Config;
 import su.nightexpress.quantumrpg.modules.LeveledItem;
 import su.nightexpress.quantumrpg.modules.ModuleItem;
@@ -21,6 +22,12 @@ public class ItemTierRequirement extends ItemRequirement<String> {
                 ItemTags.PLACEHOLDER_REQ_ITEM_TIER,
                 ItemTags.TAG_REQ_ITEM_TIER,
                 PersistentDataType.STRING);
+    }
+
+    @Override
+    @NotNull
+    public Class<String> getParameterClass() {
+        return String.class;
     }
 
     @Override
@@ -50,7 +57,7 @@ public class ItemTierRequirement extends ItemRequirement<String> {
         Tier tier = Config.getTier(tierId);
         if (tier == null) return null;
 
-        return plugin.lang().Module_Item_Apply_Error_Tier.replace("%tier%", tier.getName());
+        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Tier.replace("%tier%", tier.getName());
     }
 
     @Override
@@ -58,7 +65,7 @@ public class ItemTierRequirement extends ItemRequirement<String> {
     public String formatValue(@NotNull ItemStack item, @NotNull String value) {
         Tier tier = Config.getTier(value);
         if (tier == null) {
-            plugin.warn("Invalid Tier requirement provided: '" + value + "' !");
+            QuantumRPG.getInstance().warn("Invalid Tier requirement provided: '" + value + "' !");
             return "";
         }
 

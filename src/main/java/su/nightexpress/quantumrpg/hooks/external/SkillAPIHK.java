@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.hooks.external;
 
 import com.sucy.skill.SkillAPI;
+import com.sucy.skill.api.DefaultCombatProtection;
 import com.sucy.skill.api.enums.ExpSource;
 import com.sucy.skill.api.event.DynamicTriggerEvent;
 import com.sucy.skill.api.event.PlayerManaGainEvent;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,7 +34,7 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityG
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.SkillAPIAttribute;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 
 import java.util.*;
@@ -108,7 +110,7 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
         Player player = e.getPlayerData().getPlayer();
         if (player == null) return;
 
-        double regen = 1D + EntityStats.get(player).getItemStat(AbstractStat.Type.MANA_REGEN, false) / 100D;
+        double regen = 1D + EntityStats.get(player).getItemStat(TypedStat.Type.MANA_REGEN, false) / 100D;
         if (regen > 0) {
             e.setAmount(e.getAmount() * regen);
         }
@@ -280,5 +282,9 @@ public class SkillAPIHK extends NHook<QuantumRPG> implements HookLevel, HookClas
                 }
             }
         }.runTask(plugin);
+    }
+
+    public boolean isFakeDamage(EntityDamageByEntityEvent event) {
+        return DefaultCombatProtection.isFakeDamageEvent(event);
     }
 }

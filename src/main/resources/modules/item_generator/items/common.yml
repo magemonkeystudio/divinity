@@ -1,5 +1,6 @@
 name: '%prefix_tier% %prefix_material% %prefix_type% %item_type% %suffix_material% %suffix_type% %suffix_tier%'
 lore:
+- '%BASE_LORE%'
 - '&7Tier: %TIER_NAME%'
 - '&7Level: &f%ITEM_LEVEL%'
 - '%ITEM_AMMO%'
@@ -7,7 +8,7 @@ lore:
 - '%ENCHANTS%'
 - ''
 - '%USER_CLASS%'
-- '%USER_BANNED_CLASS'
+- '%USER_BANNED_CLASS%'
 - '%USER_LEVEL%'
 - ''
 - '%ITEM_SET%'
@@ -55,7 +56,8 @@ generator:
         armor:
         - 20
         - 22
-    stat-modifiers:
+  bonuses:
+    material:
       iron_sword:
         damage-types:
           physical: 1.15

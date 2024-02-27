@@ -2,6 +2,7 @@ package su.nightexpress.quantumrpg.config;
 
 import mc.promcteam.engine.config.api.IConfigTemplate;
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.items.ItemType;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.constants.JStrings;
@@ -13,10 +14,10 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.attributes.*;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.BleedStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
-import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
 import su.nightexpress.quantumrpg.stats.tiers.Tier;
 import su.nightexpress.quantumrpg.types.ItemGroup;
 import su.nightexpress.quantumrpg.types.ItemSubType;
@@ -181,7 +182,7 @@ public class Config extends IConfigTemplate {
             return;
         }
 
-        for (AbstractStat.Type statType : AbstractStat.Type.values()) {
+        for (SimpleStat.Type statType : TypedStat.Type.values()) {
             String path2 = statType.name() + ".";
             if (!cfg.getBoolean(path2 + "enabled")) {
                 continue;
@@ -191,10 +192,10 @@ public class Config extends IConfigTemplate {
             String statFormat = StringUT.color(cfg.getString(path2 + "format", "&a▸ %name%: &f%value%"));
             double statCap    = cfg.getDouble(path2 + "capacity", -1D);
 
-            AbstractStat<?> stat;
-            if (statType == AbstractStat.Type.DURABILITY) {
-                stat = new DurabilityStat(statType, statName, statFormat, statCap);
-            } else if (statType == AbstractStat.Type.BLEED_RATE) {
+            TypedStat stat;
+            if (statType == TypedStat.Type.DURABILITY) {
+                stat = new DurabilityStat(statName, statFormat, statCap);
+            } else if (statType == TypedStat.Type.BLEED_RATE) {
                 String  formula  = cfg.getString(path2 + "settings.damage", "%damage% * 0.5");
                 boolean ofMax    = cfg.getBoolean(path2 + "settings.of-max-health");
                 double  duration = cfg.getDouble(path2 + "settings.duration", 10);
@@ -324,9 +325,11 @@ public class Config extends IConfigTemplate {
 
     @Nullable
     public static ItemSubType getItemSubType(@NotNull ItemStack item) {
-        return getItemSubType(item.getType());
+        return ITEM_SUB_TYPES.values().stream().filter(itemSubType -> itemSubType.isItemOfThis(item))
+                .findFirst().orElse(null);
     }
 
+    @Deprecated
     @Nullable
     public static ItemSubType getItemSubType(@NotNull Material material) {
         return getItemSubType(material.name());
@@ -334,22 +337,15 @@ public class Config extends IConfigTemplate {
 
     @Nullable
     public static ItemSubType getItemSubType(@NotNull String mat) {
-        Optional<ItemSubType> opt = ITEM_SUB_TYPES.values().stream().filter(type -> type.isItemOfThis(mat))
-                .findFirst();
-        return opt.isPresent() ? opt.get() : null;
+        return ITEM_SUB_TYPES.values().stream().filter(type -> type.isItemOfThis(mat)).findFirst().orElse(null);
     }
 
     @NotNull
-    public static Set<Material> getAllRegisteredMaterials() {
-        Set<Material> set = new HashSet<>();
+    public static Set<ItemType> getAllRegisteredMaterials() {
+        Set<ItemType> set = new HashSet<>();
 
         for (ItemGroup group : ItemGroup.values()) {
-            for (String materialName : group.getMaterials()) {
-                Material material = Material.getMaterial(materialName.toUpperCase());
-                if (material != null) {
-                    set.add(material);
-                }
-            }
+            set.addAll(group.getMaterials());
         }
 
         return set;

@@ -5,6 +5,7 @@ import mc.promcteam.engine.utils.StringUT;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.SocketItem;
 import su.nightexpress.quantumrpg.modules.api.socketing.ModuleSocket;
 import su.nightexpress.quantumrpg.modules.list.essences.EssencesManager;
@@ -46,6 +47,12 @@ public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements
         this.formatValueFilled = this.getTier().format(StringUT.color(formatValueFilled).replace("%name%", this.getName()));
     }
 
+    @Override
+    @NotNull
+    public Class<String[]> getParameterClass() {
+        return String[].class;
+    }
+
     public static enum Type {
 
         GEM,
@@ -77,13 +84,13 @@ public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements
         public ModuleSocket<?> getModule() {
             switch (this) {
                 case GEM: {
-                    return plugin.getModuleCache().getGemManager();
+                    return QuantumRPG.getInstance().getModuleCache().getGemManager();
                 }
                 case RUNE: {
-                    return plugin.getModuleCache().getRuneManager();
+                    return QuantumRPG.getInstance().getModuleCache().getRuneManager();
                 }
                 case ESSENCE: {
-                    return plugin.getModuleCache().getEssenceManager();
+                    return QuantumRPG.getInstance().getModuleCache().getEssenceManager();
                 }
             }
             return null;
@@ -158,7 +165,7 @@ public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements
             String     itemId = value[0];
             SocketItem mItem  = this.getModule().getItemById(itemId);
             if (mItem == null) {
-                plugin.error("Invalid socket item '" + itemId + "' for Socket Attribute.");
+                QuantumRPG.getInstance().error("Invalid socket item '" + itemId + "' for Socket Attribute.");
                 return format;
             }
 

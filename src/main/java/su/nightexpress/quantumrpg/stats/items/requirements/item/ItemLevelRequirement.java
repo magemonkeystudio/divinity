@@ -4,6 +4,7 @@ import mc.promcteam.engine.config.api.ILangMsg;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
@@ -22,6 +23,12 @@ public class ItemLevelRequirement extends ItemRequirement<int[]> {
                 ItemTags.PLACEHOLDER_REQ_ITEM_LEVEL,
                 ItemTags.TAG_REQ_ITEM_LEVEL,
                 PersistentDataType.INTEGER_ARRAY);
+    }
+
+    @Override
+    @NotNull
+    public Class<int[]> getParameterClass() {
+        return int[].class;
     }
 
     @Override
@@ -57,6 +64,6 @@ public class ItemLevelRequirement extends ItemRequirement<int[]> {
         int[] arr = this.getRaw(src);
         if (arr == null) throw new IllegalStateException("Item does not have stat!");
 
-        return plugin.lang().Module_Item_Apply_Error_Level.replace("%value%", this.formatValue(src, arr));
+        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Level.replace("%value%", this.formatValue(src, arr));
     }
 }

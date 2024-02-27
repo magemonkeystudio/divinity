@@ -29,6 +29,9 @@ dependencies:
   - name: HolographicDisplays
     required: false
     bootstrap: true
+  - name: LevelledMobs
+    required: false
+    bootstrap: true
   - name: LorinthsRpgMobs
     required: false
     bootstrap: true
@@ -66,6 +69,8 @@ load-after:
   - name: ProMCCore
     boostrap: false
   - name: ProSkillAPI
+    boostrap: falsed
+  - name: SkillAPI
     boostrap: false
   - name: Magic
     boostrap: false

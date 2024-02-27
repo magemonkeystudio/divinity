@@ -34,6 +34,7 @@ import su.nightexpress.quantumrpg.nms.engine.PMS;
 import su.nightexpress.quantumrpg.nms.engine.PMSManager;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
+import su.nightexpress.quantumrpg.utils.ProRpgItemsProvider;
 import su.nightexpress.quantumrpg.utils.actions.conditions.CEntityLevel;
 import su.nightexpress.quantumrpg.utils.actions.executors.ActionDamage;
 import su.nightexpress.quantumrpg.utils.actions.executors.ActionParticleLine;
@@ -141,6 +142,10 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 
         this.worthManager = new WorthManager(this);
         this.worthManager.setup();
+
+        NexEngine.getEngine()
+                .getItemManager()
+                .registerProvider(ProRpgItemsProvider.NAMESPACE, new ProRpgItemsProvider());
     }
 
     @Override
@@ -168,6 +173,8 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
 
         ItemStats.clear();
         ItemRequirements.clear();
+
+        NexEngine.get().getItemManager().unregisterProvider(ProRpgItemsProvider.class);
     }
 
     @Override
@@ -197,6 +204,7 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
     @Override
     public void registerHooks() {
         this.registerHook(EHook.CRACK_SHOT, CrackShotHK.class);
+        this.registerHook(EHook.LEVELLED_MOBS, LevelledMobsHK.class);
         this.registerHook(EHook.LORINTHS_RPG_MOBS, LorinthsRpgMobsHK.class);
         this.registerHook(EHook.MAGIC, MagicHK.class);
         this.registerHook(EHook.MCMMO, McmmoHK.class);

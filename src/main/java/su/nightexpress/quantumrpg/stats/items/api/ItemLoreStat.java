@@ -13,24 +13,21 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.stats.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ItemLoreStat<Z> {
-
-    protected static QuantumRPG               plugin = QuantumRPG.getInstance();
+    private final    String                   id;
+    protected        String                   name;
     protected final  String                   format;
     protected final  String                   placeholder;
-    protected final  String                   metaId;
-    private final    String                   id;
-    private final    String                   uniqueMetaTag;
-    private final    NamespacedKey            key;
-    private final    NamespacedKey            key2;
-    protected        String                   name;
+    protected final  List<NamespacedKey>      keys;
     protected        PersistentDataType<?, Z> dataType;
+    private final    String                   uniqueMetaTag;
+    protected final  String                   metaId;
 
     public ItemLoreStat(
             @NotNull String id,
@@ -38,19 +35,29 @@ public abstract class ItemLoreStat<Z> {
             @NotNull String format,
             @NotNull String placeholder,
             @NotNull String uniqueTag,
-            @NotNull PersistentDataType<?, Z> dataType
-    ) {
+            @NotNull PersistentDataType<?, Z> dataType) {
         this.id = id.toLowerCase();
-        this.uniqueMetaTag = uniqueTag.toLowerCase();
-        this.dataType = dataType;
-        this.key = new NamespacedKey(plugin, this.getMetaTag() + this.getId());
-        this.key2 = NamespacedKey.fromString("quantumrpg:" + this.getMetaTag() + this.getId());
-        this.metaId = this.getMetaTag() + this.getId();
-
         this.name = StringUT.color(name);
         this.format = StringUT.color(format.replace("%name%", this.getName()));
         this.placeholder = placeholder.toUpperCase();
+        this.uniqueMetaTag = uniqueTag.toLowerCase();
+
+        this.keys = new ArrayList<>();
+        if (this.uniqueMetaTag.endsWith(this.id)) {
+            this.metaId = this.uniqueMetaTag;
+            keys.add(new NamespacedKey(QuantumRPG.getInstance(), this.uniqueMetaTag));
+            keys.add(new NamespacedKey(QuantumRPG.getInstance(), this.uniqueMetaTag+this.id));
+        } else {
+            this.metaId = this.uniqueMetaTag + this.id;
+            keys.add(new NamespacedKey(QuantumRPG.getInstance(), this.metaId));
+        }
+        keys.add(NamespacedKey.fromString("quantumrpg:" + this.getMetaTag() + this.getId()));
+
+        this.dataType = dataType;
     }
+
+    @NotNull
+    public abstract Class<Z> getParameterClass();
 
     @NotNull
     public final String getId() {
@@ -89,17 +96,16 @@ public abstract class ItemLoreStat<Z> {
     }
 
     @NotNull
-    protected final NamespacedKey getKey() {
+    protected final List<NamespacedKey> getKeys() {
         this.validateMethod();
-        return this.key;
+        return this.keys;
     }
 
     @NotNull
-    protected final NamespacedKey getKey2() {
+    public final NamespacedKey getKey() {
         this.validateMethod();
-        return this.key2;
+        return this.keys.get(0);
     }
-
 
     @NotNull
     protected final String getMetaTag() {
@@ -144,11 +150,11 @@ public abstract class ItemLoreStat<Z> {
 
         // *** REMOVE() ****
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(this.getKey(), this.dataType)) {
-            container.remove(this.getKey());
+        for (NamespacedKey key : this.keys) {
+            if (container.has(key, this.dataType)) container.remove(key);
         }
 
-        String[] format  = StringUT.colorFix(this.getFormat(item, value)).split("\n");
+        String[] format  = StringUT.colorFix(this instanceof DynamicStat ? ((DynamicStat<Z>) this).getFormat(null, item, value) : this.getFormat(item, value)).split("\n");
         boolean  isEmpty = true;
         for (String formatLine : format) {
             if (!formatLine.isEmpty()) {
@@ -173,7 +179,16 @@ public abstract class ItemLoreStat<Z> {
         meta.setLore(lore);
         item.setItemMeta(meta);
 
-        ItemUT.delLoreTag(item, this.getMetaId(item));
+        if (this instanceof DuplicableItemLoreStat) {
+            int amount = ((DuplicableItemLoreStat<?>) this).getAmount(item);
+            for (NamespacedKey key : this.keys) {
+                ItemUT.delLoreTag(item, key.getKey()+amount);
+            }
+        } else {
+            for (NamespacedKey key : this.keys) {
+                ItemUT.delLoreTag(item, key.getKey());
+            }
+        }
 
         if (!isEmpty) {
             ItemUT.addLoreTag(item, this.getMetaId(item), format[0]);
@@ -183,7 +198,7 @@ public abstract class ItemLoreStat<Z> {
         }
 
 //		if (this instanceof SimpleStat) {
-        ItemStats.updateVanillaAttributes(item);
+        ItemStats.updateVanillaAttributes(item, null);
 //		}
         return !isEmpty;
     }
@@ -195,10 +210,15 @@ public abstract class ItemLoreStat<Z> {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
+        boolean foundAny = false;
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(this.getKey(), this.dataType)) {
-            container.remove(this.getKey());
-
+        for (NamespacedKey key : this.keys) {
+            if (container.has(key, this.dataType)) {
+                container.remove(key);
+                foundAny = true;
+            }
+        }
+        if (foundAny) {
             List<String> lore = meta.getLore();
             if (lore != null && !lore.contains(this.getPlaceholder())) {
                 int pos = this.getLoreIndex(item);
@@ -210,12 +230,21 @@ public abstract class ItemLoreStat<Z> {
 
             item.setItemMeta(meta);
 
-            if (this instanceof SimpleStat) {
-                ItemStats.updateVanillaAttributes(item);
+            if (this instanceof TypedStat) {
+                ItemStats.updateVanillaAttributes(item, null);
             }
         }
 
-        ItemUT.delLoreTag(item, this.getMetaId(item));
+        if (this instanceof DuplicableItemLoreStat) {
+            int amount = ((DuplicableItemLoreStat<?>) this).getAmount(item);
+            for (NamespacedKey key : this.keys) {
+                ItemUT.delLoreTag(item, key.getKey()+amount);
+            }
+        } else {
+            for (NamespacedKey key : this.keys) {
+                ItemUT.delLoreTag(item, key.getKey());
+            }
+        }
 
         if (this.isSingle()) {
             // FIXME An issue where applying Duplicable stat without removing previous one
@@ -236,17 +265,26 @@ public abstract class ItemLoreStat<Z> {
         if (meta == null) return null;
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        if (container.has(this.getKey(), this.dataType)) {
-            return container.get(this.getKey(), this.dataType);
-        } else if (container.has(this.getKey2(), this.dataType)) {
-            return container.get(this.getKey2(), this.dataType);
+        for (NamespacedKey key : this.keys) {
+            if (container.has(key, this.dataType)) return container.get(key, this.dataType);
         }
         return null;
     }
 
     public final int getLoreIndex(@NotNull ItemStack item) {
-        this.validateMethod();
-        return ItemUT.getLoreIndex(item, this.getMetaId(item));
+        if (this instanceof DuplicableItemLoreStat) {
+            int amount = ((DuplicableItemLoreStat <?>) this).getAmount(item);
+            for (NamespacedKey key : this.keys) {
+                int found = ItemUT.getLoreIndex(item, key.getKey()+amount);
+                if (found != 0) return found;
+            }
+        } else {
+            for (NamespacedKey key : this.keys) {
+                int found = ItemUT.getLoreIndex(item, key.getKey());
+                if (found != 0) return found;
+            }
+        }
+        return 0;
     }
 
     /**

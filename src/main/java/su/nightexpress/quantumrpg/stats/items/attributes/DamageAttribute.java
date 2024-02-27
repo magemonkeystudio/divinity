@@ -1,25 +1,33 @@
 package su.nightexpress.quantumrpg.stats.items.attributes;
 
 import mc.promcteam.engine.utils.DataUT;
+import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.NumberUT;
+import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.actions.ActionManipulator;
 import mc.promcteam.engine.utils.constants.JStrings;
-import mc.promcteam.engine.utils.random.Rnd;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.EngineCfg;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager;
 import su.nightexpress.quantumrpg.modules.list.gems.GemManager.Gem;
 import su.nightexpress.quantumrpg.modules.list.refine.RefineManager;
 import su.nightexpress.quantumrpg.stats.bonus.BonusCalculator;
 import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
-import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
+import su.nightexpress.quantumrpg.stats.items.api.DuplicableItemLoreStat;
+import su.nightexpress.quantumrpg.stats.items.api.DynamicStat;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 
 import java.util.ArrayList;
@@ -29,7 +37,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-public class DamageAttribute extends ItemLoreStat<double[]> {
+public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implements DynamicStat<StatBonus> {
 
     private int                 priority;
     private ActionManipulator   actionEngine;
@@ -50,7 +58,7 @@ public class DamageAttribute extends ItemLoreStat<double[]> {
             @NotNull Map<String, Double> entityTypeModifier,
             @NotNull Map<String, Double> mythicFactionModifier
     ) {
-        super(id, name, format, "%DAMAGE_" + id + "%", ItemTags.TAG_ITEM_DAMAGE, DataUT.DOUBLE_ARRAY);
+        super(id, name, format, "%DAMAGE_" + id + "%", ItemTags.TAG_ITEM_DAMAGE, StatBonus.DATA_TYPE);
         this.priority = priority;
         this.actionEngine = actionEngine;
         this.attachedDamageCauses = attachedDamageCauses;
@@ -58,6 +66,14 @@ public class DamageAttribute extends ItemLoreStat<double[]> {
         this.entityTypeModifier = entityTypeModifier;
         this.mythicFactionModifier = mythicFactionModifier;
         this.defenseAttached = null;
+
+        ItemStats.registerDynamicStat(this);
+    }
+
+    @Override
+    @NotNull
+    public Class<StatBonus> getParameterClass() {
+        return StatBonus.class;
     }
 
     public boolean isDefault() {
@@ -87,69 +103,104 @@ public class DamageAttribute extends ItemLoreStat<double[]> {
     }
 
     public static double getVanillaDamage(@NotNull ItemStack item) {
-        return plugin.getPMS().getDefaultDamage(item);
+        return QuantumRPG.getInstance().getPMS().getDefaultDamage(item);
     }
 
-    public double getMinOrMax(@NotNull ItemStack item, int i) {
-        double   value = 0D;
-        double[] arr   = this.getRaw(item);
-        if (arr != null) {
-            value = arr[i];
-        }
-
-        if (value == 0D && this.isDefault()) {
-            value = DamageAttribute.getVanillaDamage(item);
-        }
-
-        return value;
+    public double[] getTotal(@NotNull ItemStack item, @Nullable Player player) {
+        return BonusCalculator.RANGE_FULL.apply(new double[]{0, 0}, get(item, player));
     }
 
-    public double get(@NotNull ItemStack item) {
-        double  min = 0D;
-        double  max = 0D;
-        boolean has = false;
+    @NotNull
+    public List<BiFunction<Boolean, double[], double[]>> get(@NotNull ItemStack item, @Nullable Player player) {
+        List<BiFunction<Boolean, double[], double[]>> bonuses = new ArrayList<>();
+        double[] base    = new double[]{0, 0};
+        double   percent = 0;
+        boolean  has     = false;
 
-        double[] arr = this.getRaw(item);
-        // Item has attached damage type
-        if (arr != null) {
-            min = arr[0];
-            max = arr[1];
-            has = true;
-        } else {
-            if (ItemUtils.isWeapon(item)) {
-                if (this.isDefault() && !ItemStats.hasDamage(item)) {
-                    min = max = DamageAttribute.getVanillaDamage(item);
-                    has = true;
+        // Get from old format
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            PersistentDataContainer container = meta.getPersistentDataContainer();
+            for (NamespacedKey key : this.keys) {
+                if (container.has(key, DataUT.DOUBLE_ARRAY)) {
+                    double[] value = container.get(key, DataUT.DOUBLE_ARRAY);
+                    if (value != null) {
+                        base[0] += value[0];
+                        base[1] += value[1];
+                        has = true;
+                        break;
+                    }
                 }
             }
         }
 
-        List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
+        for (StatBonus bonus : this.getAllRaw(item)) {
+            if (!bonus.meetsRequirement(player)) continue;
+            double[] value = bonus.getValue();
+            if (value.length == 1) {
+                if (bonus.isPercent()) {
+                    percent += value[0];
+                } else {
+                    base[0] += value[0];
+                    base[1] += value[0];
+                }
+            } else {
+                base[0] += value[0];
+                base[1] += value[1];
+                has = true;
+            }
+        }
+
+        base[0] = Math.max(0, base[0]);
+        base[1] = Math.max(base[0], base[1]);
+
+        if (base[1] == 0 && ItemUtils.isWeapon(item) && this.isDefault() && ItemStats.getDamages().stream()
+                .filter(damageAttribute -> !damageAttribute.isDefault())
+                .noneMatch(damageAttribute -> ItemStats.hasDamage(item, player, damageAttribute))) {
+            base[0] = base[1] = DamageAttribute.getVanillaDamage(item);
+            has = true;
+        }
+
+        bonuses.add((isPercent, input) -> isPercent ? input : (
+                input.length == 2
+                ? new double[]{input[0]+base[0], input[1]+base[1]}
+                : new double[]{input[0]+base[0], input[0]+base[1]}));
+        {
+            double finalPercent = percent;
+            bonuses.add((isPercent, input) -> isPercent ? new double[]{input[0] + finalPercent} : input);
+        }
 
         // Support for Refined attributes.
-        RefineManager refineManager = plugin.getModuleCache().getRefineManager();
+        RefineManager refineManager = QuantumRPG.getInstance().getModuleCache().getRefineManager();
         if (refineManager != null && has) {
-            bonuses.add(refineManager.getRefinedBonus(item, this));
+            BiFunction<Boolean, Double, Double> refineManagerBonus = refineManager.getRefinedBonus(item, this);
+            bonuses.add((isPercent, input) ->
+                    input.length == 2
+                            ? new double[]{
+                                refineManagerBonus.apply(isPercent, input[0]),
+                                refineManagerBonus.apply(isPercent, input[1])}
+                            : new double[]{
+                                refineManagerBonus.apply(isPercent, input[0])});
         }
 
         // Support for filled socket Gems.
-        GemManager gems = plugin.getModuleCache().getGemManager();
+        GemManager gems = QuantumRPG.getInstance().getModuleCache().getGemManager();
         if (gems != null) {
             for (Entry<Gem, Integer> e : gems.getItemSockets(item)) {
                 BonusMap bMap = e.getKey().getBonusMap(e.getValue());
                 if (bMap == null) continue;
-
-                bonuses.add(bMap.getBonus(this));
+                BiFunction<Boolean, Double, Double> gemBonus = bMap.getBonus(this);
+                bonuses.add((isPercent, input) ->
+                        input.length == 2
+                                ? new double[]{
+                                    gemBonus.apply(isPercent, input[0]),
+                                    gemBonus.apply(isPercent, input[1])}
+                                : new double[]{
+                                    gemBonus.apply(isPercent, input[0])});
             }
         }
 
-        // Multiply values by additional percent bonus.
-        min = BonusCalculator.CALC_FULL.apply(min, bonuses);
-        max = BonusCalculator.CALC_FULL.apply(max, bonuses);
-
-        if (max == 0D) max = min; // Fix for single damage value. Useless for 5.0?
-
-        return Rnd.getDouble(min, max);
+        return bonuses;
     }
 
     @NotNull
@@ -177,14 +228,59 @@ public class DamageAttribute extends ItemLoreStat<double[]> {
 
     @Override
     @NotNull
-    public String formatValue(@NotNull ItemStack item, double[] values) {
-        double min    = values[0];
-        double max    = values[1];
-        String format = (min == max) ? EngineCfg.LORE_STYLE_DAMAGE_FORMAT_SINGLE : EngineCfg.LORE_STYLE_DAMAGE_FORMAT_RANGE;
+    public String formatValue(@NotNull ItemStack item, @NotNull StatBonus value) {
+        double[] array = value.getValue();
+        if (array.length == 1) {
+            return EngineCfg.LORE_STYLE_DAMAGE_FORMAT_SINGLE
+                    .replace("%value%", NumberUT.format(array[0]) + (value.isPercent() ? "%" : ""));
+        } else {
+            return EngineCfg.LORE_STYLE_DAMAGE_FORMAT_RANGE
+                    .replace("%min%", NumberUT.format(array[0]))
+                    .replace("%max%", NumberUT.format(array[1]));
 
-        return format
-                .replace("%value%", NumberUT.format(min))
-                .replace("%max%", NumberUT.format(max))
-                .replace("%min%", NumberUT.format(min));
+        }
+    }
+
+    @Override
+    @NotNull
+    public String getFormat(@Nullable Player p, @NotNull ItemStack item, @NotNull StatBonus value) {
+        String format = super.getFormat(item, value);
+        StatBonus.Condition<?> condition = value.getCondition();
+        if (condition == null || !EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE)
+            return StringUT.colorFix(format.replace("%condition%", ""));
+        return StringUT.colorFix(format.replace("%condition%", condition.getFormat(p, item)));
+    }
+
+    @Override
+    @NotNull
+    public ItemStack updateItem(@Nullable Player p, @NotNull ItemStack item) {
+        int amount = this.getAmount(item);
+        if (amount == 0) return item;
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
+        List<String> lore = meta.getLore();
+        if (lore == null) return item;
+
+        for (int i = 0; i < amount; i++) {
+            int loreIndex = -1;
+            String metaId = "";
+            for (NamespacedKey key : this.keys) {
+                metaId = key.getKey()+i;
+                loreIndex = ItemUT.getLoreIndex(item, metaId);
+                if (loreIndex >= 0) break;
+            }
+            if (loreIndex < 0) continue;
+
+            @Nullable StatBonus arr = this.getRaw(item, i);
+            if (arr == null) continue;
+            String formatNew = this.getFormat(p, item, arr);
+            lore.set(loreIndex, formatNew);
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+            ItemUT.addLoreTag(item, metaId, formatNew);
+        }
+
+        return item;
     }
 }

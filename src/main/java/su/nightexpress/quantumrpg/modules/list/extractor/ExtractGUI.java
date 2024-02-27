@@ -143,11 +143,10 @@ class ExtractGUI extends NGUI<QuantumRPG> {
             if (mod == null) break Label_Sockets;
 
             ItemMeta     meta      = target.getItemMeta();
-            List<String> lore      = meta != null && meta.hasLore() ? meta.getLore() : null;
             int          indexMain = 0;
             for (SocketAttribute socketAtt : ItemStats.getSockets(type)) {
                 String socketCategory = socketAtt.getId();
-                for (Map.Entry<Integer, String[]> en : mod.getFilledSocketKeys(meta, lore, socketCategory).entrySet()) {
+                for (Map.Entry<Integer, String[]> en : mod.getFilledSocketKeys(meta, socketCategory).entrySet()) {
                     if (indexMain >= this.socketSlots.length) break Label_Sockets;
 
                     String[] values       = en.getValue();

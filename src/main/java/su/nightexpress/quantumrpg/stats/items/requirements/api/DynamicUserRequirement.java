@@ -9,10 +9,12 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.config.EngineCfg;
+import su.nightexpress.quantumrpg.stats.items.ItemStats;
+import su.nightexpress.quantumrpg.stats.items.api.DynamicStat;
 
 import java.util.List;
 
-public abstract class DynamicUserRequirement<Z> extends UserRequirement<Z> {
+public abstract class DynamicUserRequirement<Z> extends UserRequirement<Z> implements DynamicStat<Z> {
 
     public DynamicUserRequirement(
             @NotNull String id,
@@ -23,6 +25,8 @@ public abstract class DynamicUserRequirement<Z> extends UserRequirement<Z> {
             @NotNull PersistentDataType<?, Z> dataType
     ) {
         super(id, name, format, placeholder, uniqueTag, dataType);
+
+        ItemStats.registerDynamicStat(this);
     }
 
     @Override
@@ -31,17 +35,19 @@ public abstract class DynamicUserRequirement<Z> extends UserRequirement<Z> {
         return this.getFormat(null, item, value);
     }
 
+    @Override
     @NotNull
     public String getFormat(@Nullable Player p, @NotNull ItemStack item, @NotNull Z value) {
         String state = "";
         if (EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE) {
-            boolean canUse = p != null && this.canUse(p, item);
+            boolean canUse = p != null && this.canUse(p, value);
             state = EngineCfg.getDynamicRequirementState(canUse);
         }
 
         return StringUT.colorFix(super.getFormat(item, value).replace("%state%", state));
     }
 
+    @Override
     @NotNull
     public ItemStack updateItem(@Nullable Player p, @NotNull ItemStack item) {
         if (!EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE) return item;

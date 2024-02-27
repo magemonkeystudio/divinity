@@ -7,11 +7,11 @@ import mc.promcteam.engine.utils.constants.JStrings;
 import mc.promcteam.engine.utils.eval.Evaluator;
 import mc.promcteam.engine.utils.random.Rnd;
 import org.apache.commons.lang.ArrayUtils;
-import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.config.Config;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
@@ -123,11 +123,6 @@ public abstract class LeveledItem extends ModuleItem {
     }
 
     @NotNull
-    public Material getMaterial() {
-        return this.material;
-    }
-
-    @NotNull
     public List<String> getLore() {
         return this.lore;
     }
@@ -216,7 +211,12 @@ public abstract class LeveledItem extends ModuleItem {
 
     @NotNull
     protected ItemStack build(int lvl) {
-        ItemStack item = super.build();
+        return build(null, lvl);
+    }
+
+    @NotNull
+    protected ItemStack build(@Nullable ItemStack item, int lvl) {
+        item = item == null ? super.build() : super.build(item);
 
         ItemStats.setId(item, this.getId());
         ItemStats.setModule(item, this.getModule().getId());

@@ -19,7 +19,7 @@ import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.api.event.QuantumProjectileLaunchEvent;
 import su.nightexpress.quantumrpg.api.event.RPGDamageEvent;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.attributes.stats.DurabilityStat;
 
 public class ItemDurabilityListener extends IListener<QuantumRPG> {
@@ -34,7 +34,7 @@ public class ItemDurabilityListener extends IListener<QuantumRPG> {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onDuraItemDamage(PlayerItemDamageEvent e) {
         ItemStack item = e.getItem();
-        if (ItemStats.hasStat(item, AbstractStat.Type.DURABILITY) || this.duraStat.isUnbreakable(item)) {
+        if (ItemStats.hasStat(item, null, TypedStat.Type.DURABILITY) || this.duraStat.isUnbreakable(item)) {
             e.setCancelled(true);
         }
     }

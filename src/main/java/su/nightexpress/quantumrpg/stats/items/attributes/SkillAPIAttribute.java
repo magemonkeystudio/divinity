@@ -18,7 +18,26 @@ public class SkillAPIAttribute extends ItemLoreStat<Integer> {
     }
 
     @Override
+    @NotNull
+    public Class<Integer> getParameterClass() {
+        return Integer.class;
+    }
+
+    @Override
     public @NotNull String formatValue(@NotNull ItemStack item, @NotNull Integer value) {
         return (value > 0 ? EngineCfg.LORE_CHAR_POSITIVE : EngineCfg.LORE_CHAR_NEGATIVE) + NumberUT.format(value);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!obj.getClass().equals(this.getClass())) return false;
+        SkillAPIAttribute other = (SkillAPIAttribute) obj;
+        return this.getId().equalsIgnoreCase(other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getId().hashCode();
     }
 }

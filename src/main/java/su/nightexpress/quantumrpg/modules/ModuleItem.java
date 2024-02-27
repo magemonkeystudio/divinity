@@ -1,6 +1,11 @@
 package su.nightexpress.quantumrpg.modules;
 
+import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.items.ItemType;
+import mc.promcteam.engine.items.exception.MissingItemException;
+import mc.promcteam.engine.items.exception.MissingProviderException;
+import mc.promcteam.engine.items.providers.VanillaProvider;
 import mc.promcteam.engine.manager.LoadableItem;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
@@ -19,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.list.identify.IdentifyManager.UnidentifiedItem;
@@ -36,7 +42,7 @@ public abstract class ModuleItem extends LoadableItem {
     protected final QModuleDrop<?>            module;
     protected       QuantumRPG                plugin;
     protected       String                    name;
-    protected       Material                  material;
+    protected       ItemType                  material;
     protected       List<String>              lore;
     protected       int                       modelData;
     protected       int                       durability;
@@ -65,12 +71,13 @@ public abstract class ModuleItem extends LoadableItem {
 
         // Fix for loading Generator Items
         if (this instanceof GeneratorItem || this instanceof UnidentifiedItem) {
-            this.material = Material.LEATHER_HELMET;
+            this.material = new VanillaProvider.VanillaItemType(Material.LEATHER_HELMET);
         } else {
             String[] matSplit = cfg.getString("material", "STONE").split(":");
-            this.material = Material.getMaterial(matSplit[0].toUpperCase());
-            if (this.material == null) {
-                throw new IllegalArgumentException("Invalid item material!");
+            try {
+                this.material = NexEngine.get().getItemManager().getItemType(matSplit[0].toUpperCase());
+            } catch (MissingItemException | MissingProviderException e) {
+                throw new IllegalArgumentException("Invalid item material!", e);
             }
         }
 
@@ -155,7 +162,7 @@ public abstract class ModuleItem extends LoadableItem {
     }
 
     @NotNull
-    public Material getMaterial() {
+    public ItemType getMaterial() {
         return this.material;
     }
 
@@ -164,7 +171,7 @@ public abstract class ModuleItem extends LoadableItem {
         return this.lore;
     }
 
-    public int[] getColor() {return Arrays.copyOf(color, 3);}
+    public int[] getColor() {return this.color == null ? null : Arrays.copyOf(color, 3);}
 
     public Set<ItemFlag> getFlags() {return new HashSet<>(this.flags);}
 
@@ -182,14 +189,27 @@ public abstract class ModuleItem extends LoadableItem {
 
     @NotNull
     protected ItemStack build() {
-        ItemStack item = new ItemStack(this.getMaterial());
+        return build(this.getMaterial().create());
+    }
+
+    @NotNull
+    protected ItemStack build(@NotNull ItemStack item) {
         ItemUT.addSkullTexture(item, this.hash, this.getId());
 
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
 
         meta.setDisplayName(this.name);
-        meta.setLore(this.lore);
+        List<String> baseLore = meta.getLore();
+        List<String> modifiedLore;
+        if (baseLore == null || baseLore.isEmpty()) {
+            modifiedLore = new ArrayList<>(this.lore);
+            modifiedLore.remove(ItemTags.PLACEHOLDER_BASE_LORE);
+        } else {
+            modifiedLore = StringUT.replace(this.lore, ItemTags.PLACEHOLDER_BASE_LORE, baseLore);
+        }
+
+        meta.setLore(modifiedLore);
 
         if (this.modelData > 0) {
             meta.setCustomModelData(this.modelData);

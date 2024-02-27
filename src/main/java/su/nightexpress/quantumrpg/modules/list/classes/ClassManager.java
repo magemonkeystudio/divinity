@@ -50,7 +50,7 @@ import su.nightexpress.quantumrpg.modules.list.classes.object.ClassAspectBonus;
 import su.nightexpress.quantumrpg.modules.list.classes.object.ClassAttributeType;
 import su.nightexpress.quantumrpg.stats.EntityStats;
 import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
-import su.nightexpress.quantumrpg.stats.items.attributes.api.AbstractStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -862,7 +862,7 @@ public class ClassManager extends QModule {
 
         UserClassData data   = e.getClassData();
         double        amount = e.getAmount();
-        double        stat   = EntityStats.get(player).getItemStat(AbstractStat.Type.MANA_REGEN, false);
+        double        stat   = EntityStats.get(player).getItemStat(TypedStat.Type.MANA_REGEN, false);
         amount *= (1D + stat / 100D);
         e.setAmount(amount);
 

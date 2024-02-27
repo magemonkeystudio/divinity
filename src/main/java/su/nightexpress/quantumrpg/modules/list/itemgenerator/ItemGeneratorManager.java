@@ -1,18 +1,24 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator;
 
+import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.core.Version;
+import mc.promcteam.engine.items.ItemType;
+import mc.promcteam.engine.items.exception.MissingItemException;
+import mc.promcteam.engine.items.exception.MissingProviderException;
+import mc.promcteam.engine.items.providers.IProItemProvider;
+import mc.promcteam.engine.items.providers.VanillaProvider;
 import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.StringUT;
 import mc.promcteam.engine.utils.constants.JStrings;
 import mc.promcteam.engine.utils.random.Rnd;
 import org.bukkit.DyeColor;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.Banner;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.block.banner.PatternType;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -40,12 +46,18 @@ import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEdit
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AbilityGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.AttributeGenerator;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.SingleAttributeGenerator;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.generators.TypedStatGenerator;
 import su.nightexpress.quantumrpg.modules.list.sets.SetManager;
 import su.nightexpress.quantumrpg.stats.bonus.BonusMap;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
 import su.nightexpress.quantumrpg.stats.items.api.ItemLoreStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.DamageAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.DefenseAttribute;
 import su.nightexpress.quantumrpg.stats.items.attributes.SocketAttribute;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.SimpleStat;
+import su.nightexpress.quantumrpg.stats.items.attributes.api.TypedStat;
 import su.nightexpress.quantumrpg.stats.items.requirements.ItemRequirements;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.BannedClassRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
@@ -53,6 +65,7 @@ import su.nightexpress.quantumrpg.stats.items.requirements.user.LevelRequirement
 import su.nightexpress.quantumrpg.stats.items.requirements.user.SoulboundRequirement;
 import su.nightexpress.quantumrpg.utils.ItemUtils;
 import su.nightexpress.quantumrpg.utils.LoreUT;
+import su.nightexpress.quantumrpg.utils.ProRpgItemsProvider;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -162,12 +175,13 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private double suffixChance;
 
         private boolean       materialsWhitelist;
-        private Set<Material> materialsList;
+        private Set<ItemType> materialsList;
 
         private List<Integer>              modelDataList;
         private Map<String, List<Integer>> modelDataSpecial;
 
         private Map<String, BonusMap> materialsModifiers;
+        private Map<String, Map<ItemLoreStat<?>, String>> classModifiers;
 
         private TreeMap<Integer, String[]> reqUserLvl;
         private TreeMap<Integer, String[]> reqUserClass;
@@ -192,28 +206,48 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             // Pre-cache available materials for Generator.
             this.materialsWhitelist = cfg.getBoolean(path + "materials.reverse");
-            this.materialsList = new HashSet<>(Config.getAllRegisteredMaterials());
+            if (this.materialsWhitelist) {
+                this.materialsList = new HashSet<>();
+                Set<String> startWildcards = new HashSet<>();
+                Set<String> endWildcards = new HashSet<>();
 
-            String      mask      = JStrings.MASK_ANY;
-            Set<String> materials = new HashSet<>(cfg.getStringList(path + "materials.black-list"));
-
-            this.materialsList.removeIf(matAll -> {
-
-                String mAll = matAll.name();
-                for (String mCfg : materials) {
-                    boolean isWildCard = mCfg.startsWith(mask) || mCfg.endsWith(mask);
-                    String  mCfgRaw    = isWildCard ? mCfg.replace(mask, "") : mCfg;
-                    boolean matches    = isWildCard ? (mAll.startsWith(mCfgRaw) || mAll.endsWith(mCfgRaw))
-                            : mAll.equalsIgnoreCase(mCfgRaw);
-
-                    if (matches) { // If matches then either keep item in list or remove it
-                        return !this.materialsWhitelist;
+                for (String mat : cfg.getStringList(path + "materials.black-list")) {
+                    String[] split = mat.split('\\'+JStrings.MASK_ANY, 2);
+                    if (split.length == 2) { // We have a wildcard
+                        if (split[0].isEmpty()) startWildcards.add(split[1].toUpperCase());
+                        else if (split[1].isEmpty()) endWildcards.add(split[0].toUpperCase());
+                        continue;
                     }
+                    try {
+                        ItemType itemType = NexEngine.get().getItemManager().getItemType(mat);
+                        if (itemType.getNamespace().equals(ProRpgItemsProvider.NAMESPACE)) continue; // Avoid self-reference
+                        this.materialsList.add(itemType);
+                    } catch (MissingProviderException | MissingItemException ignored) {}
                 }
 
-                // For whitelist it will remove all items not passed the match check.
-                return this.materialsWhitelist;
-            });
+                for (ItemType itemType : Config.getAllRegisteredMaterials()) {
+                    String name = itemType.getNamespacedID().toUpperCase();
+                    if (startWildcards.stream().anyMatch(name::endsWith) || endWildcards.stream().anyMatch(name::startsWith)) {
+                        this.materialsList.add(itemType);
+                    }
+                }
+            } else {
+                this.materialsList = new HashSet<>(Config.getAllRegisteredMaterials());
+                Set<String> materials = new HashSet<>(cfg.getStringList(path + "materials.black-list"));
+                this.materialsList.removeIf(matAll -> {
+                    String namespacedID = matAll.getNamespacedID();
+                    String upperCaseNamespacedID = namespacedID.toUpperCase();
+                    for (String mat : materials) {
+                        String[] split = mat.split('\\'+JStrings.MASK_ANY, 2);
+                        if (split.length == 2 ) { // We have a wildcard
+                            if (split[0].isEmpty() && upperCaseNamespacedID.endsWith(split[1])) return true;
+                            else if (split[1].isEmpty() && upperCaseNamespacedID.startsWith(split[0])) return true;
+                        }
+                        if (namespacedID.equals(mat)) return true;
+                    }
+                    return false;
+                });
+            }
 
             // Load Model Data values for specified item groups.
             path = "generator.materials.model-data.";
@@ -224,10 +258,20 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 this.modelDataSpecial.put(specGroup.toLowerCase(), specList);
             }
 
-            // Load Attribute Bonus Maps depends on Item Group.
-            path = "generator.materials.stat-modifiers.";
+            // Load Bonuses
+
+            // Migrate old Stat Modifiers to Material Bonuses
+            if (cfg.isConfigurationSection("generator.materials.stat-modifiers")) {
+                ConfigurationSection section = cfg.getConfigurationSection("generator.materials.stat-modifiers");
+                cfg.remove("generator.materials.stat-modifiers");
+                cfg.set("generator.bonuses.material", section);
+                cfg.save();
+            }
+
+            // Load Material bonuses
+            path = "generator.bonuses.material.";
             this.materialsModifiers = new HashMap<>();
-            for (String group : cfg.getSection("generator.materials.stat-modifiers")) {
+            for (String group : cfg.getSection("generator.bonuses.material")) {
                 if (!ItemUtils.parseItemGroup(group)) {
                     error("Invalid item group provided: '" + group + "' in '" + path + "'. File: " + cfg.getFile()
                             .getName());
@@ -239,8 +283,67 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 bMap.loadDamages(cfg, path2 + "damage-types");
                 bMap.loadDefenses(cfg, path2 + "defense-types");
                 bMap.loadStats(cfg, path2 + "item-stats");
+                bMap.loadSkillAPIAttributes(cfg, path2 + "skillapi-attributes");
+                bMap.loadAmmo(cfg, path2 + "ammo");
+                bMap.loadHands(cfg, path2 + "hands");
 
                 this.materialsModifiers.put(group.toLowerCase(), bMap);
+            }
+
+            // Load Class bonuses
+            path = "generator.bonuses.class.";
+            this.classModifiers = new HashMap<>();
+            for (String group : cfg.getSection("generator.bonuses.class")) {
+                Map<ItemLoreStat<?>, String> statMap = new HashMap<>();
+
+                String path2 = path + group + ".damage-types";
+                for (String id : cfg.getSection(path2)) {
+                    DamageAttribute dt = ItemStats.getDamageById(id);
+                    if (dt == null) continue;
+
+                    String sVal = cfg.getString(path2 + "." + id);
+                    if (sVal == null) continue;
+
+                    String[] split = sVal.split("%", 2);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double  val  = StringUT.getDouble(split[0], 0, true);
+
+                    statMap.put(dt, val+(perc ? "%" : ""));
+                }
+
+                path2 = path + group + ".defense-types";
+                for (String id : cfg.getSection(path2)) {
+                    DefenseAttribute dt = ItemStats.getDefenseById(id);
+                    if (dt == null) continue;
+
+                    String sVal = cfg.getString(path2 + "." + id);
+                    if (sVal == null) continue;
+
+                    String[] split = sVal.split("%", 2);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double  val  = StringUT.getDouble(split[0], 0, true);
+
+                    statMap.put(dt, val+(perc ? "%" : ""));
+                }
+
+                path2 = path + group + ".item-stats";
+                for (String id : cfg.getSection(path2)) {
+                    SimpleStat.Type dt = TypedStat.Type.getByName(id);
+                    if (dt == null) continue;
+
+                    ItemLoreStat<?> mainStat = (ItemLoreStat<?>) ItemStats.getStat(dt);
+
+                    String sVal = cfg.getString(path2 + "." + id);
+                    if (sVal == null) continue;
+
+                    String[] split = sVal.split("%", 2);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double  val  = StringUT.getDouble(split[0], 0, true);
+
+                    statMap.put(mainStat, val+(perc ? "%" : ""));
+                }
+
+                this.classModifiers.put(group.toLowerCase(), statMap);
             }
 
             // Load User Requirements.
@@ -356,7 +459,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     "generator.defense-types.",
                     ItemStats.getDefenses(),
                     ItemGeneratorManager.PLACE_GEN_DEFENSE));
-            this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
+            this.addAttributeGenerator(new TypedStatGenerator(this.plugin,
                     this,
                     "generator.item-stats.",
                     ItemStats.getStats(),
@@ -432,7 +535,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         }
 
         @NotNull
-        public Set<Material> getMaterialsList() {
+        public Set<ItemType> getMaterialsList() {
             return materialsList;
         }
 
@@ -464,6 +567,23 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             return (isBonus, result) -> result;
         }
 
+        public Collection<StatBonus> getClassBonuses(ItemLoreStat<?> stat) {
+            List<StatBonus> list = new ArrayList<>();
+            for (Map.Entry<String, Map<ItemLoreStat<?>, String>> entry : this.classModifiers.entrySet()) {
+                for (Map.Entry<ItemLoreStat<?>, String> entry1 : entry.getValue().entrySet()) {
+                    if (entry1.getKey().equals(stat)) {
+                        String sVal = entry1.getValue();
+                        String[] split = sVal.split("%", 2);
+                        list.add(new StatBonus(
+                                new double[]{Double.parseDouble(split[0])},
+                                split.length == 2 && split[1].isEmpty(),
+                                new StatBonus.Condition<>(ItemRequirements.getUserRequirement(ClassRequirement.class), new String[]{entry.getKey()})));
+                    }
+                }
+            }
+            return list;
+        }
+
         @NotNull
         public Set<IAttributeGenerator> getAttributeGenerators() {
             return attributeGenerators;
@@ -489,7 +609,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         }
 
         @NotNull
-        public ItemStack create(int lvl, int uses, @Nullable Material mat) {
+        public ItemStack create(int lvl, int uses, @Nullable ItemType mat) {
             lvl = this.validateLevel(lvl);
             if (uses < 1) uses = this.getCharges(lvl);
 
@@ -497,22 +617,17 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         }
 
         @NotNull
-        protected ItemStack build(int itemLvl, int uses, @Nullable Material mat) {
-            ItemStack item = super.build(itemLvl, uses);
-
-            // Set material
-            if (this.materialsList.isEmpty()) return item;
-            if (mat != null && this.materialsList.contains(mat)) {
-                item.setType(mat);
+        protected ItemStack build(int itemLvl, int uses, @Nullable ItemType mat) {
+            ItemStack item;
+            if (mat != null && materialsList.contains(mat)) {
+                item = super.build(mat.create(), itemLvl, uses);
             } else {
-                Material type = Rnd.get(new ArrayList<>(this.materialsList));
-                item.setType(type != null ? type : Material.AIR);
+                ItemType itemType = Rnd.get(new ArrayList<>(this.materialsList));
+                item = super.build(itemType == null ? null : itemType.create(), itemLvl, uses);
             }
 
             ItemMeta meta = item.getItemMeta();
             if (meta == null) return item;
-
-            String itemMaterial = item.getType().name();
 
             List<Integer> dataValues = new ArrayList<>();
             for (Map.Entry<String, List<Integer>> e : this.modelDataSpecial.entrySet()) {
@@ -541,7 +656,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             String suffixItemType = "";
 
             String itemGroupId   = ItemUtils.getItemGroupIdFor(item);
-            String itemGroupName = ItemUtils.getItemGroupNameFor(item.getType());
+            String itemGroupName = ItemUtils.getItemGroupNameFor(item);
+
+            String itemMaterial = NexEngine.get().getItemManager().getItemTypes(item).stream()
+                    .filter(itemType -> itemType.getCategory() != IProItemProvider.Category.PRO)
+                    .max(Comparator.comparing(ItemType::getCategory))
+                    .orElseGet(() -> new VanillaProvider.VanillaItemType(item.getType())).getNamespacedID();
 
             if (Rnd.get(true) <= prefixChance) {
                 prefixTier = Rnd.get(resourceManager.getPrefix(ResourceCategory.TIER, this.getTier().getId()));
@@ -733,7 +853,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             lore = meta.getLore();
             if (lore == null) return item;
 
-            for (ItemLoreStat<?> at : ItemStats.getStats()) {
+            for (TypedStat at : ItemStats.getStats()) {
                 lore.remove(at.getPlaceholder());
             }
             for (ItemLoreStat<?> at : ItemStats.getDamages()) {

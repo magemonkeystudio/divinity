@@ -58,7 +58,14 @@ public abstract class AbstractEditorGUI extends Menu {
     }
 
     protected static ItemStack createItem(Material material, String name, List<String> lore) {
-        ItemStack itemStack = new ItemStack(material);
+        return createItem(new ItemStack(material), name, lore);
+    }
+
+    protected static ItemStack createItem(ItemStack itemStack, String name, String... lore) {
+        return createItem(itemStack, name, List.of(lore));
+    }
+
+    protected static ItemStack createItem(ItemStack itemStack, String name, List<String> lore) {
         ItemMeta  meta      = itemStack.getItemMeta();
         if (meta != null) {
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

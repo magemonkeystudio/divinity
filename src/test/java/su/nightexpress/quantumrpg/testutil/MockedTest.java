@@ -5,18 +5,16 @@ import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import com.sucy.skill.api.player.PlayerData;
 import mc.promcteam.engine.NexEngine;
-import mc.promcteam.engine.core.config.CoreLang;
-import mc.promcteam.engine.hooks.HookManager;
 import mc.promcteam.engine.mccore.commands.CommandManager;
 import mc.promcteam.engine.nms.NMS;
+import mc.promcteam.engine.nms.TEST;
 import mc.promcteam.engine.utils.ItemUT;
-import mc.promcteam.engine.utils.actions.ActionsManager;
+import mc.promcteam.engine.utils.reflection.ReflectionManager;
 import mc.promcteam.engine.utils.reflection.ReflectionUtil;
-import mc.promcteam.engine.utils.reflection.Reflection_1_17;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -35,18 +33,15 @@ import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class MockedTest {
-    protected ServerMock                    server;
-    protected NexEngine                     engine;
-    protected QuantumRPG                    plugin;
-    protected List<PlayerMock>              players          = new ArrayList<>();
-    protected Map<UUID, PlayerData>         activePlayerData = new HashMap<>();
-    protected MockedStatic<ReflectionUtil>  mockedReflection;
-    protected MockedStatic<Reflection_1_17> mockedReflection17;
-    protected MockedStatic<NexEngine>       nexEngine;
-    protected HookManager                   hookManager;
-    protected NMS                           nms;
-    protected ActionsManager                actionsManager;
-    protected CoreLang                      coreLang;
+    protected ServerMock                      server;
+    protected NexEngine                       engine;
+    protected QuantumRPG                      plugin;
+    protected List<PlayerMock>                players          = new ArrayList<>();
+    protected Map<UUID, PlayerData>           activePlayerData = new HashMap<>();
+    protected MockedStatic<ReflectionManager> reflectionManager;
+    protected ReflectionUtil                  reflectionUtil;
+    protected MockedStatic<NexEngine>         nexEngine;
+    protected NMS                             nms;
 
     @BeforeAll
     public void setupServer() {
@@ -66,36 +61,34 @@ public abstract class MockedTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        mockedReflection = mockStatic(ReflectionUtil.class);
-        mockedReflection17 = mockStatic(Reflection_1_17.class);
 
-        coreLang = mock(CoreLang.class);
-        when(coreLang.getEnum(any()))
+        reflectionUtil = mock(ReflectionUtil.class);
+        reflectionManager = mockStatic(ReflectionManager.class);
+        reflectionManager.when(ReflectionManager::getReflectionUtil)
+                .thenReturn(reflectionUtil);
+        when(reflectionUtil.getDefaultDamage(any(ItemStack.class)))
                 .thenAnswer(args -> {
-                    Enum<?> e    = args.getArgument(0);
-                    String  path = e.getClass().getSimpleName() + "." + e.name();
-                    return path;
+                    switch (((ItemStack) args.getArgument(0)).getType()) {
+                        case DIAMOND_SWORD:
+                            return 7.0;
+                        case IRON_SWORD:
+                            return 6.0;
+                        case WOODEN_SWORD:
+                            return 4.0;
+                        case TRIDENT:
+                            return 9.0;
+                        default:
+                            return 1.0;
+                    }
                 });
 
-        hookManager = mock(HookManager.class);
-        actionsManager = mock(ActionsManager.class);
-        nms = mock(NMS.class);
+        engine = MockBukkit.load(NexEngine.class);
+        nms = ((TEST) engine.getNMS()).getTestNms();
         when(nms.fixColors(anyString()))
                 .thenAnswer(args -> args.getArgument(0));
         when(nms.toBase64(any())).thenReturn("");
-
-        engine = mock(NexEngine.class);
         nexEngine = mockStatic(NexEngine.class);
-        nexEngine.when(() -> NexEngine.get()).thenReturn(engine);
-        when(engine.getDescription()).thenReturn(new PluginDescriptionFile("ProMCCore",
-                coreVersion,
-                NexEngine.class.getName()));
-        when(engine.getHooksManager()).thenReturn(hookManager);
-        when(engine.getActionsManager()).thenReturn(actionsManager);
-        when(engine.getNMS()).thenReturn(nms);
-        when(engine.lang()).thenReturn(coreLang);
-        doReturn(server.getPluginManager())
-                .when(engine).getPluginManager();
+        nexEngine.when(NexEngine::get).thenReturn(engine);
 
         ItemUT.setEngine(engine);
 
