@@ -2,6 +2,7 @@ package su.nightexpress.quantumrpg.stats.items.attributes.stats;
 
 import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.random.Rnd;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
@@ -33,6 +34,10 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
                 ItemTags.TAG_ITEM_STAT,
                 DataUT.DOUBLE_ARRAY);
         this.cap = cap;
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_stat_durability"));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_stat_durability"));
     }
 
     @Override

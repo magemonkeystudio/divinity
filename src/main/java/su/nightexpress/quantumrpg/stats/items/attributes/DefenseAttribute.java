@@ -51,6 +51,10 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
         this.protectionFactor = protectionFactor;
 
         ItemStats.registerDynamicStat(this);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_defense_" + this.getId()));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_defense_" + this.getId()));
     }
 
     @Override

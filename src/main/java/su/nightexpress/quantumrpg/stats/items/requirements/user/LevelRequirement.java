@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.stats.items.requirements.user;
 
 import mc.promcteam.engine.config.api.ILangMsg;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -24,6 +25,10 @@ public class LevelRequirement extends DynamicUserRequirement<int[]> {
                 ItemTags.PLACEHOLDER_REQ_USER_LEVEL,
                 ItemTags.TAG_REQ_USER_LEVEL,
                 PersistentDataType.INTEGER_ARRAY);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_user_levellevel"));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_user_levellevel"));
     }
 
     @Override

@@ -52,6 +52,10 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         this.cap = cap;
 
         ItemStats.registerDynamicStat(this);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_stat_" + this.getId()));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_stat_" + this.getId()));
     }
 
     @Override

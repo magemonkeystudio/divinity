@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.stats.items.requirements.item;
 
 import mc.promcteam.engine.config.api.ILangMsg;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,10 @@ public class ItemLevelRequirement extends ItemRequirement<int[]> {
                 ItemTags.PLACEHOLDER_REQ_ITEM_LEVEL,
                 ItemTags.TAG_REQ_ITEM_LEVEL,
                 PersistentDataType.INTEGER_ARRAY);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_req_item_levellevel"));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_req_item_levellevel"));
     }
 
     @Override

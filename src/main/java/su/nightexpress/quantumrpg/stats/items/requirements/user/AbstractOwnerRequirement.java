@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.stats.items.requirements.user;
 
 import mc.promcteam.engine.utils.DataUT;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.stats.items.ItemTags;
@@ -26,6 +27,11 @@ public abstract class AbstractOwnerRequirement extends DynamicUserRequirement<UU
                 ItemTags.TAG_REQ_USER_OWNER,
                 DataUT.UUID
         );
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_user_uuid" + this.getId()));
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_user_uuid" + this.getId()));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_user_uuid" + this.getId()));
     }
 
     @Override

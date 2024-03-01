@@ -25,7 +25,10 @@ public class BannedClassRequirement extends DynamicUserRequirement<String[]> {
                 ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS,
                 ItemTags.TAG_REQ_USER_BANNED_CLASS,
                 DataUT.STRING_ARRAY);
-        this.keys.add(NamespacedKey.fromString("prorpgitems:item_user_banned_classbanned-class"));
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_user_banned_classbanned-class"));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_user_banned_classbanned-class"));
     }
 
     @Override

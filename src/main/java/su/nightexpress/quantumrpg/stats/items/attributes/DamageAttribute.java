@@ -68,6 +68,10 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
         this.defenseAttached = null;
 
         ItemStats.registerDynamicStat(this);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_damage_" + this.getId()));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_damage_" + this.getId()));
     }
 
     @Override
