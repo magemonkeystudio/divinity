@@ -6,12 +6,9 @@ import mc.promcteam.engine.hooks.Hooks;
 import mc.promcteam.engine.nms.packets.IPacketHandler;
 import mc.promcteam.engine.nms.packets.events.EnginePlayerPacketEvent;
 import mc.promcteam.engine.nms.packets.events.EngineServerPacketEvent;
-import mc.promcteam.engine.utils.ItemUT;
 import mc.promcteam.engine.utils.Reflex;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -22,14 +19,9 @@ import su.nightexpress.quantumrpg.data.api.RPGUser;
 import su.nightexpress.quantumrpg.data.api.UserEntityNamesMode;
 import su.nightexpress.quantumrpg.data.api.UserProfile;
 import su.nightexpress.quantumrpg.manager.EntityManager;
-import su.nightexpress.quantumrpg.modules.list.itemhints.ItemHintsManager;
-import su.nightexpress.quantumrpg.nms.packets.PacketManager;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {

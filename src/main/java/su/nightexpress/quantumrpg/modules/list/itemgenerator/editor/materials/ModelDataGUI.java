@@ -1,7 +1,7 @@
 package su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.materials;
 
-import mc.promcteam.engine.manager.api.menu.Slot;
 import mc.promcteam.engine.config.api.JYML;
+import mc.promcteam.engine.manager.api.menu.Slot;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;

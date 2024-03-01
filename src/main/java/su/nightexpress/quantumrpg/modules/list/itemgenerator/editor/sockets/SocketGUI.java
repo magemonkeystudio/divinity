@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.LoreGUI;
-import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.skills.SkillGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.stats.MainStatsGUI;
 
 import java.util.ArrayList;
