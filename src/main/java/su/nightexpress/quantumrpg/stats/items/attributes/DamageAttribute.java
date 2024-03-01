@@ -244,11 +244,10 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
     @Override
     @NotNull
     public String getFormat(@Nullable Player p, @NotNull ItemStack item, @NotNull StatBonus value) {
-        String format = super.getFormat(item, value);
         StatBonus.Condition<?> condition = value.getCondition();
-        if (condition == null || !EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE)
-            return StringUT.colorFix(format.replace("%condition%", ""));
-        return StringUT.colorFix(format.replace("%condition%", condition.getFormat(p, item)));
+        return StringUT.colorFix(super.getFormat(item, value).replace("%condition%", condition == null || !EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE
+                ? ""
+                : condition.getFormat(p, item)));
     }
 
     @Override
