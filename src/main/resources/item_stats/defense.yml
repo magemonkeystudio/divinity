@@ -4,7 +4,7 @@ physical:
   format: '&6▸ %name%: &f%value% %condition%'
   block-damage-types:
   - physical
-  protection-factor: 0.25
+  protection-factor: 0.8
 
 magical:
   priority: 10
@@ -12,7 +12,7 @@ magical:
   format: '&d▸ %name%: &f%value% %condition%'
   block-damage-types:
   - magical
-  protection-factor: 0.25
+  protection-factor: 0.8
 
 fire:
   priority: 10
@@ -20,7 +20,7 @@ fire:
   format: '&c▸ %name%: &f%value% %condition%'
   block-damage-types:
   - fire
-  protection-factor: 0.25
+  protection-factor: 0.8
 
 poison:
   priority: 10
@@ -28,7 +28,7 @@ poison:
   format: '&a▸ %name%: &f%value% %condition%'
   block-damage-types:
   - poison
-  protection-factor: 0.25
+  protection-factor: 0.8
 
 water:
   priority: 10
@@ -36,7 +36,7 @@ water:
   format: '&9▸ %name%: &f%value% %condition%'
   block-damage-types:
   - water
-  protection-factor: 0.25
+  protection-factor: 0.8
 
 wind:
   priority: 10
@@ -44,4 +44,4 @@ wind:
   format: '&7▸ %name%: &f%value% %condition%'
   block-damage-types:
   - wind
-  protection-factor: 0.25
+  protection-factor: 0.8

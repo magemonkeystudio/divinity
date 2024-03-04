@@ -216,6 +216,7 @@ public class DamageManager extends IListener<QuantumRPG> {
         double pveDamageMod     = meta.getPvEDamageModifier();
         double pveDefenseMod    = meta.getPvEDefenseModifier();
         double enchantFactorMod = this.getEnchantModifier(victim, e.getCause());
+        double toughness        = e.getVictimStats().getItemStat(TypedStat.Type.ARMOR_TOUGHNESS, false);
         meta.setEnchantProtectionModifier(enchantFactorMod);
 
         Map<DefenseAttribute, Double> defenses = e.getDefenseMap();
@@ -243,7 +244,7 @@ public class DamageManager extends IListener<QuantumRPG> {
                 if (defAtt != null && defenses.containsKey(defAtt)) {
                     double def = Math.max(0, defenses.get(defAtt) * pveDefenseMod * penetrateMod);
 
-                    double defCalced = Math.max(0, dmgType * (1 - (def * defAtt.getProtectionFactor() * 0.01))); // TODO
+                    double defCalced = Math.max(0, dmgType * (1 - Math.max(def/5, def-4*dmgType/Math.max(1, toughness+8))*defAtt.getProtectionFactor()*0.05));
                     meta.setDefendedDamage(defAtt, dmgType - defCalced);
                     dmgType = defCalced;
                 }
