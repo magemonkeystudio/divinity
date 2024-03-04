@@ -182,6 +182,12 @@ public class Config extends IConfigTemplate {
             return;
         }
 
+        cfg.addMissing("ARMOR_TOUGHNESS.enabled", true);
+        cfg.addMissing("ARMOR_TOUGHNESS.name", "Armor Toughness");
+        cfg.addMissing("ARMOR_TOUGHNESS.format", "&9▸ %name%: &f%value% %condition%");
+        cfg.addMissing("ARMOR_TOUGHNESS.capacity", 100.0);
+        cfg.save();
+
         for (SimpleStat.Type statType : TypedStat.Type.values()) {
             String path2 = statType.name() + ".";
             if (!cfg.getBoolean(path2 + "enabled")) {

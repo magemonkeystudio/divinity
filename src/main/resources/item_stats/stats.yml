@@ -169,3 +169,9 @@ MANA_REGEN:
   name: Mana Regen
   format: '&9▸ %name%: &f%value% %condition%'
   capacity: -1.0
+
+ARMOR_TOUGHNESS:
+  enabled: true
+  name: Armor Toughness
+  format: '&9▸ %name%: &f%value% %condition%'
+  capacity: 100.0

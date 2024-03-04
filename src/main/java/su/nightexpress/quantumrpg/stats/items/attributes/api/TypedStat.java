@@ -72,6 +72,7 @@ public interface TypedStat {
         THORNMAIL(SimpleStat.ItemType.ARMOR, true, false, true),
         HEALTH_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
         MANA_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
+        ARMOR_TOUGHNESS(SimpleStat.ItemType.ARMOR, false, true, true),
         ;
 
         private final SimpleStat.ItemType type;

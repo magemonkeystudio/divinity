@@ -94,8 +94,8 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         for (StatBonus bonus : this.getAllRaw(item)) {
             if (!bonus.meetsRequirement(player)) continue;
             double[] value = bonus.getValue();
-            if (value.length == 1) {
-                if (bonus.isPercent()) percent += value[0];
+            if (value.length == 1 && bonus.isPercent()) {
+                percent += value[0];
             } else {
                 base += value[0];
                 has = true;
