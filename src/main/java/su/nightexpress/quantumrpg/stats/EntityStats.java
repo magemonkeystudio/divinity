@@ -658,6 +658,12 @@ public class EntityStats {
                 bonuses.addAll(dt.get(item, player));
             }
             bonuses.addAll(this.getBonuses(dt));
+            if (dt.isDefault()) {
+                AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_ARMOR);
+                if (attribute != null) {
+                    bonuses.add((isPercent, input) -> isPercent ? input : input + attribute.getBaseValue());
+                }
+            }
 
             double value = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
             value = this.getEffectBonus(dt, safe).applyAsDouble(value);
@@ -704,6 +710,13 @@ public class EntityStats {
         }
 
         bonuses.addAll(this.getBonuses(stat));
+
+        if (type == TypedStat.Type.ARMOR_TOUGHNESS) {
+            AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS);
+            if (attribute != null) {
+                bonuses.add((isPercent, input) -> isPercent ? input : input + attribute.getBaseValue());
+            }
+        }
 
         // Get Sets bonuses
         double value = BonusCalculator.SIMPLE_FULL.apply(type == TypedStat.Type.CRITICAL_DAMAGE ? 1D : 0D, bonuses);
