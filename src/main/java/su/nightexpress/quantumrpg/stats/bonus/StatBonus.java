@@ -42,7 +42,7 @@ public class StatBonus {
             } else if (complex.value.length == 2) {
                 container.set(VALUE, DataUT.DOUBLE_ARRAY, complex.value);
             }
-            if (complex.percent) container.set(PERCENT, BOOLEAN, true);
+            if (complex.percent) container.set(PERCENT, DataUT.BOOLEAN, true);
             if (complex.condition != null) {
                 if (complex.condition.requirement instanceof ClassRequirement) {
                     container.set(complex.condition.requirement.getKey(), DataUT.STRING_ARRAY, (String[]) complex.condition.value);
@@ -78,7 +78,7 @@ public class StatBonus {
                     condition = new Condition<>(ItemRequirements.getUserRequirement(ClassRequirement.class), classCondition);
                 }
             }
-            return new StatBonus(array, array.length == 1 ? primitive.getOrDefault(PERCENT, BOOLEAN, false) : false, condition);
+            return new StatBonus(array, array.length == 1 ? primitive.getOrDefault(PERCENT, DataUT.BOOLEAN, false) : false, condition);
         }
     };
 
