@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.stats.items.attributes;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,10 @@ public class ChargesAttribute extends ItemLoreStat<int[]> {
             @NotNull String format
     ) {
         super("ITEM_CHARGES", name, format, ItemTags.PLACEHOLDER_ITEM_CHARGES, ItemTags.TAG_ITEM_CHARGES, PersistentDataType.INTEGER_ARRAY);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_chargesitem_charges"));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_chargesitem_charges"));
     }
 
     @Override

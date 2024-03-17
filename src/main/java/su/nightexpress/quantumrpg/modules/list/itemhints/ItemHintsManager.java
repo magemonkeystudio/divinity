@@ -224,6 +224,8 @@ public class ItemHintsManager extends QModule {
 
     private boolean isAffected(@NotNull Item item, boolean checkGlow) {
         String name = item.getCustomName();
+        if (name == null) name = ItemUT.getItemName(item.getItemStack());
+
         if (name != null) {
             for (String blackText : (checkGlow ? this.glowIgnoredNames : this.hintIgnoredNames)) {
                 if (name.contains(blackText)) {

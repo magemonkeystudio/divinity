@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.stats.items.attributes;
 
 import mc.promcteam.engine.utils.NumberUT;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,9 @@ public class SkillAPIAttribute extends ItemLoreStat<Integer> {
             @NotNull String name,
             @NotNull String format) {
         super(id, name, format.replace("%name%", name), "%SKILLAPI_ATTRIBUTE_"+id+"%", ItemTags.TAG_ITEM_SKILLAPI_ATTR, PersistentDataType.INTEGER);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_skillapi_attr_" + this.getId()));
     }
 
     @Override

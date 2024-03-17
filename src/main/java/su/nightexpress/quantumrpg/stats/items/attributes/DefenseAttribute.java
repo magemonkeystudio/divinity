@@ -51,6 +51,10 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
         this.protectionFactor = protectionFactor;
 
         ItemStats.registerDynamicStat(this);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_defense_" + this.getId()));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_defense_" + this.getId()));
     }
 
     @Override
@@ -166,11 +170,10 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
     @Override
     @NotNull
     public String getFormat(@Nullable Player p, @NotNull ItemStack item, @NotNull StatBonus value) {
-        String format = super.getFormat(item, value);
         StatBonus.Condition<?> condition = value.getCondition();
-        return StringUT.colorFix(format.replace("%condition%", condition == null || !EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE
+        return StringUT.colorFix(super.getFormat(item, value).replace("%condition%", condition == null || !EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE
                 ? ""
-                : condition.getFormat(p, item).replace("%state%", EngineCfg.getDynamicRequirementState(p != null && value.meetsRequirement(p)))));
+                : condition.getFormat(p, item)));
     }
 
     @Override

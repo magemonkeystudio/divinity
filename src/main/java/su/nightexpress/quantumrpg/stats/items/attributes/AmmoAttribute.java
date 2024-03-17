@@ -1,6 +1,7 @@
 package su.nightexpress.quantumrpg.stats.items.attributes;
 
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
@@ -20,6 +21,11 @@ public class AmmoAttribute extends ItemLoreStat<String> {
     ) {
         super(type.name(), name, format, ItemTags.PLACEHOLDER_ITEM_AMMO, ItemTags.TAG_ITEM_AMMO, PersistentDataType.STRING);
         this.type = type;
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_ammo" + this.getId()));
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_ammo" + this.getId()));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_ammo" + this.getId()));
     }
 
     @Override

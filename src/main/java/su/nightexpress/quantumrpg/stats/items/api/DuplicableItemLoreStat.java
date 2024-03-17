@@ -8,6 +8,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
 import java.util.ArrayList;
@@ -75,6 +76,8 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
 
             ItemUT.addLoreTag(item, this.getMetaId(item, index), format);
         }
+
+        ItemStats.updateVanillaAttributes(item, null);
 
         return !format.isEmpty();
     }

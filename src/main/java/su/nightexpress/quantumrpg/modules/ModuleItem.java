@@ -24,7 +24,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import su.nightexpress.quantumrpg.QuantumRPG;
 import su.nightexpress.quantumrpg.modules.api.QModuleDrop;
 import su.nightexpress.quantumrpg.modules.list.identify.IdentifyManager.UnidentifiedItem;
@@ -199,7 +198,7 @@ public abstract class ModuleItem extends LoadableItem {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
 
-        meta.setDisplayName(this.name);
+        meta.setDisplayName(StringUT.colorSensitiveStrip(this.name.replace(ItemTags.PLACEHOLDER_BASE_NAME, meta.getDisplayName())));
         List<String> baseLore = meta.getLore();
         List<String> modifiedLore;
         if (baseLore == null || baseLore.isEmpty()) {

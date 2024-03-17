@@ -271,13 +271,9 @@ public class ItemStats {
     // ----------------------------------------------------------------- //
 
     public static void updateVanillaAttributes(@NotNull ItemStack item, @Nullable Player player) {
-        double hp    = getStat(item, player, TypedStat.Type.MAX_HEALTH);
-        double speed = getStat(item, player, TypedStat.Type.ATTACK_SPEED);
-        double move  = getStat(item, player, TypedStat.Type.MOVEMENT_SPEED);
-
-        addAttribute(item, player, NBTAttribute.MAX_HEALTH, hp);
-        addAttribute(item, player, NBTAttribute.MOVEMENT_SPEED, move);
-        addAttribute(item, player, NBTAttribute.ATTACK_SPEED, speed);
+        addAttribute(item, player, NBTAttribute.MAX_HEALTH, getStat(item, player, TypedStat.Type.MAX_HEALTH));
+        addAttribute(item, player, NBTAttribute.MOVEMENT_SPEED, getStat(item, player, TypedStat.Type.MOVEMENT_SPEED));
+        addAttribute(item, player, NBTAttribute.ATTACK_SPEED, getStat(item, player, TypedStat.Type.ATTACK_SPEED));
 
 //        if (ItemUtils.isWeapon(item)) {
         double vanilla = DamageAttribute.getVanillaDamage(item);
@@ -286,7 +282,8 @@ public class ItemStats {
 //        }
         if (ItemUtils.isArmor(item)) {
             addAttribute(item, player, NBTAttribute.ARMOR, DefenseAttribute.getVanillaArmor(item));
-            addAttribute(item, player, NBTAttribute.ARMOR_TOUGHNESS, DefenseAttribute.getVanillaToughness(item));
+            double toughness = getStat(item, player, TypedStat.Type.ARMOR_TOUGHNESS);
+            addAttribute(item, player, NBTAttribute.ARMOR_TOUGHNESS, toughness == 0 ? DefenseAttribute.getVanillaToughness(item) : toughness);
         }
         ItemMeta im = item.getItemMeta();
         im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

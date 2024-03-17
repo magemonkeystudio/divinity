@@ -26,7 +26,6 @@ public abstract class ItemLoreStat<Z> {
     protected final  String                   placeholder;
     protected final  List<NamespacedKey>      keys;
     protected        PersistentDataType<?, Z> dataType;
-    private final    String                   uniqueMetaTag;
     protected final  String                   metaId;
 
     public ItemLoreStat(
@@ -40,18 +39,11 @@ public abstract class ItemLoreStat<Z> {
         this.name = StringUT.color(name);
         this.format = StringUT.color(format.replace("%name%", this.getName()));
         this.placeholder = placeholder.toUpperCase();
-        this.uniqueMetaTag = uniqueTag.toLowerCase();
 
         this.keys = new ArrayList<>();
-        if (this.uniqueMetaTag.endsWith(this.id)) {
-            this.metaId = this.uniqueMetaTag;
-            keys.add(new NamespacedKey(QuantumRPG.getInstance(), this.uniqueMetaTag));
-            keys.add(new NamespacedKey(QuantumRPG.getInstance(), this.uniqueMetaTag+this.id));
-        } else {
-            this.metaId = this.uniqueMetaTag + this.id;
-            keys.add(new NamespacedKey(QuantumRPG.getInstance(), this.metaId));
-        }
-        keys.add(NamespacedKey.fromString("quantumrpg:" + this.getMetaTag() + this.getId()));
+        uniqueTag = uniqueTag.toLowerCase();
+        this.metaId = uniqueTag.endsWith(this.id) ? uniqueTag : uniqueTag + this.id;
+        keys.add(new NamespacedKey(QuantumRPG.getInstance(), this.metaId));
 
         this.dataType = dataType;
     }
@@ -105,11 +97,6 @@ public abstract class ItemLoreStat<Z> {
     public final NamespacedKey getKey() {
         this.validateMethod();
         return this.keys.get(0);
-    }
-
-    @NotNull
-    protected final String getMetaTag() {
-        return this.uniqueMetaTag;
     }
 
     @NotNull

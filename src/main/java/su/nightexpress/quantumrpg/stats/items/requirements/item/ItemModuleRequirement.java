@@ -4,6 +4,7 @@ import mc.promcteam.engine.config.api.ILangMsg;
 import mc.promcteam.engine.modules.IModule;
 import mc.promcteam.engine.utils.DataUT;
 import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -31,6 +32,10 @@ public class ItemModuleRequirement extends ItemRequirement<String[]> {
                 ItemTags.PLACEHOLDER_REQ_ITEM_MODULE,
                 ItemTags.TAG_REQ_ITEM_LEVEL,
                 DataUT.STRING_ARRAY);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_req_item_levelmodule"));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_req_item_levelmodule"));
     }
 
     @Override

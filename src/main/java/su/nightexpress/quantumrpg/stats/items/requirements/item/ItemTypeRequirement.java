@@ -3,6 +3,7 @@ package su.nightexpress.quantumrpg.stats.items.requirements.item;
 import mc.promcteam.engine.config.api.ILangMsg;
 import mc.promcteam.engine.utils.DataUT;
 import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.quantumrpg.QuantumRPG;
@@ -25,6 +26,10 @@ public class ItemTypeRequirement extends ItemRequirement<String[]> {
                 ItemTags.PLACEHOLDER_REQ_ITEM_TYPE,
                 ItemTags.TAG_REQ_ITEM_TYPE,
                 DataUT.STRING_ARRAY);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_req_item_typetype"));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_req_item_typetype"));
     }
 
     @Override

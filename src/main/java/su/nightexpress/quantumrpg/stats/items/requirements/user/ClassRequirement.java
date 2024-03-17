@@ -2,6 +2,7 @@ package su.nightexpress.quantumrpg.stats.items.requirements.user;
 
 import mc.promcteam.engine.config.api.ILangMsg;
 import mc.promcteam.engine.utils.DataUT;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +28,10 @@ public class ClassRequirement extends DynamicUserRequirement<String[]> {
                 ItemTags.PLACEHOLDER_REQ_USER_CLASS,
                 ItemTags.TAG_REQ_USER_CLASS,
                 DataUT.STRING_ARRAY);
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_user_classclass"));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_user_classclass"));
     }
 
     @Override

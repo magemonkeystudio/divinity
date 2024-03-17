@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.stats.items.attributes;
 
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,11 @@ public class HandAttribute extends ItemLoreStat<String> {
     ) {
         super(type.name(), name, format, ItemTags.PLACEHOLDER_ITEM_HAND, ItemTags.TAG_ITEM_HAND, PersistentDataType.STRING);
         this.type = type;
+
+        // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_hand" + this.getId()));
+        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_hand" + this.getId()));
+        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_hand" + this.getId()));
     }
 
     @Override

@@ -4,7 +4,6 @@ import mc.promcteam.engine.manager.api.menu.Slot;
 import org.bukkit.Material;
 import org.bukkit.Registry;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
