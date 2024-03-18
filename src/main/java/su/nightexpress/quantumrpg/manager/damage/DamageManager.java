@@ -1,15 +1,21 @@
 package su.nightexpress.quantumrpg.manager.damage;
 
 import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.items.ProItemManager;
 import mc.promcteam.engine.manager.IListener;
+import mc.promcteam.engine.registry.damage.DamageTypeProvider;
 import mc.promcteam.engine.utils.LocUT;
 import mc.promcteam.engine.utils.random.Rnd;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.damage.DamageSource;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
@@ -43,7 +49,7 @@ import java.util.*;
 import java.util.function.DoubleUnaryOperator;
 
 @SuppressWarnings("deprecation")
-public class DamageManager extends IListener<QuantumRPG> {
+public class DamageManager extends IListener<QuantumRPG> implements DamageTypeProvider {
 
     private static final QuantumRPG plugin;
 
@@ -471,5 +477,39 @@ public class DamageManager extends IListener<QuantumRPG> {
         epfMod = Math.min(20D, (epfSpec + epfAll));
 
         return (1D - epfMod / 25D);
+    }
+
+    @Override
+    public String pluginName() {
+        return QuantumRPG.getInstance().getName();
+    }
+
+    @Override
+    public String getNamespace() {
+        return QuantumRPG.getInstance().getName().toUpperCase(Locale.US);
+    }
+
+    @Override
+    public boolean dealDamage(@NotNull LivingEntity entity, double amount, String damageType, @Nullable LivingEntity damager) {
+        DamageAttribute damageAttribute = ItemStats.getDamageById(ProItemManager.stripPrefix(getNamespace(), damageType));
+        if (damageAttribute == null) return false;
+        final boolean[] success = {false};
+        Listener listener = new Listener() {
+            @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+            public void onDamage(RPGDamageEvent.Start event) {
+                if (event.getOriginalEvent().getEntity() != entity) return;
+                Map<DamageAttribute, Double> damageMap = event.getDamageMap();
+                damageMap.clear();
+                damageMap.put(damageAttribute, amount);
+                success[0] = true;
+            }
+        };
+        try {
+            Bukkit.getPluginManager().registerEvents(listener, QuantumRPG.getInstance());
+            entity.damage(amount, damager);
+        } finally {
+            HandlerList.unregisterAll(listener);
+        }
+        return success[0];
     }
 }

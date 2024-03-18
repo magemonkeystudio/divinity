@@ -5,6 +5,7 @@ import mc.promcteam.engine.NexEngine;
 import mc.promcteam.engine.commands.api.IGeneralCommand;
 import mc.promcteam.engine.config.api.JYML;
 import mc.promcteam.engine.hooks.Hooks;
+import mc.promcteam.engine.registry.damage.DamageRegistry;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -146,10 +147,12 @@ public class QuantumRPG extends NexDataPlugin<QuantumRPG, RPGUser> {
         NexEngine.getEngine()
                 .getItemManager()
                 .registerProvider(ProRpgItemsProvider.NAMESPACE, new ProRpgItemsProvider());
+        DamageRegistry.registerProvider(dmgManager);
     }
 
     @Override
     public void disable() {
+        DamageRegistry.unregisterProvider(DamageManager.class);
         if (this.interactionManager != null) {
             this.interactionManager.shutdown();
             this.interactionManager = null;
