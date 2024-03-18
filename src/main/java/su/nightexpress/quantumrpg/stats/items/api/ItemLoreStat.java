@@ -263,15 +263,15 @@ public abstract class ItemLoreStat<Z> {
             int amount = ((DuplicableItemLoreStat <?>) this).getAmount(item);
             for (NamespacedKey key : this.keys) {
                 int found = ItemUT.getLoreIndex(item, key.getKey()+amount);
-                if (found != 0) return found;
+                if (found >= 0) return found;
             }
         } else {
             for (NamespacedKey key : this.keys) {
                 int found = ItemUT.getLoreIndex(item, key.getKey());
-                if (found != 0) return found;
+                if (found >= 0) return found;
             }
         }
-        return 0;
+        return -1;
     }
 
     /**

@@ -15,6 +15,9 @@ import su.nightexpress.quantumrpg.stats.items.requirements.api.DynamicUserRequir
 import su.nightexpress.quantumrpg.stats.items.requirements.api.UserRequirement;
 import su.nightexpress.quantumrpg.stats.items.requirements.user.ClassRequirement;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public class StatBonus {
     private static final NamespacedKey VALUE           = new NamespacedKey(QuantumRPG.getInstance(), "value");
     private static final NamespacedKey PERCENT         = new NamespacedKey(QuantumRPG.getInstance(), "percent");
@@ -114,6 +117,21 @@ public class StatBonus {
         return this.condition == null || (player != null && this.condition.meetsRequirement(player));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StatBonus statBonus = (StatBonus) o;
+        return percent == statBonus.percent && Arrays.equals(value, statBonus.value) && Objects.equals(condition, statBonus.condition);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(percent, condition);
+        result = 31 * result + Arrays.hashCode(value);
+        return result;
+    }
+
     public static final class Condition<Z> {
         private final DynamicUserRequirement<Z> requirement;
         private final Z                         value;
@@ -130,6 +148,62 @@ public class StatBonus {
         @NotNull
         public String getFormat(@Nullable Player p, @NotNull ItemStack item) {
             return this.requirement.getFormat(p, item, this.value);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Condition<?> condition = (Condition<?>) o;
+            if (this.requirement != condition.requirement) return false;
+            if (this.value instanceof long[] && condition.value instanceof long[]) {
+                return Arrays.equals((long[]) this.value, (long[]) condition.value);
+            } else if (this.value instanceof int[] && condition.value instanceof int[]) {
+                return Arrays.equals((int[]) this.value, (int[]) condition.value);
+            } else if (this.value instanceof short[] && condition.value instanceof short[]) {
+                return Arrays.equals((short[]) this.value, (short[]) condition.value);
+            } else if (this.value instanceof char[] && condition.value instanceof char[]) {
+                return Arrays.equals((char[]) this.value, (char[]) condition.value);
+            } else if (this.value instanceof byte[] && condition.value instanceof byte[]) {
+                return Arrays.equals((byte[]) this.value, (byte[]) condition.value);
+            } else if (this.value instanceof boolean[] && condition.value instanceof boolean[]) {
+                return Arrays.equals((boolean[]) this.value, (boolean[]) condition.value);
+            } else if (this.value instanceof double[] && condition.value instanceof double[]) {
+                return Arrays.equals((double[]) this.value, (double[]) condition.value);
+            } else if (this.value instanceof float[] && condition.value instanceof float[]) {
+                return Arrays.equals((float[]) this.value, (float[]) condition.value);
+            } else if (this.value instanceof Object[] && condition.value instanceof Object[]) {
+                return Arrays.equals((Object[]) this.value, (Object[]) condition.value);
+            } else {
+                return Objects.equals(value, condition.value);
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            int result = 31;
+            if (this.value instanceof long[]) {
+                result += Arrays.hashCode((long[]) this.value);
+            } else if (this.value instanceof int[]) {
+                result += Arrays.hashCode((int[]) this.value);
+            } else if (this.value instanceof short[]) {
+                result += Arrays.hashCode((short[]) this.value);
+            } else if (this.value instanceof char[]) {
+                result += Arrays.hashCode((char[]) this.value);
+            } else if (this.value instanceof byte[]) {
+                result += Arrays.hashCode((byte[]) this.value);
+            } else if (this.value instanceof boolean[]) {
+                result += Arrays.hashCode((boolean[]) this.value);
+            } else if (this.value instanceof double[]) {
+                result += Arrays.hashCode((double[]) this.value);
+            } else if (this.value instanceof float[]) {
+                result += Arrays.hashCode((float[]) this.value);
+            } else if (this.value instanceof Object[]) {
+                result += Arrays.hashCode((Object[]) this.value);
+            } else {
+                result += this.value.hashCode();
+            }
+            return 31 * result + requirement.hashCode();
         }
     }
 }

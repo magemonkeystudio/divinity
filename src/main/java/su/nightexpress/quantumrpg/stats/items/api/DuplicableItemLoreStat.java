@@ -8,6 +8,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import su.nightexpress.quantumrpg.stats.bonus.StatBonus;
 import su.nightexpress.quantumrpg.stats.items.ItemStats;
 import su.nightexpress.quantumrpg.utils.LoreUT;
 
@@ -49,7 +50,17 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
     }
 
     public boolean add(@NotNull ItemStack item, @NotNull Z value, int index, int line) {
+        if (index < 0 && value instanceof StatBonus) {
+            for (int i = 0, size = this.getAmount(item); i < size; i++) {
+                StatBonus existing = (StatBonus) this.getRaw(item, i);
+                if (existing != null && Objects.equals(existing.getCondition(), ((StatBonus) value).getCondition())) {
+                    index = i;
+                    break;
+                }
+            }
+        }
         if (index < 0) index = this.getAmount(item);
+        if (line < 0) line = this.getLoreIndex(item, index);
 
         //System.out.println("Adding new index: " + index);
         item = this.preparePlaceholder(item, index, line); // Replace current text with placeholder
@@ -212,7 +223,7 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
             int found = 0;
             for (NamespacedKey key : this.keys) {
                 found = ItemUT.getLoreIndex(item, key.getKey()+i);
-                if (found != 0) break;
+                if (found >= 0) break;
             }
 
             if (found >= 0 && index == count++) {
