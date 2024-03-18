@@ -714,7 +714,7 @@ public class EntityStats {
         if (type == TypedStat.Type.ARMOR_TOUGHNESS) {
             AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS);
             if (attribute != null) {
-                bonuses.add((isPercent, input) -> isPercent ? input : input + attribute.getBaseValue());
+                bonuses.add((isPercent, input) -> isPercent ? input : input + attribute.getValue());
             }
         }
 
