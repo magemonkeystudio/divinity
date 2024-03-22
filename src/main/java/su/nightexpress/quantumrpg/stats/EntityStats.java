@@ -62,9 +62,9 @@ import java.util.function.DoubleUnaryOperator;
 public class EntityStats {
 
     private static final Map<String, EntityStats> STATS;
-    private static final UUID              ATTRIBUTE_BONUS_UUID;
-    private static final SimpleStat.Type[] ATTRIBUTE_BONUS_STATS;
-    private static final NBTAttribute[]    ATTRIBUTE_BONUS_NBT;
+    private static final UUID                     ATTRIBUTE_BONUS_UUID;
+    private static final SimpleStat.Type[]        ATTRIBUTE_BONUS_STATS;
+    private static final NBTAttribute[]           ATTRIBUTE_BONUS_NBT;
     private static final double                   DEFAULT_ATTACK_POWER = 1D;
     private static final QuantumRPG               plugin               = QuantumRPG.getInstance();
 
@@ -192,6 +192,7 @@ public class EntityStats {
             this.bonuses.clear();
             this.damageMeta = null;
             this.aoeIgnore = false;
+            this.updateBonusAttributes();
         } else {
             this.purge();
         }
@@ -263,15 +264,14 @@ public class EntityStats {
     public void removeEffect(@NotNull IEffect effect) {
         effect.clear();
         this.effects.remove(effect);
-        this.updateBonusAttributes();
     }
 
     public boolean hasEffect(@NotNull IEffectType type) {
-        return this.getActiveEffects().stream().anyMatch(effect -> effect.isType(type));
+        return this.getActiveEffects(true).stream().anyMatch(effect -> effect.isType(type));
     }
 
     public double getEffectResist(@NotNull IEffectType type, boolean safe) {
-        return this.getActiveEffects().stream().filter(effect -> effect instanceof ResistEffect)
+        return this.getActiveEffects(true).stream().filter(effect -> effect instanceof ResistEffect)
                 .mapToDouble(effect -> {
                     double resist = ((ResistEffect) effect).getResist(type);
                     if (resist != 0D) effect.trigger(safe); // TODO make the same as adjust effect count
@@ -279,13 +279,20 @@ public class EntityStats {
                 }).sum();
     }
 
+    /**
+     * Gets all active effects for the entity. Optionally updates the bonus attributes
+     *
+     * @param update If true, the bonus attributes will be updated. Care should be taken to avoid infinite loops
+     * @return A set of active effects
+     */
     @NotNull
-    public synchronized Set<IEffect> getActiveEffects() {
-        Set<IEffect> set = new HashSet<>();
+    public synchronized Set<IEffect> getActiveEffects(boolean update) {
+        Set<IEffect> set      = new HashSet<>();
+        Set<IEffect> toRemove = new HashSet<>();
 
         for (IEffect e : new HashSet<>(this.effects)) {
             if (e.isExpired()) {
-                this.removeEffect(e);
+                toRemove.add(e);
                 continue;
             }
 
@@ -301,11 +308,15 @@ public class EntityStats {
             set.add(e);
         }
 
+        // There's no need to update the bonus attributes
+        toRemove.forEach(this::removeEffect);
+        if (update) this.updateBonusAttributes();
+
         return set;
     }
 
     public void triggerEffects() {
-        this.getActiveEffects().forEach(effect -> effect.trigger(false));
+        this.getActiveEffects(true).forEach(effect -> effect.trigger(false));
     }
 
     public void triggerVisualEffects() {
@@ -568,7 +579,7 @@ public class EntityStats {
     private synchronized DoubleUnaryOperator getEffectBonus(@NotNull ItemLoreStat<?> stat, boolean safe) {
         DoubleUnaryOperator operator = (value -> value);
 
-        for (IEffect effect : this.getActiveEffects()) {
+        for (IEffect effect : this.getActiveEffects(false)) {
             if (effect instanceof AdjustStatEffect) {
                 AdjustStatEffect    adjust         = (AdjustStatEffect) effect;
                 DoubleUnaryOperator operatorEffect = adjust.getAdjust(stat, safe);
@@ -625,13 +636,13 @@ public class EntityStats {
             for (BiFunction<Boolean, Double, Double> bonus : this.getBonuses(dmgAtt)) {
                 bonuses.add((isPercent, input) -> input.length == 2
                         ? new double[]{
-                                bonus.apply(isPercent, input[0]),
-                                bonus.apply(isPercent, input[1])}
+                        bonus.apply(isPercent, input[0]),
+                        bonus.apply(isPercent, input[1])}
                         : new double[]{
                                 bonus.apply(isPercent, input[0])});
             }
             double[] range = BonusCalculator.RANGE_FULL.apply(new double[]{0, 0}, bonuses);
-            double value = Rnd.getDouble(range[0], range[1]);
+            double   value = Rnd.getDouble(range[0], range[1]);
             value *= dmgAtt.getDamageModifierByBiome(bio); // Multiply by Biome
             value = this.getEffectBonus(dmgAtt, safe).applyAsDouble(value);
 
@@ -701,7 +712,7 @@ public class EntityStats {
         SimpleStat stat = (SimpleStat) ItemStats.getStat(type);
         if (stat == null) return 0D;
 
-        List<ItemStack> equip = this.getEquipment();
+        List<ItemStack>                           equip   = this.getEquipment();
         List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
 
         for (ItemStack item : equip) {

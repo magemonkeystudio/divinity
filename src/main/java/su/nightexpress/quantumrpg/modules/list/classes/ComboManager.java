@@ -310,7 +310,7 @@ public class ComboManager extends IListener<QuantumRPG> implements Loadable {
     private boolean processCombo(@NotNull Player player, @NotNull ComboKey key) {
         EntityStats es = EntityStats.get(player);
         if (es.hasEffect(IEffectType.CONTROL_STUN) || es.hasEffect(IEffectType.SILENCE)) {
-            // TODO MEssage
+            // TODO Message
             return false;
         }
 
