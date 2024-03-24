@@ -35,7 +35,7 @@ public class MainSocketsGUI extends AbstractEditorGUI {
             } else if (i % 9 == 0) {i++;}
             setSlot(i, new Slot(createItem(Material.EMERALD,
                     "&e" + entry,
-                    "&6Left-Click: &eModify")) {
+                    "&eModify")) {
                 @Override
                 public void onLeftClick() {
                     openSubMenu(new SocketGUI(player, itemGenerator, entry));

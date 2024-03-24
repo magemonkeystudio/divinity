@@ -152,14 +152,14 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
                                     "&bCurrent:",
                                     "&a%current%",
                                     "&6Left-Click: &eModify",
-                                    "&6Drop: &eRemove"))) {
+                                    "&6Right-Click: &eRemove"))) {
                         @Override
                         public void onLeftClick() {
                             openSubMenu(new BonusesGUI(player, itemGenerator, BonusCategoryGUI.this.category.getPath() + '.' + group));
                         }
 
                         @Override
-                        public void onDrop() {
+                        public void onRightClick() {
                             cfg.remove(BonusCategoryGUI.this.category.getPath() + '.' + group);
                             saveAndReopen();
                         }

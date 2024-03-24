@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import su.nightexpress.quantumrpg.config.Config;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.EditorGUI;
+import su.nightexpress.quantumrpg.modules.list.itemgenerator.editor.enchantments.EnchantmentsGUI;
 import su.nightexpress.quantumrpg.types.ItemGroup;
 import su.nightexpress.quantumrpg.types.ItemSubType;
 
@@ -30,10 +31,17 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
                         : Material.BARRIER,
                 "&eIs whitelist/reversed",
                 "&bCurrent: &a" + reversed,
-                "&6Left-Click: &eToggle")) {
+                "&6Left-Click: &eToggle",
+                "&6Right-Click: &eSet to default value")) {
             @Override
             public void onLeftClick() {
                 itemGenerator.getConfig().set(ItemType.REVERSE.getPath(), !reversed);
+                saveAndReopen();
+            }
+
+            @Override
+            public void onRightClick() {
+                setDefault(ItemType.REVERSE.getPath());
                 saveAndReopen();
             }
         });

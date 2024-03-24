@@ -16,7 +16,7 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
     public void setContents() {
         setSlot(0, new Slot(createItem(Material.EXPERIENCE_BOTTLE,
                 "&eLevel requirements",
-                "&6Left-Click: &eModify")) {
+                "&eModify")) {
             @Override
             public void onLeftClick() {
                 openSubMenu(new RequirementsGUI(player, itemGenerator, MainRequirementsGUI.ItemType.LEVEL.getPath(), Material.EXPERIENCE_BOTTLE));
@@ -24,7 +24,7 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
         });
         setSlot(1, new Slot(createItem(Material.BOW,
                 "&eClass requirements",
-                "&6Left-Click: &eModify")) {
+                "&eModify")) {
             @Override
             public void onLeftClick() {
                 openSubMenu(new RequirementsGUI(player, itemGenerator, MainRequirementsGUI.ItemType.CLASS.getPath(), Material.BOW));
@@ -32,7 +32,7 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
         });
         setSlot(2, new Slot(createItem(Material.BARRIER,
                 "&eBanned Class requirements",
-                "&6Left-Click: &eModify")) {
+                "&eModify")) {
             @Override
             public void onLeftClick() {
                 openSubMenu(new RequirementsGUI(player, itemGenerator, MainRequirementsGUI.ItemType.BANNED_CLASS.getPath(), Material.BARRIER));

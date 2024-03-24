@@ -75,7 +75,7 @@ public class StatListGUI extends AbstractEditorGUI {
                     "&bFlat range: &a" + cfg.getBoolean(path + "flat-range"),
                     roundDisplay,
                     "",
-                    "&6Left-Click: &eModify");
+                    "&eModify");
             setSlot(i, new Slot(itemStack) {
                 @Override
                 public void onLeftClick() {

@@ -17,24 +17,24 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
         setSlot(0, new Slot(createItem(Material.BROWN_MUSHROOM,
                 "&eMinimum enchantments",
                 "&bCurrent: &a" + this.itemGenerator.getHandle().getMinEnchantments(),
-                "&6Shift-Left-Click: &eSet",
-                "&6Left-Click: &eDecrease",
-                "&6Right-Click: &eIncrease",
-                "&6Drop: &eSet to default value")) {
+                "&6Left-Click: &eSet",
+                "&6Shift-Left-Click: &eDecrease",
+                "&6Shift-Right-Click: &eIncrease",
+                "&6Right-Click: &eSet to default value")) {
             @Override
-            public void onLeftClick() {
+            public void onShiftLeftClick() {
                 itemGenerator.getConfig().set(ItemType.MINIMUM.getPath(EditorGUI.ItemType.ENCHANTMENTS.getPath()), Math.max(0, itemGenerator.getHandle().getMinEnchantments() - 1));
                 saveAndReopen();
             }
 
             @Override
-            public void onRightClick() {
+            public void onShiftRightClick() {
                 itemGenerator.getConfig().set(ItemType.MINIMUM.getPath(EditorGUI.ItemType.ENCHANTMENTS.getPath()), Math.max(0, itemGenerator.getHandle().getMinEnchantments() + 1));
                 saveAndReopen();
             }
 
             @Override
-            public void onShiftLeftClick() {
+            public void onLeftClick() {
                 sendSetMessage(ItemType.MINIMUM.name().toLowerCase() + " enchantments",
                         String.valueOf(itemGenerator.getHandle().getMinEnchantments()),
                         s -> {
@@ -44,7 +44,7 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 setDefault(ItemType.MINIMUM.getPath(EditorGUI.ItemType.ENCHANTMENTS.getPath()));
                 saveAndReopen();
             }
@@ -52,24 +52,24 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
         setSlot(1, new Slot(createItem(Material.RED_MUSHROOM,
                 "&eMaximum enchantments",
                 "&bCurrent: &a" + this.itemGenerator.getHandle().getMaxEnchantments(),
-                "&6Shift-Left-Click: &eSet",
-                "&6Left-Click: &eDecrease",
-                "&6Right-Click: &eIncrease",
-                "&6Drop: &eSet to default value")) {
+                "&6Left-Click: &eSet",
+                "&6Shift-Left-Click: &eDecrease",
+                "&6Shift-Right-Click: &eIncrease",
+                "&6Right-Click: &eSet to default value")) {
             @Override
-            public void onLeftClick() {
+            public void onShiftLeftClick() {
                 itemGenerator.getConfig().set(ItemType.MAXIMUM.getPath(EditorGUI.ItemType.ENCHANTMENTS.getPath()), Math.max(0, itemGenerator.getHandle().getMaxEnchantments() - 1));
                 saveAndReopen();
             }
 
             @Override
-            public void onRightClick() {
+            public void onShiftRightClick() {
                 itemGenerator.getConfig().set(ItemType.MAXIMUM.getPath(EditorGUI.ItemType.ENCHANTMENTS.getPath()), Math.max(0, itemGenerator.getHandle().getMaxEnchantments() + 1));
                 saveAndReopen();
             }
 
             @Override
-            public void onShiftLeftClick() {
+            public void onLeftClick() {
                 sendSetMessage(ItemType.MAXIMUM.name().toLowerCase() + " enchantments",
                         String.valueOf(itemGenerator.getHandle().getMaxEnchantments()),
                         s -> {
@@ -79,7 +79,7 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 setDefault(ItemType.MAXIMUM.getPath(EditorGUI.ItemType.ENCHANTMENTS.getPath()));
                 saveAndReopen();
             }
@@ -88,10 +88,16 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
                 "&eSafe enchantments only",
                 "&bCurrent: &a" + this.itemGenerator.getHandle().isSafeEnchant(),
                 "&6Left-Click: &eToggle",
-                "&6Drop: &eSet to default value")) {
+                "&6Right-Click: &eSet to default value")) {
             @Override
             public void onLeftClick() {
                 itemGenerator.getConfig().set(ItemType.SAFE_ONLY.getPath(EditorGUI.ItemType.ENCHANTMENTS.getPath()), !itemGenerator.getHandle().isSafeEnchant());
+                saveAndReopen();
+            }
+
+            @Override
+            public void onRightClick() {
+                setDefault(ItemType.SAFE_ONLY.getPath(EditorGUI.ItemType.ENCHANTMENTS.getPath()));
                 saveAndReopen();
             }
         });
@@ -99,10 +105,16 @@ public class EnchantmentsGUI extends AbstractEditorGUI {
                 "&eSafe enchantment levels only",
                 "&bCurrent: &a" + this.itemGenerator.getHandle().isEnchantsSafeLevels(),
                 "&6Left-Click: &eToggle",
-                "&6Drop: &eSet to default value")) {
+                "&6Right-Click: &eSet to default value")) {
             @Override
             public void onLeftClick() {
                 itemGenerator.getConfig().set(ItemType.SAFE_LEVELS.getPath(EditorGUI.ItemType.ENCHANTMENTS.getPath()), !itemGenerator.getHandle().isEnchantsSafeLevels());
+                saveAndReopen();
+            }
+
+            @Override
+            public void onRightClick() {
+                setDefault(ItemType.SAFE_LEVELS.getPath(EditorGUI.ItemType.ENCHANTMENTS.getPath()));
                 saveAndReopen();
             }
         });

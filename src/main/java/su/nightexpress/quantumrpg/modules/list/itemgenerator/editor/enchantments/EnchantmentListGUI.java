@@ -60,7 +60,7 @@ public class EnchantmentListGUI extends AbstractEditorGUI {
                             "&e" + key,
                             "&bCurrent: &a" + map.get(key),
                             "&6Left-Click: &eSet",
-                            "&6Drop: &eRemove")) {
+                            "&6Right-Click: &eRemove")) {
                         @Override
                         public void onLeftClick() {
                             sendSetMessage("desired level range",
@@ -78,7 +78,7 @@ public class EnchantmentListGUI extends AbstractEditorGUI {
                         }
 
                         @Override
-                        public void onDrop() {
+                        public void onRightClick() {
                             itemGenerator.getConfig().remove(EditorGUI.ItemType.ENCHANTMENTS.getPath() + ".list." + key);
                             saveAndReopen();
                         }

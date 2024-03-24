@@ -81,14 +81,14 @@ public class MainModelDataGUI extends AbstractEditorGUI {
                                 "&bCurrent:",
                                 "&a%current%",
                                 "&6Left-Click: &eModify",
-                                "&6Drop: &eRemove"))) {
+                                "&6Right-Click: &eRemove"))) {
                     @Override
                     public void onLeftClick() {
                         openSubMenu(new ModelDataGUI(player, itemGenerator, path));
                     }
 
                     @Override
-                    public void onDrop() {
+                    public void onRightClick() {
                         map.remove(path);
                         cfg.remove(MainMaterialsGUI.ItemType.MODEL_DATA.getPath());
                         for (Map.Entry<String, List<Integer>> entry : map.entrySet()) {

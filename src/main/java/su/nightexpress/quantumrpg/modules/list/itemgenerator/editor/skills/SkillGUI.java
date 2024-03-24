@@ -24,7 +24,7 @@ public class SkillGUI extends AbstractEditorGUI {
                 "&eChance",
                 "&bCurrent: &a" + itemGenerator.getConfig().getDouble(ItemType.CHANCE.getPath(path)),
                 "&6Left-Click: &eSet",
-                "&6Drop: &eSet to default value")) {
+                "&6Right-Click: &eSet to default value")) {
             @Override
             public void onLeftClick() {
                 sendSetMessage(ItemType.CHANCE.getTitle(),
@@ -36,7 +36,7 @@ public class SkillGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(ItemType.CHANCE.getPath(path), 0);
                 saveAndReopen();
             }
@@ -44,24 +44,24 @@ public class SkillGUI extends AbstractEditorGUI {
         setSlot(1, new Slot(createItem(Material.BROWN_MUSHROOM,
                 "&eMinimum Level",
                 "&bCurrent: &a" + itemGenerator.getConfig().getInt(ItemType.MIN.getPath(this.path)),
-                "&6Shift-Left-Click: &eSet",
-                "&6Left-Click: &eDecrease",
-                "&6Right-Click: &eIncrease",
-                "&6Drop: &eSet to default value")) {
+                "&6Left-Click: &eSet",
+                "&6Shift-Left-Click: &eDecrease",
+                "&6Shift-Right-Click: &eIncrease",
+                "&6Right-Click: &eSet to default value")) {
             @Override
-            public void onLeftClick() {
+            public void onShiftLeftClick() {
                 itemGenerator.getConfig().set(ItemType.MIN.getPath(path), Math.max(1, itemGenerator.getConfig().getInt(ItemType.MIN.getPath(path)) - 1));
                 saveAndReopen();
             }
 
             @Override
-            public void onRightClick() {
+            public void onShiftRightClick() {
                 itemGenerator.getConfig().set(ItemType.MIN.getPath(path), itemGenerator.getConfig().getInt(ItemType.MIN.getPath(path)) + 1);
                 saveAndReopen();
             }
 
             @Override
-            public void onShiftLeftClick() {
+            public void onLeftClick() {
                 sendSetMessage(ItemType.MIN.getTitle(),
                         String.valueOf(itemGenerator.getConfig().getInt(ItemType.MIN.getPath(path))),
                         s -> {
@@ -71,7 +71,7 @@ public class SkillGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(ItemType.MIN.getPath(path), 1);
                 saveAndReopen();
             }
@@ -79,24 +79,24 @@ public class SkillGUI extends AbstractEditorGUI {
         setSlot(2, new Slot(createItem(Material.RED_MUSHROOM,
                 "&eMaximum Level",
                 "&bCurrent: &a" + itemGenerator.getConfig().getInt(ItemType.MAX.getPath(path)),
-                "&6Shift-Left-Click: &eSet",
-                "&6Left-Click: &eDecrease",
-                "&6Right-Click: &eIncrease",
-                "&6Drop: &eSet to default value")) {
+                "&6Left-Click: &eSet",
+                "&6Shift-Left-Click: &eDecrease",
+                "&6Shift-Right-Click: &eIncrease",
+                "&6Right-Click: &eSet to default value")) {
             @Override
-            public void onLeftClick() {
+            public void onShiftLeftClick() {
                 itemGenerator.getConfig().set(ItemType.MAX.getPath(path), Math.max(1, itemGenerator.getConfig().getInt(ItemType.MAX.getPath(path)) - 1));
                 saveAndReopen();
             }
 
             @Override
-            public void onRightClick() {
+            public void onShiftRightClick() {
                 itemGenerator.getConfig().set(ItemType.MAX.getPath(path), itemGenerator.getConfig().getInt(ItemType.MAX.getPath(path)) + 1);
                 saveAndReopen();
             }
 
             @Override
-            public void onShiftLeftClick() {
+            public void onLeftClick() {
                 sendSetMessage(ItemType.MAX.getTitle(),
                         String.valueOf(itemGenerator.getConfig().getInt(ItemType.MAX.getPath(path))),
                         s -> {
@@ -106,7 +106,7 @@ public class SkillGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(ItemType.MAX.getPath(path), 1);
                 saveAndReopen();
             }
@@ -118,14 +118,14 @@ public class SkillGUI extends AbstractEditorGUI {
                         "&f%current%",
                         "&a----------",
                         "&6Left-Click: &eModify",
-                        "&6Drop: &eSet to default value"))) {
+                        "&6RightClick: &eSet to default value"))) {
             @Override
             public void onLeftClick() {
                 openSubMenu(new LoreGUI(player, title, itemGenerator, ItemType.LORE.getPath(path)));
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(ItemType.LORE.getPath(path), List.of("&b" + path.substring(path.lastIndexOf('.') + 1) + " &7Lvl. &f%level%"));
                 saveAndReopen();
             }

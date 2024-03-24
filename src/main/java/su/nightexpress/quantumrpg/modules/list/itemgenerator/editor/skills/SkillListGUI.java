@@ -80,7 +80,7 @@ public class SkillListGUI extends AbstractEditorGUI {
                                 "&f%current%",
                                 "&a----------",
                                 "&6Left-Click: &eModify",
-                                "&6Drop: &eRemove")
+                                "&6Right-Click: &eRemove")
                 );
                 if (skillAPIHK != null) {
                     ItemStack indicator = skillAPIHK.getSkillIndicator(key);
@@ -103,7 +103,7 @@ public class SkillListGUI extends AbstractEditorGUI {
                     }
 
                     @Override
-                    public void onDrop() {
+                    public void onRightClick() {
                         cfg.remove(path);
                         saveAndReopen();
                     }

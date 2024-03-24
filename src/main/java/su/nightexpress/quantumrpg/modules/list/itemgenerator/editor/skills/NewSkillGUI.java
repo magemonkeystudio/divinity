@@ -37,7 +37,7 @@ public class NewSkillGUI extends AbstractEditorGUI {
                 i++;
             } else if (i % 9 == 0) {i++;}
             ItemStack itemStack = createItem(Material.JACK_O_LANTERN,
-                    "&e" + key, "&6Left-Click: &eAdd");
+                    "&e" + key, "&eAdd");
             if (skillAPIHK != null) {
                 ItemStack indicator = skillAPIHK.getSkillIndicator(key);
                 if (indicator != null) {

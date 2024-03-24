@@ -42,7 +42,7 @@ public class SocketListGUI extends AbstractEditorGUI {
             setSlot(i, new Slot(createItem(Material.EMERALD,
                     "&e" + entry,
                     "&bCurrent: &a" + itemGenerator.getConfig().getDouble(path + entry + ".chance"),
-                    "&6Left-Click: &eModify")) {
+                    "&eModify")) {
                 @Override
                 public void onLeftClick() {
                     sendSetMessage("chance for a " + entry + ' ' + name + " socket",

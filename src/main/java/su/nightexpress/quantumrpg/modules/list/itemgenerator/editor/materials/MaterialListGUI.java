@@ -45,7 +45,7 @@ public class MaterialListGUI extends AbstractEditorGUI {
                     } :
                     new Slot(createItem(MainMaterialsGUI.getMaterial(entry),
                             "&e" + entry,
-                            "&6Left-Click: &eRemove")) {
+                            "&eRemove")) {
                         @Override
                         public void onLeftClick() {
                             materialList.remove(entry);

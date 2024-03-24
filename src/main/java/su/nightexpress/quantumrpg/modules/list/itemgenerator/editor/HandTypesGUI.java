@@ -31,7 +31,7 @@ public class HandTypesGUI extends AbstractEditorGUI {
                     "&e" + hand.getName(),
                     "&bCurrent: &a" + itemGenerator.getConfig().getDouble(EditorGUI.ItemType.HAND_TYPES.getPath() + '.' + id, 0),
                     "&6Left-Click: &eSet",
-                    "&6Drop: &eRemove")) {
+                    "&6Right-Click: &eRemove")) {
                 @Override
                 public void onLeftClick() {
                     sendSetMessage(id,
@@ -50,7 +50,7 @@ public class HandTypesGUI extends AbstractEditorGUI {
                 }
 
                 @Override
-                public void onDrop() {
+                public void onRightClick() {
                     itemGenerator.getConfig().remove(EditorGUI.ItemType.HAND_TYPES.getPath() + '.' + id);
                     saveAndReopen();
                 }

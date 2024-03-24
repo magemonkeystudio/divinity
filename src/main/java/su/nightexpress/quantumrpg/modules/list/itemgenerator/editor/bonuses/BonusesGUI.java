@@ -95,7 +95,7 @@ public class BonusesGUI extends AbstractEditorGUI {
                         "&e" + id,
                         "&bCurrent: &a" + value,
                         "&6Left-Click: &eSet",
-                        "&6Drop: &eRemove")) {
+                        "&6Right-Click: &eRemove")) {
                     @Override
                     public void onLeftClick() {
                         sendSetMessage(id + " value",
@@ -110,7 +110,7 @@ public class BonusesGUI extends AbstractEditorGUI {
                     }
 
                     @Override
-                    public void onDrop() {
+                    public void onRightClick() {
                         cfg.remove(path);
                         saveAndReopen();
                     }
