@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.LimitedItem;
 import com.promcteam.divinity.types.QClickType;
 
-public class QuantumPlayerItemUseEvent extends Event implements Cancellable {
+public class DivinityPlayerItemUseEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private boolean cancelled;
@@ -22,10 +22,10 @@ public class QuantumPlayerItemUseEvent extends Event implements Cancellable {
 
     private final QClickType click;
 
-    public QuantumPlayerItemUseEvent(@NotNull ItemStack item,
-                                     @NotNull Player p,
-                                     @NotNull LimitedItem ci,
-                                     @NotNull QClickType click) {
+    public DivinityPlayerItemUseEvent(@NotNull ItemStack item,
+                                      @NotNull Player p,
+                                      @NotNull LimitedItem ci,
+                                      @NotNull QClickType click) {
         this.item = item;
         this.ci = ci;
         this.p = p;

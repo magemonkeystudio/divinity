@@ -1,6 +1,7 @@
 package com.promcteam.divinity.manager;
 
 import com.promcteam.codex.manager.IListener;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -15,10 +16,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.api.event.EntityEquipmentChangeEvent;
 import com.promcteam.divinity.api.event.EntityDivinityItemPickupEvent;
-import com.promcteam.divinity.api.event.RPGDamageEvent;
+import com.promcteam.divinity.api.event.DivinityDamageEvent;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.stats.EntityStats;
 import com.promcteam.divinity.stats.EntityStatsTask;
@@ -30,19 +30,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class EntityManager extends IListener<QuantumRPG> {
+public class EntityManager extends IListener<Divinity> {
 
     private static final String                     PACKET_DUPLICATOR_FIXER = "PACKET_DUPLICATOR_FIXER";
     private static final Map<UUID, EntityEquipment> previousEquipment       = new HashMap<>();
     private              EntityStatsTask            entityStatsTask;
 
-    public EntityManager(@NotNull QuantumRPG plugin) {
+    public EntityManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 
     public static boolean isPacketDuplicatorFixed(@NotNull Entity entity) {
         if (entity.hasMetadata(PACKET_DUPLICATOR_FIXER)) {
-            entity.removeMetadata(PACKET_DUPLICATOR_FIXER, QuantumRPG.getInstance());
+            entity.removeMetadata(PACKET_DUPLICATOR_FIXER, Divinity.getInstance());
             return true;
         }
         return false;
@@ -149,7 +149,7 @@ public class EntityManager extends IListener<QuantumRPG> {
             public void run() {
                 EntityStats.get(entity).updateAll();
             }
-        }.runTask(QuantumRPG.getInstance());
+        }.runTask(Divinity.getInstance());
     }
 
     private final void addDuplicatorFixer(@NotNull Entity entity) {
@@ -162,7 +162,7 @@ public class EntityManager extends IListener<QuantumRPG> {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onStatsDamagePacketDuplicator(RPGDamageEvent.Exit e) {
+    public void onStatsDamagePacketDuplicator(DivinityDamageEvent.Exit e) {
         LivingEntity victim = e.getVictim();
         this.addDuplicatorFixer(victim);
         this.pushToUpdate(victim, 1.5D);

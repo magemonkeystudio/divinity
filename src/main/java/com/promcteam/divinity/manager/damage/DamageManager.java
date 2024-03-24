@@ -6,6 +6,7 @@ import com.promcteam.codex.manager.IListener;
 import com.promcteam.codex.registry.damage.DamageTypeProvider;
 import com.promcteam.codex.utils.LocUT;
 import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,9 +29,8 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.api.PartyAPI;
-import com.promcteam.divinity.api.event.RPGDamageEvent;
+import com.promcteam.divinity.api.event.DivinityDamageEvent;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
 import com.promcteam.divinity.manager.effects.main.AdjustStatEffect;
@@ -48,12 +48,12 @@ import java.util.*;
 import java.util.function.DoubleUnaryOperator;
 
 @SuppressWarnings("deprecation")
-public class DamageManager extends IListener<QuantumRPG> implements DamageTypeProvider {
+public class DamageManager extends IListener<Divinity> implements DamageTypeProvider {
 
-    private static final QuantumRPG plugin;
+    private static final Divinity plugin;
 
     static {
-        plugin = QuantumRPG.getInstance();
+        plugin = Divinity.getInstance();
     }
     //private CrackShotHK csHook;
 
@@ -190,7 +190,7 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onDamageRPGStart(@NotNull RPGDamageEvent.Start e) {
+    public void onDamageRPGStart(@NotNull DivinityDamageEvent.Start e) {
         LivingEntity      victim     = e.getVictim();
         LivingEntity      damager    = e.getDamager();
         Projectile        projectile = e.getProjectile();
@@ -206,7 +206,7 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
             if (!this.handleDamageModifiers(e, victim, damager, statsVictim, statsDamager, projectile, orig, meta))
                 return;
 
-        RPGDamageEvent.Pre eventPre = new RPGDamageEvent.Pre(victim, damager, projectile, orig, meta);
+        DivinityDamageEvent.Pre eventPre = new DivinityDamageEvent.Pre(victim, damager, projectile, orig, meta);
         plugin.getPluginManager().callEvent(eventPre);
         if (eventPre.isCancelled()) return;
 
@@ -286,7 +286,7 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
             if (!this.handleDamagePostEffects(e, victim, damager, statsVictim, statsDamager, projectile, orig, meta))
                 return;
 
-        RPGDamageEvent.Exit eventExit = new RPGDamageEvent.Exit(victim, damager, projectile, orig, meta);
+        DivinityDamageEvent.Exit eventExit = new DivinityDamageEvent.Exit(victim, damager, projectile, orig, meta);
         plugin.getPluginManager().callEvent(eventExit);
         if (eventExit.isCancelled()) return;
 
@@ -294,7 +294,7 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
     }
 
     private boolean handleDamageModifiers(
-            @NotNull RPGDamageEvent event,
+            @NotNull DivinityDamageEvent event,
             @NotNull LivingEntity victim,
             @NotNull LivingEntity damager,
             @NotNull EntityStats statsVictim,
@@ -309,7 +309,7 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
             double accurRate = event.getDamagerItemStat(TypedStat.Type.ACCURACY_RATE);
             if (Rnd.get(true) < dodgeRate && Rnd.get(true) >= accurRate) {
 
-                RPGDamageEvent.Dodge qDodge = new RPGDamageEvent.Dodge(victim, damager, projectile, e, meta);
+                DivinityDamageEvent.Dodge qDodge = new DivinityDamageEvent.Dodge(victim, damager, projectile, e, meta);
                 plugin.getPluginManager().callEvent(qDodge);
                 if (!qDodge.isCancelled()) {
                     e.setDamage(0D);
@@ -401,7 +401,7 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
     }
 
     private boolean handleDamagePostEffects(
-            @NotNull RPGDamageEvent event,
+            @NotNull DivinityDamageEvent event,
             @NotNull LivingEntity victim,
             @NotNull LivingEntity damager,
             @NotNull EntityStats statsVictim,
@@ -491,12 +491,12 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
 
     @Override
     public String pluginName() {
-        return QuantumRPG.getInstance().getName();
+        return Divinity.getInstance().getName();
     }
 
     @Override
     public String getNamespace() {
-        return QuantumRPG.getInstance().getName().toUpperCase(Locale.US);
+        return Divinity.getInstance().getName().toUpperCase(Locale.US);
     }
 
     @Override
@@ -510,7 +510,7 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
         final boolean[] success = {false};
         Listener listener = new Listener() {
             @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-            public void onDamage(RPGDamageEvent.Start event) {
+            public void onDamage(DivinityDamageEvent.Start event) {
                 if (event.getOriginalEvent().getEntity() != entity) return;
                 Map<DamageAttribute, Double> damageMap = event.getDamageMap();
                 damageMap.clear();
@@ -519,7 +519,7 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
             }
         };
         try {
-            Bukkit.getPluginManager().registerEvents(listener, QuantumRPG.getInstance());
+            Bukkit.getPluginManager().registerEvents(listener, Divinity.getInstance());
             entity.damage(amount, damager);
         } finally {
             HandlerList.unregisterAll(listener);

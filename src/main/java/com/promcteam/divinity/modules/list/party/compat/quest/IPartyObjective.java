@@ -7,18 +7,18 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.list.party.PartyManager;
 import com.promcteam.divinity.modules.list.party.PartyManager.Party;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 
 import java.util.Set;
 
-public abstract class IPartyObjective extends IListener<QuantumRPG> {
+public abstract class IPartyObjective extends IListener<Divinity> {
 
     protected PartyManager partyManager;
 
-    public IPartyObjective(@NotNull QuantumRPG plugin, @NotNull PartyManager partyManager) {
+    public IPartyObjective(@NotNull Divinity plugin, @NotNull PartyManager partyManager) {
         super(plugin);
         this.partyManager = partyManager;
     }

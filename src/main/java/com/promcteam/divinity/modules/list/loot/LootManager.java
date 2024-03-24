@@ -31,7 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
 import com.promcteam.divinity.modules.EModule;
@@ -71,7 +71,7 @@ public class LootManager extends QModule {
 
     private static final String META_SPAWN_REASON = "QRPG_META_SPAWN_REASON";
 
-    public LootManager(@NotNull QuantumRPG plugin) {
+    public LootManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 
@@ -404,9 +404,9 @@ public class LootManager extends QModule {
         }
     }
 
-    class LootTask extends ITask<QuantumRPG> {
+    class LootTask extends ITask<Divinity> {
 
-        public LootTask(@NotNull QuantumRPG plugin) {
+        public LootTask(@NotNull Divinity plugin) {
             super(plugin, 1, false);
         }
 

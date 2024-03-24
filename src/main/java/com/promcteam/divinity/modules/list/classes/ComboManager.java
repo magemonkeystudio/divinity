@@ -11,6 +11,7 @@ import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.MsgUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.constants.JStrings;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -28,7 +29,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.manager.effects.IEffectType;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
 import com.promcteam.divinity.modules.list.classes.api.UserSkillData;
@@ -39,7 +39,7 @@ import com.promcteam.divinity.utils.ItemUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ComboManager extends IListener<QuantumRPG> implements Loadable {
+public class ComboManager extends IListener<Divinity> implements Loadable {
 
     private ClassManager classManager;
     private JYML         cfg;
@@ -428,7 +428,7 @@ public class ComboManager extends IListener<QuantumRPG> implements Loadable {
         }
     }
 
-    class ComboTask extends ITask<QuantumRPG> {
+    class ComboTask extends ITask<Divinity> {
 
         public ComboTask() {
             super(ComboManager.this.plugin, comboCheckTime, true);
@@ -464,7 +464,7 @@ public class ComboManager extends IListener<QuantumRPG> implements Loadable {
         }
     }
 
-    class GUI extends NGUI<QuantumRPG> {
+    class GUI extends NGUI<Divinity> {
 
         private UserSkillData data;
 

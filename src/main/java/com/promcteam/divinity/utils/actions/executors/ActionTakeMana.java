@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
 
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class ActionTakeMana extends IActionExecutor {
 
-    public ActionTakeMana(@NotNull QuantumRPG plugin) {
+    public ActionTakeMana(@NotNull Divinity plugin) {
         super(plugin, "TAKE_MANA");
     }
 

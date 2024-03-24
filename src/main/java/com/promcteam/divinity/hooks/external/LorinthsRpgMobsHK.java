@@ -5,12 +5,12 @@ import com.promcteam.codex.hooks.NHook;
 import me.lorinth.rpgmobs.LorinthsRpgMobs;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.HookMobLevel;
 
-public class LorinthsRpgMobsHK extends NHook<QuantumRPG> implements HookMobLevel {
+public class LorinthsRpgMobsHK extends NHook<Divinity> implements HookMobLevel {
 
-    public LorinthsRpgMobsHK(@NotNull QuantumRPG plugin) {
+    public LorinthsRpgMobsHK(@NotNull Divinity plugin) {
         super(plugin);
     }
 

@@ -7,7 +7,8 @@ import com.promcteam.codex.manager.api.gui.GuiItem;
 import com.promcteam.codex.manager.api.gui.NGUI;
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.NumberUT;
-import org.apache.commons.lang.ArrayUtils;
+import com.promcteam.divinity.Divinity;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.dismantle.DismantleManager.OutputContainer;
 import com.promcteam.divinity.modules.list.dismantle.DismantleManager.OutputItem;
 import com.promcteam.divinity.modules.list.dismantle.event.PlayerDismantleItemEvent;
@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class DismantleGUI extends NGUI<QuantumRPG> {
+class DismantleGUI extends NGUI<Divinity> {
 
     protected DismantleManager dismantleManager;
 

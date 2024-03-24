@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
@@ -143,7 +143,7 @@ public class MDropCmd extends MCmd<QModuleDrop<?>> {
             if (material != null && generatorItem != null) {
                 item = generatorItem.create(iLevel, -1, material);
             } else {
-                item = QuantumAPI.getItemByModule(this.module, id, iLevel, -1, -1);
+                item = DivinityAPI.getItemByModule(this.module, id, iLevel, -1, -1);
             }
             if (item == null) continue;
 

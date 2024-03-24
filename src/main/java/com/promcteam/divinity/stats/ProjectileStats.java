@@ -1,5 +1,6 @@
 package com.promcteam.divinity.stats;
 
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Trident;
@@ -7,11 +8,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 
 public class ProjectileStats {
 
-    private static QuantumRPG plugin = QuantumRPG.getInstance();
+    private static Divinity plugin = Divinity.getInstance();
 
     private static final String PROJECTILE_SOURCE_WEAPON = "QRPG_PJ_WEAPON";
     private static final String PROJECTILE_PICKABLE      = "QRPG_PJ_PICKABLE";

@@ -7,15 +7,15 @@ import com.promcteam.codex.nms.packets.IPacketHandler;
 import com.promcteam.codex.nms.packets.events.EnginePlayerPacketEvent;
 import com.promcteam.codex.nms.packets.events.EngineServerPacketEvent;
 import com.promcteam.codex.utils.Reflex;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.api.event.EntityEquipmentChangeEvent;
 import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.data.api.RPGUser;
+import com.promcteam.divinity.data.api.DivinityUser;
 import com.promcteam.divinity.data.api.UserEntityNamesMode;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.manager.EntityManager;
@@ -28,7 +28,7 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
 
     private static final String PACKET_LOCATION = "net.minecraft.network.protocol.game";
 
-    public V1_17_R1(@NotNull QuantumRPG plugin) {
+    public V1_17_R1(@NotNull Divinity plugin) {
         super(plugin);
     }
 
@@ -133,7 +133,7 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
 
     @Override
     protected void manageEntityNames(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(e.getReciever());
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(e.getReciever());
         if (user == null) return;
 
         UserProfile         profile   = user.getActiveProfile();
@@ -164,7 +164,7 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
 
     @Override
     protected void managePlayerHelmet(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
-        Bukkit.getScheduler().runTask(QuantumRPG.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(Divinity.getInstance(), () -> {
             Class playOutEntityEquipment = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutEntityEquipment");
             Class enumItemSlotClass      = Reflex.getClass("net.minecraft.world.entity", "EnumItemSlot");
 
@@ -220,8 +220,8 @@ public class V1_17_R1 extends UniversalPacketHandler implements IPacketHandler {
                     CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
             if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;
 
-            Player  player = (Player) bukkitEntity;
-            RPGUser user   = plugin.getUserManager().getOrLoadUser(player);
+            Player       player = (Player) bukkitEntity;
+            DivinityUser user   = plugin.getUserManager().getOrLoadUser(player);
             if (user == null) return;
 
             UserProfile profile = user.getActiveProfile();

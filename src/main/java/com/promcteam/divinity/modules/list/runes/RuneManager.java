@@ -2,6 +2,7 @@ package com.promcteam.divinity.modules.list.runes;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.external.citizens.CitizensHK;
+import com.promcteam.divinity.Divinity;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
@@ -9,7 +10,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.SocketItem;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
@@ -23,7 +23,7 @@ import java.util.TreeMap;
 
 public class RuneManager extends ModuleSocket<Rune> {
 
-    public RuneManager(@NotNull QuantumRPG plugin) {
+    public RuneManager(@NotNull Divinity plugin) {
         super(plugin, Rune.class);
     }
 
@@ -85,7 +85,7 @@ public class RuneManager extends ModuleSocket<Rune> {
 
         private TreeMap<Integer, PotionEffect> effects;
 
-        public Rune(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public Rune(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, RuneManager.this);
 
             PotionEffectType type = PotionEffectType.getByName(cfg.getString("effect", "").toUpperCase());

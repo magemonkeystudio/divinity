@@ -2,25 +2,25 @@ package com.promcteam.divinity.manager.interactions;
 
 import com.promcteam.codex.manager.IListener;
 import com.promcteam.codex.manager.api.Loadable;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public class InteractionManager extends IListener<QuantumRPG> implements Loadable {
+public class InteractionManager extends IListener<Divinity> implements Loadable {
 
     // TODO In Abstract action add task and check for other things
     // in map add action instead of boolean
 
     private Map<Player, Boolean> actionPlayers;
 
-    public InteractionManager(@NotNull QuantumRPG plugin) {
+    public InteractionManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 

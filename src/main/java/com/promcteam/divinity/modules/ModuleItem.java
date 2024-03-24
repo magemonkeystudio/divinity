@@ -11,7 +11,8 @@ import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.constants.JStrings;
 import com.promcteam.codex.utils.random.Rnd;
-import org.apache.commons.lang.ArrayUtils;
+import com.promcteam.divinity.Divinity;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -24,7 +25,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.modules.list.identify.IdentifyManager.UnidentifiedItem;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
@@ -38,9 +38,9 @@ import java.util.*;
 
 public abstract class ModuleItem extends LoadableItem {
 
-    protected final QModuleDrop<?>            module;
-    protected       QuantumRPG                plugin;
-    protected       String                    name;
+    protected final QModuleDrop<?> module;
+    protected       Divinity       plugin;
+    protected       String         name;
     protected       ItemType                  material;
     protected       List<String>              lore;
     protected       int                       modelData;
@@ -54,7 +54,7 @@ public abstract class ModuleItem extends LoadableItem {
 
     // Creating new config
     @Deprecated
-    public ModuleItem(@NotNull QuantumRPG plugin, String path, QModuleDrop<?> module) throws
+    public ModuleItem(@NotNull Divinity plugin, String path, QModuleDrop<?> module) throws
             InvalidConfigurationException {
         super(plugin, path);
         this.module = module;
@@ -62,7 +62,7 @@ public abstract class ModuleItem extends LoadableItem {
     }
 
     // Load from existent config
-    public ModuleItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
+    public ModuleItem(@NotNull Divinity plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
         super(plugin, cfg);
         this.plugin = plugin;
         this.module = module;

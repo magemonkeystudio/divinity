@@ -3,12 +3,12 @@ package com.promcteam.divinity.modules.list.classes.gui;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.gui.*;
 import com.promcteam.codex.utils.CollectionsUT;
+import com.promcteam.divinity.data.api.DivinityUser;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.data.api.RPGUser;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.api.RPGClass;
@@ -17,7 +17,7 @@ import com.promcteam.divinity.modules.list.classes.api.UserClassData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassSelectionGUI extends NGUI<QuantumRPG> {
+public class ClassSelectionGUI extends NGUI<Divinity> {
 
     private ClassManager classManager;
     private boolean      allowClose;
@@ -79,7 +79,7 @@ public class ClassSelectionGUI extends NGUI<QuantumRPG> {
 
     @Override
     protected void onCreate(@NotNull Player player, @NotNull Inventory inv, int page) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
         UserProfile   prof  = user.getActiveProfile();

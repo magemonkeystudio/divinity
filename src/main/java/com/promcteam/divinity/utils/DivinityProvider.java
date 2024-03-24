@@ -4,9 +4,9 @@ import com.promcteam.codex.items.ItemType;
 import com.promcteam.codex.items.ProItemManager;
 import com.promcteam.codex.items.providers.IProItemProvider;
 import com.promcteam.codex.modules.IModule;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.ModuleItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.stats.items.ItemStats;
@@ -39,12 +39,12 @@ public class DivinityProvider implements IProItemProvider<DivinityProvider.Divin
 
         String[] split = id.split(":", 2);
         if (split.length == 2) { // Module name
-            IModule<?> module = QuantumRPG.getInstance().getModuleManager().getModule(split[0]);
+            IModule<?> module = Divinity.getInstance().getModuleManager().getModule(split[0]);
             if (!(module instanceof QModuleDrop)) return null;
             ModuleItem moduleItem = ((QModuleDrop<?>) module).getItemById(split[1]);
             return moduleItem == null ? null : new DivinityItemType(moduleItem);
         } else { // Look in all modules
-            for (IModule<?> module : QuantumRPG.getInstance().getModuleManager().getModules()) {
+            for (IModule<?> module : Divinity.getInstance().getModuleManager().getModules()) {
                 if (!(module instanceof QModuleDrop)) continue;
 
                 ModuleItem item = ((QModuleDrop<? extends ModuleItem>) module).getItemById(id);

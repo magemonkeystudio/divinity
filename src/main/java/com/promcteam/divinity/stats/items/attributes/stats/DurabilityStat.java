@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.api.event.DivinityItemDamageEvent;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.stats.items.ItemTags;
@@ -138,7 +138,7 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
 
         // Custom item damage event
         DivinityItemDamageEvent eve = new DivinityItemDamageEvent(item, li);
-        QuantumRPG.getInstance().getPluginManager().callEvent(eve);
+        Divinity.getInstance().getPluginManager().callEvent(eve);
         if (eve.isCancelled()) return false;
 
         double max  = durability[1];

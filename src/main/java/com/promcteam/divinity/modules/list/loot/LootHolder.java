@@ -5,6 +5,7 @@ import com.promcteam.codex.manager.api.task.ITask;
 import com.promcteam.codex.modules.IModuleExecutor;
 import com.promcteam.codex.utils.*;
 import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.divinity.Divinity;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import org.bukkit.Location;
@@ -22,7 +23,6 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.party.PartyManager;
 import com.promcteam.divinity.modules.list.party.PartyManager.Party;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyDropMode;
@@ -31,7 +31,7 @@ import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class LootHolder extends IListener<QuantumRPG> implements InventoryHolder {
+public class LootHolder extends IListener<Divinity> implements InventoryHolder {
 
     protected       LootManager manager;
     protected final Location    boxLoc;
@@ -51,7 +51,7 @@ public class LootHolder extends IListener<QuantumRPG> implements InventoryHolder
     private HologramExpansion holoEx   = null;
 
     private static final NamespacedKey KEY_META_OWNER =
-            new NamespacedKey(QuantumRPG.getInstance(), "QRPG_LOOT_ITEM_OWNER");
+            new NamespacedKey(Divinity.getInstance(), "QRPG_LOOT_ITEM_OWNER");
 
     public LootHolder(
             LootManager manager,
@@ -337,7 +337,7 @@ public class LootHolder extends IListener<QuantumRPG> implements InventoryHolder
         return this.rollTask;
     }
 
-    public class RollTask extends ITask<QuantumRPG> {
+    public class RollTask extends ITask<Divinity> {
 
         Party     party;
         Player    roller;

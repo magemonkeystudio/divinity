@@ -3,9 +3,9 @@ package com.promcteam.divinity.data.api.serialize;
 import com.google.gson.*;
 import com.promcteam.codex.utils.CollectionsUT;
 import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.inventory.ItemStack;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.data.api.UserEntityNamesMode;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.manager.effects.buffs.SavedBuff;
@@ -96,15 +96,15 @@ public class UserProfileSerializer implements JsonSerializer<UserProfile>, JsonD
 
         UserClassData cData = null;
         JsonElement   jData = j.get("cData");
-        if (jData != null && QuantumRPG.getInstance().cfg().isModuleEnabled(EModule.CLASSES)) {
+        if (jData != null && Divinity.getInstance().cfg().isModuleEnabled(EModule.CLASSES)) {
             JsonObject jClass = jData.getAsJsonObject();
             cData = context.deserialize(jClass, UserClassData.class);
 
             String       clazzId      = cData.getClassId();
-            ClassManager classManager = QuantumAPI.getModuleManager().getClassManager();
+            ClassManager classManager = DivinityAPI.getModuleManager().getClassManager();
             RPGClass     clazz        = classManager == null ? null : classManager.getClassById(clazzId);
             if (clazz == null) {
-                QuantumRPG.getInstance().getLogger().info("Player class '" + clazzId + "' no more exists.");
+                Divinity.getInstance().getLogger().info("Player class '" + clazzId + "' no more exists.");
                 cData = null;
             } else {
                 cData.setPlayerClass(clazz);

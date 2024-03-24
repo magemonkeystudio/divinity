@@ -3,10 +3,10 @@ package com.promcteam.divinity.nms.packets;
 import com.promcteam.codex.core.Version;
 import com.promcteam.codex.nms.packets.IPacketHandler;
 import com.promcteam.codex.utils.Reflex;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 
 import java.util.Map;
 import java.util.Set;
@@ -15,10 +15,10 @@ import java.util.WeakHashMap;
 public class PacketManager {
 
     public static final Map<Player, Set<ChatColor>> COLOR_CACHE = new WeakHashMap<>();
-    private final       QuantumRPG                  plugin;
+    private final       Divinity                    plugin;
     private             IPacketHandler              packetHandler;
 
-    public PacketManager(@NotNull QuantumRPG plugin) {
+    public PacketManager(@NotNull Divinity plugin) {
         this.plugin = plugin;
     }
 
@@ -30,7 +30,7 @@ public class PacketManager {
             Class<?> clazz = Reflex.getClass(pack, cur);
             if (clazz == null) return;
 
-            packetHandler = (IPacketHandler) clazz.getConstructor(QuantumRPG.class).newInstance(plugin);
+            packetHandler = (IPacketHandler) clazz.getConstructor(Divinity.class).newInstance(plugin);
             this.plugin.getPacketManager().registerHandler(this.packetHandler);
         } catch (Exception e) {
             this.plugin.error("Could not register PacketHandler!");

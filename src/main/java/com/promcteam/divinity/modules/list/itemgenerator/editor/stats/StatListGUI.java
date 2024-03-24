@@ -2,11 +2,11 @@ package com.promcteam.divinity.modules.list.itemgenerator.editor.stats;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.menu.Slot;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
@@ -58,7 +58,7 @@ public class StatListGUI extends AbstractEditorGUI {
                     break;
                 }
                 case FABLED_ATTRIBUTES: {
-                    FabledHook fabledHook = (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+                    FabledHook fabledHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
                     if (fabledHook != null) itemStack = fabledHook.getAttributeIndicator(entry);
                     break;
                 }

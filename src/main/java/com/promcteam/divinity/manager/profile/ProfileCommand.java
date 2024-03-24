@@ -4,9 +4,9 @@ import com.promcteam.codex.commands.api.IGeneralCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 
-public class ProfileCommand extends IGeneralCommand<QuantumRPG> {
+public class ProfileCommand extends IGeneralCommand<Divinity> {
 
     private ProfileManager profileManager;
 

@@ -26,7 +26,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
 import com.promcteam.divinity.modules.list.classes.api.RPGClass;
@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-public class LevelingManager extends IListener<QuantumRPG> implements Loadable {
+public class LevelingManager extends IListener<Divinity> implements Loadable {
 
     private final ClassManager classManager;
     private       JYML         cfg;

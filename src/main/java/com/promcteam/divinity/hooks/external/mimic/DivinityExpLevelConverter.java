@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.mimic.level.ExpLevelConverter;
 import ru.endlesscode.mimic.util.ExistingWeakReference;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.api.RPGClass;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
@@ -18,7 +18,7 @@ public class DivinityExpLevelConverter implements ExpLevelConverter {
 
     public DivinityExpLevelConverter(Player player) {
         playerRef = new ExistingWeakReference<>(player);
-        classManager = QuantumAPI.getModuleManager().getClassManager();
+        classManager = DivinityAPI.getModuleManager().getClassManager();
         Objects.requireNonNull(classManager);
     }
 

@@ -8,15 +8,15 @@ import com.promcteam.codex.nms.packets.events.EngineServerPacketEvent;
 import com.promcteam.codex.utils.Reflex;
 import com.promcteam.codex.utils.reflection.ReflectionManager;
 import com.promcteam.codex.utils.reflection.ReflectionUtil;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.data.api.DivinityUser;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.api.event.EntityEquipmentChangeEvent;
 import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.data.api.RPGUser;
 import com.promcteam.divinity.data.api.UserEntityNamesMode;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.manager.EntityManager;
@@ -27,10 +27,10 @@ import java.util.UUID;
 
 public class UniversalPacketHandler implements IPacketHandler {
 
-    protected QuantumRPG     plugin;
+    protected Divinity       plugin;
     protected ReflectionUtil reflectionUtil;
 
-    public UniversalPacketHandler(@NotNull QuantumRPG plugin) {
+    public UniversalPacketHandler(@NotNull Divinity plugin) {
         this.plugin = plugin;
         reflectionUtil = ReflectionManager.getReflectionUtil();
     }
@@ -133,7 +133,7 @@ public class UniversalPacketHandler implements IPacketHandler {
     }
 
     protected void manageEntityNames(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(e.getReciever());
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(e.getReciever());
         if (user == null) return;
 
         UserProfile         profile   = user.getActiveProfile();
@@ -208,8 +208,8 @@ public class UniversalPacketHandler implements IPacketHandler {
                 CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
         if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;
 
-        Player  player = (Player) bukkitEntity;
-        RPGUser user   = plugin.getUserManager().getOrLoadUser(player);
+        Player       player = (Player) bukkitEntity;
+        DivinityUser user   = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
         UserProfile profile = user.getActiveProfile();

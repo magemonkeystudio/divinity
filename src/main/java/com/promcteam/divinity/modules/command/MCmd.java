@@ -2,10 +2,10 @@ package com.promcteam.divinity.modules.command;
 
 import com.promcteam.codex.commands.api.ISubCommand;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.api.QModule;
 
-public abstract class MCmd<M extends QModule> extends ISubCommand<QuantumRPG> {
+public abstract class MCmd<M extends QModule> extends ISubCommand<Divinity> {
 
     protected M module;
 

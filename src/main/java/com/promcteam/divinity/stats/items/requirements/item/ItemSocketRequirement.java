@@ -2,11 +2,11 @@ package com.promcteam.divinity.stats.items.requirements.item;
 
 import com.promcteam.codex.config.api.ILangMsg;
 import com.promcteam.codex.utils.DataUT;
-import org.apache.commons.lang.ArrayUtils;
+import com.promcteam.divinity.Divinity;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.ItemTags;
 import com.promcteam.divinity.stats.items.attributes.SocketAttribute;
@@ -53,7 +53,7 @@ public class ItemSocketRequirement extends ItemRequirement<String[]> {
 
     @Override
     public ILangMsg getApplyMessage(@NotNull ItemStack src, @NotNull ItemStack target) {
-        ILangMsg msg = QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Socket;
+        ILangMsg msg = Divinity.getInstance().lang().Module_Item_Apply_Error_Socket;
 
         String[] arr = this.getRaw(src);
         if (arr == null || ArrayUtils.isEmpty(arr) || arr.length != 2) return msg;
@@ -71,19 +71,19 @@ public class ItemSocketRequirement extends ItemRequirement<String[]> {
     @NotNull
     public String formatValue(@NotNull ItemStack item, @NotNull String[] arr) {
         if (ArrayUtils.isEmpty(arr) || arr.length != 2) {
-            QuantumRPG.getInstance().error("Empty/Incomplete arguments for Socket Requirement!");
+            Divinity.getInstance().error("Empty/Incomplete arguments for Socket Requirement!");
             return "";
         }
 
         SocketAttribute.Type type = SocketAttribute.Type.getByName(arr[0]);
         if (type == null) {
-            QuantumRPG.getInstance().error("Invalid Socket Type '" + arr[0] + "' for Socket Requirement!");
+            Divinity.getInstance().error("Invalid Socket Type '" + arr[0] + "' for Socket Requirement!");
             return "";
         }
 
         SocketAttribute socket = ItemStats.getSocket(type, arr[1]);
         if (socket == null) {
-            QuantumRPG.getInstance().error("Invalid Socket Attribute Id '" + arr[1] + "' for Socket Requirement!");
+            Divinity.getInstance().error("Invalid Socket Attribute Id '" + arr[1] + "' for Socket Requirement!");
             return "";
         }
 

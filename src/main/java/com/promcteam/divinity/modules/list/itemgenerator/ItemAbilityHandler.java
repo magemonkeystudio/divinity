@@ -22,7 +22,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ItemAbilityHandler extends IListener<QuantumRPG> implements Loadable {
+public class ItemAbilityHandler extends IListener<Divinity> implements Loadable {
 
     private final ItemGeneratorManager itemGen;
     private final List<UUID>           noSpam = new ArrayList<>();

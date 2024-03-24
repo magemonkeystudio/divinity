@@ -1,5 +1,6 @@
 package com.promcteam.divinity.modules.list.party.compat.quest;
 
+import com.promcteam.divinity.Divinity;
 import me.Cutiemango.MangoQuest.Main;
 import me.Cutiemango.MangoQuest.QuestUtil;
 import me.Cutiemango.MangoQuest.data.QuestPlayerData;
@@ -8,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.party.PartyManager;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 
@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class IPOMangoQuest extends IPartyObjective {
 
-    public IPOMangoQuest(@NotNull QuantumRPG plugin, @NotNull PartyManager partyManager) {
+    public IPOMangoQuest(@NotNull Divinity plugin, @NotNull PartyManager partyManager) {
         super(plugin, partyManager);
     }
 

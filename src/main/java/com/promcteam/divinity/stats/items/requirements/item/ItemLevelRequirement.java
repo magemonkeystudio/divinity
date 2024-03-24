@@ -1,11 +1,11 @@
 package com.promcteam.divinity.stats.items.requirements.item;
 
 import com.promcteam.codex.config.api.ILangMsg;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.ItemTags;
@@ -69,7 +69,7 @@ public class ItemLevelRequirement extends ItemRequirement<int[]> {
         int[] arr = this.getRaw(src);
         if (arr == null) throw new IllegalStateException("Item does not have stat!");
 
-        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Level.replace("%value%",
+        return Divinity.getInstance().lang().Module_Item_Apply_Error_Level.replace("%value%",
                 this.formatValue(src, arr));
     }
 }

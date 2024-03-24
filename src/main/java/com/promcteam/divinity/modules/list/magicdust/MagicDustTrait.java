@@ -5,7 +5,7 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 
 @TraitName("magicdust")
 public class MagicDustTrait extends Trait {
@@ -19,7 +19,7 @@ public class MagicDustTrait extends Trait {
         if (e.getNPC() == this.getNPC()) {
             Player p = e.getClicker();
 
-            MagicDustManager magicDustManager = QuantumAPI.getModuleManager().getMagicDustManager();
+            MagicDustManager magicDustManager = DivinityAPI.getModuleManager().getMagicDustManager();
             if (magicDustManager == null) return;
 
             magicDustManager.openGUIPaid(p, p.getInventory().getItemInMainHand(), false);

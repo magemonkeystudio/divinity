@@ -3,12 +3,12 @@ package com.promcteam.divinity.modules.list.itemgenerator.editor.skills;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.menu.Slot;
 import com.promcteam.codex.utils.StringUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
@@ -36,7 +36,7 @@ public class SkillListGUI extends AbstractEditorGUI {
             list.addAll(section.getKeys(false));
         }
         List<String> missingList = new ArrayList<>();
-        FabledHook   fabledHook  = (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+        FabledHook   fabledHook  = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
         if (fabledHook != null) {
             for (String skillId : fabledHook.getSkills()) {
                 boolean missing = true;

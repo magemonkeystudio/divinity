@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
 
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.Set;
 
 public class LoreUT {
 
-    private static QuantumRPG plugin;
+    private static Divinity plugin;
 
     static {
-        plugin = QuantumRPG.getInstance();
+        plugin = Divinity.getInstance();
     }
 
     @Deprecated

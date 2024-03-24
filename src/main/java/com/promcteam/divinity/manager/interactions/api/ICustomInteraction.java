@@ -1,15 +1,15 @@
 package com.promcteam.divinity.manager.interactions.api;
 
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 
 public abstract class ICustomInteraction {
 
-    protected QuantumRPG plugin;
-    protected Player     player;
+    protected Divinity plugin;
+    protected Player   player;
 
-    public ICustomInteraction(@NotNull QuantumRPG plugin) {
+    public ICustomInteraction(@NotNull Divinity plugin) {
         this.plugin = plugin;
     }
 

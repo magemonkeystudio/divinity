@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 
 @TraitName("repair")
 public class RepairTrait extends Trait {
@@ -37,7 +37,7 @@ public class RepairTrait extends Trait {
             }
             skull.setItemMeta(meta);
 
-            RepairManager repairManager = QuantumAPI.getModuleManager().getRepairManager();
+            RepairManager repairManager = DivinityAPI.getModuleManager().getRepairManager();
             if (repairManager == null) return;
 
             repairManager.openAnvilGUI(player, player.getInventory().getItemInMainHand(), skull, null, false);

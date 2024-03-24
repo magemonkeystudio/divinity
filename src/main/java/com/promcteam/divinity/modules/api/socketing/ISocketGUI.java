@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.manager.interactions.api.AnimatedSuccessBar;
 import com.promcteam.divinity.modules.SocketItem;
 import com.promcteam.divinity.modules.api.socketing.merchant.MerchantGUI;
@@ -20,7 +20,7 @@ import com.promcteam.divinity.modules.list.fortify.FortifyManager;
 
 import java.util.function.Function;
 
-public abstract class ISocketGUI extends NGUI<QuantumRPG> {
+public abstract class ISocketGUI extends NGUI<Divinity> {
 
     //    private final List<UUID> open = new ArrayList<>();
     protected ModuleSocket<?> module;

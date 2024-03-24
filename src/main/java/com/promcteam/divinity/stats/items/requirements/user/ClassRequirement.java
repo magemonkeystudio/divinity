@@ -2,13 +2,13 @@ package com.promcteam.divinity.stats.items.requirements.user;
 
 import com.promcteam.codex.config.api.ILangMsg;
 import com.promcteam.codex.utils.DataUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.hooks.HookClass;
 import com.promcteam.divinity.stats.items.ItemTags;
@@ -80,6 +80,6 @@ public class ClassRequirement extends DynamicUserRequirement<String[]> {
     @Override
     @NotNull
     public ILangMsg getDenyMessage(@NotNull Player p, @NotNull ItemStack src) {
-        return QuantumRPG.getInstance().lang().Module_Item_Interact_Error_Class;
+        return Divinity.getInstance().lang().Module_Item_Interact_Error_Class;
     }
 }

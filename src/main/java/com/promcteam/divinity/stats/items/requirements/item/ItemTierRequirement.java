@@ -1,11 +1,11 @@
 package com.promcteam.divinity.stats.items.requirements.item;
 
 import com.promcteam.codex.config.api.ILangMsg;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.Config;
 import com.promcteam.divinity.modules.LeveledItem;
 import com.promcteam.divinity.modules.ModuleItem;
@@ -62,7 +62,7 @@ public class ItemTierRequirement extends ItemRequirement<String> {
         Tier tier = Config.getTier(tierId);
         if (tier == null) return null;
 
-        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Tier.replace("%tier%", tier.getName());
+        return Divinity.getInstance().lang().Module_Item_Apply_Error_Tier.replace("%tier%", tier.getName());
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ItemTierRequirement extends ItemRequirement<String> {
     public String formatValue(@NotNull ItemStack item, @NotNull String value) {
         Tier tier = Config.getTier(value);
         if (tier == null) {
-            QuantumRPG.getInstance().warn("Invalid Tier requirement provided: '" + value + "' !");
+            Divinity.getInstance().warn("Invalid Tier requirement provided: '" + value + "' !");
             return "";
         }
 

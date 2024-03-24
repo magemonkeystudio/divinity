@@ -8,7 +8,7 @@ import com.promcteam.codex.utils.StringUT;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,7 +28,7 @@ public class ItemSubType {
             try {
                 this.mats.add(CodexEngine.get().getItemManager().getItemType(mat));
             } catch (ProItemException e) {
-                QuantumRPG.getInstance().warn("Unknown item sub type: \"" + mat + '\"');
+                Divinity.getInstance().warn("Unknown item sub type: \"" + mat + '\"');
             }
         }
     }

@@ -1,11 +1,11 @@
 package com.promcteam.divinity.nms.packets.versions;
 
+import com.promcteam.divinity.Divinity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 
 public class V1_16_R3 extends UniversalPacketHandler {
 
-    public V1_16_R3(@NotNull QuantumRPG plugin) {
+    public V1_16_R3(@NotNull Divinity plugin) {
         super(plugin);
     }
 

@@ -2,14 +2,14 @@ package com.promcteam.divinity.modules.api;
 
 import com.promcteam.codex.commands.list.HelpCommand;
 import com.promcteam.codex.modules.IModule;
+import com.promcteam.divinity.Divinity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 import com.promcteam.divinity.modules.command.*;
 
-public abstract class QModule extends IModule<QuantumRPG> {
+public abstract class QModule extends IModule<Divinity> {
 
-    public QModule(@NotNull QuantumRPG plugin) {
+    public QModule(@NotNull Divinity plugin) {
         super(plugin);
     }
 

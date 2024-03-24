@@ -20,15 +20,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.utils.ItemUtils;
 
 import java.util.Set;
 
-public class ItemRequirementListener extends IListener<QuantumRPG> {
+public class ItemRequirementListener extends IListener<Divinity> {
 
-    public ItemRequirementListener(@NotNull QuantumRPG plugin) {
+    public ItemRequirementListener(@NotNull Divinity plugin) {
         super(plugin);
     }
 

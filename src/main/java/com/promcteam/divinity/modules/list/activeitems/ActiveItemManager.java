@@ -2,12 +2,12 @@ package com.promcteam.divinity.modules.list.activeitems;
 
 import com.promcteam.codex.config.api.JYML;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.UsableItem;
 import com.promcteam.divinity.modules.api.QModuleUsage;
 
 public class ActiveItemManager extends QModuleUsage<ActiveItemManager.ActiveItem> {
-    public ActiveItemManager(@NotNull QuantumRPG plugin) {
+    public ActiveItemManager(@NotNull Divinity plugin) {
         super(plugin, ActiveItem.class);
     }
 
@@ -28,7 +28,7 @@ public class ActiveItemManager extends QModuleUsage<ActiveItemManager.ActiveItem
     }
 
     public class ActiveItem extends UsableItem {
-        public ActiveItem(@NotNull QuantumRPG plugin, JYML cfg) {
+        public ActiveItem(@NotNull Divinity plugin, JYML cfg) {
             super(plugin, cfg, ActiveItemManager.this);
         }
     }

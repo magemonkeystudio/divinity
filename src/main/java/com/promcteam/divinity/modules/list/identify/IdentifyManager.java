@@ -8,6 +8,7 @@ import com.promcteam.codex.items.providers.VanillaProvider;
 import com.promcteam.codex.modules.IModule;
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.actions.ActionManipulator;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,8 +17,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.manager.listener.object.DynamicStatListener;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.LimitedItem;
@@ -39,7 +39,7 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
     private static final String PERFIX_TOME = "tome-";
     private static final String PREFIX_ITEM = "item-";
 
-    public IdentifyManager(@NotNull QuantumRPG plugin) {
+    public IdentifyManager(@NotNull Divinity plugin) {
         super(plugin, IdentifyItem.class);
     }
 
@@ -168,7 +168,7 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
                         .orElseGet(() -> new VanillaProvider.VanillaItemType(unknown.getType())));
             }
         } else {
-            unlock = QuantumAPI.getItemByModule(uItem.getResultModule(), uItem.getResultId(), lvl, -1, -1);
+            unlock = DivinityAPI.getItemByModule(uItem.getResultModule(), uItem.getResultId(), lvl, -1, -1);
         }
 
         return unlock;
@@ -232,14 +232,14 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
 
     public abstract class IdentifyItem extends LimitedItem {
 
-        public IdentifyItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
+        public IdentifyItem(@NotNull Divinity plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
             super(plugin, cfg, IdentifyManager.this);
         }
     }
 
     public class IdentifyTome extends IdentifyItem {
 
-        public IdentifyTome(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public IdentifyTome(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, IdentifyManager.this);
             this.id = PERFIX_TOME + this.id; // Add tome prefix to item id
         }
@@ -251,7 +251,7 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
         private String         itemId;
         private Set<String>    applicableTomes;
 
-        public UnidentifiedItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public UnidentifiedItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, IdentifyManager.this);
             this.id = PREFIX_ITEM + this.id; // Add item prefix to item id
 
@@ -308,7 +308,7 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
         @Override
         @NotNull
         protected ItemStack build(int lvl, int uses) {
-            ItemStack orig = QuantumAPI.getItemByModule(this.getResultModule(), getResultId(), lvl, -1, -1);
+            ItemStack orig = DivinityAPI.getItemByModule(this.getResultModule(), getResultId(), lvl, -1, -1);
             if (orig == null) {
                 error("Invalid module for unidentified item '" + id + "' !");
                 return new ItemStack(Material.AIR);

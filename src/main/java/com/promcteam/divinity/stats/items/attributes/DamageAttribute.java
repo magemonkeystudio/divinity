@@ -6,6 +6,7 @@ import com.promcteam.codex.utils.NumberUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.actions.ActionManipulator;
 import com.promcteam.codex.utils.constants.JStrings;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Entity;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.modules.list.gems.GemManager;
 import com.promcteam.divinity.modules.list.gems.GemManager.Gem;
@@ -107,7 +107,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
     }
 
     public static double getVanillaDamage(@NotNull ItemStack item) {
-        return QuantumRPG.getInstance().getPMS().getDefaultDamage(item);
+        return Divinity.getInstance().getPMS().getDefaultDamage(item);
     }
 
     public double[] getTotal(@NotNull ItemStack item, @Nullable Player player) {
@@ -175,7 +175,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
         }
 
         // Support for Refined attributes.
-        RefineManager refineManager = QuantumRPG.getInstance().getModuleCache().getRefineManager();
+        RefineManager refineManager = Divinity.getInstance().getModuleCache().getRefineManager();
         if (refineManager != null && has) {
             BiFunction<Boolean, Double, Double> refineManagerBonus = refineManager.getRefinedBonus(item, this);
             bonuses.add((isPercent, input) ->
@@ -188,7 +188,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
         }
 
         // Support for filled socket Gems.
-        GemManager gems = QuantumRPG.getInstance().getModuleCache().getGemManager();
+        GemManager gems = Divinity.getInstance().getModuleCache().getGemManager();
         if (gems != null) {
             for (Entry<Gem, Integer> e : gems.getItemSockets(item)) {
                 BonusMap bMap = e.getKey().getBonusMap(e.getValue());

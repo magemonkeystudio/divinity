@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.event.PlayerCastSkillEvent;
 import com.promcteam.divinity.modules.list.classes.event.PlayerPreCastSkillEvent;
@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 /**
  * @author Фогус Мультимедиа
  */
-public abstract class IAbstractSkill extends IListener<QuantumRPG> {
+public abstract class IAbstractSkill extends IListener<Divinity> {
 
     protected JYML         cfg;
     protected ClassManager classManager;
@@ -44,7 +44,7 @@ public abstract class IAbstractSkill extends IListener<QuantumRPG> {
 
     public static final Map<String, Map<String, Long>> COOLDOWNS = new HashMap<>();
 
-    public IAbstractSkill(@NotNull QuantumRPG plugin) {
+    public IAbstractSkill(@NotNull Divinity plugin) {
         super(plugin);
     }
 

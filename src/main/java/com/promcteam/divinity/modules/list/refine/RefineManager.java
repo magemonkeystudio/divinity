@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.RatedItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -39,7 +39,7 @@ import java.util.function.BiFunction;
 public class RefineManager extends QModuleDrop<RefineItem> {
 
     private static final NamespacedKey             TAG_REFINE_LVL     =
-            new NamespacedKey(QuantumRPG.getInstance(), "REFINE_LVL");
+            new NamespacedKey(Divinity.getInstance(), "REFINE_LVL");
     private static final String                    TAG_REFINE_LORE    = "refine_lore_global";
     private static final String                    TAG_REFINE_NAME    = "refine_name_display";
     private final        int                       silentRateBonusCap = 20; // TODO INIT
@@ -55,7 +55,7 @@ public class RefineManager extends QModuleDrop<RefineItem> {
     private              Map<String, Integer>      userSilentRateBonusMap;
     private              GUI                       gui;
 
-    public RefineManager(@NotNull QuantumRPG plugin) {
+    public RefineManager(@NotNull Divinity plugin) {
         super(plugin, RefineItem.class);
     }
 
@@ -558,7 +558,7 @@ public class RefineManager extends QModuleDrop<RefineItem> {
 
         private final TreeMap<Integer, BonusMap> refineBonusMap;
 
-        public RefineItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public RefineItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, RefineManager.this);
 
             this.refineBonusMap = new TreeMap<>();
@@ -611,7 +611,7 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         }
     }
 
-    class GUI extends NGUI<QuantumRPG> {
+    class GUI extends NGUI<Divinity> {
 
         protected int itemSlot;
         protected int sourceSlot;

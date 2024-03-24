@@ -1,9 +1,9 @@
 package com.promcteam.divinity.modules.list.party.compat.level;
 
 import com.promcteam.codex.manager.IListener;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.party.PartyManager;
 import com.promcteam.divinity.modules.list.party.PartyManager.Party;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyExpMode;
@@ -11,11 +11,11 @@ import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 
 import java.util.Set;
 
-public abstract class IPartyLevelManager extends IListener<QuantumRPG> {
+public abstract class IPartyLevelManager extends IListener<Divinity> {
 
     protected PartyManager partyManager;
 
-    public IPartyLevelManager(@NotNull QuantumRPG plugin, @NotNull PartyManager partyManager) {
+    public IPartyLevelManager(@NotNull Divinity plugin, @NotNull PartyManager partyManager) {
         super(plugin);
         this.partyManager = partyManager;
     }

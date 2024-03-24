@@ -6,7 +6,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.modules.list.identify.IdentifyManager;
 import com.promcteam.divinity.stats.items.ItemStats;
@@ -23,12 +23,12 @@ public class LimitedItem extends LeveledItem {
 
     // Creating new config
     @Deprecated
-    public LimitedItem(QuantumRPG plugin, String path, QModuleDrop<?> module) throws InvalidConfigurationException {
+    public LimitedItem(Divinity plugin, String path, QModuleDrop<?> module) throws InvalidConfigurationException {
         super(plugin, path, module);
     }
 
     // Load from config
-    public LimitedItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
+    public LimitedItem(@NotNull Divinity plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
         super(plugin, cfg, module);
 
         this.chargesByLvl = new TreeMap<>();

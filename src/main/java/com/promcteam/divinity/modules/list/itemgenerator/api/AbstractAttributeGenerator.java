@@ -1,14 +1,14 @@
 package com.promcteam.divinity.modules.list.itemgenerator.api;
 
+import com.promcteam.divinity.Divinity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 
 import java.util.List;
 
 public abstract class AbstractAttributeGenerator implements IAttributeGenerator {
 
-    protected QuantumRPG    plugin;
+    protected Divinity      plugin;
     protected GeneratorItem generatorItem;
 
     protected       int          minAmount;
@@ -17,7 +17,7 @@ public abstract class AbstractAttributeGenerator implements IAttributeGenerator 
     protected final String       placeholder;
 
     public AbstractAttributeGenerator(
-            @NotNull QuantumRPG plugin,
+            @NotNull Divinity plugin,
             @NotNull GeneratorItem generatorItem,
             @NotNull String placeholder) {
         this.plugin = plugin;

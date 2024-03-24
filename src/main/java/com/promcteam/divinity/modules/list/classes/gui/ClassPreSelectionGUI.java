@@ -8,10 +8,10 @@ import com.promcteam.codex.manager.api.gui.NGUI;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 
-public class ClassPreSelectionGUI extends NGUI<QuantumRPG> {
+public class ClassPreSelectionGUI extends NGUI<Divinity> {
 
     public ClassPreSelectionGUI(@NotNull ClassManager classManager, @NotNull JYML cfg, @NotNull String path) {
         super(classManager.plugin, cfg, path);

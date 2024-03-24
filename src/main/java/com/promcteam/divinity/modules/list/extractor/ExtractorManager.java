@@ -6,6 +6,7 @@ import com.promcteam.codex.hooks.external.citizens.CitizensHK;
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.actions.ActionManipulator;
 import com.promcteam.codex.utils.eval.Evaluator;
+import com.promcteam.divinity.Divinity;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -17,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.LimitedItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -38,7 +38,7 @@ public class ExtractorManager extends QModuleDrop<ExtractorTool> {
 
     private ExtractGUI gui;
 
-    public ExtractorManager(@NotNull QuantumRPG plugin) {
+    public ExtractorManager(@NotNull Divinity plugin) {
         super(plugin, ExtractorTool.class);
     }
 
@@ -187,7 +187,7 @@ public class ExtractorManager extends QModuleDrop<ExtractorTool> {
         boolean open = this.openExtraction(player, target, src, null, true);
         if (!open) e.getView().setCursor(cursor);
 
-        Bukkit.getScheduler().runTaskLater(QuantumRPG.getInstance(), () -> player.updateInventory(), 1L);
+        Bukkit.getScheduler().runTaskLater(Divinity.getInstance(), () -> player.updateInventory(), 1L);
         return open;
     }
 
@@ -196,7 +196,7 @@ public class ExtractorManager extends QModuleDrop<ExtractorTool> {
 
     public class ExtractorTool extends LimitedItem {
 
-        public ExtractorTool(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public ExtractorTool(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, ExtractorManager.this);
         }
     }

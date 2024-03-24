@@ -20,9 +20,9 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.api.event.QuantumProjectileLaunchEvent;
-import com.promcteam.divinity.api.event.RPGDamageEvent;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.api.event.DivinityProjectileLaunchEvent;
+import com.promcteam.divinity.api.event.DivinityDamageEvent;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
@@ -42,11 +42,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("deprecation")
-public class VanillaWrapperListener extends IListener<QuantumRPG> {
+public class VanillaWrapperListener extends IListener<Divinity> {
 
     private static final String META_PROJECTILE_EVENT_FIXER = "QRPG_EVENT_FIX";
 
-    public VanillaWrapperListener(@NotNull QuantumRPG plugin) {
+    public VanillaWrapperListener(@NotNull Divinity plugin) {
         super(plugin);
     }
 
@@ -81,8 +81,8 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
         // Prevent duplicated event call
         pj.setMetadata(META_PROJECTILE_EVENT_FIXER, new FixedMetadataValue(plugin, "true"));
 
-        QuantumProjectileLaunchEvent eve =
-                new QuantumProjectileLaunchEvent(pj, pj.getLocation(), shooter, bow, power, true);
+        DivinityProjectileLaunchEvent eve =
+                new DivinityProjectileLaunchEvent(pj, pj.getLocation(), shooter, bow, power, true);
         plugin.getPluginManager().callEvent(eve);
         if (eve.isCancelled()) {
             e.setCancelled(true);
@@ -119,8 +119,8 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
             }
         }
 
-        QuantumProjectileLaunchEvent eve =
-                new QuantumProjectileLaunchEvent(e1, e1.getLocation(), shooter, bow, power, false);
+        DivinityProjectileLaunchEvent eve =
+                new DivinityProjectileLaunchEvent(e1, e1.getLocation(), shooter, bow, power, false);
         plugin.getPluginManager().callEvent(eve);
         if (eve.isCancelled()) {
             e.setCancelled(true);
@@ -162,7 +162,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
 
         boolean isFullDamage = false;
 
-        FabledHook skillApi = (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+        FabledHook skillApi = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
         // Here only check for damager
         // to be sure to use his stats or not.
         labelFullDamage:
@@ -314,7 +314,7 @@ public class VanillaWrapperListener extends IListener<QuantumRPG> {
 
         scaleValuesWithCore(damager, projectile, damages, defenses, victim);
 
-        RPGDamageEvent.Start eventStart = new RPGDamageEvent.Start(victim, damager, projectile, damages, defenses,
+        DivinityDamageEvent.Start eventStart = new DivinityDamageEvent.Start(victim, damager, projectile, damages, defenses,
                 stats, e, meta, exempt);
         plugin.getPluginManager().callEvent(eventStart);
         if (eventStart.isCancelled() || e.isCancelled()) {

@@ -6,6 +6,7 @@ import com.promcteam.codex.utils.DataUT;
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -13,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.LimitedItem;
@@ -30,14 +30,14 @@ public class FortifyManager extends QModuleDrop<FortifyItem> {
 
     private static final List<String>        LORE_KEY_FORTIFY = List.of("fortify", "qrpg_fortify");
     private static final List<NamespacedKey> META_KEY_FORTIFY = List.of(
-            new NamespacedKey(QuantumRPG.getInstance(), "FORTIFY_PROTECTION"),
-            new NamespacedKey(QuantumRPG.getInstance(), "QRPG_FORTIFY_PROTECTION"),
+            new NamespacedKey(Divinity.getInstance(), "FORTIFY_PROTECTION"),
+            new NamespacedKey(Divinity.getInstance(), "QRPG_FORTIFY_PROTECTION"),
             Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_fortify_protection")));
     private              boolean             formatNameAsPrefix;
     private              String              formatNameText;
     private              List<String>        formatLoreFormat;
 
-    public FortifyManager(@NotNull QuantumRPG plugin) {
+    public FortifyManager(@NotNull Divinity plugin) {
         super(plugin, FortifyItem.class);
     }
 
@@ -284,7 +284,7 @@ public class FortifyManager extends QModuleDrop<FortifyItem> {
         private final Set<String>               protectModules;
         private final TreeMap<Integer, Integer> protectChanceMap;
 
-        public FortifyItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public FortifyItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, FortifyManager.this);
 
             this.protectModules = new HashSet<>();

@@ -12,6 +12,7 @@ import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.actions.ActionManipulator;
 import com.promcteam.codex.utils.constants.JStrings;
 import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.divinity.Divinity;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.LimitedItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -41,7 +41,7 @@ public class DismantleManager extends QModuleDrop<DismantleItem> {
 
     private DismantleGUI gui;
 
-    public DismantleManager(@NotNull QuantumRPG plugin) {
+    public DismantleManager(@NotNull Divinity plugin) {
         super(plugin, DismantleItem.class);
     }
 
@@ -402,7 +402,7 @@ public class DismantleManager extends QModuleDrop<DismantleItem> {
 
     public class DismantleItem extends LimitedItem {
 
-        public DismantleItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public DismantleItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, DismantleManager.this);
         }
     }

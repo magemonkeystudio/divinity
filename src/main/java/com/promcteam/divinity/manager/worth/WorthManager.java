@@ -8,6 +8,7 @@ import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.NumberUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -16,7 +17,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.ModuleItem;
 import com.promcteam.divinity.modules.SocketItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -36,8 +36,8 @@ import java.util.TreeMap;
 
 public class WorthManager implements Loadable {
 
-    private final QuantumRPG                                         plugin;
-    private final Map<ItemStack, Double>                             worthCache = new HashMap<>();
+    private final Divinity               plugin;
+    private final Map<ItemStack, Double> worthCache = new HashMap<>();
     private       Map<String, Double>                                priceItemMaterial;
     private       Map<SimpleStat.Type, Double>                       priceItemStats;
     private       TreeMap<Integer, Double>                           priceRefineLvl;
@@ -47,7 +47,7 @@ public class WorthManager implements Loadable {
     private       Map<String, TreeMap<Integer, Double>>              priceEnchants;
     private       Map<String, Map<String, TreeMap<Integer, Double>>> priceItemModule;
 
-    public WorthManager(@NotNull QuantumRPG plugin) {
+    public WorthManager(@NotNull Divinity plugin) {
         this.plugin = plugin;
     }
 
@@ -424,7 +424,7 @@ public class WorthManager implements Loadable {
         cost = Math.max(0, NumberUT.round(cost));
         //Let's cache so we don't have to run these calculations all the time.
         worthCache.put(item, cost);
-        Bukkit.getScheduler().runTaskLater(QuantumRPG.getInstance(), () -> worthCache.remove(item), 20 * 20L);
+        Bukkit.getScheduler().runTaskLater(Divinity.getInstance(), () -> worthCache.remove(item), 20 * 20L);
 
         return cost;
     }

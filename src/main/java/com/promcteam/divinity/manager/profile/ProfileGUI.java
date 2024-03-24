@@ -5,12 +5,12 @@ import com.promcteam.codex.manager.api.gui.ContentType;
 import com.promcteam.codex.manager.api.gui.GuiClick;
 import com.promcteam.codex.manager.api.gui.GuiItem;
 import com.promcteam.codex.manager.api.gui.NGUI;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 
-public class ProfileGUI extends NGUI<QuantumRPG> {
+public class ProfileGUI extends NGUI<Divinity> {
 
     private ProfileManager profileManager;
 

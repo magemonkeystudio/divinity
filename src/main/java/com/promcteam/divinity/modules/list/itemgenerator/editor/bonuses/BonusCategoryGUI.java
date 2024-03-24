@@ -8,7 +8,7 @@ import com.promcteam.codex.utils.StringUT;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
@@ -97,7 +97,7 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
                                 lore.add("&2Fabled Attributes:");
                                 loadLore(section, lore, s -> {
                                     FabledHook fabledHook =
-                                            (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+                                            (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
                                     if (fabledHook != null) {
                                         ProAttribute proAttribute = Fabled.getAttributeManager().getAttribute(s);
                                         if (proAttribute != null) return proAttribute.getName() + ": &6%value%";

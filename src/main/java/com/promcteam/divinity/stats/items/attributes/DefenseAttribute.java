@@ -4,6 +4,7 @@ import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.NumberUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.constants.JStrings;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +13,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.modules.list.gems.GemManager;
 import com.promcteam.divinity.modules.list.gems.GemManager.Gem;
@@ -129,13 +129,13 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
         }
 
         // Support for Refine Module
-        RefineManager refine = QuantumRPG.getInstance().getModuleCache().getRefineManager();
+        RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
         if (refine != null && has) {
             bonuses.add(refine.getRefinedBonus(item, this));
         }
 
         // Support for filled socket Gems.
-        GemManager gems = QuantumRPG.getInstance().getModuleCache().getGemManager();
+        GemManager gems = Divinity.getInstance().getModuleCache().getGemManager();
         if (gems != null) {
             for (Entry<Gem, Integer> e : gems.getItemSockets(item)) {
                 BonusMap bMap = e.getKey().getBonusMap(e.getValue());
@@ -149,11 +149,11 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
     }
 
     public static double getVanillaArmor(@NotNull ItemStack item) {
-        return QuantumRPG.getInstance().getPMS().getDefaultArmor(item);
+        return Divinity.getInstance().getPMS().getDefaultArmor(item);
     }
 
     public static double getVanillaToughness(@NotNull ItemStack item) {
-        return QuantumRPG.getInstance().getPMS().getDefaultToughness(item);
+        return Divinity.getInstance().getPMS().getDefaultToughness(item);
     }
 
     public boolean isDefault() {

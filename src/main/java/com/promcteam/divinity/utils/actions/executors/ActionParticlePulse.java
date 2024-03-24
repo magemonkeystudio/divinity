@@ -3,9 +3,9 @@ package com.promcteam.divinity.utils.actions.executors;
 import com.promcteam.codex.utils.actions.actions.IActionExecutor;
 import com.promcteam.codex.utils.actions.params.IParamResult;
 import com.promcteam.codex.utils.actions.params.IParamType;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.utils.ParticleUtils;
 
 import java.util.Arrays;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class ActionParticlePulse extends IActionExecutor {
 
-    public ActionParticlePulse(@NotNull QuantumRPG plugin) {
+    public ActionParticlePulse(@NotNull Divinity plugin) {
         super(plugin, "PARTICLE_PULSE");
     }
 

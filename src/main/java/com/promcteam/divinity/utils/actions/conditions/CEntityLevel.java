@@ -9,7 +9,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
 
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 
 public class CEntityLevel extends IConditionValidator {
 
-    public CEntityLevel(@NotNull QuantumRPG plugin) {
+    public CEntityLevel(@NotNull Divinity plugin) {
         super(plugin, "ENTITY_LEVEL");
     }
 

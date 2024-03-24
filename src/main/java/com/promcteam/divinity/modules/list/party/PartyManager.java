@@ -7,6 +7,7 @@ import com.promcteam.codex.manager.api.task.ITask;
 import com.promcteam.codex.utils.CollectionsUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.TimeUT;
+import com.promcteam.divinity.Divinity;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -21,7 +22,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.HookLevel;
@@ -54,7 +54,7 @@ public class PartyManager extends QModule {
 
     private QuitTask taskQuit;
 
-    public PartyManager(@NotNull QuantumRPG plugin) {
+    public PartyManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 
@@ -1113,9 +1113,9 @@ public class PartyManager extends QModule {
         }
     }
 
-    class QuitTask extends ITask<QuantumRPG> {
+    class QuitTask extends ITask<Divinity> {
 
-        public QuitTask(@NotNull QuantumRPG plugin) {
+        public QuitTask(@NotNull Divinity plugin) {
             super(plugin, 60, false);
         }
 

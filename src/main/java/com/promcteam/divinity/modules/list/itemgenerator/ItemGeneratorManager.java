@@ -12,6 +12,7 @@ import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.constants.JStrings;
 import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.DyeColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -30,7 +31,6 @@ import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.Config;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
@@ -87,7 +87,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
     public static final String PLACE_GEN_ABILITY     = "%GENERATOR_SKILLS%";
     public static final String PLACE_GEN_FABLED_ATTR = "%GENERATOR_FABLED_ATTR%";
 
-    public ItemGeneratorManager(@NotNull QuantumRPG plugin) {
+    public ItemGeneratorManager(@NotNull Divinity plugin) {
         super(plugin, GeneratorItem.class);
     }
 
@@ -197,7 +197,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private Set<IAttributeGenerator> attributeGenerators;
         private AbilityGenerator         abilityGenerator;
 
-        public GeneratorItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public GeneratorItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, ItemGeneratorManager.this);
 
             String path = "generator.";
@@ -471,7 +471,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             this.addAttributeGenerator(this.abilityGenerator = new AbilityGenerator(this.plugin,
                     this,
                     PLACE_GEN_ABILITY));
-            FabledHook fabledHook = (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+            FabledHook fabledHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
             this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
                     this,
                     "generator.fabled-attributes.",
@@ -869,7 +869,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             for (ItemLoreStat<?> at : ItemStats.getDefenses()) {
                 lore.remove(at.getPlaceholder());
             }
-            FabledHook fabledHook = (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+            FabledHook fabledHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
             if (fabledHook != null) {
                 for (ItemLoreStat<?> at : fabledHook.getAttributes()) {
                     lore.remove(at.getPlaceholder());

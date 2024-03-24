@@ -2,11 +2,11 @@ package com.promcteam.divinity.modules.list.itemgenerator.editor;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.menu.Slot;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import com.promcteam.divinity.QuantumRPG;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class UsesByLevelGUI extends AbstractEditorGUI {
                                                             saveAndReopen();
                                                         });
                                             }
-                                        }.runTask(QuantumRPG.getInstance());
+                                        }.runTask(Divinity.getInstance());
                                     });
                         }
                     } :

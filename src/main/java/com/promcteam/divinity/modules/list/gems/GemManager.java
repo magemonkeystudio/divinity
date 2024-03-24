@@ -3,12 +3,12 @@ package com.promcteam.divinity.modules.list.gems;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.external.citizens.CitizensHK;
 import com.promcteam.codex.utils.StringUT;
+import com.promcteam.divinity.Divinity;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.SocketItem;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
@@ -22,7 +22,7 @@ import java.util.TreeMap;
 
 public class GemManager extends ModuleSocket<Gem> {
 
-    public GemManager(@NotNull QuantumRPG plugin) {
+    public GemManager(@NotNull Divinity plugin) {
         super(plugin, Gem.class);
     }
 
@@ -66,7 +66,7 @@ public class GemManager extends ModuleSocket<Gem> {
 
         private TreeMap<Integer, BonusMap> bonusMap;
 
-        public Gem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public Gem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, GemManager.this);
 
             this.bonusMap = new TreeMap<>();

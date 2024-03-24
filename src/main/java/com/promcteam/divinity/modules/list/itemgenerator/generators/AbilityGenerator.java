@@ -5,11 +5,11 @@ import com.promcteam.codex.manager.types.ClickType;
 import com.promcteam.codex.utils.DataUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import com.promcteam.divinity.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import com.promcteam.divinity.utils.LoreUT;
@@ -24,7 +24,7 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
     public static NamespacedKey                         ABILITY_KEY;
     private final Map<AbilityGenerator.Ability, Double> abilities;
 
-    public AbilityGenerator(@NotNull QuantumRPG plugin,
+    public AbilityGenerator(@NotNull Divinity plugin,
                             @NotNull GeneratorItem generatorItem,
                             @NotNull String placeholder) {
         super(plugin, generatorItem, placeholder);

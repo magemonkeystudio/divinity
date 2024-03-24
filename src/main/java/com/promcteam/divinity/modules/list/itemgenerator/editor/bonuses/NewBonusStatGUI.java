@@ -1,10 +1,10 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor.bonuses;
 
 import com.promcteam.codex.manager.api.menu.Slot;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
@@ -92,7 +92,7 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
             }
             case FABLED_ATTRIBUTE: {
                 material = Material.BOOK;
-                FabledHook fabledHook = (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+                FabledHook fabledHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
                 if (fabledHook != null) {
                     for (FabledAttribute fabledAttribute : fabledHook.getAttributes()) {
                         boolean exists = false;

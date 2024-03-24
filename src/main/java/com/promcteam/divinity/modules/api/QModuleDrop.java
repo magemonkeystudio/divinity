@@ -4,6 +4,7 @@ import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,7 +16,6 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.modules.ModuleItem;
 import com.promcteam.divinity.stats.items.ItemStats;
@@ -38,7 +38,7 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
     private String       itemNameFormat;
     private List<String> itemLoreFormat;
 
-    public QModuleDrop(@NotNull QuantumRPG plugin, @NotNull Class<I> clazz) {
+    public QModuleDrop(@NotNull Divinity plugin, @NotNull Class<I> clazz) {
         super(plugin);
         this.clazz = clazz;
         this.chargesAtt = ItemStats.getAttribute(ChargesAttribute.class);
@@ -69,7 +69,7 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
         for (JYML cfg : JYML.loadAll(plugin.getDataFolder() + this.getItemsFolder(), true)) {
             @Nullable I item;
             try {
-                Constructor<I> ctor = clazz.getDeclaredConstructor(this.getClass(), QuantumRPG.class, JYML.class);
+                Constructor<I> ctor = clazz.getDeclaredConstructor(this.getClass(), Divinity.class, JYML.class);
                 item = ctor.newInstance(this, plugin, cfg);
                 if (item == null) continue;
             } catch (InvocationTargetException ite) {

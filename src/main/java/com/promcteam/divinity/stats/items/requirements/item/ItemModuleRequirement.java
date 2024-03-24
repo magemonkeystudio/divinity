@@ -3,11 +3,11 @@ package com.promcteam.divinity.stats.items.requirements.item;
 import com.promcteam.codex.config.api.ILangMsg;
 import com.promcteam.codex.modules.IModule;
 import com.promcteam.codex.utils.DataUT;
-import org.apache.commons.lang.ArrayUtils;
+import com.promcteam.divinity.Divinity;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.modules.api.QModule;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -60,7 +60,7 @@ public class ItemModuleRequirement extends ItemRequirement<String[]> {
         String[] arr = this.getRaw(src);
         if (arr == null) throw new IllegalStateException("Item does not have stat!");
 
-        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Module.replace("%value%",
+        return Divinity.getInstance().lang().Module_Item_Apply_Error_Module.replace("%value%",
                 this.formatValue(src, arr));
     }
 
@@ -69,7 +69,7 @@ public class ItemModuleRequirement extends ItemRequirement<String[]> {
     public String formatValue(@NotNull ItemStack item, @NotNull String[] values) {
         List<String> valid = new ArrayList<>();
         for (String module : values) {
-            IModule<?> mod = QuantumRPG.getInstance().getModuleManager().getModule(module);
+            IModule<?> mod = Divinity.getInstance().getModuleManager().getModule(module);
             if (mod == null || !(mod instanceof QModuleDrop<?>)) continue;
 
             valid.add(mod.name());

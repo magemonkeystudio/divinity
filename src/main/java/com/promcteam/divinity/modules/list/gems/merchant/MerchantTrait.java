@@ -5,7 +5,7 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.modules.api.socketing.merchant.MerchantSocket;
 import com.promcteam.divinity.modules.list.gems.GemManager;
 
@@ -19,7 +19,7 @@ public class MerchantTrait extends Trait {
     @EventHandler
     public void click(NPCRightClickEvent e) {
         if (e.getNPC() == this.getNPC()) {
-            GemManager gemManager = QuantumAPI.getModuleManager().getGemManager();
+            GemManager gemManager = DivinityAPI.getModuleManager().getGemManager();
             if (gemManager == null) return;
 
             MerchantSocket merchant = gemManager.getMerchant();

@@ -3,6 +3,7 @@ package com.promcteam.divinity.modules.list.soulbound;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.gui.*;
 import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -10,9 +11,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 
-public class SoulGUI extends NGUI<QuantumRPG> {
+public class SoulGUI extends NGUI<Divinity> {
 
     private int itemSlot;
     private int sourceSlot;

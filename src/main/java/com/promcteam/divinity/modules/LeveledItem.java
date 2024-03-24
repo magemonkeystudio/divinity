@@ -6,13 +6,13 @@ import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.constants.JStrings;
 import com.promcteam.codex.utils.eval.Evaluator;
 import com.promcteam.codex.utils.random.Rnd;
-import org.apache.commons.lang.ArrayUtils;
+import com.promcteam.divinity.Divinity;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.Config;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.stats.items.ItemStats;
@@ -39,13 +39,13 @@ public abstract class LeveledItem extends ModuleItem {
 
     // Creating new config
     @Deprecated
-    public LeveledItem(@NotNull QuantumRPG plugin, String path, QModuleDrop<?> module) throws
+    public LeveledItem(@NotNull Divinity plugin, String path, QModuleDrop<?> module) throws
             InvalidConfigurationException {
         super(plugin, path, module);
     }
 
     // Load from existent config
-    public LeveledItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
+    public LeveledItem(@NotNull Divinity plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
         super(plugin, cfg, module);
         this.updateConfig(cfg);
 

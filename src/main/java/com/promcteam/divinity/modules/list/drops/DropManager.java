@@ -23,8 +23,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.hooks.external.MyPetHK;
 import com.promcteam.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
 import com.promcteam.divinity.modules.EModule;
@@ -47,7 +47,7 @@ public class DropManager extends QModule {
     private              AbstractMythicMobsHK   mmHook;
     private              MyPetHK                myPetHook;
 
-    public DropManager(@NotNull QuantumRPG plugin) {
+    public DropManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 
@@ -246,7 +246,7 @@ public class DropManager extends QModule {
                 for (int i = 0; i < dropItem.getCount(); i++) {
                     int itemLvl = dropConfig.getLevel(killer, dead);
 
-                    ItemStack dropStack = QuantumAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
+                    ItemStack dropStack = DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
                     if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
                     dropConfig.executeActions(killer, mapTarget);
@@ -283,7 +283,7 @@ public class DropManager extends QModule {
 
             String itemId = dropConfig.getItemId();
 
-            ItemStack dropStack = QuantumAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
+            ItemStack dropStack = DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
             if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
             dropConfig.executeActions(target, mapTarget);
@@ -316,7 +316,7 @@ public class DropManager extends QModule {
 //            if (!ActionManipulator.processConditions(plugin, target, dropConditions, mapTarget)) continue;
 
             String    itemId    = dropConfig.getItemId();
-            ItemStack dropStack = QuantumAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
+            ItemStack dropStack = DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
             if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
 //            dropConfig.executeActions(target, mapTarget);

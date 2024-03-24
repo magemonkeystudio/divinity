@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.api.QModule;
 
@@ -41,7 +41,7 @@ public class ItemHintsManager extends QModule {
     private Set<String> hintIgnoredLores;
     private Set<String> hintIgnoredModules;
 
-    public ItemHintsManager(@NotNull QuantumRPG plugin) {
+    public ItemHintsManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 

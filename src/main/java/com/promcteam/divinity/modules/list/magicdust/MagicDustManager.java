@@ -8,6 +8,7 @@ import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.NumberUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.actions.ActionManipulator;
+import com.promcteam.divinity.Divinity;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,7 +22,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.LimitedItem;
 import com.promcteam.divinity.modules.ModuleItem;
@@ -40,7 +40,7 @@ public class MagicDustManager extends QModuleDrop<MagicDust> {
     private ActionManipulator actionsApply;
     private ActionManipulator actionsError;
 
-    public MagicDustManager(@NotNull QuantumRPG plugin) {
+    public MagicDustManager(@NotNull Divinity plugin) {
         super(plugin, MagicDust.class);
     }
 
@@ -213,7 +213,7 @@ public class MagicDustManager extends QModuleDrop<MagicDust> {
         private final int                       rateMax;
         private final TreeMap<Integer, Integer> rateLvl;
 
-        public MagicDust(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public MagicDust(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, MagicDustManager.this);
 
             this.rateMax = Math.min(100, cfg.getInt("rate-increasing.max-value", 80));
@@ -262,14 +262,14 @@ public class MagicDustManager extends QModuleDrop<MagicDust> {
         }
     }
 
-    class PaidGUI extends NGUI<QuantumRPG> {
+    class PaidGUI extends NGUI<Divinity> {
 
         private final int          itemSlot;
         private final VaultHK      vault;
         private final boolean      hasVault;
         private final Set<GuiItem> buttons;
 
-        public PaidGUI(@NotNull QuantumRPG plugin) {
+        public PaidGUI(@NotNull Divinity plugin) {
             super(plugin, cfg, "gui.paid.");
 
             this.buttons = new HashSet<>();

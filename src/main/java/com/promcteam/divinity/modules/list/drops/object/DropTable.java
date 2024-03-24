@@ -12,7 +12,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 
@@ -33,7 +33,7 @@ public class DropTable extends LoadableItem implements DropCalculator {
     protected     List<DropItem>   dropList;
     protected     Set<DropNonItem> nonItemDrops;
 
-    public DropTable(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+    public DropTable(@NotNull Divinity plugin, @NotNull JYML cfg) {
         super(plugin, cfg);
 
         this.name = StringUT.color(cfg.getString("name", this.getId()));

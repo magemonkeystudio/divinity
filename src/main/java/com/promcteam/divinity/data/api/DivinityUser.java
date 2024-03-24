@@ -2,25 +2,25 @@ package com.promcteam.divinity.data.api;
 
 import com.promcteam.codex.data.users.IAbstractUser;
 import com.promcteam.codex.utils.constants.JStrings;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class RPGUser extends IAbstractUser<QuantumRPG> {
+public class DivinityUser extends IAbstractUser<Divinity> {
 
-    private final     LinkedHashMap<String, UserProfile> profiles;
-    private transient UserProfile                        activeProfile;
+    private final     Map<String, UserProfile> profiles;
+    private transient UserProfile              activeProfile;
 
     // Create new
-    public RPGUser(@NotNull QuantumRPG plugin, @NotNull Player player) {
+    public DivinityUser(@NotNull Divinity plugin, @NotNull Player player) {
         this(
                 plugin,
                 player.getUniqueId(),
@@ -31,13 +31,12 @@ public class RPGUser extends IAbstractUser<QuantumRPG> {
     }
 
     // Load from database
-    public RPGUser(
-            @NotNull QuantumRPG plugin,
+    public DivinityUser(
+            @NotNull Divinity plugin,
             @NotNull UUID uuid,
             @NotNull String name,
             long lastOnline,
-
-            @NotNull LinkedHashMap<String, UserProfile> profiles
+            @NotNull Map<String, UserProfile> profiles
     ) {
         super(plugin, uuid, name, lastOnline);
 

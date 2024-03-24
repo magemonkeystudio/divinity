@@ -2,11 +2,11 @@ package com.promcteam.divinity.modules.list.itemgenerator.editor.requirements;
 
 import com.promcteam.codex.manager.api.menu.Slot;
 import com.promcteam.codex.utils.StringUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 
@@ -69,7 +69,7 @@ public class RequirementsGUI extends AbstractEditorGUI {
                                                             saveAndReopen();
                                                         });
                                             }
-                                        }.runTask(QuantumRPG.getInstance());
+                                        }.runTask(Divinity.getInstance());
                                     });
                         }
                     } :

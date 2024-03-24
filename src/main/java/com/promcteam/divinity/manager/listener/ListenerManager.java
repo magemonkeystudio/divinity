@@ -1,8 +1,8 @@
 package com.promcteam.divinity.manager.listener;
 
 import com.promcteam.codex.manager.api.Loadable;
+import com.promcteam.divinity.Divinity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.hooks.HookListener;
 import com.promcteam.divinity.manager.listener.object.*;
 import com.promcteam.divinity.stats.items.ItemStats;
@@ -11,8 +11,8 @@ import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
 
 public class ListenerManager implements Loadable {
 
-    private final QuantumRPG              plugin;
-    private       ItemDurabilityListener  lisDurability;
+    private final Divinity               plugin;
+    private       ItemDurabilityListener lisDurability;
     private       ItemHandListener        lisHand;
     private       ItemRequirementListener lisReq;
     private       DynamicStatListener     lisDynamic;
@@ -20,7 +20,7 @@ public class ListenerManager implements Loadable {
     private       VanillaWrapperListener  lisQuantum;
     private       HookListener            hookListener;
 
-    public ListenerManager(@NotNull QuantumRPG plugin) {
+    public ListenerManager(@NotNull Divinity plugin) {
         this.plugin = plugin;
     }
 

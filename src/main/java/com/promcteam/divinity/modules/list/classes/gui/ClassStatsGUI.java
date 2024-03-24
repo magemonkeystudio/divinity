@@ -10,7 +10,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.api.RPGClass;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
@@ -19,7 +19,7 @@ import com.promcteam.divinity.modules.list.classes.object.ClassAttributeType;
 
 import java.util.List;
 
-public class ClassStatsGUI extends NGUI<QuantumRPG> {
+public class ClassStatsGUI extends NGUI<Divinity> {
 
     private ClassManager classManager;
 

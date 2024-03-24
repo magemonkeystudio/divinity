@@ -4,7 +4,8 @@ import com.promcteam.codex.commands.api.ISubCommand;
 import com.promcteam.codex.utils.CollectionsUT;
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.StringUT;
-import org.apache.commons.lang.StringUtils;
+import com.promcteam.divinity.Divinity;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Color;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
@@ -15,16 +16,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ModifyCommand extends ISubCommand<QuantumRPG> {
+public class ModifyCommand extends ISubCommand<Divinity> {
 
-    public ModifyCommand(@NotNull QuantumRPG plugin) {
+    public ModifyCommand(@NotNull Divinity plugin) {
         super(plugin, new String[]{"modify"}, Perms.ADMIN);
     }
 

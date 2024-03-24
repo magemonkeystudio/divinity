@@ -7,12 +7,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.HookMobLevel;
 
-public class LevelledMobsHK extends NHook<QuantumRPG> implements HookMobLevel {
+public class LevelledMobsHK extends NHook<Divinity> implements HookMobLevel {
 
-    public LevelledMobsHK(@NotNull QuantumRPG plugin) {
+    public LevelledMobsHK(@NotNull Divinity plugin) {
         super(plugin);
     }
 

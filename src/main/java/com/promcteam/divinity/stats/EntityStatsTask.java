@@ -1,17 +1,17 @@
 package com.promcteam.divinity.stats;
 
 import com.promcteam.codex.manager.api.task.ITask;
+import com.promcteam.divinity.Divinity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 
 import java.util.HashSet;
 
-public class EntityStatsTask extends ITask<QuantumRPG> {
+public class EntityStatsTask extends ITask<Divinity> {
 
     public static final int POTION_DURATION = 140; // TODO Config option
     private             int count;
 
-    public EntityStatsTask(@NotNull QuantumRPG plugin) {
+    public EntityStatsTask(@NotNull Divinity plugin) {
         super(plugin, 1L, false);
         this.count = 1;
     }

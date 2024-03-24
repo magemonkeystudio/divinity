@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.endlesscode.mimic.level.BukkitLevelSystem;
 import ru.endlesscode.mimic.level.ExpLevelConverter;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
 
@@ -18,7 +18,7 @@ public class DivinityLevelSystem extends BukkitLevelSystem {
 
     public DivinityLevelSystem(@NotNull Player player) {
         super(player);
-        classManager = QuantumAPI.getModuleManager().getClassManager();
+        classManager = DivinityAPI.getModuleManager().getClassManager();
     }
 
 

@@ -4,8 +4,8 @@
 package com.promcteam.divinity.modules.list.customitems;
 
 import com.promcteam.codex.config.api.JYML;
+import com.promcteam.divinity.Divinity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.ModuleItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -23,7 +23,7 @@ model-data:
 
 public class CustomItemsManager extends QModuleDrop<CustomItem> {
 
-    public CustomItemsManager(@NotNull QuantumRPG plugin) {
+    public CustomItemsManager(@NotNull Divinity plugin) {
         super(plugin, CustomItem.class);
     }
 
@@ -51,7 +51,7 @@ public class CustomItemsManager extends QModuleDrop<CustomItem> {
 
     public class CustomItem extends ModuleItem {
 
-        public CustomItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public CustomItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, CustomItemsManager.this);
         }
 

@@ -6,6 +6,7 @@ import com.promcteam.codex.manager.LoadableItem;
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.divinity.Divinity;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -22,7 +23,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.api.QModule;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -45,7 +45,7 @@ public class SetManager extends QModule {
     private              List<String>         formatLore;
     private              Map<String, ItemSet> sets;
 
-    public SetManager(@NotNull QuantumRPG plugin) {
+    public SetManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 
@@ -338,7 +338,7 @@ public class SetManager extends QModule {
         private final Map<String, SetElement>           elements;
         private final TreeMap<Integer, SetElementBonus> elementBonus;
 
-        public ItemSet(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public ItemSet(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg);
 
             this.name = StringUT.color(cfg.getString("name", id));

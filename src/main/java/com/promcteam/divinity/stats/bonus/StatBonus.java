@@ -1,6 +1,7 @@
 package com.promcteam.divinity.stats.bonus;
 
 import com.promcteam.codex.utils.DataUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -9,7 +10,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
 import com.promcteam.divinity.stats.items.requirements.api.DynamicUserRequirement;
 import com.promcteam.divinity.stats.items.requirements.api.UserRequirement;
@@ -19,9 +19,9 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class StatBonus {
-    private static final NamespacedKey VALUE           = new NamespacedKey(QuantumRPG.getInstance(), "value");
-    private static final NamespacedKey PERCENT         = new NamespacedKey(QuantumRPG.getInstance(), "percent");
-    private static final NamespacedKey CLASS_CONDITION = new NamespacedKey(QuantumRPG.getInstance(), "class");
+    private static final NamespacedKey VALUE           = new NamespacedKey(Divinity.getInstance(), "value");
+    private static final NamespacedKey PERCENT         = new NamespacedKey(Divinity.getInstance(), "percent");
+    private static final NamespacedKey CLASS_CONDITION = new NamespacedKey(Divinity.getInstance(), "class");
 
     public static PersistentDataType<PersistentDataContainer, StatBonus> DATA_TYPE = new PersistentDataType<>() {
         @NotNull

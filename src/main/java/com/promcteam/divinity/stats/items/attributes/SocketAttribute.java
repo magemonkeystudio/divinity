@@ -6,7 +6,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.SocketItem;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 import com.promcteam.divinity.modules.list.essences.EssencesManager;
@@ -99,13 +99,13 @@ public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements
         public ModuleSocket<?> getModule() {
             switch (this) {
                 case GEM: {
-                    return QuantumRPG.getInstance().getModuleCache().getGemManager();
+                    return Divinity.getInstance().getModuleCache().getGemManager();
                 }
                 case RUNE: {
-                    return QuantumRPG.getInstance().getModuleCache().getRuneManager();
+                    return Divinity.getInstance().getModuleCache().getRuneManager();
                 }
                 case ESSENCE: {
-                    return QuantumRPG.getInstance().getModuleCache().getEssenceManager();
+                    return Divinity.getInstance().getModuleCache().getEssenceManager();
                 }
             }
             return null;
@@ -180,7 +180,7 @@ public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements
             String     itemId = value[0];
             SocketItem mItem  = this.getModule().getItemById(itemId);
             if (mItem == null) {
-                QuantumRPG.getInstance().error("Invalid socket item '" + itemId + "' for Socket Attribute.");
+                Divinity.getInstance().error("Invalid socket item '" + itemId + "' for Socket Attribute.");
                 return format;
             }
 

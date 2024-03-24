@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.stats.items.ItemTags;
 import com.promcteam.divinity.stats.items.requirements.api.DynamicUserRequirement;
@@ -75,6 +75,6 @@ public class LevelRequirement extends DynamicUserRequirement<int[]> {
     @Override
     @NotNull
     public ILangMsg getDenyMessage(@NotNull Player p, @NotNull ItemStack src) {
-        return QuantumRPG.getInstance().lang().Module_Item_Interact_Error_Level;
+        return Divinity.getInstance().lang().Module_Item_Interact_Error_Level;
     }
 }

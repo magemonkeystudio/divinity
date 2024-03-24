@@ -1,5 +1,6 @@
 package com.promcteam.divinity.modules.list.consumables;
 
+import com.promcteam.divinity.Divinity;
 import lombok.Getter;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.utils.ItemUT;
@@ -8,8 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.api.event.QuantumPlayerItemUseEvent;
+import com.promcteam.divinity.api.event.DivinityPlayerItemUseEvent;
 import com.promcteam.divinity.modules.LimitedItem;
 import com.promcteam.divinity.modules.UsableItem;
 import com.promcteam.divinity.modules.api.QModuleUsage;
@@ -19,7 +19,7 @@ public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume>
     private boolean allowConsumeFullHealth;
     private boolean allowConsumeFullFood;
 
-    public ConsumablesManager(@NotNull QuantumRPG plugin) {
+    public ConsumablesManager(@NotNull Divinity plugin) {
         super(plugin, Consume.class);
     }
 
@@ -42,7 +42,7 @@ public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume>
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onConsume(QuantumPlayerItemUseEvent e) {
+    public void onConsume(DivinityPlayerItemUseEvent e) {
         LimitedItem uItem = e.getItem();
         if (!(uItem instanceof Consume))
             return;
@@ -75,7 +75,7 @@ public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume>
         @Getter
         private final double health, hunger, saturation;
 
-        public Consume(@NotNull QuantumRPG plugin, JYML cfg) {
+        public Consume(@NotNull Divinity plugin, JYML cfg) {
             super(plugin, cfg, ConsumablesManager.this);
             this.health = cfg.getDouble("effects.health");
             this.hunger = cfg.getDouble("effects.hunger");

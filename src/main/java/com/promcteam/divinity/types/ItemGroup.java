@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,7 +49,7 @@ public enum ItemGroup {
             try {
                 this.mats.add(CodexEngine.get().getItemManager().getItemType(mat));
             } catch (ProItemException e) {
-                QuantumRPG.getInstance().warn("Unknown item group: \"" + mat + '\"');
+                Divinity.getInstance().warn("Unknown item group: \"" + mat + '\"');
             }
         }
     }

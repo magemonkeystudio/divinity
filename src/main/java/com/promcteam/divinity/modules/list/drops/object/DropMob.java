@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.list.drops.DropManager;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class DropMob extends LoadableItem implements DropCalculator {
 
     protected List<DropTable> dropTables;
 
-    public DropMob(@NotNull QuantumRPG plugin, @NotNull JYML cfg, DropManager dropManager) {
+    public DropMob(@NotNull Divinity plugin, @NotNull JYML cfg, DropManager dropManager) {
         super(plugin, cfg);
 
         this.chance = (float) cfg.getDouble("chance");

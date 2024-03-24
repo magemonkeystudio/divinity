@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.mimic.classes.BukkitClassSystem;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.api.RPGClass;
 
@@ -23,7 +23,7 @@ public class DivinityClassSystem extends BukkitClassSystem {
 
     public DivinityClassSystem(@NotNull Player player) {
         super(player);
-        classManager = QuantumAPI.getModuleManager().getClassManager();
+        classManager = DivinityAPI.getModuleManager().getClassManager();
     }
 
     @NotNull

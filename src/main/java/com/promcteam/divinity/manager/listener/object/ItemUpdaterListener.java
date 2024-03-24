@@ -21,13 +21,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.stats.items.ItemStats;
 
-public class ItemUpdaterListener extends IListener<QuantumRPG> {
+public class ItemUpdaterListener extends IListener<Divinity> {
 
 
-    public ItemUpdaterListener(@NotNull QuantumRPG plugin) {
+    public ItemUpdaterListener(@NotNull Divinity plugin) {
         super(plugin);
     }
 

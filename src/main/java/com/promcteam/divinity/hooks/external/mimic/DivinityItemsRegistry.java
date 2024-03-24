@@ -5,7 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.mimic.items.BukkitItemsRegistry;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.ModuleItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 
@@ -21,10 +21,10 @@ public class DivinityItemsRegistry implements BukkitItemsRegistry {
 
     private static final String SEPARATOR = "/";
 
-    private final QuantumRPG quantumRpg;
+    private final Divinity divinity;
 
-    public DivinityItemsRegistry(QuantumRPG quantumRpg) {
-        this.quantumRpg = quantumRpg;
+    public DivinityItemsRegistry(Divinity divinity) {
+        this.divinity = divinity;
     }
 
     @NotNull
@@ -35,7 +35,7 @@ public class DivinityItemsRegistry implements BukkitItemsRegistry {
 
     @Override
     public boolean isEnabled() {
-        return quantumRpg.isEnabled();
+        return divinity.isEnabled();
     }
 
     @NotNull
@@ -112,7 +112,7 @@ public class DivinityItemsRegistry implements BukkitItemsRegistry {
     }
 
     private Stream<QModuleDrop<?>> getDropModules() {
-        ModuleManager<QuantumRPG> moduleManager = quantumRpg.getModuleManager();
+        ModuleManager<Divinity> moduleManager = divinity.getModuleManager();
         Objects.requireNonNull(
                 moduleManager,
                 "It seems you're trying to access items from Divinity before the plugin is loaded. " +

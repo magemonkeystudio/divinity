@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.stats.ProjectileStats;
 
-public class QuantumProjectileLaunchEvent extends Event implements Cancellable {
+public class DivinityProjectileLaunchEvent extends Event implements Cancellable {
     private static final HandlerList  handlers = new HandlerList();
     private final        Location     loc;
     private final        boolean      isBowEvent;
@@ -21,12 +21,12 @@ public class QuantumProjectileLaunchEvent extends Event implements Cancellable {
     private              LivingEntity shooter;
     private              double       power;
 
-    public QuantumProjectileLaunchEvent(@NotNull Entity pj,
-                                        @NotNull Location loc,
-                                        @NotNull LivingEntity shooter,
-                                        @Nullable ItemStack bow,
-                                        double power,
-                                        boolean isBowEvent) {
+    public DivinityProjectileLaunchEvent(@NotNull Entity pj,
+                                         @NotNull Location loc,
+                                         @NotNull LivingEntity shooter,
+                                         @Nullable ItemStack bow,
+                                         double power,
+                                         boolean isBowEvent) {
         setProjectile(pj);
         this.loc = loc;
         setShooter(shooter);

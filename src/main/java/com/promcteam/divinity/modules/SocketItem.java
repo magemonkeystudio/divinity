@@ -3,11 +3,11 @@ package com.promcteam.divinity.modules;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.utils.NumberUT;
 import com.promcteam.codex.utils.StringUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 import com.promcteam.divinity.modules.list.gems.GemManager.Gem;
 import com.promcteam.divinity.stats.bonus.BonusMap;
@@ -22,13 +22,13 @@ public abstract class SocketItem extends RatedItem {
 
     // Creating new config
     @Deprecated
-    public SocketItem(@NotNull QuantumRPG plugin, @NotNull String path, @NotNull ModuleSocket<?> module) throws
+    public SocketItem(@NotNull Divinity plugin, @NotNull String path, @NotNull ModuleSocket<?> module) throws
             InvalidConfigurationException {
         super(plugin, path, module);
     }
 
     // Load from existent config
-    public SocketItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg, @NotNull ModuleSocket<?> module) {
+    public SocketItem(@NotNull Divinity plugin, @NotNull JYML cfg, @NotNull ModuleSocket<?> module) {
         super(plugin, cfg, module);
 
         this.socketDisplay = StringUT.color(cfg.getString("socket-display", this.getName()));

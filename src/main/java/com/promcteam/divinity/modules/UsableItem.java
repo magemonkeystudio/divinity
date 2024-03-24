@@ -9,12 +9,12 @@ import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.utils.NumberUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.actions.ActionManipulator;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.api.QModuleUsage;
 import com.promcteam.divinity.stats.items.ItemTags;
 import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
@@ -38,7 +38,7 @@ public class UsableItem extends LimitedItem {
     protected TreeMap<Integer, Map<String, Object>> varsLvl;
     protected Map<QClickType, UsableItem.Usage>     usageMap;
 
-    public UsableItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg, @NotNull QModuleUsage<?> module) {
+    public UsableItem(@NotNull Divinity plugin, @NotNull JYML cfg, @NotNull QModuleUsage<?> module) {
         super(plugin, cfg, module);
         String   sLvl;
         Iterator var5;

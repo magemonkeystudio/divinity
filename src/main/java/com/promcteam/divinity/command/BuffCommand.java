@@ -7,8 +7,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.data.api.RPGUser;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.data.api.DivinityUser;
 import com.promcteam.divinity.manager.effects.buffs.SavedBuff;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.api.ItemLoreStat;
@@ -19,9 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class BuffCommand extends ISubCommand<QuantumRPG> {
+public class BuffCommand extends ISubCommand<Divinity> {
 
-    public BuffCommand(@NotNull QuantumRPG plugin) {
+    public BuffCommand(@NotNull Divinity plugin) {
         super(plugin, new String[]{"buff"}, Perms.ADMIN);
     }
 
@@ -97,7 +97,7 @@ public class BuffCommand extends ISubCommand<QuantumRPG> {
             return;
         }
 
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) {
             this.errPlayer(sender);
             return;

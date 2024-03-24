@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.HookClass;
 import com.promcteam.divinity.hooks.HookLevel;
 import com.promcteam.divinity.hooks.HookMobLevel;
@@ -14,7 +14,7 @@ public class DefaultHook implements HookLevel, HookClass, HookMobLevel {
 
     //private QuantumRPG plugin;
 
-    public DefaultHook(@NotNull QuantumRPG plugin) {
+    public DefaultHook(@NotNull Divinity plugin) {
         //this.plugin = plugin;
     }
 

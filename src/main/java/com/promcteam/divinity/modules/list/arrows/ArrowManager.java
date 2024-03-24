@@ -5,6 +5,7 @@ import com.promcteam.codex.manager.api.task.ITask;
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.actions.ActionManipulator;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -19,8 +20,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.api.event.QuantumProjectileLaunchEvent;
+import com.promcteam.divinity.api.event.DivinityProjectileLaunchEvent;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.LeveledItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -39,7 +39,7 @@ public class ArrowManager extends QModuleDrop<QArrow> {
     private              ArrowTask                          taskFly;
     private              boolean                            generalAllowInfinity;
 
-    public ArrowManager(@NotNull QuantumRPG plugin) {
+    public ArrowManager(@NotNull Divinity plugin) {
         super(plugin, QArrow.class);
     }
 
@@ -128,7 +128,7 @@ public class ArrowManager extends QModuleDrop<QArrow> {
     // TODO Allow mobs shoot custom arrows
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onQuantumArrowLaunch(QuantumProjectileLaunchEvent e) {
+    public void onQuantumArrowLaunch(DivinityProjectileLaunchEvent e) {
         if (!(e.getProjectile() instanceof Projectile)) return;
         if (!(e.getShooter() instanceof Player)) return;
 
@@ -198,7 +198,7 @@ public class ArrowManager extends QModuleDrop<QArrow> {
         private final ActionManipulator          fly;
         private final ActionManipulator          hit;
 
-        public QArrow(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public QArrow(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, ArrowManager.this);
 
             cfg.addMissing("material", "ARROW");
@@ -246,9 +246,9 @@ public class ArrowManager extends QModuleDrop<QArrow> {
         }
     }
 
-    class ArrowTask extends ITask<QuantumRPG> {
+    class ArrowTask extends ITask<Divinity> {
 
-        public ArrowTask(@NotNull QuantumRPG plugin) {
+        public ArrowTask(@NotNull Divinity plugin) {
             super(plugin, 1L, false);
         }
 

@@ -7,7 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.utils.ParticleUtils;
 
@@ -17,7 +17,7 @@ import java.util.Set;
 
 public class ActionParticleLine extends IActionExecutor {
 
-    public ActionParticleLine(@NotNull QuantumRPG plugin) {
+    public ActionParticleLine(@NotNull Divinity plugin) {
         super(plugin, "PARTICLE_LINE");
     }
 

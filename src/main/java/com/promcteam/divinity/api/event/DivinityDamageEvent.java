@@ -1,9 +1,15 @@
 package com.promcteam.divinity.api.event;
 
 import com.google.common.collect.Sets;
+import com.promcteam.codex.manager.api.event.ICancellableEvent;
+import com.promcteam.divinity.manager.damage.DamageMeta;
+import com.promcteam.divinity.modules.list.arrows.ArrowManager.QArrow;
+import com.promcteam.divinity.stats.EntityStats;
+import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
+import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
+import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
 import lombok.Getter;
 import lombok.Setter;
-import com.promcteam.codex.manager.api.event.ICancellableEvent;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -11,19 +17,13 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.manager.damage.DamageMeta;
-import com.promcteam.divinity.modules.list.arrows.ArrowManager.QArrow;
-import com.promcteam.divinity.stats.EntityStats;
-import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
-import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
-import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.DoubleUnaryOperator;
 
-public abstract class RPGDamageEvent extends ICancellableEvent {
+public abstract class DivinityDamageEvent extends ICancellableEvent {
 
     protected LivingEntity victim;
     protected LivingEntity damager;
@@ -42,7 +42,7 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
     @Setter
     protected boolean exempt = false;
 
-    public RPGDamageEvent(
+    public DivinityDamageEvent(
             @NotNull LivingEntity zertva,
             @NotNull EntityDamageEvent eventOrig,
             @NotNull DamageMeta meta
@@ -50,7 +50,7 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
         this(zertva, null, eventOrig, meta);
     }
 
-    public RPGDamageEvent(
+    public DivinityDamageEvent(
             @NotNull LivingEntity zertva,
             @Nullable LivingEntity damager,
             @NotNull EntityDamageEvent eventOrig,
@@ -59,7 +59,7 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
         this(zertva, damager, null, eventOrig, meta);
     }
 
-    public RPGDamageEvent(
+    public DivinityDamageEvent(
             @NotNull LivingEntity zertva,
             @Nullable LivingEntity damager,
             @Nullable Projectile projectile,
@@ -196,7 +196,7 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
      * Called at the start of Damage Event, before ANY calculations.
      * This is the first QuantumDamageEvent instance.
      */
-    public static class Start extends RPGDamageEvent {
+    public static class Start extends DivinityDamageEvent {
 
         public Start(
                 @NotNull LivingEntity zertva,
@@ -221,7 +221,7 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
      * Called at the start of Damage Event, before damage calculations.
      * This is the second QuantumDamageEvent instance.
      */
-    public static class Pre extends RPGDamageEvent {
+    public static class Pre extends DivinityDamageEvent {
 
         public Pre(
                 @NotNull LivingEntity zertva,
@@ -234,7 +234,7 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
         }
     }
 
-    public static class Dodge extends RPGDamageEvent {
+    public static class Dodge extends DivinityDamageEvent {
 
         public Dodge(
                 @NotNull LivingEntity zertva,
@@ -257,7 +257,7 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
      * Called at the end of Damage Event, before return the damage value.
      * This is the latest QuantumDamageEvent instance.
      */
-    public static class Exit extends RPGDamageEvent {
+    public static class Exit extends DivinityDamageEvent {
 
         public Exit(
                 @NotNull LivingEntity zertva,

@@ -6,13 +6,13 @@ import com.promcteam.codex.utils.NumberUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.actions.ActionManipulator;
 import com.promcteam.codex.utils.eval.Evaluator;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.object.ClassAspect;
 import com.promcteam.divinity.modules.list.classes.object.ClassAspectBonus;
@@ -52,7 +52,7 @@ public class RPGClass extends LoadableItem {
 
     private RPGClass cParent;
 
-    public RPGClass(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+    public RPGClass(@NotNull Divinity plugin, @NotNull JYML cfg) {
         super(plugin, cfg);
 
         String name = cfg.getString("name");

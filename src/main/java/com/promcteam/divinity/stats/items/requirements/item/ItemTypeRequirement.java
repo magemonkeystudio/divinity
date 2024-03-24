@@ -2,11 +2,11 @@ package com.promcteam.divinity.stats.items.requirements.item;
 
 import com.promcteam.codex.config.api.ILangMsg;
 import com.promcteam.codex.utils.DataUT;
-import org.apache.commons.lang.ArrayUtils;
+import com.promcteam.divinity.Divinity;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.stats.items.ItemTags;
 import com.promcteam.divinity.stats.items.requirements.api.ItemRequirement;
@@ -51,7 +51,7 @@ public class ItemTypeRequirement extends ItemRequirement<String[]> {
         String[] arr = this.getRaw(src);
         if (arr == null) throw new IllegalStateException("Item does not have stat!");
 
-        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Type.replace("%value%",
+        return Divinity.getInstance().lang().Module_Item_Apply_Error_Type.replace("%value%",
                 this.formatValue(src, arr));
     }
 

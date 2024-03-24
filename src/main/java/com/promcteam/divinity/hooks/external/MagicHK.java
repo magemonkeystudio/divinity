@@ -3,15 +3,15 @@ package com.promcteam.divinity.hooks.external;
 import com.elmakers.mine.bukkit.api.magic.MagicAPI;
 import com.promcteam.codex.hooks.HookState;
 import com.promcteam.codex.hooks.NHook;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 
-public class MagicHK extends NHook<QuantumRPG> {
+public class MagicHK extends NHook<Divinity> {
 
     private MagicAPI api;
 
-    public MagicHK(@NotNull QuantumRPG plugin) {
+    public MagicHK(@NotNull Divinity plugin) {
         super(plugin);
     }
 

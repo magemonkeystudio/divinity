@@ -3,8 +3,8 @@ package com.promcteam.divinity.stats.bonus;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.utils.NumberUT;
 import com.promcteam.codex.utils.StringUT;
+import com.promcteam.divinity.Divinity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
@@ -153,7 +153,7 @@ public class BonusMap {
 
     public void loadFabledAttributes(@NotNull JYML cfg, @NotNull String path) {
         for (String id : cfg.getSection(path)) {
-            FabledHook fabledHook = (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+            FabledHook fabledHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
             if (fabledHook == null) continue;
             Collection<FabledAttribute> attributes = fabledHook.getAttributes();
 

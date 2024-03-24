@@ -24,10 +24,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.api.event.EntityStatsBonusUpdateEvent;
 import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.data.api.RPGUser;
+import com.promcteam.divinity.data.api.DivinityUser;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.manager.damage.DamageMeta;
 import com.promcteam.divinity.manager.effects.IEffect;
@@ -65,8 +65,8 @@ public class EntityStats {
     private static final UUID                     ATTRIBUTE_BONUS_UUID;
     private static final SimpleStat.Type[]        ATTRIBUTE_BONUS_STATS;
     private static final NBTAttribute[]           ATTRIBUTE_BONUS_NBT;
-    private static final double                   DEFAULT_ATTACK_POWER = 1D;
-    private static final QuantumRPG               plugin               = QuantumRPG.getInstance();
+    private static final double   DEFAULT_ATTACK_POWER = 1D;
+    private static final Divinity plugin               = Divinity.getInstance();
 
     static {
         STATS = Collections.synchronizedMap(new HashMap<>());
@@ -468,7 +468,7 @@ public class EntityStats {
         }
 
         if (this.isPlayer() && !this.isNPC()) {
-            RPGUser user = plugin.getUserManager().getOrLoadUser(this.player);
+            DivinityUser user = plugin.getUserManager().getOrLoadUser(this.player);
             if (user != null) {
                 UserProfile prof = user.getActiveProfile();
                 bonuses.add(prof.getBuff(stat));

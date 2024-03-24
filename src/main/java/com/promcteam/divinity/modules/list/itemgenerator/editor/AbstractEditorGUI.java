@@ -4,6 +4,7 @@ import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.core.Version;
 import com.promcteam.codex.manager.api.menu.Menu;
 import com.promcteam.codex.utils.StringUT;
+import com.promcteam.divinity.Divinity;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 
 import java.util.ArrayList;
@@ -113,7 +113,7 @@ public abstract class AbstractEditorGUI extends Menu {
                     fakeClosing = false; // In case it wasn't open yet
                 }
             }
-        }.runTask(QuantumRPG.getInstance());
+        }.runTask(Divinity.getInstance());
     }
 
     protected void setDefault(String path) {
@@ -144,7 +144,7 @@ public abstract class AbstractEditorGUI extends Menu {
                         onMessage.accept(message);
                         unregisterListener(this);
                     } catch (IllegalArgumentException e) {
-                        QuantumRPG.getInstance().lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%",
+                        Divinity.getInstance().lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%",
                                 message).replace("%value%", valueName).send(player);
                         player.spigot().sendMessage(component);
                     }
@@ -167,7 +167,7 @@ public abstract class AbstractEditorGUI extends Menu {
         public void reload() {
             JYML cfg = getConfig();
             cfg.save();
-            handle = Objects.requireNonNull(QuantumRPG.getInstance()
+            handle = Objects.requireNonNull(Divinity.getInstance()
                     .getModuleManager()
                     .getModule(ItemGeneratorManager.class)).load(handle.getId(), cfg);
         }

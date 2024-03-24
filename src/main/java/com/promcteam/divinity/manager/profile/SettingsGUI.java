@@ -6,18 +6,18 @@ import com.promcteam.codex.manager.api.gui.GuiClick;
 import com.promcteam.codex.manager.api.gui.GuiItem;
 import com.promcteam.codex.manager.api.gui.NGUI;
 import com.promcteam.codex.utils.CollectionsUT;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.data.api.DivinityUser;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.data.api.RPGUser;
 import com.promcteam.divinity.data.api.UserProfile;
 
 import java.util.List;
 
-public class SettingsGUI extends NGUI<QuantumRPG> {
+public class SettingsGUI extends NGUI<Divinity> {
 
     private ProfileManager profileManager;
 
@@ -50,7 +50,7 @@ public class SettingsGUI extends NGUI<QuantumRPG> {
             if (clazz.equals(ItemType.class)) {
                 ItemType type2 = (ItemType) type;
 
-                RPGUser user = plugin.getUserManager().getOrLoadUser(p);
+                DivinityUser user = plugin.getUserManager().getOrLoadUser(p);
                 if (user == null) return;
 
                 UserProfile profile = user.getActiveProfile();
@@ -114,7 +114,7 @@ public class SettingsGUI extends NGUI<QuantumRPG> {
         List<String> lore = meta.getLore();
         if (lore == null) return;
 
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
         UserProfile profile = user.getActiveProfile();

@@ -6,7 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
@@ -27,7 +27,7 @@ public class NewSkillGUI extends AbstractEditorGUI {
 
     @Override
     public void setContents() {
-        FabledHook fabledHook = (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+        FabledHook fabledHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
         int        i          = 0;
         for (String key : list) {
             i++;

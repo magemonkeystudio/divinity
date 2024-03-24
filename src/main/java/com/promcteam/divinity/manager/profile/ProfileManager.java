@@ -12,15 +12,15 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.data.api.RPGUser;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.data.api.DivinityUser;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.stats.EntityStats;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class ProfileManager extends IListener<QuantumRPG> implements Loadable {
+public class ProfileManager extends IListener<Divinity> implements Loadable {
 
     private JYML cfg;
 
@@ -37,7 +37,7 @@ public class ProfileManager extends IListener<QuantumRPG> implements Loadable {
     private Map<String, Long> profileCooldown;
     private Set<Player>       profileCreation;
 
-    public ProfileManager(@NotNull QuantumRPG plugin) {
+    public ProfileManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 
@@ -169,7 +169,7 @@ public class ProfileManager extends IListener<QuantumRPG> implements Loadable {
     }
 
     public boolean canCreateMoreProfiles(@NotNull Player player) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return false;
 
         int maxProfiles = this.getPlayerMaxProfiles(player);
@@ -192,7 +192,7 @@ public class ProfileManager extends IListener<QuantumRPG> implements Loadable {
     }
 
     public boolean createProfile(@NotNull Player player, @NotNull String name) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return false;
 
         int maxProfiles = this.getPlayerMaxProfiles(player);
@@ -221,7 +221,7 @@ public class ProfileManager extends IListener<QuantumRPG> implements Loadable {
     }
 
     public boolean switchProfile(@NotNull Player player, @NotNull UserProfile profile) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return false;
 
         if (user.switchProfile(profile.getIdName())) {

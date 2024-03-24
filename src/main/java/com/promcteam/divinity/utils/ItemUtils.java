@@ -11,7 +11,8 @@ import com.promcteam.codex.items.providers.VanillaProvider;
 import com.promcteam.codex.utils.CollectionsUT;
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.StringUT;
-import org.apache.commons.lang.ArrayUtils;
+import com.promcteam.divinity.Divinity;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -26,7 +27,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.Config;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.modules.list.identify.IdentifyManager;
@@ -44,7 +44,7 @@ import java.util.UUID;
 
 public class ItemUtils {
 
-    private static final QuantumRPG plugin = QuantumRPG.getInstance();
+    private static final Divinity plugin = Divinity.getInstance();
 
     public static boolean canUse(@NotNull ItemStack item, @NotNull Player player) {
         return canUse(item, player, true);

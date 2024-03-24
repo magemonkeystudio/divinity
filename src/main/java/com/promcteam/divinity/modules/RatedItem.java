@@ -6,7 +6,7 @@ import com.promcteam.codex.utils.random.Rnd;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 import com.promcteam.divinity.stats.items.ItemStats;
@@ -20,12 +20,12 @@ public abstract class RatedItem extends LimitedItem {
 
     // Creating new config
     @Deprecated
-    public RatedItem(QuantumRPG plugin, String path, ModuleSocket<?> module) throws InvalidConfigurationException {
+    public RatedItem(Divinity plugin, String path, ModuleSocket<?> module) throws InvalidConfigurationException {
         super(plugin, path, module);
     }
 
     // Load from existent config
-    public RatedItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
+    public RatedItem(@NotNull Divinity plugin, @NotNull JYML cfg, @NotNull QModuleDrop<?> module) {
         super(plugin, cfg, module);
 
         if (!cfg.contains("success-rate-by-level")) {

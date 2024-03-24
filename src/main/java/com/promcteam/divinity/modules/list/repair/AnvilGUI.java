@@ -4,6 +4,7 @@ import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.gui.*;
 import com.promcteam.codex.utils.DataUT;
 import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -16,13 +17,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.repair.RepairManager.RepairType;
 
 import java.util.HashSet;
 import java.util.List;
 
-public class AnvilGUI extends NGUI<QuantumRPG> {
+public class AnvilGUI extends NGUI<Divinity> {
 
     protected RepairManager repairManager;
     protected int           itemSlot;
@@ -30,7 +30,7 @@ public class AnvilGUI extends NGUI<QuantumRPG> {
     protected int           resultSlot;
 
     private static final NamespacedKey META_KEY_REPAIR_SELECT =
-            new NamespacedKey(QuantumRPG.getInstance(), "QRPG_REPAIR_GUI_SELECTOR");
+            new NamespacedKey(Divinity.getInstance(), "QRPG_REPAIR_GUI_SELECTOR");
 
     public AnvilGUI(@NotNull RepairManager repairManager) {
         super(repairManager.plugin, repairManager.getJYML(), "gui.");

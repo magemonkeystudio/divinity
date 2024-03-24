@@ -6,6 +6,7 @@ import com.promcteam.codex.commands.api.IGeneralCommand;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.Hooks;
 import com.promcteam.codex.registry.damage.DamageRegistry;
+import lombok.Getter;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPluginLoader;
@@ -16,9 +17,9 @@ import com.promcteam.divinity.command.SetCommand;
 import com.promcteam.divinity.config.Config;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.config.Lang;
-import com.promcteam.divinity.data.RPGUserData;
+import com.promcteam.divinity.data.DivinityUserData;
 import com.promcteam.divinity.data.UserManager;
-import com.promcteam.divinity.data.api.RPGUser;
+import com.promcteam.divinity.data.api.DivinityUser;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.*;
 import com.promcteam.divinity.hooks.external.mimic.MimicHook;
@@ -50,15 +51,16 @@ import java.sql.SQLException;
 /**
  * @author © 2024 ProMCTeam
  */
-public class QuantumRPG extends CodexDataPlugin<QuantumRPG, RPGUser> {
+public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
 
-    public static QuantumRPG instance;
+    @Getter
+    public static Divinity instance;
 
     private Config    config;
     private Lang      lang;
     private EngineCfg engineCfg;
 
-    private RPGUserData dataHandler;
+    private DivinityUserData dataHandler;
 
     private InteractionManager interactionManager;
     private WorthManager       worthManager;
@@ -70,17 +72,13 @@ public class QuantumRPG extends CodexDataPlugin<QuantumRPG, RPGUser> {
 
     private PMSManager pms;
 
-    public QuantumRPG() {
+    public Divinity() {
         instance = this;
     }
 
-    public QuantumRPG(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
+    public Divinity(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
         instance = this;
-    }
-
-    public static QuantumRPG getInstance() {
-        return instance;
     }
 
     @Override
@@ -237,7 +235,7 @@ public class QuantumRPG extends CodexDataPlugin<QuantumRPG, RPGUser> {
     }
 
     @Override
-    public void registerCmds(@NotNull IGeneralCommand<QuantumRPG> mainCommand) {
+    public void registerCmds(@NotNull IGeneralCommand<Divinity> mainCommand) {
         mainCommand.addSubCommand(new ModifyCommand(this));
         mainCommand.addSubCommand(new SetCommand(this));
         mainCommand.addSubCommand(new BuffCommand(this));
@@ -263,7 +261,7 @@ public class QuantumRPG extends CodexDataPlugin<QuantumRPG, RPGUser> {
     @Override
     protected boolean setupDataHandlers() {
         try {
-            this.dataHandler = RPGUserData.getInstance(this);
+            this.dataHandler = DivinityUserData.getInstance(this);
             this.dataHandler.setup();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -277,7 +275,7 @@ public class QuantumRPG extends CodexDataPlugin<QuantumRPG, RPGUser> {
     }
 
     @Override
-    public RPGUserData getData() {
+    public DivinityUserData getData() {
         return this.dataHandler;
     }
 

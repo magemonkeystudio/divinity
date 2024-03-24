@@ -5,7 +5,7 @@ import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 
 @TraitName("sell")
 public class SellTrait extends Trait {
@@ -18,7 +18,7 @@ public class SellTrait extends Trait {
     public void click(NPCRightClickEvent e) {
         if (e.getNPC() == this.getNPC()) {
             Player      player      = e.getClicker();
-            SellManager sellManager = QuantumAPI.getModuleManager().getSellManager();
+            SellManager sellManager = DivinityAPI.getModuleManager().getSellManager();
             if (sellManager == null) return;
 
             sellManager.openSellGUI(player, false);

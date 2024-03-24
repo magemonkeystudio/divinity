@@ -9,13 +9,13 @@ import com.promcteam.codex.manager.api.gui.*;
 import com.promcteam.codex.utils.CollectionsUT;
 import com.promcteam.codex.utils.DataUT;
 import com.promcteam.codex.utils.StringUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.hooks.external.MagicHK;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.ComboManager;
@@ -29,14 +29,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class SkillListGUI extends NGUI<QuantumRPG> {
+public class SkillListGUI extends NGUI<Divinity> {
 
     private ClassManager classManager;
     private int[]        objSlots;
     private String       previewName;
     private List<String> previewLore;
 
-    private static final NamespacedKey TAG_PREVIEW = new NamespacedKey(QuantumRPG.getInstance(), "QRPG_SKILL_PREVIEW");
+    private static final NamespacedKey TAG_PREVIEW = new NamespacedKey(Divinity.getInstance(), "QRPG_SKILL_PREVIEW");
 
     public SkillListGUI(@NotNull ClassManager classManager, @NotNull JYML cfg, @NotNull String path) {
         super(classManager.plugin, cfg, path);

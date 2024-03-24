@@ -4,13 +4,13 @@ import com.promcteam.codex.hooks.external.VaultHK;
 import com.promcteam.codex.hooks.external.citizens.CitizensHK;
 import com.promcteam.codex.utils.NumberUT;
 import com.promcteam.codex.utils.actions.ActionManipulator;
+import com.promcteam.divinity.Divinity;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.api.QModule;
 import com.promcteam.divinity.modules.list.sell.command.SellOpenCmd;
@@ -23,7 +23,7 @@ public class SellManager extends QModule {
 
     private SellGUI gui;
 
-    public SellManager(@NotNull QuantumRPG plugin) {
+    public SellManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 

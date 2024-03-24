@@ -7,7 +7,7 @@ import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.random.Rnd;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 
 import java.util.function.Function;
 
@@ -83,7 +83,7 @@ public class AnimatedSuccessBar extends ICustomInteraction {
     @Accessors(chain = true)
     public static class Builder {
 
-        private final QuantumRPG plugin;
+        private final Divinity plugin;
 
         private final String    barTitle;
         private final String    barChar;
@@ -101,7 +101,7 @@ public class AnimatedSuccessBar extends ICustomInteraction {
 
         private Function<Boolean, Void> result;
 
-        public Builder(@NotNull QuantumRPG plugin, @NotNull String title, @NotNull String barChar) {
+        public Builder(@NotNull Divinity plugin, @NotNull String title, @NotNull String barChar) {
             this.plugin = plugin;
             this.barTitle = StringUT.color(title);
             this.barChar = StringUT.color(barChar);
@@ -146,7 +146,7 @@ public class AnimatedSuccessBar extends ICustomInteraction {
         }
     }
 
-    class Task extends ITask<QuantumRPG> {
+    class Task extends ITask<Divinity> {
 
         Task() {
             super(AnimatedSuccessBar.this.plugin, AnimatedSuccessBar.this.fillInterval, true);

@@ -19,8 +19,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 import com.promcteam.divinity.modules.list.extractor.event.PlayerExtractSocketEvent;
 import com.promcteam.divinity.stats.items.ItemStats;
@@ -30,10 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-class ExtractGUI extends NGUI<QuantumRPG> {
+class ExtractGUI extends NGUI<Divinity> {
 
     private static final NamespacedKey    META_KEY_SOCKET_SELECT  =
-            new NamespacedKey(QuantumRPG.getInstance(), "QRPG_EXTRACTOR_GUI_SOCKET_SELECTOR");
+            new NamespacedKey(Divinity.getInstance(), "QRPG_EXTRACTOR_GUI_SOCKET_SELECTOR");
     private static final NamespacedKey    META_KEY_SOCKET_SELECT2 =
             NamespacedKey.fromString("quantumrpg:qrpg_extractor_gui_socket_selector");
     private final        int[]            socketSlots;
@@ -156,7 +156,7 @@ class ExtractGUI extends NGUI<QuantumRPG> {
                     int      lvl          = StringUT.getInteger(values[1], -1);
                     double   extractPrice = this.extractorManager.getExtractionPrice(type, socketCategory, lvl);
 
-                    ItemStack item = QuantumAPI.getItemByModule(mod, itemId, lvl, -1, 0);
+                    ItemStack item = DivinityAPI.getItemByModule(mod, itemId, lvl, -1, 0);
                     if (item == null) continue;
                     this.replaceCostHave(player, item, socketAtt, extractPrice);
 

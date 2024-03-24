@@ -9,6 +9,7 @@ import com.promcteam.codex.utils.PlayerUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.actions.ActionManipulator;
 import com.promcteam.codex.utils.constants.JStrings;
+import com.promcteam.divinity.Divinity;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -25,7 +26,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.LimitedItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -53,7 +53,7 @@ public class RepairManager extends QModuleDrop<RepairItem> {
     private VaultHK vaultHook;
     DurabilityStat duraStat;
 
-    public RepairManager(@NotNull QuantumRPG plugin) {
+    public RepairManager(@NotNull Divinity plugin) {
         super(plugin, RepairItem.class);
     }
 
@@ -487,7 +487,7 @@ public class RepairManager extends QModuleDrop<RepairItem> {
 
         private TreeMap<Integer, Integer> repairLvl;
 
-        public RepairItem(@NotNull QuantumRPG plugin, @NotNull JYML cfg) {
+        public RepairItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, RepairManager.this);
 
             this.repairLvl = new TreeMap<>();

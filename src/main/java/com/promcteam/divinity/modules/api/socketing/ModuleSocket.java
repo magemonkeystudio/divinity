@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.manager.interactions.api.AnimatedSuccessBar;
 import com.promcteam.divinity.modules.SocketItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -45,7 +45,7 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
     protected UserGUI        guiUser;
     protected MerchantSocket merchant;
 
-    public ModuleSocket(@NotNull QuantumRPG plugin, @NotNull Class<I> clazz) {
+    public ModuleSocket(@NotNull Divinity plugin, @NotNull Class<I> clazz) {
         super(plugin, clazz);
     }
 

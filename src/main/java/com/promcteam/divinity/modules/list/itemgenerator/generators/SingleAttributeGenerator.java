@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import com.promcteam.divinity.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import com.promcteam.divinity.stats.bonus.BonusCalculator;
@@ -24,7 +24,7 @@ public class SingleAttributeGenerator<A extends ItemLoreStat<String>> extends Ab
     private Map<A, Double> attributes;
 
     public SingleAttributeGenerator(
-            @NotNull QuantumRPG plugin,
+            @NotNull Divinity plugin,
             @NotNull GeneratorItem generatorItem,
             @NotNull String path,
             @NotNull Collection<A> attributesAll,

@@ -24,7 +24,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.api.QModule;
 import com.promcteam.divinity.modules.list.soulbound.command.SoulboundSoulCmd;
@@ -56,7 +56,7 @@ public class SoulboundManager extends QModule {
     public static String UNTRADE_FORMAT_FREE;
     public static String UNTRADE_FORMAT_APPLIED;
 
-    public SoulboundManager(@NotNull QuantumRPG plugin) {
+    public SoulboundManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 

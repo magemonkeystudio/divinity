@@ -15,15 +15,15 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.attributes.HandAttribute;
 
 import java.util.Set;
 
-public class ItemHandListener extends IListener<QuantumRPG> {
+public class ItemHandListener extends IListener<Divinity> {
 
-    public ItemHandListener(@NotNull QuantumRPG plugin) {
+    public ItemHandListener(@NotNull Divinity plugin) {
         super(plugin);
     }
 

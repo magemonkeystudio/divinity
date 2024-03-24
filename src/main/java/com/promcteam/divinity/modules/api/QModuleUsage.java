@@ -2,6 +2,7 @@ package com.promcteam.divinity.modules.api;
 
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.TimeUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -13,8 +14,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.api.event.QuantumPlayerItemUseEvent;
+import com.promcteam.divinity.api.event.DivinityPlayerItemUseEvent;
 import com.promcteam.divinity.modules.UsableItem;
 import com.promcteam.divinity.modules.list.consumables.ConsumablesManager;
 import com.promcteam.divinity.stats.items.ItemStats;
@@ -31,7 +31,7 @@ import java.util.Set;
 public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> {
     protected Map<String, Map<String, Set<UsableItem.Cooldown>>> itemCooldown;
 
-    public QModuleUsage(@NotNull QuantumRPG plugin, @NotNull Class<I> clazz) {
+    public QModuleUsage(@NotNull Divinity plugin, @NotNull Class<I> clazz) {
         super(plugin, clazz);
     }
 
@@ -64,7 +64,7 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
                     .send(p);
             return false;
         }
-        QuantumPlayerItemUseEvent eve = new QuantumPlayerItemUseEvent(item, p, uItem, type);
+        DivinityPlayerItemUseEvent eve = new DivinityPlayerItemUseEvent(item, p, uItem, type);
         this.plugin.getPluginManager().callEvent(eve);
         if (eve.isCancelled())
             return false;

@@ -3,6 +3,7 @@ package com.promcteam.divinity.testutil;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.fabled.api.player.PlayerData;
 import com.promcteam.codex.CodexEngine;
 import com.promcteam.codex.mccore.commands.CommandManager;
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.MockedStatic;
-import com.promcteam.divinity.QuantumRPG;
 
 import java.io.*;
 import java.util.*;
@@ -34,9 +34,9 @@ import static org.mockito.Mockito.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class MockedTest {
     protected ServerMock                      server;
-    protected CodexEngine                     engine;
-    protected QuantumRPG                      plugin;
-    protected List<PlayerMock>                players          = new ArrayList<>();
+    protected CodexEngine      engine;
+    protected Divinity         plugin;
+    protected List<PlayerMock> players          = new ArrayList<>();
     protected Map<UUID, PlayerData>           activePlayerData = new HashMap<>();
     protected MockedStatic<ReflectionManager> reflectionManager;
     protected ReflectionUtil                  reflectionUtil;
@@ -92,7 +92,7 @@ public abstract class MockedTest {
 
         ItemUT.setEngine(engine);
 
-        plugin = MockBukkit.load(QuantumRPG.class);
+        plugin = MockBukkit.load(Divinity.class);
         server.getScheduler().performOneTick();
 //        server.getScheduler().waitAsyncTasksFinished();
     }

@@ -1,5 +1,6 @@
 package com.promcteam.divinity.hooks.external;
 
+import com.promcteam.divinity.Divinity;
 import com.promcteam.fabled.Fabled;
 import com.promcteam.fabled.api.DefaultCombatProtection;
 import com.promcteam.fabled.api.enums.ExpSource;
@@ -25,7 +26,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.hooks.HookClass;
 import com.promcteam.divinity.hooks.HookLevel;
@@ -38,9 +38,9 @@ import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
 
 import java.util.*;
 
-public class FabledHook extends NHook<QuantumRPG> implements HookLevel, HookClass {
+public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass {
 
-    public FabledHook(@NotNull QuantumRPG plugin) {
+    public FabledHook(@NotNull Divinity plugin) {
         super(plugin);
     }
 

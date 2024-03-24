@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import com.promcteam.divinity.api.event.RPGDamageEvent;
+import com.promcteam.divinity.api.event.DivinityDamageEvent;
 import com.promcteam.divinity.testutil.MockedTest;
 
 import static org.junit.Assert.assertEquals;
@@ -29,7 +29,7 @@ public class VanillaWrapperListenerTest extends MockedTest {
         final double expectedDamage = 5;
         damager.getInventory().setItemInMainHand(new ItemStack(Material.IRON_SWORD));
         ((PlayerMock) target).simulateDamage(5, damager);
-        server.getPluginManager().assertEventFired(RPGDamageEvent.Start.class, event -> {
+        server.getPluginManager().assertEventFired(DivinityDamageEvent.Start.class, event -> {
             double damage = 0;
             for (Double value : event.getDamageMap().values()) {
                 damage += value;
@@ -51,7 +51,7 @@ public class VanillaWrapperListenerTest extends MockedTest {
         Trident      trident        = target.getWorld().spawn(target.getLocation(), Trident.class);
         trident.setShooter(damager);
         ((PlayerMock) target).simulateDamage(9, trident);
-        server.getPluginManager().assertEventFired(RPGDamageEvent.Start.class, event -> {
+        server.getPluginManager().assertEventFired(DivinityDamageEvent.Start.class, event -> {
             double damage = 0;
             for (Double value : event.getDamageMap().values()) {
                 damage += value;

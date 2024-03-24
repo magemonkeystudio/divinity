@@ -1,6 +1,7 @@
 package com.promcteam.divinity.manager.listener.object;
 
 import com.promcteam.codex.manager.IListener;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,7 +13,6 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.api.DynamicStat;
 
@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DynamicStatListener extends IListener<QuantumRPG> {
+public class DynamicStatListener extends IListener<Divinity> {
 
-    public DynamicStatListener(@NotNull QuantumRPG plugin) {
+    public DynamicStatListener(@NotNull Divinity plugin) {
         super(plugin);
     }
 

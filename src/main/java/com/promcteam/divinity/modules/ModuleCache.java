@@ -1,9 +1,9 @@
 package com.promcteam.divinity.modules;
 
+import com.promcteam.divinity.Divinity;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.arrows.ArrowManager;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.combatlog.CombatLogManager;
@@ -31,7 +31,7 @@ import com.promcteam.divinity.modules.list.soulbound.SoulboundManager;
 
 public class ModuleCache {
 
-    private final QuantumRPG plugin;
+    private final Divinity plugin;
 
     private GemManager           gemsManager;
     private EssencesManager      essencesManager;
@@ -65,7 +65,7 @@ public class ModuleCache {
     private ConsumablesManager consumablesManager;
 //    private ActiveItemManager activeItemManager;
 
-    public ModuleCache(@NotNull QuantumRPG plugin) {
+    public ModuleCache(@NotNull Divinity plugin) {
         this.plugin = plugin;
     }
 

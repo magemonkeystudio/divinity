@@ -1,18 +1,18 @@
 package com.promcteam.divinity.nms.engine;
 
+import com.promcteam.divinity.Divinity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.nms.packets.PacketManager;
 
 public class PMSManager {
 
-    private final QuantumRPG    plugin;
-    private       PMS           nmsEngine;
+    private final Divinity plugin;
+    private       PMS      nmsEngine;
     private       PacketManager packetManager;
 
-    public PMSManager(@NotNull QuantumRPG plugin) {
+    public PMSManager(@NotNull Divinity plugin) {
         this.plugin = plugin;
     }
 

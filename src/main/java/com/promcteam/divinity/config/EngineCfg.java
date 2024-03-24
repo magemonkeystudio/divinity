@@ -7,7 +7,7 @@ import com.promcteam.codex.utils.StringUT;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.HookClass;
 import com.promcteam.divinity.hooks.HookLevel;
 import com.promcteam.divinity.hooks.HookMobLevel;
@@ -26,10 +26,10 @@ import java.util.*;
 
 public class EngineCfg {
 
-    private QuantumRPG plugin;
-    private JYML       cfg;
+    private Divinity plugin;
+    private JYML     cfg;
 
-    public EngineCfg(@NotNull QuantumRPG plugin) throws InvalidConfigurationException {
+    public EngineCfg(@NotNull Divinity plugin) throws InvalidConfigurationException {
         this.plugin = plugin;
         this.cfg = JYML.loadOrExtract(plugin, "engine.yml");
     }

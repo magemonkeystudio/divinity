@@ -1,17 +1,17 @@
 package com.promcteam.divinity.hooks.external.mythicmobs;
 
+import com.promcteam.divinity.Divinity;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
 import com.promcteam.codex.hooks.HookState;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
 
 public class MythicMobsHK extends AbstractMythicMobsHK {
 
     private MythicMobs mm;
 
-    public MythicMobsHK(@NotNull QuantumRPG plugin) {
+    public MythicMobsHK(@NotNull Divinity plugin) {
         super(plugin);
     }
 

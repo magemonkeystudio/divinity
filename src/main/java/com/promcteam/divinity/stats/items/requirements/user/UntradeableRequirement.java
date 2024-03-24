@@ -1,12 +1,12 @@
 package com.promcteam.divinity.stats.items.requirements.user;
 
 import com.promcteam.codex.config.api.ILangMsg;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.list.soulbound.SoulboundManager;
 import com.promcteam.divinity.stats.items.ItemTags;
 
@@ -43,7 +43,7 @@ public class UntradeableRequirement extends AbstractOwnerRequirement {
         if (value.equals(DUMMY_ID)) {
             return SoulboundManager.UNTRADE_FORMAT_FREE;
         }
-        String user = QuantumRPG.getInstance().getServer().getOfflinePlayer(value).getName();
+        String user = Divinity.getInstance().getServer().getOfflinePlayer(value).getName();
         if (user == null) user = "null";
 
         return SoulboundManager.UNTRADE_FORMAT_APPLIED.replace("%player%", user);
@@ -55,9 +55,9 @@ public class UntradeableRequirement extends AbstractOwnerRequirement {
         UUID   value = this.getRaw(src);
         String user  = "null";
         if (value != null) {
-            String name = QuantumRPG.getInstance().getServer().getOfflinePlayer(value).getName();
+            String name = Divinity.getInstance().getServer().getOfflinePlayer(value).getName();
             if (name != null) user = name;
         }
-        return QuantumRPG.getInstance().lang().Module_Item_Interact_Error_Owner.replace("%owner%", user);
+        return Divinity.getInstance().lang().Module_Item_Interact_Error_Owner.replace("%owner%", user);
     }
 }

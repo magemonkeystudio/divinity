@@ -4,10 +4,10 @@ import com.promcteam.codex.modules.IModuleExecutor;
 import com.promcteam.codex.utils.ClickText;
 import com.promcteam.codex.utils.CollectionsUT;
 import com.promcteam.codex.utils.StringUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.ModuleItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 
@@ -56,7 +56,7 @@ public class MListCmd extends MCmd<QModuleDrop<?>> {
 
         int i = 10 * (page - 1) + 1;
 
-        IModuleExecutor<QuantumRPG> executor = module.getExecutor();
+        IModuleExecutor<Divinity> executor = module.getExecutor();
         if (executor == null) return;
 
         for (String line : plugin.lang().Module_Cmd_List_Format_List.asList()) {

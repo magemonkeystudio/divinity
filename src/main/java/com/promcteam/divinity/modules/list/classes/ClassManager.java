@@ -10,6 +10,7 @@ import com.promcteam.codex.utils.FileUT;
 import com.promcteam.codex.utils.NumberUT;
 import com.promcteam.codex.utils.StringUT;
 import com.promcteam.codex.utils.TimeUT;
+import com.promcteam.divinity.data.api.DivinityUser;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -26,9 +27,8 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.api.event.EntityStatsBonusUpdateEvent;
-import com.promcteam.divinity.data.api.RPGUser;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.hooks.external.MagicHK;
 import com.promcteam.divinity.manager.profile.ProfileManager;
@@ -97,7 +97,7 @@ public class ClassManager extends QModule {
 
     private MagicHK magicHook;
 
-    public ClassManager(@NotNull QuantumRPG plugin) {
+    public ClassManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 
@@ -578,7 +578,7 @@ public class ClassManager extends QModule {
     }
 
     public void setClassSelectionCooldown(@NotNull Player player) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
         UserProfile prof = user.getActiveProfile();
@@ -590,7 +590,7 @@ public class ClassManager extends QModule {
     }
 
     public boolean isAllowedToChangeClass(@NotNull Player player) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return false;
 
         UserProfile   prof  = user.getActiveProfile();
@@ -617,7 +617,7 @@ public class ClassManager extends QModule {
     public UserClassData getUserData(@NotNull Player player) {
         if (Hooks.isNPC(player)) return null;
 
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return null;
 
         UserProfile   prof  = user.getActiveProfile();
@@ -631,7 +631,7 @@ public class ClassManager extends QModule {
     }
 
     public void setPlayerClass(@NotNull Player player, @NotNull RPGClass cNew, boolean force) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
         UserProfile   prof     = user.getActiveProfile();
@@ -667,7 +667,7 @@ public class ClassManager extends QModule {
     }
 
     public void resetClassData(@NotNull Player player) {
-        RPGUser user = this.plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = this.plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
         UserProfile prof = user.getActiveProfile();
@@ -796,7 +796,7 @@ public class ClassManager extends QModule {
                 if (IAbstractSkill.class.isAssignableFrom(c)) {
                     Class<? extends IAbstractSkill>       requirementClass = c.asSubclass(IAbstractSkill.class);
                     Constructor<? extends IAbstractSkill> cstrctr          =
-                            requirementClass.getConstructor(QuantumRPG.class);
+                            requirementClass.getConstructor(Divinity.class);
                     IAbstractSkill                        qskill           = cstrctr.newInstance(plugin);
                     if (qskill == null) continue;
 
@@ -817,7 +817,7 @@ public class ClassManager extends QModule {
         Player player = e.getPlayer();
         this.updateClassData(player);
 
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
         UserProfile   prof  = user.getActiveProfile();
@@ -918,11 +918,11 @@ public class ClassManager extends QModule {
     }
 
 
-    class BarTask extends ITask<QuantumRPG> {
+    class BarTask extends ITask<Divinity> {
 
         private int count;
 
-        public BarTask(@NotNull QuantumRPG plugin) {
+        public BarTask(@NotNull Divinity plugin) {
             super(plugin, 1, false);
             this.count = 0;
         }

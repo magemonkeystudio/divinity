@@ -12,9 +12,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.data.api.RPGUser;
+import com.promcteam.divinity.data.api.DivinityUser;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.modules.list.classes.api.RPGClass;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
@@ -30,7 +30,7 @@ import java.util.function.BiFunction;
 
 public class AspectManager {
 
-    private QuantumRPG   plugin;
+    private Divinity     plugin;
     private ClassManager classManager;
 
     private Map<String, ClassAspect> aspects;
@@ -156,7 +156,7 @@ public class AspectManager {
         ;
     }
 
-    public class GUI extends NGUI<QuantumRPG> {
+    public class GUI extends NGUI<Divinity> {
 
         private int[]        aspectSlots;
         private List<String> aspectLore;
@@ -200,7 +200,7 @@ public class AspectManager {
 
         @Override
         protected void onCreate(@NotNull Player player, @NotNull Inventory inv, int page) {
-            RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+            DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
             if (user == null) return;
 
             UserProfile   prof  = user.getActiveProfile();

@@ -2,6 +2,7 @@ package com.promcteam.divinity.stats.items.api;
 
 import com.promcteam.codex.utils.ItemUT;
 import com.promcteam.codex.utils.StringUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -10,7 +11,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
@@ -43,7 +43,7 @@ public abstract class ItemLoreStat<Z> {
         this.keys = new ArrayList<>();
         uniqueTag = uniqueTag.toLowerCase();
         this.metaId = uniqueTag.endsWith(this.id) ? uniqueTag : uniqueTag + this.id;
-        keys.add(new NamespacedKey(QuantumRPG.getInstance(), this.metaId));
+        keys.add(new NamespacedKey(Divinity.getInstance(), this.metaId));
 
         this.dataType = dataType;
     }

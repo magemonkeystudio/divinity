@@ -11,7 +11,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.modules.list.gems.GemManager;
 import com.promcteam.divinity.modules.list.refine.RefineManager;
@@ -110,7 +110,7 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         }
 
         // Support for Gems adding values.
-        GemManager gems = QuantumRPG.getInstance().getModuleCache().getGemManager();
+        GemManager gems = Divinity.getInstance().getModuleCache().getGemManager();
         if (gems != null) {
             for (Map.Entry<GemManager.Gem, Integer> e : gems.getItemSockets(item)) {
                 BonusMap bMap = e.getKey().getBonusMap(e.getValue());
@@ -121,7 +121,7 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         }
 
         // Support for Refined attributes.
-        RefineManager refine = QuantumRPG.getInstance().getModuleCache().getRefineManager();
+        RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
         if (refine != null && has) {
             bonuses.add(refine.getRefinedBonus(item, this));
         }
@@ -130,7 +130,7 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
     }
 
     public static double getDefaultAttackSpeed(@NotNull ItemStack item) {
-        return QuantumRPG.getInstance().getPMS().getDefaultSpeed(item);
+        return Divinity.getInstance().getPMS().getDefaultSpeed(item);
     }
 
     @Override

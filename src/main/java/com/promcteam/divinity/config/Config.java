@@ -11,7 +11,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.attributes.*;
 import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
@@ -26,7 +26,7 @@ import java.util.*;
 
 public class Config extends IConfigTemplate {
 
-    public Config(@NotNull QuantumRPG plugin) {
+    public Config(@NotNull Divinity plugin) {
         super(plugin);
     }
 

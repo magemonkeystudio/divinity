@@ -1,10 +1,10 @@
 package com.promcteam.divinity.hooks.internal;
 
 import com.promcteam.codex.utils.StringUT;
+import com.promcteam.divinity.data.api.DivinityUser;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.data.api.RPGUser;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.hooks.HookClass;
 import com.promcteam.divinity.hooks.HookLevel;
@@ -13,16 +13,16 @@ import com.promcteam.divinity.modules.list.classes.api.UserClassData;
 
 public class QuantumRPGHook implements HookLevel, HookClass {
 
-    private QuantumRPG plugin;
+    private Divinity plugin;
 
-    public QuantumRPGHook(@NotNull QuantumRPG plugin) {
+    public QuantumRPGHook(@NotNull Divinity plugin) {
         this.plugin = plugin;
     }
 
     @Override
     @NotNull
     public String getClass(@NotNull Player player) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return "";
 
         UserProfile   prof  = user.getActiveProfile();
@@ -34,7 +34,7 @@ public class QuantumRPGHook implements HookLevel, HookClass {
 
     @Override
     public int getLevel(@NotNull Player player) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return 0;
 
         UserProfile   prof  = user.getActiveProfile();
@@ -44,7 +44,7 @@ public class QuantumRPGHook implements HookLevel, HookClass {
 
     @Override
     public void giveExp(@NotNull Player player, int amount) {
-        RPGUser user = plugin.getUserManager().getOrLoadUser(player);
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(player);
         if (user == null) return;
 
         UserProfile   prof  = user.getActiveProfile();

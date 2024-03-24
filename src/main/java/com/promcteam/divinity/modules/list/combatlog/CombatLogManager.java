@@ -1,5 +1,6 @@
 package com.promcteam.divinity.modules.list.combatlog;
 
+import com.promcteam.divinity.Divinity;
 import com.promcteam.fabled.api.DefaultCombatProtection;
 import com.promcteam.codex.hooks.Hooks;
 import com.promcteam.codex.manager.api.task.ITask;
@@ -25,7 +26,6 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.manager.damage.DamageMeta;
 import com.promcteam.divinity.modules.EModule;
@@ -61,7 +61,7 @@ public class CombatLogManager extends QModule {
     private Map<String, List<ClickText>> logCombat;
     private IndicatorExpansion           indicatorExpansion;
 
-    public CombatLogManager(@NotNull QuantumRPG plugin) {
+    public CombatLogManager(@NotNull Divinity plugin) {
         super(plugin);
     }
 
@@ -554,7 +554,7 @@ public class CombatLogManager extends QModule {
             });
         }
 
-        class UpTask extends ITask<QuantumRPG> {
+        class UpTask extends ITask<Divinity> {
 
             public UpTask() {
                 super(CombatLogManager.this.plugin, 1L, false);

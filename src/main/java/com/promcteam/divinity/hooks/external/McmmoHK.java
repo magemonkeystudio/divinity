@@ -5,12 +5,12 @@ import com.promcteam.codex.hooks.HookState;
 import com.promcteam.codex.hooks.NHook;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.HookLevel;
 
-public class McmmoHK extends NHook<QuantumRPG> implements HookLevel {
+public class McmmoHK extends NHook<Divinity> implements HookLevel {
 
-    public McmmoHK(@NotNull QuantumRPG plugin) {
+    public McmmoHK(@NotNull Divinity plugin) {
         super(plugin);
     }
 

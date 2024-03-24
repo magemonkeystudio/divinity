@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import com.promcteam.divinity.api.QuantumAPI;
+import com.promcteam.divinity.api.DivinityAPI;
 
 @TraitName("extractor")
 public class ExtractorTrait extends Trait {
@@ -37,7 +37,7 @@ public class ExtractorTrait extends Trait {
             }
             skull.setItemMeta(meta);
 
-            ExtractorManager extractorManager = QuantumAPI.getModuleManager().getExtractManager();
+            ExtractorManager extractorManager = DivinityAPI.getModuleManager().getExtractManager();
             if (extractorManager == null) return;
 
             extractorManager.openExtraction(p, p.getInventory().getItemInMainHand(), skull, null, false);

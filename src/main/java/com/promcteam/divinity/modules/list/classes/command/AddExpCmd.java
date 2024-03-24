@@ -1,11 +1,11 @@
 package com.promcteam.divinity.modules.list.classes.command;
 
 import com.promcteam.codex.utils.PlayerUT;
+import com.promcteam.divinity.data.api.DivinityUser;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.data.api.RPGUser;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.modules.command.MCmd;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
@@ -68,7 +68,7 @@ public class AddExpCmd extends MCmd<ClassManager> {
             this.module.getLevelingManager().addExp(player, amount, sender.getName(), ExpSource.INTERNAL);
             name = player.getName();
         } else {
-            RPGUser user = plugin.getUserManager().getOrLoadUser(args[1], false);
+            DivinityUser user = plugin.getUserManager().getOrLoadUser(args[1], false);
             if (user == null) {
                 this.errPlayer(sender);
                 return;

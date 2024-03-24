@@ -4,9 +4,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.promcteam.codex.data.DataTypes;
 import com.promcteam.codex.data.IDataHandler;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.data.api.DivinityUser;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
-import com.promcteam.divinity.data.api.RPGUser;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.data.api.serialize.SkillDataSerializer;
 import com.promcteam.divinity.data.api.serialize.UserProfileSerializer;
@@ -18,13 +18,13 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class RPGUserData extends IDataHandler<QuantumRPG, RPGUser> {
+public class DivinityUserData extends IDataHandler<Divinity, DivinityUser> {
 
-    private static RPGUserData instance;
+    private static DivinityUserData instance;
 
-    private final Function<ResultSet, RPGUser> FUNC_USER;
+    private final Function<ResultSet, DivinityUser> FUNC_USER;
 
-    protected RPGUserData(@NotNull QuantumRPG plugin) throws SQLException {
+    protected DivinityUserData(@NotNull Divinity plugin) throws SQLException {
         super(plugin);
 
         this.FUNC_USER = (rs) -> {
@@ -37,7 +37,7 @@ public class RPGUserData extends IDataHandler<QuantumRPG, RPGUser> {
                         gson.fromJson(rs.getString("profiles"), new TypeToken<LinkedHashMap<String, UserProfile>>() {
                         }.getType());
 
-                return new RPGUser(plugin, uuid, name, lastOnline, profiles);
+                return new DivinityUser(plugin, uuid, name, lastOnline, profiles);
             } catch (SQLException ex) {
                 ex.printStackTrace();
                 return null;
@@ -45,9 +45,9 @@ public class RPGUserData extends IDataHandler<QuantumRPG, RPGUser> {
         };
     }
 
-    public static RPGUserData getInstance(@NotNull QuantumRPG plugin) throws SQLException {
+    public static DivinityUserData getInstance(@NotNull Divinity plugin) throws SQLException {
         if (instance == null) {
-            instance = new RPGUserData(plugin);
+            instance = new DivinityUserData(plugin);
         }
         return instance;
     }
@@ -71,7 +71,7 @@ public class RPGUserData extends IDataHandler<QuantumRPG, RPGUser> {
 
     @Override
     @NotNull
-    protected LinkedHashMap<String, String> getColumnsToSave(@NotNull RPGUser user) {
+    protected LinkedHashMap<String, String> getColumnsToSave(@NotNull DivinityUser user) {
         LinkedHashMap<String, String> map = new LinkedHashMap<>();
         map.put("profiles", this.gson.toJson(user.getProfileMap()));
         return map;
@@ -79,7 +79,7 @@ public class RPGUserData extends IDataHandler<QuantumRPG, RPGUser> {
 
     @Override
     @NotNull
-    protected Function<ResultSet, RPGUser> getFunctionToUser() {
+    protected Function<ResultSet, DivinityUser> getFunctionToUser() {
         return this.FUNC_USER;
     }
 

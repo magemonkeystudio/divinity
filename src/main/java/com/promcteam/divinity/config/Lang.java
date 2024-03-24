@@ -4,7 +4,7 @@ import com.promcteam.codex.config.api.ILangMsg;
 import com.promcteam.codex.core.config.CoreLang;
 import com.promcteam.codex.manager.types.ClickType;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.data.api.UserEntityNamesMode;
 import com.promcteam.divinity.modules.list.classes.object.ClassAttributeType;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyDropMode;
@@ -572,7 +572,7 @@ public class Lang extends CoreLang {
     public ILangMsg Other_Get                                         =
             new ILangMsg(this, "You received: &7<%item%&7>");
 
-    public Lang(@NotNull QuantumRPG plugin) {
+    public Lang(@NotNull Divinity plugin) {
         super(plugin);
     }
 

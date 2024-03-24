@@ -9,12 +9,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.list.essences.EssencesManager.EssenceEffect;
 
 public class ParticleUtils {
 
-    private static QuantumRPG plugin = QuantumRPG.instance;
+    private static Divinity plugin = Divinity.instance;
 
     public static void spiral(final Location loc, final String eff1, final String eff2) {
         new BukkitRunnable() {

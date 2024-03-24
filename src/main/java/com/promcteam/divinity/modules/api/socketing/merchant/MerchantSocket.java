@@ -3,16 +3,16 @@ package com.promcteam.divinity.modules.api.socketing.merchant;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.Loadable;
 import com.promcteam.codex.modules.IModuleExecutor;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.QuantumRPG;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 
 public class MerchantSocket implements Loadable {
 
-    private QuantumRPG      plugin;
+    private Divinity        plugin;
     private ModuleSocket<?> moduleSocket;
     private JYML            cfg;
 
@@ -53,7 +53,7 @@ public class MerchantSocket implements Loadable {
 
         this.merchantGUI = new MerchantGUI(this.moduleSocket, this);
 
-        IModuleExecutor<QuantumRPG> exec = this.moduleSocket.getExecutor();
+        IModuleExecutor<Divinity> exec = this.moduleSocket.getExecutor();
         if (exec != null) {
             exec.addSubCommand(new MerchantCmd(this.moduleSocket, this));
         }
