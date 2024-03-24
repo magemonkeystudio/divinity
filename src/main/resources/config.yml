@@ -1,7 +1,7 @@
-core:
+divinity:
   lang: en
-  command-aliases: prorpgitems,rpgitems,rpgi,quantumrpg,qrpg
-  prefix: ProRPGItems
+  command-aliases: div,prorpgitems,rpgitems,rpgi,quantumrpg,qrpg
+  prefix: Divinity
 
 data:
   auto-save: 15

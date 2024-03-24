@@ -17,7 +17,7 @@ lore:
 - '%GENERATOR_DEFENSE%'
 - '%GENERATOR_DAMAGE%'
 - '%GENERATOR_STATS%'
-- '%GENERATOR_SKILLAPI_ATTR%'
+- '%GENERATOR_FABLED_ATTR%'
 - '%GENERATOR_SOCKETS_GEM%'
 - '%GENERATOR_SOCKETS_ESSENCE%'
 - '%GENERATOR_SOCKETS_RUNE%'
@@ -261,15 +261,15 @@ generator:
         min: 0
         max: 0
         flat-range: false
-  skillapi-attributes:
+  fabled-attributes:
     minimum: 1
     maximum: 4
     lore-format:
-      - '%SKILLAPI_ATTRIBUTE_VITALITY%'
-      - '%SKILLAPI_ATTRIBUTE_SPIRIT%'
-      - '%SKILLAPI_ATTRIBUTE_INTELLIGENCE%'
-      - '%SKILLAPI_ATTRIBUTE_DEXTERITY%'
-      - '%SKILLAPI_ATTRIBUTE_STRENGTH%'
+      - '%FABLED_ATTRIBUTE_VITALITY%'
+      - '%FABLED_ATTRIBUTE_SPIRIT%'
+      - '%FABLED_ATTRIBUTE_INTELLIGENCE%'
+      - '%FABLED_ATTRIBUTE_DEXTERITY%'
+      - '%FABLED_ATTRIBUTE_STRENGTH%'
     list:
       vitality:
         chance: 20.0

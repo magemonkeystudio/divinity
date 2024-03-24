@@ -1,10 +1,10 @@
-main: su.nightexpress.quantumrpg.QuantumRPG
+main: com.promcteam.divinity.QuantumRPG
 version: ${project.version}
 name: ${project.name}
 authors: [ Travja, goflish ]
 description: The most advanced, customizable and configurable RPG-Core plugin!
-depend: [ ProMCCore ]
-loadafter: [ Magic, ProSkillAPI, SkillAPI ]
+depend: [ Codex ]
+loadafter: [ Magic, Fabled ]
 provides: [ QuantumRPG ]
 softdepend:
   - Citizens
@@ -18,8 +18,7 @@ softdepend:
   - PwingRaces
   - QuestCreator
   - RacesOfThana
-  - SkillAPI
-  - ProSkillAPI
+  - Fabled
   - SkillsPro
   - Vault
   - WorldGuard

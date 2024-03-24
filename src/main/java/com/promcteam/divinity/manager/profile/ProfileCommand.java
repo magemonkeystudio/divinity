@@ -1,0 +1,40 @@
+package com.promcteam.divinity.manager.profile;
+
+import com.promcteam.codex.commands.api.IGeneralCommand;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import com.promcteam.divinity.QuantumRPG;
+
+public class ProfileCommand extends IGeneralCommand<QuantumRPG> {
+
+    private ProfileManager profileManager;
+
+    public ProfileCommand(@NotNull ProfileManager profileManager) {
+        super(profileManager.plugin, new String[]{"profile", "profiles"}, null);
+        this.profileManager = profileManager;
+    }
+
+    @Override
+    @NotNull
+    public String usage() {
+        return "";
+    }
+
+    @Override
+    @NotNull
+    public String description() {
+        return plugin.lang().Profiles_Command_Profiles_Desc.getMsg();
+    }
+
+    @Override
+    public boolean playersOnly() {
+        return true;
+    }
+
+    @Override
+    protected void perform(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+        Player player = (Player) sender;
+        this.profileManager.getProfileGUI().open(player, 1);
+    }
+}

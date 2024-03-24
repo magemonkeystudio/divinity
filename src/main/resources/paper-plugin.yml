@@ -1,4 +1,4 @@
-main: su.nightexpress.quantumrpg.QuantumRPG
+main: com.promcteam.divinity.QuantumRPG
 version: ${project.version}
 name: ${project.name}
 provides:
@@ -11,13 +11,10 @@ description: The most advanced, customizable and configurable RPG-Core plugin!
 has-open-classloader: true
 
 dependencies:
-  - name: ProMCCore
+  - name: Codex
     required: true
     bootstrap: true
-  - name: ProSkillAPI
-    required: false
-    bootstrap: true
-  - name: SkillAPI
+  - name: Fabled
     required: false
     bootstrap: true
   - name: SkillPro
@@ -66,12 +63,10 @@ dependencies:
     required: false
     bootstrap: true
 load-after:
-  - name: ProMCCore
+  - name: Codex
     boostrap: false
-  - name: ProSkillAPI
+  - name: Fabled
     boostrap: falsed
-  - name: SkillAPI
-    boostrap: false
   - name: Magic
     boostrap: false
 

@@ -11,13 +11,13 @@
     </parent>
 
     <properties>
-        <promccore.version>1.2.2-R0.1-SNAPSHOT</promccore.version>
-        <proskillapi.version>1.3.0-R0.1-SNAPSHOT</proskillapi.version>
+        <codex.version>1.0.0-R0.1-SNAPSHOT</codex.version>
+        <fabled.version>1.0.0-R0.1-SNAPSHOT</fabled.version>
     </properties>
 
-    <artifactId>prorpgitems</artifactId>
-    <version>1.1.2-R0.3-SNAPSHOT</version>
-    <name>ProRPGItems</name>
+    <artifactId>divinity</artifactId>
+    <version>1.0.0-R0.1-SNAPSHOT</version>
+    <name>Divinity</name>
 
     <repositories>
         <repository>
@@ -64,13 +64,13 @@
         <!-- ProMCTeam -->
         <dependency>
             <groupId>com.promcteam</groupId>
-            <artifactId>promccore</artifactId>
-            <version>${promccore.version}</version>
+            <artifactId>codex</artifactId>
+            <version>${codex.version}</version>
         </dependency>
         <dependency>
             <groupId>com.promcteam</groupId>
-            <artifactId>proskillapi</artifactId>
-            <version>1.3.0-R0.16-SNAPSHOT</version>
+            <artifactId>fabled</artifactId>
+            <version>${fabled.version}</version>
         </dependency>
 
         <dependency>
@@ -224,7 +224,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <systemPropertyVariables>
-                        <PROMCCORE_VERSION>${promccore.version}</PROMCCORE_VERSION>
+                        <CODEX_VERSION>${codex.version}</CODEX_VERSION>
                         <ITEMS_VERSION>${project.version}</ITEMS_VERSION>
                     </systemPropertyVariables>
                 </configuration>
