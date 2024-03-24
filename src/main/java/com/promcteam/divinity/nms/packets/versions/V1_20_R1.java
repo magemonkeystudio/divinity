@@ -61,12 +61,13 @@ public class V1_20_R1 extends V1_19_R3 {
 
             if (nmsEntity == null) return;
 
-            Method getUniqueId  = Reflex.getMethod(nmsEntityClass, "ct");
+            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "ct");
             Entity bukkitEntity =
                     CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 
             if (!(bukkitEntity instanceof LivingEntity)) return;
-            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity) || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
+            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)
+                    || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
 
             EntityEquipmentChangeEvent event = new EntityEquipmentChangeEvent((LivingEntity) bukkitEntity);
             plugin.getServer().getPluginManager().callEvent(event);
@@ -124,7 +125,7 @@ public class V1_20_R1 extends V1_19_R3 {
             if (nmsEntity == null) return;
 
 
-            Method getUniqueId  = Reflex.getMethod(nmsEntityClass, "ct");
+            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "ct");
             Entity bukkitEntity =
                     CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 

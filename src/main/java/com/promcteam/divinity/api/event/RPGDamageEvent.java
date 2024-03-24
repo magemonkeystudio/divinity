@@ -29,7 +29,7 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
     protected LivingEntity damager;
     protected Projectile   projectile;
 
-    protected Map<DamageAttribute, Double>   damageMap;
+    protected Map<DamageAttribute, Double>  damageMap;
     protected Map<DefenseAttribute, Double> defenseMap;
     protected Map<SimpleStat.Type, Double>  damagerItemStatsMap;
 
@@ -128,7 +128,8 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
     }
 
     public void computeDamage(@NotNull Collection<DamageAttribute> damages, @NotNull DoubleUnaryOperator operator) {
-        damages.forEach(dmgApp -> this.damageMap.compute(dmgApp, (dmgApp2, dmg) -> operator.applyAsDouble(this.damageMap.computeIfAbsent(dmgApp, dmg2 -> 0D))));
+        damages.forEach(dmgApp -> this.damageMap.compute(dmgApp,
+                (dmgApp2, dmg) -> operator.applyAsDouble(this.damageMap.computeIfAbsent(dmgApp, dmg2 -> 0D))));
         this.damageMap.values().removeIf(dmg -> dmg == 0D);
     }
 
@@ -146,7 +147,8 @@ public abstract class RPGDamageEvent extends ICancellableEvent {
     }
 
     public void computeDefense(@NotNull Collection<DefenseAttribute> defenses, @NotNull DoubleUnaryOperator operator) {
-        defenses.forEach(defApp -> this.defenseMap.compute(defApp, (defKey, defVal) -> operator.applyAsDouble(this.defenseMap.computeIfAbsent(defApp, defVal2 -> 0D))));
+        defenses.forEach(defApp -> this.defenseMap.compute(defApp,
+                (defKey, defVal) -> operator.applyAsDouble(this.defenseMap.computeIfAbsent(defApp, defVal2 -> 0D))));
         this.defenseMap.values().removeIf(dmg -> dmg == 0D);
     }
 

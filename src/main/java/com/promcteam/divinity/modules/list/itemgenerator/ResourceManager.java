@@ -101,7 +101,8 @@ public class ResourceManager implements Loadable {
         List<String> list = new ArrayList<>();
 
         String folder = type.getFolder();
-        String path   = itemGen.getFullPath() + "resources/names/" + folder + "/" + cat.getFolder() + "/" + file + ".txt";
+        String path   =
+                itemGen.getFullPath() + "resources/names/" + folder + "/" + cat.getFolder() + "/" + file + ".txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String sCurrentLine;

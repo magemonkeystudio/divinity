@@ -77,7 +77,8 @@ public class ComboManager extends IListener<QuantumRPG> implements Loadable {
         try {
             this.cfg = JYML.loadOrExtract(plugin, classManager.getPath() + "combo.yml");
         } catch (InvalidConfigurationException e) {
-            this.plugin.error("Failed to load combo config (" + classManager.getPath() + "combo.yml): Configuration error");
+            this.plugin.error(
+                    "Failed to load combo config (" + classManager.getPath() + "combo.yml): Configuration error");
             e.printStackTrace();
             shutdown();
             return;

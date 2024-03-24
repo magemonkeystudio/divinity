@@ -20,21 +20,25 @@ import java.util.*;
 public class TrimmingListGUI extends AbstractEditorGUI {
 
     public TrimmingListGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.ARMOR_TRIMINGS.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.ARMOR_TRIMINGS.getTitle(),
+                itemGenerator);
     }
 
     @Override
     public void setContents() {
         List<ArmorTrim>        list = new ArrayList<>();
         Map<ArmorTrim, Double> map  = new HashMap<>();
-        ConfigurationSection   cfg  = itemGenerator.getConfig().getConfigurationSection(EditorGUI.ItemType.ARMOR_TRIMINGS.getPath());
+        ConfigurationSection   cfg  =
+                itemGenerator.getConfig().getConfigurationSection(EditorGUI.ItemType.ARMOR_TRIMINGS.getPath());
         if (cfg != null) {
             for (String key : cfg.getKeys(false)) {
                 if (key.equals("none")) {
                     map.put(null, cfg.getDouble(key));
                     continue;
                 }
-                String[]     split        = key.toLowerCase().split(":");
+                String[] split = key.toLowerCase().split(":");
                 if (split.length != 2) {
                     continue;
                 }
@@ -105,11 +109,15 @@ public class TrimmingListGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             if (i == 1) {
                 double weight = map.getOrDefault(null, 0D);
                 setSlot(i, new Slot(createItem(Material.FLINT,
@@ -160,7 +168,9 @@ public class TrimmingListGUI extends AbstractEditorGUI {
                 });
             }
         }
-        if (list.get(list.size() - 1) == null) {list.remove(list.size() - 1);}
+        if (list.get(list.size() - 1) == null) {
+            list.remove(list.size() - 1);
+        }
         this.setSlot(this.getPages() * this.inventory.getSize() - 9, getPrevButton());
         this.setSlot(this.getPages() * this.inventory.getSize() - 1, getNextButton());
     }
@@ -175,7 +185,7 @@ public class TrimmingListGUI extends AbstractEditorGUI {
 
     public static class ArmorTrim {
         private TrimMaterial trimMaterial;
-        private TrimPattern trimPattern;
+        private TrimPattern  trimPattern;
 
         public ArmorTrim(TrimMaterial material, TrimPattern pattern) {
             this.trimMaterial = material;
@@ -222,7 +232,8 @@ public class TrimmingListGUI extends AbstractEditorGUI {
                     "&6Drop: &eRemove");
             ItemMeta meta = itemStack.getItemMeta();
             if (meta instanceof ArmorMeta) {
-                ((ArmorMeta) meta).setTrim(new org.bukkit.inventory.meta.trim.ArmorTrim(this.trimMaterial, this.trimPattern));
+                ((ArmorMeta) meta).setTrim(new org.bukkit.inventory.meta.trim.ArmorTrim(this.trimMaterial,
+                        this.trimPattern));
                 itemStack.setItemMeta(meta);
             }
             return itemStack;
@@ -233,7 +244,8 @@ public class TrimmingListGUI extends AbstractEditorGUI {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             ArmorTrim armorTrim = (ArmorTrim) o;
-            return Objects.equals(trimMaterial, armorTrim.trimMaterial) && Objects.equals(trimPattern, armorTrim.trimPattern);
+            return Objects.equals(trimMaterial, armorTrim.trimMaterial) && Objects.equals(trimPattern,
+                    armorTrim.trimPattern);
         }
 
         @Override

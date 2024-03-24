@@ -9,7 +9,10 @@ import com.promcteam.divinity.stats.items.attributes.AmmoAttribute;
 public class AmmoTypesGUI extends AbstractEditorGUI {
 
     public AmmoTypesGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.AMMO_TYPES.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.AMMO_TYPES.getTitle(),
+                itemGenerator);
     }
 
     @Override
@@ -20,11 +23,15 @@ public class AmmoTypesGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
 
             Material material;
             switch (ammo.getType()) {
@@ -68,21 +75,25 @@ public class AmmoTypesGUI extends AbstractEditorGUI {
             String id = ammo.getId().toUpperCase();
             this.setSlot(i, new Slot(createItem(material,
                     "&e" + ammo.getName(),
-                    "&bCurrent: &a" + itemGenerator.getConfig().getDouble(EditorGUI.ItemType.AMMO_TYPES.getPath() + '.' + id, 0),
+                    "&bCurrent: &a" + itemGenerator.getConfig()
+                            .getDouble(EditorGUI.ItemType.AMMO_TYPES.getPath() + '.' + id, 0),
                     "&6Left-Click: &eSet",
                     "&6Drop: &eRemove")) {
                 @Override
                 public void onLeftClick() {
                     sendSetMessage(id,
-                            String.valueOf(itemGenerator.getConfig().getDouble(EditorGUI.ItemType.AMMO_TYPES.getPath() + '.' + id, 0)),
+                            String.valueOf(itemGenerator.getConfig()
+                                    .getDouble(EditorGUI.ItemType.AMMO_TYPES.getPath() + '.' + id, 0)),
                             s -> {
                                 double chance = Double.parseDouble(s);
                                 if (chance == 0) {
-                                    itemGenerator.getConfig().remove(EditorGUI.ItemType.AMMO_TYPES.getPath() + '.' + id);
+                                    itemGenerator.getConfig()
+                                            .remove(EditorGUI.ItemType.AMMO_TYPES.getPath() + '.' + id);
                                 } else if (chance > 0) {
-                                    itemGenerator.getConfig().set(EditorGUI.ItemType.AMMO_TYPES.getPath() + '.' + id, chance);
+                                    itemGenerator.getConfig()
+                                            .set(EditorGUI.ItemType.AMMO_TYPES.getPath() + '.' + id, chance);
                                 } else {
-                                     throw new IllegalArgumentException();
+                                    throw new IllegalArgumentException();
                                 }
                                 saveAndReopen();
                             });

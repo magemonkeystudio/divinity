@@ -1,9 +1,9 @@
 material: PRISMARINE_SHARD
 name: Rune of Strength
 lore:
-- '&7Grants &fStrength %ITEM_LEVEL_ROMAN% &7effect'
+  - '&7Grants &fStrength %ITEM_LEVEL_ROMAN% &7effect'
 item-flags:
-- '*'
+  - '*'
 tier: rare
 level:
   min: 1
@@ -18,11 +18,11 @@ socket-display: '&bRune: Strength %ITEM_LEVEL_ROMAN%'
 effect: INCREASE_DAMAGE
 target-requirements:
   type:
-  - WEAPON
+    - WEAPON
   level:
     '1': '10'
     '2': '20'
     '3': '30'
   module:
-  - '*'
+    - '*'
   socket: default

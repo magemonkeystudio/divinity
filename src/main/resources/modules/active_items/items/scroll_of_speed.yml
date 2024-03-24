@@ -1,7 +1,7 @@
 material: MAP
 name: 'Scroll of Speed'
 lore:
-- '&7Gives &fSpeed Lv. %var_lvl% &7effect for &f%var_dur%.'
+  - '&7Gives &fSpeed Lv. %var_lvl% &7effect for &f%var_dur%.'
 tier: common
 level:
   min: 1
@@ -13,7 +13,7 @@ uses-by-level:
 user-requirements-by-level:
   level:
     '1': '5'
-  class: {}
+  class: { }
 variables-by-level:
   '1':
     lvl: 1
@@ -34,12 +34,12 @@ usage:
       default:
         target-selectors:
           self:
-          - '[SELF]'
+            - '[SELF]'
         conditions:
-          list: []
+          list: [ ]
           actions-on-fail: 'null'
         action-executors:
-        - '[PARTICLE_SIMPLE] ~offset: 0.3,0.3,0.3; ~speed: 0.05; ~name: CLOUD; ~target: self; ~amount: 50;'
-        - '[POTION] ~name: SPEED; ~amount: %var_lvl%; ~duration: %var_durtick%; ~target: self;'
-        - '[SOUND] ~name: BLOCK_NOTE_BLOCK_BELL; ~target: self;'
-target-requirements: {}
+          - '[PARTICLE_SIMPLE] ~offset: 0.3,0.3,0.3; ~speed: 0.05; ~name: CLOUD; ~target: self; ~amount: 50;'
+          - '[POTION] ~name: SPEED; ~amount: %var_lvl%; ~duration: %var_durtick%; ~target: self;'
+          - '[SOUND] ~name: BLOCK_NOTE_BLOCK_BELL; ~target: self;'
+target-requirements: { }

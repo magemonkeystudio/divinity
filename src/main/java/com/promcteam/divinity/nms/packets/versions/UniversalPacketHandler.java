@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public class UniversalPacketHandler implements IPacketHandler {
 
-    protected QuantumRPG plugin;
+    protected QuantumRPG     plugin;
     protected ReflectionUtil reflectionUtil;
 
     public UniversalPacketHandler(@NotNull QuantumRPG plugin) {
@@ -59,7 +59,6 @@ public class UniversalPacketHandler implements IPacketHandler {
         }
         if (playOutEntityEquipment.isInstance(packet)) {
             this.managePlayerHelmet(e, packet);
-            return;
         }
     }
 
@@ -104,9 +103,11 @@ public class UniversalPacketHandler implements IPacketHandler {
 
         Method getUniqueId = Reflex.getMethod(nmsEntityClass, "getUniqueID");
 
-        Entity bukkitEntity = CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+        Entity bukkitEntity =
+                CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
         if (!(bukkitEntity instanceof LivingEntity)) return;
-        if (EntityManager.isPacketDuplicatorFixed(bukkitEntity) || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
+        if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)
+                || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
 
         plugin.getServer().getScheduler().runTask(plugin, () -> {
             EntityEquipmentChangeEvent event = new EntityEquipmentChangeEvent((LivingEntity) bukkitEntity);
@@ -203,7 +204,8 @@ public class UniversalPacketHandler implements IPacketHandler {
 
         Method getUniqueId = Reflex.getMethod(nmsEntityClass, "getUniqueID");
 
-        Entity bukkitEntity = CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+        Entity bukkitEntity =
+                CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
         if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;
 
         Player  player = (Player) bukkitEntity;

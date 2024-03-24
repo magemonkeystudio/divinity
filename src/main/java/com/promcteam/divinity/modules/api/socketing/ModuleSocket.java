@@ -74,9 +74,12 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
             String    barChar         = cfg.getString(path2 + "bar-char", "◼");
             String    barFormat       = cfg.getString(path2 + "bar-format", "%bar%");
             int       barSize         = cfg.getInt(path2 + "bar-size", 20);
-            ChatColor barColorNeutral = CollectionsUT.getEnum(cfg.getString(path2 + "color-neutral", "DARK_GRAY"), ChatColor.class);
-            ChatColor barColorGood    = CollectionsUT.getEnum(cfg.getString(path2 + "color-success", "GREEN"), ChatColor.class);
-            ChatColor barColorBad     = CollectionsUT.getEnum(cfg.getString(path2 + "color-failure", "RED"), ChatColor.class);
+            ChatColor barColorNeutral =
+                    CollectionsUT.getEnum(cfg.getString(path2 + "color-neutral", "DARK_GRAY"), ChatColor.class);
+            ChatColor barColorGood    =
+                    CollectionsUT.getEnum(cfg.getString(path2 + "color-success", "GREEN"), ChatColor.class);
+            ChatColor barColorBad     =
+                    CollectionsUT.getEnum(cfg.getString(path2 + "color-failure", "RED"), ChatColor.class);
             long      fillInterval    = cfg.getLong(path2 + "fill-interval", 1L);
             int       fillAmount      = cfg.getInt(path2 + "fill-amount", 1);
             int       minSuccess      = cfg.getInt(path2 + "min-success", 50);
@@ -247,7 +250,7 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
     public final List<Entry<I, Integer>> getItemSockets(@NotNull ItemStack item) {
         List<Entry<I, Integer>> sockets = new ArrayList<>();
 
-        ItemMeta     meta = item.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
 
         for (SocketAttribute socket : ItemStats.getSockets(this.getSocketType())) {
             for (String[] v : this.getFilledSocketKeys(meta, socket.getId()).values()) {

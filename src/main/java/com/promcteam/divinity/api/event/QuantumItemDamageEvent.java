@@ -12,9 +12,9 @@ public class QuantumItemDamageEvent extends Event implements Cancellable {
 
     private boolean cancelled;
 
-    private ItemStack item;
+    private final ItemStack item;
 
-    private LivingEntity li;
+    private final LivingEntity li;
 
     public QuantumItemDamageEvent(@NotNull ItemStack item, @NotNull LivingEntity li) {
         this.item = item;

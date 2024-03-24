@@ -50,7 +50,8 @@ public class LootHolder extends IListener<QuantumRPG> implements InventoryHolder
     private RollTask          rollTask = null;
     private HologramExpansion holoEx   = null;
 
-    private static final NamespacedKey KEY_META_OWNER = new NamespacedKey(QuantumRPG.getInstance(), "QRPG_LOOT_ITEM_OWNER");
+    private static final NamespacedKey KEY_META_OWNER =
+            new NamespacedKey(QuantumRPG.getInstance(), "QRPG_LOOT_ITEM_OWNER");
 
     public LootHolder(
             LootManager manager,
@@ -472,7 +473,8 @@ public class LootHolder extends IListener<QuantumRPG> implements InventoryHolder
         private Hologram holo;
 
         public HologramExpansion() {
-            this.holo = HolographicDisplaysAPI.get(plugin).createHologram(LocUT.getCenter(boxLoc.clone()).add(0, 1.25, 0));
+            this.holo =
+                    HolographicDisplaysAPI.get(plugin).createHologram(LocUT.getCenter(boxLoc.clone()).add(0, 1.25, 0));
             this.update();
         }
 

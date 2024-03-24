@@ -5,13 +5,13 @@ content:
     material: 'NAME_TAG'
     name: '&eMob Names'
     lore:
-    - '&bCurrent Mode: &a%entity-names%'
-    - '&7'
-    - '&7Toggling this option will'
-    - '&7require the chunk update to'
-    - '&7be affected for nearby entities.'
-    - '&7'
-    - '&6Left-Click: &eChange'
+      - '&bCurrent Mode: &a%entity-names%'
+      - '&7'
+      - '&7Toggling this option will'
+      - '&7require the chunk update to'
+      - '&7be affected for nearby entities.'
+      - '&7'
+      - '&6Left-Click: &eChange'
     type: SETTING_ENTITY_NAMES
     slots: 0
 
@@ -19,15 +19,15 @@ content:
     material: 'GOLDEN_HELMET'
     name: '&eHelmet Invisibility'
     lore:
-    - '&bCurrent: &a%player-helmet%'
-    - '&7'
-    - '&7Hides your helmet for'
-    - '&7other players.'
-    - '&c(but not for you)'
-    - '&7'
-    - '&6Left-Click: &eChange'
+      - '&bCurrent: &a%player-helmet%'
+      - '&7'
+      - '&7Hides your helmet for'
+      - '&7other players.'
+      - '&c(but not for you)'
+      - '&7'
+      - '&6Left-Click: &eChange'
     item-flags:
-    - '*'
+      - '*'
     type: SETTING_PLAYER_HELMET
     slots: 1
 

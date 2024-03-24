@@ -24,7 +24,10 @@ public class ClassSelectionGUI extends NGUI<QuantumRPG> {
     private int[]        objSlots;
     private boolean      isMainSelector;
 
-    public ClassSelectionGUI(@NotNull ClassManager classManager, @NotNull JYML cfg, @NotNull String path, boolean main) {
+    public ClassSelectionGUI(@NotNull ClassManager classManager,
+                             @NotNull JYML cfg,
+                             @NotNull String path,
+                             boolean main) {
         super(classManager.plugin, cfg, path);
         this.classManager = classManager;
         this.allowClose = cfg.getBoolean(path + "allow-close");

@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class RPGUser extends IAbstractUser<QuantumRPG> {
 
-    private           LinkedHashMap<String, UserProfile> profiles;
+    private final     LinkedHashMap<String, UserProfile> profiles;
     private transient UserProfile                        activeProfile;
 
     // Create new

@@ -14,15 +14,18 @@ public class QuantumPlayerItemUseEvent extends Event implements Cancellable {
 
     private boolean cancelled;
 
-    private ItemStack item;
+    private final ItemStack item;
 
-    private LimitedItem ci;
+    private final LimitedItem ci;
 
-    private Player p;
+    private final Player p;
 
-    private QClickType click;
+    private final QClickType click;
 
-    public QuantumPlayerItemUseEvent(@NotNull ItemStack item, @NotNull Player p, @NotNull LimitedItem ci, @NotNull QClickType click) {
+    public QuantumPlayerItemUseEvent(@NotNull ItemStack item,
+                                     @NotNull Player p,
+                                     @NotNull LimitedItem ci,
+                                     @NotNull QClickType click) {
         this.item = item;
         this.ci = ci;
         this.p = p;

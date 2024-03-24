@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class ItemSubType {
 
-    private String      id;
+    private String        id;
     private String        name;
     private Set<ItemType> mats;
 
@@ -28,7 +28,7 @@ public class ItemSubType {
             try {
                 this.mats.add(CodexEngine.get().getItemManager().getItemType(mat));
             } catch (ProItemException e) {
-                QuantumRPG.getInstance().warn("Unknown item sub type: \""+mat+'\"');
+                QuantumRPG.getInstance().warn("Unknown item sub type: \"" + mat + '\"');
             }
         }
     }

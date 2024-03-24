@@ -10,7 +10,10 @@ public class BonusStatTypeGUI extends AbstractEditorGUI {
     private final String path;
 
     public BonusStatTypeGUI(Player player, ItemGeneratorReference itemGenerator, String path) {
-        super(player, 1, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.BONUSES.getTitle(), itemGenerator);
+        super(player,
+                1,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.BONUSES.getTitle(),
+                itemGenerator);
         this.path = path;
     }
 
@@ -38,7 +41,10 @@ public class BonusStatTypeGUI extends AbstractEditorGUI {
             setSlot(3, new Slot(createItem(Material.BOOK, "&eAdd new FabledAttribute stat")) {
                 @Override
                 public void onLeftClick() {
-                    openSubMenu(new NewBonusStatGUI(player, itemGenerator, path, BonusCategoryGUI.ItemType.FABLED_ATTRIBUTE));
+                    openSubMenu(new NewBonusStatGUI(player,
+                            itemGenerator,
+                            path,
+                            BonusCategoryGUI.ItemType.FABLED_ATTRIBUTE));
                 }
             });
             setSlot(4, new Slot(createItem(Material.ARROW, "&eAdd new ammo stat")) {

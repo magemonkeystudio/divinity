@@ -17,7 +17,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UserProfileDeserializer implements JsonDeserializer<UserProfile> {
-    public UserProfile deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+    public UserProfile deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws
+            JsonParseException {
         JsonObject     j          = json.getAsJsonObject();
         String         id         = j.get("name").getAsString();
         boolean        isDefault  = j.get("isDefault").getAsBoolean();
@@ -54,7 +55,9 @@ public class UserProfileDeserializer implements JsonDeserializer<UserProfile> {
         }
         JsonElement         eNames       = j.get("namesMode");
         String              namesModeRaw = (eNames != null) ? eNames.getAsString() : null;
-        UserEntityNamesMode namesMode    = (namesModeRaw != null) ? CollectionsUT.getEnum(namesModeRaw, UserEntityNamesMode.class) : UserEntityNamesMode.DEFAULT;
+        UserEntityNamesMode namesMode    =
+                (namesModeRaw != null) ? CollectionsUT.getEnum(namesModeRaw, UserEntityNamesMode.class)
+                        : UserEntityNamesMode.DEFAULT;
         JsonElement         eHideHelmet  = j.get("hideHelmet");
         boolean             hideHelmet   = eHideHelmet != null && eHideHelmet.getAsBoolean();
         UserClassData       cData        = null;

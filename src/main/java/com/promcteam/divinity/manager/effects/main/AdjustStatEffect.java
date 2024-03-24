@@ -92,7 +92,8 @@ public class AdjustStatEffect extends IExpirableEffect {
         }
 
         @NotNull
-        public Builder withAdjust(@NotNull Collection<? extends ItemLoreStat<?>> stats, @NotNull DoubleUnaryOperator operator) {
+        public Builder withAdjust(@NotNull Collection<? extends ItemLoreStat<?>> stats,
+                                  @NotNull DoubleUnaryOperator operator) {
             stats.forEach(stat -> this.functions.put(stat, operator));
             return this.self();
         }

@@ -58,7 +58,6 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
         }
         if (playOutEntityEquipment.isInstance(packet)) {
             this.managePlayerHelmet(e, packet);
-            return;
         }
     }
 
@@ -105,9 +104,11 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
 
             Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cm");
 
-            Entity bukkitEntity = CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            Entity bukkitEntity =
+                    CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
             if (!(bukkitEntity instanceof LivingEntity)) return;
-            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity) || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
+            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)
+                    || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
 
             EntityEquipmentChangeEvent event = new EntityEquipmentChangeEvent((LivingEntity) bukkitEntity);
             plugin.getServer().getPluginManager().callEvent(event);
@@ -216,7 +217,8 @@ public class V1_18_R1 extends UniversalPacketHandler implements IPacketHandler {
 
             Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cm");
 
-            Entity bukkitEntity = CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
+            Entity bukkitEntity =
+                    CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
             if (bukkitEntity == null || Hooks.isNPC(bukkitEntity) || !(bukkitEntity instanceof Player)) return;
 
             Player  player = (Player) bukkitEntity;

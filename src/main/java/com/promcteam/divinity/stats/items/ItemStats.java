@@ -42,20 +42,23 @@ public class ItemStats {
     private static final QuantumRPG                              plugin           = QuantumRPG.getInstance();
     private static final List<NamespacedKey>                     KEY_ID           = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID),
-            new NamespacedKey(plugin, "qrpg_"+ItemTags.TAG_ITEM_ID),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_"+ItemTags.TAG_ITEM_ID.toLowerCase())));
+            new NamespacedKey(plugin, "qrpg_" + ItemTags.TAG_ITEM_ID),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_ID.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_MODULE       = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_MODULE),
-            new NamespacedKey(plugin, "qrpg_"+ItemTags.TAG_ITEM_MODULE),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_MODULE.toLowerCase())));
+            new NamespacedKey(plugin, "qrpg_" + ItemTags.TAG_ITEM_MODULE),
+            Objects.requireNonNull(NamespacedKey.fromString(
+                    "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_MODULE.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_LEVEL        = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_LEVEL),
-            new NamespacedKey(plugin, "qrpg_"+ItemTags.TAG_ITEM_LEVEL),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())));
+            new NamespacedKey(plugin, "qrpg_" + ItemTags.TAG_ITEM_LEVEL),
+            Objects.requireNonNull(NamespacedKey.fromString(
+                    "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_SOCKET       = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_SOCKET_RATE),
-            new NamespacedKey(plugin, "qrpg_"+ItemTags.TAG_ITEM_SOCKET_RATE),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())));
+            new NamespacedKey(plugin, "qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE),
+            Objects.requireNonNull(NamespacedKey.fromString(
+                    "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())));
     private static       DamageAttribute                         DAMAGE_DEFAULT;
     private static       DefenseAttribute                        DEFENSE_DEFAULT;
 
@@ -172,11 +175,16 @@ public class ItemStats {
         return ItemStats.hasDamage(item, player, dmgType);
     }
 
-    public static boolean hasDamage(@NotNull ItemStack item, @Nullable Player player, @NotNull DamageAttribute dmgType) {
+    public static boolean hasDamage(@NotNull ItemStack item,
+                                    @Nullable Player player,
+                                    @NotNull DamageAttribute dmgType) {
         return dmgType.getTotal(item, player)[1] > 0;
     }
 
-    public static double getDamageMinOrMax(@NotNull ItemStack item, @Nullable Player player, @NotNull String id, int index) {
+    public static double getDamageMinOrMax(@NotNull ItemStack item,
+                                           @Nullable Player player,
+                                           @NotNull String id,
+                                           int index) {
         DamageAttribute dmgType = getDamageById(id);
         if (dmgType == null) return 0D;
 
@@ -200,7 +208,9 @@ public class ItemStats {
         return ItemStats.hasDefense(item, player, defType);
     }
 
-    public static boolean hasDefense(@NotNull ItemStack item, @Nullable Player player, @NotNull DefenseAttribute defType) {
+    public static boolean hasDefense(@NotNull ItemStack item,
+                                     @Nullable Player player,
+                                     @NotNull DefenseAttribute defType) {
         return defType.getTotal(item, player) != 0;
     }
 
@@ -261,7 +271,7 @@ public class ItemStats {
         }
         if (stat instanceof DurabilityStat) {
             DurabilityStat rs  = (DurabilityStat) stat;
-            double[]   arr = rs.getRaw(item);
+            double[]       arr = rs.getRaw(item);
             return arr != null && arr.length == 2;// && arr[0] != 0D;
         }
 
@@ -283,14 +293,20 @@ public class ItemStats {
         if (ItemUtils.isArmor(item)) {
             addAttribute(item, player, NBTAttribute.ARMOR, DefenseAttribute.getVanillaArmor(item));
             double toughness = getStat(item, player, TypedStat.Type.ARMOR_TOUGHNESS);
-            addAttribute(item, player, NBTAttribute.ARMOR_TOUGHNESS, toughness == 0 ? DefenseAttribute.getVanillaToughness(item) : toughness);
+            addAttribute(item,
+                    player,
+                    NBTAttribute.ARMOR_TOUGHNESS,
+                    toughness == 0 ? DefenseAttribute.getVanillaToughness(item) : toughness);
         }
         ItemMeta im = item.getItemMeta();
         im.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         item.setItemMeta(im);
     }
 
-    private static void addAttribute(@NotNull ItemStack item, @Nullable Player player, @NotNull NBTAttribute att, double value) {
+    private static void addAttribute(@NotNull ItemStack item,
+                                     @Nullable Player player,
+                                     @NotNull NBTAttribute att,
+                                     double value) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 

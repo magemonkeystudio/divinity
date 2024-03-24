@@ -15,7 +15,10 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
     private static final String PATH = EditorGUI.ItemType.ITEM_FLAGS.getPath();
 
     public ItemFlagsGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.ITEM_FLAGS.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.ITEM_FLAGS.getTitle(),
+                itemGenerator);
     }
 
     @Override
@@ -26,11 +29,15 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
 
             Material material;
             switch (flag) {
@@ -104,7 +111,8 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
 
                 @Override
                 public void onDrop() {
-                    Set<String> defaultFlags = new HashSet<>(ItemGeneratorManager.commonItemGenerator.getStringList(PATH));
+                    Set<String> defaultFlags =
+                            new HashSet<>(ItemGeneratorManager.commonItemGenerator.getStringList(PATH));
                     Set<String> itemFlags    = new HashSet<>(itemGenerator.getConfig().getStringList(PATH));
                     if (itemFlags.contains(JStrings.MASK_ANY)) {
                         itemFlags.remove(JStrings.MASK_ANY);

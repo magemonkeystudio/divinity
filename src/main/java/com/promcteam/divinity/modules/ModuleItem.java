@@ -198,7 +198,8 @@ public abstract class ModuleItem extends LoadableItem {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
 
-        meta.setDisplayName(StringUT.colorSensitiveStrip(this.name.replace(ItemTags.PLACEHOLDER_BASE_NAME, meta.getDisplayName())));
+        meta.setDisplayName(StringUT.colorSensitiveStrip(this.name.replace(ItemTags.PLACEHOLDER_BASE_NAME,
+                meta.getDisplayName())));
         List<String> baseLore = meta.getLore();
         List<String> modifiedLore;
         if (baseLore == null || baseLore.isEmpty()) {

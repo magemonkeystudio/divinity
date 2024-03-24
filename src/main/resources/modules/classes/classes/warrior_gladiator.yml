@@ -1,36 +1,36 @@
 name: '&cGladiator'
 permission-required: false
 description:
-- '&7Gladiators has huge damage skills,'
-- '&7but be careful in combat:'
-- '&7your attack speed and defense'
-- '&7is not good as your damage.'
-- '&7'
-- '&a&lClass Stats:'
-- '&a▸ &7%att_name_ARMOR%: &a%att_start_ARMOR% &7(&f+%att_lvl_ARMOR%&7)'
-- '&a▸ &7%att_name_ARMOR_TOUGHNESS%: &a%att_start_ARMOR_TOUGHNESS% &7(&f+%att_lvl_ARMOR_TOUGHNESS%&7)'
-- '&a▸ &7%att_name_ATTACK_DAMAGE%: &a%att_start_ATTACK_DAMAGE% &7(&f+%att_lvl_ATTACK_DAMAGE%&7)'
-- '&a▸ &7%att_name_ATTACK_SPEED%: &a%att_start_ATTACK_SPEED% &7(&f+%att_lvl_ATTACK_SPEED%&7)'
-- '&a▸ &7%att_name_FLYING_SPEED%: &a%att_start_FLYING_SPEED% &7(&f+%att_lvl_FLYING_SPEED%&7)'
-- '&a▸ &7%att_name_KNOCKBACK_RESISTANCE%: &a%att_start_KNOCKBACK_RESISTANCE% &7(&f+%att_lvl_KNOCKBACK_RESISTANCE%&7)'
-- '&a▸ &7%att_name_LUCK%: &a%att_start_LUCK% &7(&f+%att_lvl_LUCK%&7)'
-- '&a▸ &7%att_name_MAX_HEALTH%: &a%att_start_MAX_HEALTH% &7(&f+%att_lvl_MAX_HEALTH%&7)'
-- '&a▸ &7%att_name_MOVEMENT_SPEED%: &a%att_start_MOVEMENT_SPEED% &7(&f+%att_lvl_MOVEMENT_SPEED%&7)'
+  - '&7Gladiators has huge damage skills,'
+  - '&7but be careful in combat:'
+  - '&7your attack speed and defense'
+  - '&7is not good as your damage.'
+  - '&7'
+  - '&a&lClass Stats:'
+  - '&a▸ &7%att_name_ARMOR%: &a%att_start_ARMOR% &7(&f+%att_lvl_ARMOR%&7)'
+  - '&a▸ &7%att_name_ARMOR_TOUGHNESS%: &a%att_start_ARMOR_TOUGHNESS% &7(&f+%att_lvl_ARMOR_TOUGHNESS%&7)'
+  - '&a▸ &7%att_name_ATTACK_DAMAGE%: &a%att_start_ATTACK_DAMAGE% &7(&f+%att_lvl_ATTACK_DAMAGE%&7)'
+  - '&a▸ &7%att_name_ATTACK_SPEED%: &a%att_start_ATTACK_SPEED% &7(&f+%att_lvl_ATTACK_SPEED%&7)'
+  - '&a▸ &7%att_name_FLYING_SPEED%: &a%att_start_FLYING_SPEED% &7(&f+%att_lvl_FLYING_SPEED%&7)'
+  - '&a▸ &7%att_name_KNOCKBACK_RESISTANCE%: &a%att_start_KNOCKBACK_RESISTANCE% &7(&f+%att_lvl_KNOCKBACK_RESISTANCE%&7)'
+  - '&a▸ &7%att_name_LUCK%: &a%att_start_LUCK% &7(&f+%att_lvl_LUCK%&7)'
+  - '&a▸ &7%att_name_MAX_HEALTH%: &a%att_start_MAX_HEALTH% &7(&f+%att_lvl_MAX_HEALTH%&7)'
+  - '&a▸ &7%att_name_MOVEMENT_SPEED%: &a%att_start_MOVEMENT_SPEED% &7(&f+%att_lvl_MOVEMENT_SPEED%&7)'
 icon:
   material: DIAMOND_AXE
   name: '%name%'
   lore:
-  - '%description%'
+    - '%description%'
 actions-on-select:
   default:
     target-selectors:
       self:
-      - '[SELF]'
+        - '[SELF]'
     conditions:
-      list: []
+      list: [ ]
       on-fail: 'null'
     action-executors:
-    - '[COMMAND_CONSOLE] ~message: class addskill %executor% furious_charge 1; ~target: self;'
+      - '[COMMAND_CONSOLE] ~message: class addskill %executor% furious_charge 1; ~target: self;'
 leveling:
   start-level: 10
   max-level: 50
@@ -43,24 +43,24 @@ leveling:
       default:
         target-selectors:
           self:
-          - '[SELF]'
+            - '[SELF]'
         conditions:
-          list: []
+          list: [ ]
           on-fail: 'null'
         action-executors:
-        - '[COMMAND_CONSOLE] ~message: class addskill %executor% energy_impact 1; ~target: self;'
+          - '[COMMAND_CONSOLE] ~message: class addskill %executor% energy_impact 1; ~target: self;'
     '20':
       default:
         target-selectors:
           self:
-          - '[SELF]'
+            - '[SELF]'
         conditions:
-          list: []
+          list: [ ]
           on-fail: 'null'
         action-executors:
-        - '[COMMAND_CONSOLE] ~message: class addskill %executor% rupture 1; ~target: self;'
+          - '[COMMAND_CONSOLE] ~message: class addskill %executor% rupture 1; ~target: self;'
 sub-class:
-  sub-classes: []
+  sub-classes: [ ]
   level-to-change: -1
 mana:
   symbol: ⚡
@@ -121,7 +121,7 @@ aspects:
     per-point-values:
       attributes:
         ARMOR: 0.06
-      stats: {}
+      stats: { }
       defense-types:
         physical: 0.24%
       item-stats:
@@ -140,7 +140,7 @@ aspects:
     start-value: 0
     max-value: 10
     per-point-values:
-      attributes: {}
+      attributes: { }
       stats:
         COOLDOWN_REDUCE: 0.2
         MAX_MANA: 0.25

@@ -20,6 +20,9 @@ public class DropMoney extends DropNonItem {
 
     @Override
     public void execute(Player target) {
-        CodexEngine.get().getVault().getEconomy().depositPlayer(target, ((allowDecimals) ? Rnd.getDouble(min, max) : Rnd.get((int) min, (int) max)));
+        CodexEngine.get()
+                .getVault()
+                .getEconomy()
+                .depositPlayer(target, ((allowDecimals) ? Rnd.getDouble(min, max) : Rnd.get((int) min, (int) max)));
     }
 }

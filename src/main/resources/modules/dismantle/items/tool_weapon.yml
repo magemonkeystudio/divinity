@@ -1,9 +1,9 @@
 material: SHEARS
 name: Weapon Dismantle Tool
-lore: []
+lore: [ ]
 tier: common
 item-flags:
-- '*'
+  - '*'
 uses-by-level:
   '1': 1
   '2': 2
@@ -13,8 +13,8 @@ level:
   max: 3
 target-requirements:
   type:
-  - WEAPON
+    - WEAPON
   level:
     '1': 1
   module:
-  - '*'
+    - '*'

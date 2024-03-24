@@ -92,7 +92,8 @@ public class SoulboundManager extends QModule {
             String reqFormat = cfg.getString(path2 + "format.main", "&6%state%%name%: %value%");
             String reqName   = cfg.getString(path2 + "name", "Trade State");
 
-            UNTRADE_FORMAT_FREE = StringUT.color(cfg.getString(path2 + "format.value.free", "Will be untradeable on pickup"));
+            UNTRADE_FORMAT_FREE =
+                    StringUT.color(cfg.getString(path2 + "format.value.free", "Will be untradeable on pickup"));
             UNTRADE_FORMAT_APPLIED = StringUT.color(cfg.getString(path2 + "format.value.applied", "Untradeable"));
 
             this.reqUntrade = new UntradeableRequirement(reqName, reqFormat);

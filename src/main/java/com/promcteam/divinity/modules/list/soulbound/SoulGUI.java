@@ -58,7 +58,10 @@ public class SoulGUI extends NGUI<QuantumRPG> {
         }
     }
 
-    public void open(@NotNull Player player, @NotNull ItemStack target, @NotNull ItemStack src, @NotNull ItemStack result) {
+    public void open(@NotNull Player player,
+                     @NotNull ItemStack target,
+                     @NotNull ItemStack src,
+                     @NotNull ItemStack result) {
         this.addButton(player, new JIcon(target), this.itemSlot);
         this.addButton(player, new JIcon(src), this.sourceSlot);
         this.addButton(player, new JIcon(result), this.resultSlot);

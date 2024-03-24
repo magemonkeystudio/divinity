@@ -17,7 +17,10 @@ public class SocketGUI extends AbstractEditorGUI {
     private final String name;
 
     public SocketGUI(Player player, ItemGeneratorReference itemGenerator, String name) {
-        super(player, 1, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.SOCKETS.getTitle(), itemGenerator);
+        super(player,
+                1,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.SOCKETS.getTitle(),
+                itemGenerator);
         this.name = name;
     }
 
@@ -33,29 +36,38 @@ public class SocketGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(path + MainStatsGUI.ItemType.MINIMUM.getPath(), Math.max(0, itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MINIMUM.getPath()) - 1));
+                itemGenerator.getConfig()
+                        .set(path + MainStatsGUI.ItemType.MINIMUM.getPath(),
+                                Math.max(0,
+                                        itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MINIMUM.getPath())
+                                                - 1));
                 saveAndReopen();
             }
 
             @Override
             public void onRightClick() {
-                itemGenerator.getConfig().set(path + MainStatsGUI.ItemType.MINIMUM.getPath(), Math.max(0, itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MINIMUM.getPath()) + 1));
+                itemGenerator.getConfig()
+                        .set(path + MainStatsGUI.ItemType.MINIMUM.getPath(),
+                                Math.max(0,
+                                        itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MINIMUM.getPath())
+                                                + 1));
                 saveAndReopen();
             }
 
             @Override
             public void onShiftLeftClick() {
                 sendSetMessage(MainStatsGUI.ItemType.MINIMUM.name().toLowerCase() + ' ' + name + " sockets",
-                        String.valueOf(itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MINIMUM.getPath())),
+                        String.valueOf(itemGenerator.getConfig()
+                                .getInt(path + MainStatsGUI.ItemType.MINIMUM.getPath())),
                         s -> {
-                    int value = Integer.parseInt(s);
-                    if (value >= 0) {
-                        itemGenerator.getConfig().set(path + MainStatsGUI.ItemType.MINIMUM.getPath(), value);
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
-                    saveAndReopen();
-                });
+                            int value = Integer.parseInt(s);
+                            if (value >= 0) {
+                                itemGenerator.getConfig().set(path + MainStatsGUI.ItemType.MINIMUM.getPath(), value);
+                            } else {
+                                throw new IllegalArgumentException();
+                            }
+                            saveAndReopen();
+                        });
             }
 
             @Override
@@ -73,20 +85,29 @@ public class SocketGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(path + MainStatsGUI.ItemType.MAXIMUM.getPath(), Math.max(0, itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MAXIMUM.getPath()) - 1));
+                itemGenerator.getConfig()
+                        .set(path + MainStatsGUI.ItemType.MAXIMUM.getPath(),
+                                Math.max(0,
+                                        itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MAXIMUM.getPath())
+                                                - 1));
                 saveAndReopen();
             }
 
             @Override
             public void onRightClick() {
-                itemGenerator.getConfig().set(path + MainStatsGUI.ItemType.MAXIMUM.getPath(), Math.max(0, itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MAXIMUM.getPath()) + 1));
+                itemGenerator.getConfig()
+                        .set(path + MainStatsGUI.ItemType.MAXIMUM.getPath(),
+                                Math.max(0,
+                                        itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MAXIMUM.getPath())
+                                                + 1));
                 saveAndReopen();
             }
 
             @Override
             public void onShiftLeftClick() {
                 sendSetMessage(MainStatsGUI.ItemType.MAXIMUM.name().toLowerCase() + ' ' + name + " sockets",
-                        String.valueOf(itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MAXIMUM.getPath())),
+                        String.valueOf(itemGenerator.getConfig()
+                                .getInt(path + MainStatsGUI.ItemType.MAXIMUM.getPath())),
                         s -> {
                             int value = Integer.parseInt(s);
                             if (value >= 0) {
@@ -105,7 +126,9 @@ public class SocketGUI extends AbstractEditorGUI {
             }
         });
         setSlot(2, new Slot(createItem(Material.WRITABLE_BOOK,
-                "&eLore format", StringUT.replace(CURRENT_PLACEHOLDER, itemGenerator.getConfig().getStringList(path + MainStatsGUI.ItemType.LORE.getPath()),
+                "&eLore format",
+                StringUT.replace(CURRENT_PLACEHOLDER,
+                        itemGenerator.getConfig().getStringList(path + MainStatsGUI.ItemType.LORE.getPath()),
                         "&bCurrent:",
                         "&a----------",
                         "&f%current%",
@@ -114,14 +137,19 @@ public class SocketGUI extends AbstractEditorGUI {
         )) {
             @Override
             public void onLeftClick() {
-                openSubMenu(new LoreGUI(player, title + " lore", itemGenerator, path + MainStatsGUI.ItemType.LORE.getPath()));
+                openSubMenu(new LoreGUI(player,
+                        title + " lore",
+                        itemGenerator,
+                        path + MainStatsGUI.ItemType.LORE.getPath()));
             }
 
             @Override
             public void onDrop() {
-                itemGenerator.getConfig().set(path + MainStatsGUI.ItemType.LORE.getPath(), StringUT.replace(CURRENT_PLACEHOLDER, List.of(name),
-                        "&8&m               &f  「 %current%S 」  &8&m               ",
-                        "%SOCKET_%current%_DEFAULT%"));
+                itemGenerator.getConfig()
+                        .set(path + MainStatsGUI.ItemType.LORE.getPath(),
+                                StringUT.replace(CURRENT_PLACEHOLDER, List.of(name),
+                                        "&8&m               &f  「 %current%S 」  &8&m               ",
+                                        "%SOCKET_%current%_DEFAULT%"));
                 saveAndReopen();
             }
         });

@@ -25,8 +25,8 @@ public class StatListGUI extends AbstractEditorGUI {
 
     @Override
     public void setContents() {
-        JYML         cfg  = itemGenerator.getConfig();
-        List<String> list = new ArrayList<>();
+        JYML                 cfg     = itemGenerator.getConfig();
+        List<String>         list    = new ArrayList<>();
         ConfigurationSection section = cfg.getConfigurationSection(MainStatsGUI.ItemType.LIST.getPath(this.itemType));
         if (section != null) {
             list.addAll(section.getKeys(false));
@@ -37,11 +37,15 @@ public class StatListGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
 
             ItemStack itemStack = null;
             switch (this.itemType) {
@@ -59,7 +63,9 @@ public class StatListGUI extends AbstractEditorGUI {
                     break;
                 }
             }
-            if (itemStack == null) {itemStack = new ItemStack(Material.PAPER);}
+            if (itemStack == null) {
+                itemStack = new ItemStack(Material.PAPER);
+            }
             String path = MainStatsGUI.ItemType.LIST.getPath(this.itemType) + '.' + entry + '.';
             String roundDisplay = this.itemType == EditorGUI.ItemType.FABLED_ATTRIBUTES
                     ? ""
@@ -79,7 +85,10 @@ public class StatListGUI extends AbstractEditorGUI {
             setSlot(i, new Slot(itemStack) {
                 @Override
                 public void onLeftClick() {
-                    openSubMenu(new StatGUI(player, itemGenerator, itemType, MainStatsGUI.ItemType.LIST.getPath(itemType) + '.' + entry));
+                    openSubMenu(new StatGUI(player,
+                            itemGenerator,
+                            itemType,
+                            MainStatsGUI.ItemType.LIST.getPath(itemType) + '.' + entry));
                 }
             });
 

@@ -16,11 +16,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class RequirementsGUI extends AbstractEditorGUI {
-    private final String path;
+    private final String   path;
     private final Material material;
 
     public RequirementsGUI(Player player, ItemGeneratorReference itemGenerator, String path, Material material) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.REQUIREMENTS.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.REQUIREMENTS.getTitle(),
+                itemGenerator);
         this.path = path;
         this.material = material;
     }
@@ -36,11 +39,15 @@ public class RequirementsGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             setSlot(i, level == null ?
                     new Slot(createItem(Material.REDSTONE,
                             "&eAdd new requirement")) {
@@ -98,15 +105,20 @@ public class RequirementsGUI extends AbstractEditorGUI {
     }
 
     protected TreeMap<Integer, String> getRequirements() {
-        ConfigurationSection     requirementsSection = this.itemGenerator.getConfig().getConfigurationSection(this.path);
+        ConfigurationSection     requirementsSection =
+                this.itemGenerator.getConfig().getConfigurationSection(this.path);
         TreeMap<Integer, String> requirements        = new TreeMap<>();
         if (requirementsSection != null) {
             for (String key : requirementsSection.getKeys(false)) {
                 int itemLvl = StringUT.getInteger(key, -1);
-                if (itemLvl <= 0) {continue;}
+                if (itemLvl <= 0) {
+                    continue;
+                }
 
                 String requirement = requirementsSection.getString(key);
-                if (requirement == null || requirement.isEmpty()) {continue;}
+                if (requirement == null || requirement.isEmpty()) {
+                    continue;
+                }
 
                 requirements.put(itemLvl, requirement);
             }

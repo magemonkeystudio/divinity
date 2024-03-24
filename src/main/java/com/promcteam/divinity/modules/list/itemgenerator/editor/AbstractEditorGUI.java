@@ -66,7 +66,7 @@ public abstract class AbstractEditorGUI extends Menu {
     }
 
     protected static ItemStack createItem(ItemStack itemStack, String name, List<String> lore) {
-        ItemMeta  meta      = itemStack.getItemMeta();
+        ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
@@ -75,7 +75,9 @@ public abstract class AbstractEditorGUI extends Menu {
             }
             meta.setDisplayName(StringUT.color(name));
             List<String> coloredLore = new ArrayList<>(lore.size());
-            for (String loreLine : lore) {coloredLore.add(StringUT.color(loreLine));}
+            for (String loreLine : lore) {
+                coloredLore.add(StringUT.color(loreLine));
+            }
             meta.setLore(coloredLore);
             itemStack.setItemMeta(meta);
         }
@@ -123,12 +125,15 @@ public abstract class AbstractEditorGUI extends Menu {
         BaseComponent component = StringUT.parseJson("[\"\",{\"text\":\"\\u25b8 Enter the desired " + valueName +
                 ". \"},{\"text\":\"Cancel\",\"underlined\":true,\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"cancel\"}}"
                 + (currentValue == null ? ']'
-                : ",{\"text\":\" \"},{\"text\":\"Current Value\",\"underlined\":true,\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\"" + currentValue + "\"}}]"));
+                : ",{\"text\":\" \"},{\"text\":\"Current Value\",\"underlined\":true,\"clickEvent\":{\"action\":\"suggest_command\",\"value\":\""
+                        + currentValue + "\"}}]"));
         player.spigot().sendMessage(component);
         this.registerListener(new Listener() {
             @EventHandler
             public void onChat(AsyncPlayerChatEvent event) {
-                if (!event.getPlayer().equals(AbstractEditorGUI.this.player)) {return;}
+                if (!event.getPlayer().equals(AbstractEditorGUI.this.player)) {
+                    return;
+                }
                 event.setCancelled(true);
                 String message = event.getMessage().strip();
                 if (message.equalsIgnoreCase("cancel")) {
@@ -139,7 +144,8 @@ public abstract class AbstractEditorGUI extends Menu {
                         onMessage.accept(message);
                         unregisterListener(this);
                     } catch (IllegalArgumentException e) {
-                        QuantumRPG.getInstance().lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%", message).replace("%value%", valueName).send(player);
+                        QuantumRPG.getInstance().lang().ItemGenerator_Cmd_Editor_Error_InvalidInput.replace("%input%",
+                                message).replace("%value%", valueName).send(player);
                         player.spigot().sendMessage(component);
                     }
                 }
@@ -161,7 +167,9 @@ public abstract class AbstractEditorGUI extends Menu {
         public void reload() {
             JYML cfg = getConfig();
             cfg.save();
-            handle = Objects.requireNonNull(QuantumRPG.getInstance().getModuleManager().getModule(ItemGeneratorManager.class)).load(handle.getId(), cfg);
+            handle = Objects.requireNonNull(QuantumRPG.getInstance()
+                    .getModuleManager()
+                    .getModule(ItemGeneratorManager.class)).load(handle.getId(), cfg);
         }
 
         public String getId() {

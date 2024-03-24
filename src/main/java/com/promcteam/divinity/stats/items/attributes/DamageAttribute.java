@@ -117,9 +117,9 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
     @NotNull
     public List<BiFunction<Boolean, double[], double[]>> get(@NotNull ItemStack item, @Nullable Player player) {
         List<BiFunction<Boolean, double[], double[]>> bonuses = new ArrayList<>();
-        double[] base    = new double[]{0, 0};
-        double   percent = 0;
-        boolean  has     = false;
+        double[]                                      base    = new double[]{0, 0};
+        double                                        percent = 0;
+        boolean                                       has     = false;
 
         // Get from old format
         ItemMeta meta = item.getItemMeta();
@@ -167,8 +167,8 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
 
         bonuses.add((isPercent, input) -> isPercent ? input : (
                 input.length == 2
-                ? new double[]{input[0]+base[0], input[1]+base[1]}
-                : new double[]{input[0]+base[0], input[0]+base[1]}));
+                        ? new double[]{input[0] + base[0], input[1] + base[1]}
+                        : new double[]{input[0] + base[0], input[0] + base[1]}));
         {
             double finalPercent = percent;
             bonuses.add((isPercent, input) -> isPercent ? new double[]{input[0] + finalPercent} : input);
@@ -181,10 +181,10 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
             bonuses.add((isPercent, input) ->
                     input.length == 2
                             ? new double[]{
-                                refineManagerBonus.apply(isPercent, input[0]),
-                                refineManagerBonus.apply(isPercent, input[1])}
+                            refineManagerBonus.apply(isPercent, input[0]),
+                            refineManagerBonus.apply(isPercent, input[1])}
                             : new double[]{
-                                refineManagerBonus.apply(isPercent, input[0])});
+                                    refineManagerBonus.apply(isPercent, input[0])});
         }
 
         // Support for filled socket Gems.
@@ -197,10 +197,10 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
                 bonuses.add((isPercent, input) ->
                         input.length == 2
                                 ? new double[]{
-                                    gemBonus.apply(isPercent, input[0]),
-                                    gemBonus.apply(isPercent, input[1])}
+                                gemBonus.apply(isPercent, input[0]),
+                                gemBonus.apply(isPercent, input[1])}
                                 : new double[]{
-                                    gemBonus.apply(isPercent, input[0])});
+                                        gemBonus.apply(isPercent, input[0])});
             }
         }
 
@@ -249,9 +249,10 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
     @NotNull
     public String getFormat(@Nullable Player p, @NotNull ItemStack item, @NotNull StatBonus value) {
         StatBonus.Condition<?> condition = value.getCondition();
-        return StringUT.colorFix(super.getFormat(item, value).replace("%condition%", condition == null || !EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE
-                ? ""
-                : condition.getFormat(p, item)));
+        return StringUT.colorFix(super.getFormat(item, value)
+                .replace("%condition%", condition == null || !EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE
+                        ? ""
+                        : condition.getFormat(p, item)));
     }
 
     @Override
@@ -266,10 +267,10 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
         if (lore == null) return item;
 
         for (int i = 0; i < amount; i++) {
-            int loreIndex = -1;
-            String metaId = "";
+            int    loreIndex = -1;
+            String metaId    = "";
             for (NamespacedKey key : this.keys) {
-                metaId = key.getKey()+i;
+                metaId = key.getKey() + i;
                 loreIndex = ItemUT.getLoreIndex(item, metaId);
                 if (loreIndex >= 0) break;
             }

@@ -10,7 +10,7 @@ import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 
 public class PartyAPI {
 
-    private static QuantumRPG plugin = QuantumRPG.getInstance();
+    private static final QuantumRPG plugin = QuantumRPG.getInstance();
 
     @Nullable
     public static Party getPlayerParty(@NotNull Player player) {

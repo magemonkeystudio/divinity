@@ -23,7 +23,7 @@ public class StatBonus {
     private static final NamespacedKey PERCENT         = new NamespacedKey(QuantumRPG.getInstance(), "percent");
     private static final NamespacedKey CLASS_CONDITION = new NamespacedKey(QuantumRPG.getInstance(), "class");
 
-    public static PersistentDataType<PersistentDataContainer,StatBonus> DATA_TYPE = new PersistentDataType<>() {
+    public static PersistentDataType<PersistentDataContainer, StatBonus> DATA_TYPE = new PersistentDataType<>() {
         @NotNull
         @Override
         public Class<PersistentDataContainer> getPrimitiveType() {
@@ -38,7 +38,8 @@ public class StatBonus {
 
         @NotNull
         @Override
-        public PersistentDataContainer toPrimitive(@NotNull StatBonus complex, @NotNull PersistentDataAdapterContext context) {
+        public PersistentDataContainer toPrimitive(@NotNull StatBonus complex,
+                                                   @NotNull PersistentDataAdapterContext context) {
             PersistentDataContainer container = DataUT.itemPersistentDataContainer();
             if (complex.value.length == 1) {
                 container.set(VALUE, PersistentDataType.DOUBLE, complex.value[0]);
@@ -48,7 +49,9 @@ public class StatBonus {
             if (complex.percent) container.set(PERCENT, DataUT.BOOLEAN, true);
             if (complex.condition != null) {
                 if (complex.condition.requirement instanceof ClassRequirement) {
-                    container.set(complex.condition.requirement.getKey(), DataUT.STRING_ARRAY, (String[]) complex.condition.value);
+                    container.set(complex.condition.requirement.getKey(),
+                            DataUT.STRING_ARRAY,
+                            (String[]) complex.condition.value);
                 }
             }
             return container;
@@ -56,7 +59,8 @@ public class StatBonus {
 
         @NotNull
         @Override
-        public StatBonus fromPrimitive(@NotNull PersistentDataContainer primitive, @NotNull PersistentDataAdapterContext context) {
+        public StatBonus fromPrimitive(@NotNull PersistentDataContainer primitive,
+                                       @NotNull PersistentDataAdapterContext context) {
             double[] array = null;
             if (primitive.has(VALUE, DataUT.DOUBLE_ARRAY)) {
                 array = primitive.get(VALUE, DataUT.DOUBLE_ARRAY);
@@ -65,7 +69,7 @@ public class StatBonus {
                 Double simple = primitive.get(VALUE, PersistentDataType.DOUBLE);
                 array = simple == null ? new double[]{0} : new double[]{simple};
             }
-            if (array == null) array = new double[] {0, 0};
+            if (array == null) array = new double[]{0, 0};
 
             Condition<?> condition = null;
             for (UserRequirement<?> requirement : ItemRequirements.getUserRequirements()) {
@@ -78,14 +82,17 @@ public class StatBonus {
             if (primitive.has(CLASS_CONDITION, DataUT.STRING_ARRAY)) {
                 String[] classCondition = primitive.get(CLASS_CONDITION, DataUT.STRING_ARRAY);
                 if (classCondition != null) {
-                    condition = new Condition<>(ItemRequirements.getUserRequirement(ClassRequirement.class), classCondition);
+                    condition = new Condition<>(ItemRequirements.getUserRequirement(ClassRequirement.class),
+                            classCondition);
                 }
             }
-            return new StatBonus(array, array.length == 1 ? primitive.getOrDefault(PERCENT, DataUT.BOOLEAN, false) : false, condition);
+            return new StatBonus(array,
+                    array.length == 1 ? primitive.getOrDefault(PERCENT, DataUT.BOOLEAN, false) : false,
+                    condition);
         }
     };
 
-    private final double[] value;
+    private final double[]     value;
     private final boolean      percent;
     @Nullable
     private final Condition<?> condition;
@@ -122,7 +129,8 @@ public class StatBonus {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StatBonus statBonus = (StatBonus) o;
-        return percent == statBonus.percent && Arrays.equals(value, statBonus.value) && Objects.equals(condition, statBonus.condition);
+        return percent == statBonus.percent && Arrays.equals(value, statBonus.value) && Objects.equals(condition,
+                statBonus.condition);
     }
 
     @Override

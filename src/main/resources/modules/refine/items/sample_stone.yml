@@ -1,6 +1,6 @@
 material: CHARCOAL
 name: 'Enchantment Stone'
-lore: []
+lore: [ ]
 tier: common
 enchanted: false
 level:
@@ -11,89 +11,89 @@ uses-by-level:
   '2': 2
 refine-by-level:
   '1':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 1%
-    defense-types: {}
+    defense-types: { }
   '2':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 1.5%
-    defense-types: {}
+    defense-types: { }
   '3':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 2%
-    defense-types: {}
+    defense-types: { }
   '4':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 2.5%
-    defense-types: {}
+    defense-types: { }
   '5':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 3%
-    defense-types: {}
+    defense-types: { }
   '6':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 3.5%
-    defense-types: {}
+    defense-types: { }
   '7':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 4%
-    defense-types: {}
+    defense-types: { }
   '8':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 4.5%
-    defense-types: {}
+    defense-types: { }
   '9':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 5%
-    defense-types: {}
+    defense-types: { }
   '10':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 5.5%
-    defense-types: {}
+    defense-types: { }
   '11':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 6%
-    defense-types: {}
+    defense-types: { }
   '12':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 6.5%
-    defense-types: {}
+    defense-types: { }
   '13':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 7%
-    defense-types: {}
+    defense-types: { }
   '14':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 7.5%
-    defense-types: {}
+    defense-types: { }
   '15':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 8%
-    defense-types: {}
+    defense-types: { }
 success-rate-by-level:
   '1': '75'
   '2': '35 * %ITEM_LEVEL%'
   '3': '30:50'
 target-requirements:
   type:
-  - 'WEAPON'
-  - 'ARMOR'
+    - 'WEAPON'
+    - 'ARMOR'
   level:
     '1': '1'
   module:
-  - '*'
+    - '*'

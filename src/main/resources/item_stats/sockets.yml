@@ -16,7 +16,7 @@ GEM:
         value:
           empty: '%TIER_COLOR%□ <%name%>'
           filled: '%TIER_COLOR%▣ &7%value%'
-    
+
 RUNE:
   categories:
     default:

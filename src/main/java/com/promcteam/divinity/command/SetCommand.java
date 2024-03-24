@@ -48,7 +48,8 @@ public class SetCommand extends ISubCommand<QuantumRPG> {
         return true;
     }
 
-    private static final String[] ARGS = new String[]{"level", "socket", "class", "damage", "defense", "stat", "ammo", "hand"};
+    private static final String[] ARGS =
+            new String[]{"level", "socket", "class", "damage", "defense", "stat", "ammo", "hand"};
 
     @Override
     @NotNull

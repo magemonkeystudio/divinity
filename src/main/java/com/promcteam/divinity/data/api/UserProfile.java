@@ -22,14 +22,14 @@ import java.util.stream.Collectors;
 
 public class UserProfile {
 
-    private String  name;
-    private boolean isDefault;
+    private final String  name;
+    private       boolean isDefault;
 
-    private Set<SavedBuff> buffDamage;
-    private Set<SavedBuff> buffDefense;
-    private Set<SavedBuff> buffStats;
+    private final Set<SavedBuff> buffDamage;
+    private final Set<SavedBuff> buffDefense;
+    private final Set<SavedBuff> buffStats;
 
-    private ItemStack           inventory[];
+    private ItemStack[]         inventory;
     private UserEntityNamesMode namesMode;
     private boolean             hideHelmet;
 

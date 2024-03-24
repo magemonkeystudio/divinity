@@ -56,7 +56,8 @@ public class ActionParticleLine extends IActionExecutor {
         } else {
             if (exe instanceof LivingEntity) {
                 LivingEntity caster = (LivingEntity) exe;
-                Location     to     = caster.getTargetBlock(null, (int) EngineCfg.COMBAT_MAX_GET_TARGET_DISTANCE).getLocation();
+                Location     to     =
+                        caster.getTargetBlock(null, (int) EngineCfg.COMBAT_MAX_GET_TARGET_DISTANCE).getLocation();
 
                 ParticleUtils.drawParticleLine(
                         caster.getEyeLocation().clone().add(0, -0.5, 0), to, name,

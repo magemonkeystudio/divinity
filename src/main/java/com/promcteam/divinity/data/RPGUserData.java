@@ -33,8 +33,9 @@ public class RPGUserData extends IDataHandler<QuantumRPG, RPGUser> {
                 String name       = rs.getString(COL_USER_NAME);
                 long   lastOnline = rs.getLong(COL_USER_LAST_ONLINE);
 
-                LinkedHashMap<String, UserProfile> profiles = gson.fromJson(rs.getString("profiles"), new TypeToken<LinkedHashMap<String, UserProfile>>() {
-                }.getType());
+                LinkedHashMap<String, UserProfile> profiles =
+                        gson.fromJson(rs.getString("profiles"), new TypeToken<LinkedHashMap<String, UserProfile>>() {
+                        }.getType());
 
                 return new RPGUser(plugin, uuid, name, lastOnline, profiles);
             } catch (SQLException ex) {

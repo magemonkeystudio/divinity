@@ -21,10 +21,12 @@ import java.util.Objects;
 
 public class AbilityGenerator extends AbstractAttributeGenerator {
 
-    public static NamespacedKey ABILITY_KEY;
+    public static NamespacedKey                         ABILITY_KEY;
     private final Map<AbilityGenerator.Ability, Double> abilities;
 
-    public AbilityGenerator(@NotNull QuantumRPG plugin, @NotNull GeneratorItem generatorItem, @NotNull String placeholder) {
+    public AbilityGenerator(@NotNull QuantumRPG plugin,
+                            @NotNull GeneratorItem generatorItem,
+                            @NotNull String placeholder) {
         super(plugin, generatorItem, placeholder);
         AbilityGenerator.ABILITY_KEY = NamespacedKey.fromString("skills", plugin);
 
@@ -39,9 +41,14 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
             String path2 = path + "list." + abilityId + ".";
 
             double chance = cfg.getDouble(path2 + "chance");
-            if (chance <= 0) { continue; }
+            if (chance <= 0) {
+                continue;
+            }
 
-            AbilityGenerator.Ability ability = new Ability(abilityId, cfg.getInt(path2+"min-level", 1), cfg.getInt(path2+"max-level", 1), cfg.getStringList(path2+"lore-format"));
+            AbilityGenerator.Ability ability = new Ability(abilityId,
+                    cfg.getInt(path2 + "min-level", 1),
+                    cfg.getInt(path2 + "max-level", 1),
+                    cfg.getStringList(path2 + "lore-format"));
             this.abilities.put(ability, chance);
         }
     }
@@ -49,13 +56,17 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
     @Override
     public void generate(@NotNull ItemStack item, int itemLevel) {
         ItemMeta meta = item.getItemMeta();
-        if (meta == null) { return; }
+        if (meta == null) {
+            return;
+        }
         List<String> lore = meta.getLore();
-        if (lore == null) { return; }
+        if (lore == null) {
+            return;
+        }
 
-        int             pos           = lore.indexOf(this.placeholder);
-        int             min           = this.getMinAmount();
-        int             max           = this.getMaxAmount();
+        int pos = lore.indexOf(this.placeholder);
+        int min = this.getMinAmount();
+        int max = this.getMaxAmount();
 
         if (pos < 0 || max == 0 || this.abilities.isEmpty()) {
             LoreUT.replacePlaceholder(item, placeholder, null);
@@ -77,7 +88,7 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         // Roll: (2, 5);
         boolean isMaxUnlimited = (max < 0);
         boolean isMinUnlimited = (min < 0);
-        int     rollMax        = isMaxUnlimited ? Integer.MAX_VALUE-1 : max;
+        int     rollMax        = isMaxUnlimited ? Integer.MAX_VALUE - 1 : max;
         int     rollMin        = isMinUnlimited ? Rnd.get(rollMax + 1) : min;
         int     roll           = Rnd.get((isMaxUnlimited ? rollMax : rollMin), rollMax);
 
@@ -88,13 +99,17 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
             return;
         }
 
-        Map<AbilityGenerator.Ability,Integer> abilityAdd = new HashMap<>();
+        Map<AbilityGenerator.Ability, Integer> abilityAdd = new HashMap<>();
 
         for (int count = 0; count < roll; count++) {
-            if (abilityMap.isEmpty()) { break; }
+            if (abilityMap.isEmpty()) {
+                break;
+            }
 
             AbilityGenerator.Ability ability = Rnd.getRandomItem(abilityMap, true);
-            if (ability == null) { break; }
+            if (ability == null) {
+                break;
+            }
 
             // Minimal stats are added, so we can process chances
             if (count >= rollMin) {
@@ -121,10 +136,10 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         meta.setLore(lore);
         item.setItemMeta(meta);
 
-        int i = 0;
+        int      i            = 0;
         String[] abilityArray = new String[abilityAdd.size()];
-        for (Map.Entry<AbilityGenerator.Ability,Integer> entry : abilityAdd.entrySet()) {
-            abilityArray[i] = entry.getKey().getId()+':'+entry.getValue();
+        for (Map.Entry<AbilityGenerator.Ability, Integer> entry : abilityAdd.entrySet()) {
+            abilityArray[i] = entry.getKey().getId() + ':' + entry.getValue();
             i++;
         }
         DataUT.setData(item, ABILITY_KEY, abilityArray);
@@ -139,8 +154,8 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
 
         public Ability(
                 @NotNull String id,
-                int      minLevel,
-                int      maxLevel,
+                int minLevel,
+                int maxLevel,
                 @NotNull List<String> loreFormat
         ) {
             this.id = id.toLowerCase();
@@ -154,7 +169,7 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
             return id;
         }
 
-        public int getRndLevel() { return Rnd.get(minLevel, maxLevel); }
+        public int getRndLevel() {return Rnd.get(minLevel, maxLevel);}
 
         @NotNull
         public List<String> getLoreFormat() {
@@ -163,13 +178,17 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) { return true; }
-            if (o == null || getClass() != o.getClass()) { return false; }
+            if (this == o) {
+                return true;
+            }
+            if (o == null || getClass() != o.getClass()) {
+                return false;
+            }
             Ability ability = (Ability) o;
             return id.equals(ability.id);
         }
 
         @Override
-        public int hashCode() { return Objects.hash(id); }
+        public int hashCode() {return Objects.hash(id);}
     }
 }

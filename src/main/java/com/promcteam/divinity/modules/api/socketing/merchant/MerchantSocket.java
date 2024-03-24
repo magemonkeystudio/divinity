@@ -35,7 +35,8 @@ public class MerchantSocket implements Loadable {
         try {
             this.cfg = JYML.loadOrExtract(plugin, this.moduleSocket.getPath() + "merchant.yml");
         } catch (InvalidConfigurationException e) {
-            this.plugin.error("Failed to load merchant config (" + this.moduleSocket.getPath() + "merchant.yml): Configuration error");
+            this.plugin.error("Failed to load merchant config (" + this.moduleSocket.getPath()
+                    + "merchant.yml): Configuration error");
             e.printStackTrace();
             shutdown();
             return;

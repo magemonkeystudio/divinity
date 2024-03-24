@@ -70,7 +70,11 @@ public class ClassRequirement extends DynamicUserRequirement<String[]> {
         String sep   = EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR;
         String color = EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR;
 
-        return LoreUT.getStrSeparated(value, sep, color, EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX, EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE);
+        return LoreUT.getStrSeparated(value,
+                sep,
+                color,
+                EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX,
+                EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE);
     }
 
     @Override

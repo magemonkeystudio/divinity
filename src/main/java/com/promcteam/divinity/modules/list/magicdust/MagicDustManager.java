@@ -111,7 +111,8 @@ public class MagicDustManager extends QModuleDrop<MagicDust> {
         int rateAdd   = mDust.getRateByLevel(ItemStats.getLevel(src));
         int rateFinal = targetRate + rateAdd;
 
-        PlayerImproveItemSocketRateEvent event = new PlayerImproveItemSocketRateEvent(player, target, targetRate, rateFinal);
+        PlayerImproveItemSocketRateEvent event =
+                new PlayerImproveItemSocketRateEvent(player, target, targetRate, rateFinal);
         plugin.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             this.actionsError.process(player);
@@ -343,7 +344,8 @@ public class MagicDustManager extends QModuleDrop<MagicDust> {
                         }
 
                         // Call custom plugin event.
-                        PlayerImproveItemSocketRateEvent event = new PlayerImproveItemSocketRateEvent(p, target, rateHas, rateHas + rateAmount2);
+                        PlayerImproveItemSocketRateEvent event =
+                                new PlayerImproveItemSocketRateEvent(p, target, rateHas, rateHas + rateAmount2);
                         plugin.getPluginManager().callEvent(event);
                         if (event.isCancelled()) {
                             MagicDustManager.this.actionsError.process(p);
@@ -407,7 +409,8 @@ public class MagicDustManager extends QModuleDrop<MagicDust> {
                     // Accessing button values via module config is the only way.
                     int    rateAmount = cfg.getInt("gui.paid.dust-buttons." + gi.getId() + ".rate-amount");
                     int    rateCap    = cfg.getInt("gui.paid.dust-buttons." + gi.getId() + ".rate-max");
-                    double rateCost   = this.hasVault ? cfg.getInt("gui.paid.dust-buttons." + gi.getId() + ".rate-cost") : 0D;
+                    double rateCost   =
+                            this.hasVault ? cfg.getInt("gui.paid.dust-buttons." + gi.getId() + ".rate-cost") : 0D;
 
                     int rateDiff    = (rateCap - rateHas);
                     int rateAmount2 = rateDiff >= rateAmount ? rateAmount : rateDiff;
@@ -460,7 +463,10 @@ public class MagicDustManager extends QModuleDrop<MagicDust> {
         }
 
         @Override
-        protected void click(@NotNull Player player, @Nullable ItemStack item, int slot, @NotNull InventoryClickEvent e) {
+        protected void click(@NotNull Player player,
+                             @Nullable ItemStack item,
+                             int slot,
+                             @NotNull InventoryClickEvent e) {
             Inventory inv    = e.getInventory();
             ItemStack target = inv.getItem(itemSlot);
 

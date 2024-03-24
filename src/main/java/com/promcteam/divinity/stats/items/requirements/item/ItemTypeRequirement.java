@@ -51,7 +51,8 @@ public class ItemTypeRequirement extends ItemRequirement<String[]> {
         String[] arr = this.getRaw(src);
         if (arr == null) throw new IllegalStateException("Item does not have stat!");
 
-        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Type.replace("%value%", this.formatValue(src, arr));
+        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Type.replace("%value%",
+                this.formatValue(src, arr));
     }
 
     @Override

@@ -28,14 +28,14 @@ import java.util.*;
 
 public class FortifyManager extends QModuleDrop<FortifyItem> {
 
-    private static final List<String>        LORE_KEY_FORTIFY  = List.of("fortify", "qrpg_fortify");
-    private static final List<NamespacedKey> META_KEY_FORTIFY  = List.of(
+    private static final List<String>        LORE_KEY_FORTIFY = List.of("fortify", "qrpg_fortify");
+    private static final List<NamespacedKey> META_KEY_FORTIFY = List.of(
             new NamespacedKey(QuantumRPG.getInstance(), "FORTIFY_PROTECTION"),
             new NamespacedKey(QuantumRPG.getInstance(), "QRPG_FORTIFY_PROTECTION"),
             Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_fortify_protection")));
-    private              boolean       formatNameAsPrefix;
-    private              String        formatNameText;
-    private              List<String>  formatLoreFormat;
+    private              boolean             formatNameAsPrefix;
+    private              String              formatNameText;
+    private              List<String>        formatLoreFormat;
 
     public FortifyManager(@NotNull QuantumRPG plugin) {
         super(plugin, FortifyItem.class);

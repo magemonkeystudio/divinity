@@ -1,11 +1,11 @@
 material: REDSTONE
 name: Essence of Magic
 lore:
-- '&7Creates a &fMagic Helix %ITEM_LEVEL_ROMAN% &7around you.'
+  - '&7Creates a &fMagic Helix %ITEM_LEVEL_ROMAN% &7around you.'
 socket-display: '&cMagic Helix %ITEM_LEVEL_ROMAN%'
 enchanted: true
 item-flags:
-- '*'
+  - '*'
 tier: rare
 level:
   min: 1
@@ -26,9 +26,9 @@ effect:
   offset-z: 0
 target-requirements:
   type:
-  - ARMOR
+    - ARMOR
   level:
     '1': 10
   module:
-  - '*'
+    - '*'
   socket: default

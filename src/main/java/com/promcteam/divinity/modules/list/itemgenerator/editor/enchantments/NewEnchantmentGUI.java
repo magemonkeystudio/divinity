@@ -12,7 +12,10 @@ public class NewEnchantmentGUI extends AbstractEditorGUI {
     private final List<String> list;
 
     public NewEnchantmentGUI(Player player, ItemGeneratorReference itemGenerator, List<String> missingList) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.ENCHANTMENTS.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.ENCHANTMENTS.getTitle(),
+                itemGenerator);
         this.list = missingList;
     }
 
@@ -24,11 +27,15 @@ public class NewEnchantmentGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             setSlot(i, new Slot(createItem(Material.ENCHANTED_BOOK,
                     "&e" + key,
                     "&6Left-Click: &eSet")) {
@@ -38,9 +45,14 @@ public class NewEnchantmentGUI extends AbstractEditorGUI {
                             null,
                             s -> {
                                 String[] strings = s.split(":");
-                                if (strings.length > 2) {throw new IllegalArgumentException();}
-                                for (String string : strings) {Integer.parseInt(string);} // Detect invalid input
-                                itemGenerator.getConfig().set(EditorGUI.ItemType.ENCHANTMENTS.getPath() + ".list." + key, s);
+                                if (strings.length > 2) {
+                                    throw new IllegalArgumentException();
+                                }
+                                for (String string : strings) {
+                                    Integer.parseInt(string);
+                                } // Detect invalid input
+                                itemGenerator.getConfig()
+                                        .set(EditorGUI.ItemType.ENCHANTMENTS.getPath() + ".list." + key, s);
                                 saveAndReopen();
                                 close();
                             });

@@ -17,7 +17,10 @@ public class BonusesGUI extends AbstractEditorGUI {
     private final String path;
 
     public BonusesGUI(Player player, ItemGeneratorReference itemGenerator, String path) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.BONUSES.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.BONUSES.getTitle(),
+                itemGenerator);
         this.path = path;
     }
 
@@ -52,11 +55,15 @@ public class BonusesGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             if (stat == null) {
                 setSlot(i, new Slot(createItem(Material.REDSTONE, "&eAdd new stat bonus")) {
                     @Override
@@ -70,22 +77,23 @@ public class BonusesGUI extends AbstractEditorGUI {
                 String   value = map.get(stat);
                 if (stat.startsWith(BonusCategoryGUI.ItemType.DAMAGE.getPath())) {
                     material = Material.IRON_SWORD;
-                    id = stat.substring(BonusCategoryGUI.ItemType.DAMAGE.getPath().length()+1)+" damage";
+                    id = stat.substring(BonusCategoryGUI.ItemType.DAMAGE.getPath().length() + 1) + " damage";
                 } else if (stat.startsWith(BonusCategoryGUI.ItemType.DEFENSE.getPath())) {
                     material = Material.IRON_CHESTPLATE;
-                    id = stat.substring(BonusCategoryGUI.ItemType.DEFENSE.getPath().length()+1)+" defense";
+                    id = stat.substring(BonusCategoryGUI.ItemType.DEFENSE.getPath().length() + 1) + " defense";
                 } else if (stat.startsWith(BonusCategoryGUI.ItemType.ITEM_STAT.getPath())) {
                     material = Material.OAK_SIGN;
-                    id = stat.substring(BonusCategoryGUI.ItemType.ITEM_STAT.getPath().length()+1)+" stat";
+                    id = stat.substring(BonusCategoryGUI.ItemType.ITEM_STAT.getPath().length() + 1) + " stat";
                 } else if (stat.startsWith(BonusCategoryGUI.ItemType.FABLED_ATTRIBUTE.getPath())) {
                     material = Material.BOOK;
-                    id = stat.substring(BonusCategoryGUI.ItemType.FABLED_ATTRIBUTE.getPath().length()+1)+" Fabled attribute";
+                    id = stat.substring(BonusCategoryGUI.ItemType.FABLED_ATTRIBUTE.getPath().length() + 1)
+                            + " Fabled attribute";
                 } else if (stat.startsWith(BonusCategoryGUI.ItemType.AMMO.getPath())) {
                     material = Material.ARROW;
-                    id = stat.substring(BonusCategoryGUI.ItemType.AMMO.getPath().length()+1)+" ammo";
+                    id = stat.substring(BonusCategoryGUI.ItemType.AMMO.getPath().length() + 1) + " ammo";
                 } else if (stat.startsWith(BonusCategoryGUI.ItemType.HAND.getPath())) {
                     material = Material.STICK;
-                    id = stat.substring(BonusCategoryGUI.ItemType.HAND.getPath().length()+1)+" hand";
+                    id = stat.substring(BonusCategoryGUI.ItemType.HAND.getPath().length() + 1) + " hand";
                 } else {
                     material = Material.OAK_SIGN;
                     id = stat;

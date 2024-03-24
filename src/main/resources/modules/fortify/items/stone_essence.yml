@@ -1,7 +1,7 @@
 material: COAL
 name: 'Fortify Stone'
 lore:
-- '&7Fortifies the item when socketing &fEssences&7.'
+  - '&7Fortifies the item when socketing &fEssences&7.'
 enchanted: false
 tier: common
 level:
@@ -13,7 +13,7 @@ uses-by-level:
   '10': 3
 protection:
   modules:
-  - essences
+    - essences
   chance-by-level:
     '1': 15
     '2': 20
@@ -27,10 +27,10 @@ protection:
     '10': 60
 target-requirements:
   type:
-  - 'WEAPON'
-  - 'ARMOR'
+    - 'WEAPON'
+    - 'ARMOR'
   level:
     '1': '1:10'
     '2': '11:20'
   module:
-  - '*'
+    - '*'

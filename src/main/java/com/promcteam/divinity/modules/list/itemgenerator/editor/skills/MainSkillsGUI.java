@@ -9,7 +9,10 @@ import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 public class MainSkillsGUI extends AbstractEditorGUI {
 
     public MainSkillsGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 1, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.SKILLS.getTitle(), itemGenerator);
+        super(player,
+                1,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.SKILLS.getTitle(),
+                itemGenerator);
     }
 
     @Override
@@ -23,13 +26,17 @@ public class MainSkillsGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath() + ".minimum", Math.max(0, itemGenerator.getHandle().getAbilityGenerator().getMinAmount() - 1));
+                itemGenerator.getConfig()
+                        .set(EditorGUI.ItemType.SKILLS.getPath() + ".minimum",
+                                Math.max(0, itemGenerator.getHandle().getAbilityGenerator().getMinAmount() - 1));
                 saveAndReopen();
             }
 
             @Override
             public void onRightClick() {
-                itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath() + ".minimum", itemGenerator.getHandle().getAbilityGenerator().getMinAmount() + 1);
+                itemGenerator.getConfig()
+                        .set(EditorGUI.ItemType.SKILLS.getPath() + ".minimum",
+                                itemGenerator.getHandle().getAbilityGenerator().getMinAmount() + 1);
                 saveAndReopen();
             }
 
@@ -38,7 +45,8 @@ public class MainSkillsGUI extends AbstractEditorGUI {
                 sendSetMessage(ItemType.MINIMUM.name() + " skills",
                         String.valueOf(itemGenerator.getHandle().getAbilityGenerator().getMinAmount()),
                         s -> {
-                            itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath() + ".minimum", Integer.parseInt(s));
+                            itemGenerator.getConfig()
+                                    .set(EditorGUI.ItemType.SKILLS.getPath() + ".minimum", Integer.parseInt(s));
                             saveAndReopen();
                         });
             }
@@ -58,13 +66,17 @@ public class MainSkillsGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath() + ".maximum", Math.max(0, itemGenerator.getHandle().getAbilityGenerator().getMaxAmount() - 1));
+                itemGenerator.getConfig()
+                        .set(EditorGUI.ItemType.SKILLS.getPath() + ".maximum",
+                                Math.max(0, itemGenerator.getHandle().getAbilityGenerator().getMaxAmount() - 1));
                 saveAndReopen();
             }
 
             @Override
             public void onRightClick() {
-                itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath() + ".maximum", itemGenerator.getHandle().getAbilityGenerator().getMaxAmount() + 1);
+                itemGenerator.getConfig()
+                        .set(EditorGUI.ItemType.SKILLS.getPath() + ".maximum",
+                                itemGenerator.getHandle().getAbilityGenerator().getMaxAmount() + 1);
                 saveAndReopen();
             }
 
@@ -73,7 +85,8 @@ public class MainSkillsGUI extends AbstractEditorGUI {
                 sendSetMessage(ItemType.MAXIMUM.name() + " skills",
                         String.valueOf(itemGenerator.getHandle().getAbilityGenerator().getMaxAmount()),
                         s -> {
-                            itemGenerator.getConfig().set(EditorGUI.ItemType.SKILLS.getPath() + ".maximum", Integer.parseInt(s));
+                            itemGenerator.getConfig()
+                                    .set(EditorGUI.ItemType.SKILLS.getPath() + ".maximum", Integer.parseInt(s));
                             saveAndReopen();
                         });
             }

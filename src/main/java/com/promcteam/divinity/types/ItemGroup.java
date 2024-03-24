@@ -49,7 +49,7 @@ public enum ItemGroup {
             try {
                 this.mats.add(CodexEngine.get().getItemManager().getItemType(mat));
             } catch (ProItemException e) {
-                QuantumRPG.getInstance().warn("Unknown item group: \""+mat+'\"');
+                QuantumRPG.getInstance().warn("Unknown item group: \"" + mat + '\"');
             }
         }
     }

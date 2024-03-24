@@ -14,7 +14,12 @@ public class ChargesAttribute extends ItemLoreStat<int[]> {
             @NotNull String name,
             @NotNull String format
     ) {
-        super("ITEM_CHARGES", name, format, ItemTags.PLACEHOLDER_ITEM_CHARGES, ItemTags.TAG_ITEM_CHARGES, PersistentDataType.INTEGER_ARRAY);
+        super("ITEM_CHARGES",
+                name,
+                format,
+                ItemTags.PLACEHOLDER_ITEM_CHARGES,
+                ItemTags.TAG_ITEM_CHARGES,
+                PersistentDataType.INTEGER_ARRAY);
 
         // Legacy keys
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_chargesitem_charges"));

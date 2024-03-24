@@ -125,13 +125,14 @@ public class MDropCmd extends MCmd<QModuleDrop<?>> {
         ItemStack item = null;
         Location  loc  = new Location(world, x, y, z);
 
-        ItemType  material;
+        ItemType material;
         try {
             material = args.length >= 9 ? CodexEngine.get().getItemManager().getItemType(args[8]) : null;
         } catch (MissingProviderException | MissingItemException e) {
             material = null;
         }
-        ItemGeneratorManager itemGenerator = this.module instanceof ItemGeneratorManager ? (ItemGeneratorManager) this.module : null;
+        ItemGeneratorManager itemGenerator =
+                this.module instanceof ItemGeneratorManager ? (ItemGeneratorManager) this.module : null;
         GeneratorItem        generatorItem = itemGenerator != null ? itemGenerator.getItemById(id) : null;
 
         Map<String, Integer> addedItems = new HashMap<>();
@@ -149,7 +150,8 @@ public class MDropCmd extends MCmd<QModuleDrop<?>> {
             world.dropItemNaturally(loc, item);
 
             String name = ItemUT.getItemName(item);
-            addedItems.put(name, addedItems.containsKey(name) ? addedItems.get(name) + item.getAmount() : item.getAmount());
+            addedItems.put(name,
+                    addedItems.containsKey(name) ? addedItems.get(name) + item.getAmount() : item.getAmount());
         }
 
         for (String name : addedItems.keySet()) {

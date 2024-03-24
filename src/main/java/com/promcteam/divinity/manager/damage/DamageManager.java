@@ -80,18 +80,26 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
     }
 
     @Nullable
-    public static LivingEntity getTargetByDirection(@NotNull Entity damager, @NotNull Location from, @NotNull Location to) {
+    public static LivingEntity getTargetByDirection(@NotNull Entity damager,
+                                                    @NotNull Location from,
+                                                    @NotNull Location to) {
         return DamageManager.getTargetByDirection(damager, from, to, EngineCfg.COMBAT_MAX_GET_TARGET_DISTANCE);
     }
 
     @Nullable
-    public static LivingEntity getTargetByDirection(@NotNull Entity damager, @NotNull Location from, @NotNull Location to, double range) {
+    public static LivingEntity getTargetByDirection(@NotNull Entity damager,
+                                                    @NotNull Location from,
+                                                    @NotNull Location to,
+                                                    double range) {
         Vector increase = LocUT.getDirectionTo(from, to);
         return DamageManager.getTargetByDirection(damager, from, increase, range);
     }
 
     @Nullable
-    public static LivingEntity getTargetByDirection(@NotNull Entity damager, @NotNull Location from, @NotNull Vector dir, double range) {
+    public static LivingEntity getTargetByDirection(@NotNull Entity damager,
+                                                    @NotNull Location from,
+                                                    @NotNull Vector dir,
+                                                    double range) {
         LivingEntity target   = null;
         Vector       increase = dir;
 
@@ -249,7 +257,9 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
                 if (defAtt != null && defenses.containsKey(defAtt)) {
                     double def = Math.max(0, defenses.get(defAtt) * pveDefenseMod * penetrateMod);
 
-                    double defCalced = Math.max(0, dmgType * (1 - Math.max(def/5, def-4*dmgType/Math.max(1, toughness+8))*defAtt.getProtectionFactor()*0.05));
+                    double defCalced = Math.max(0,
+                            dmgType * (1 - Math.max(def / 5, def - 4 * dmgType / Math.max(1, toughness + 8))
+                                    * defAtt.getProtectionFactor() * 0.05));
                     meta.setDefendedDamage(defAtt, dmgType - defCalced);
                     dmgType = defCalced;
                 }
@@ -378,7 +388,8 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
 
         ItemStack offHand  = player.getInventory().getItemInOffHand();
         ItemStack mainHand = player.getInventory().getItemInMainHand();
-        ItemStack shield   = offHand.getType() == Material.SHIELD ? offHand : mainHand.getType() == Material.SHIELD ? mainHand : null;
+        ItemStack shield   = offHand.getType() == Material.SHIELD ? offHand
+                : mainHand.getType() == Material.SHIELD ? mainHand : null;
         if (shield == null) return;
 
         Damageable shieldMeta = (Damageable) shield.getItemMeta();
@@ -489,8 +500,12 @@ public class DamageManager extends IListener<QuantumRPG> implements DamageTypePr
     }
 
     @Override
-    public boolean dealDamage(@NotNull LivingEntity entity, double amount, String damageType, @Nullable LivingEntity damager) {
-        DamageAttribute damageAttribute = ItemStats.getDamageById(ProItemManager.stripPrefix(getNamespace(), damageType));
+    public boolean dealDamage(@NotNull LivingEntity entity,
+                              double amount,
+                              String damageType,
+                              @Nullable LivingEntity damager) {
+        DamageAttribute damageAttribute =
+                ItemStats.getDamageById(ProItemManager.stripPrefix(getNamespace(), damageType));
         if (damageAttribute == null) return false;
         final boolean[] success = {false};
         Listener listener = new Listener() {

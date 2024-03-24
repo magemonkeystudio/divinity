@@ -87,7 +87,9 @@ public class UserProfileSerializer implements JsonSerializer<UserProfile>, JsonD
 
         JsonElement         eNames       = j.get("namesMode");
         String              namesModeRaw = eNames != null ? eNames.getAsString() : null;
-        UserEntityNamesMode namesMode    = namesModeRaw != null ? CollectionsUT.getEnum(namesModeRaw, UserEntityNamesMode.class) : UserEntityNamesMode.DEFAULT;
+        UserEntityNamesMode namesMode    =
+                namesModeRaw != null ? CollectionsUT.getEnum(namesModeRaw, UserEntityNamesMode.class)
+                        : UserEntityNamesMode.DEFAULT;
 
         JsonElement eHideHelmet = j.get("hideHelmet");
         boolean     hideHelmet  = eHideHelmet != null && eHideHelmet.getAsBoolean();

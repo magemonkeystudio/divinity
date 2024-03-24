@@ -18,7 +18,10 @@ public class NewSkillGUI extends AbstractEditorGUI {
     private final List<String> list;
 
     public NewSkillGUI(Player player, ItemGeneratorReference itemGenerator, List<String> missingSkills) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.SKILLS.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.SKILLS.getTitle(),
+                itemGenerator);
         this.list = missingSkills;
     }
 
@@ -31,11 +34,15 @@ public class NewSkillGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             ItemStack itemStack = createItem(Material.JACK_O_LANTERN,
                     "&e" + key, "&6Left-Click: &eAdd");
             if (fabledHook != null) {

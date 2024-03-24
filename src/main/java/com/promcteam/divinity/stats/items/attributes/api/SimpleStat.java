@@ -71,9 +71,9 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
     @NotNull
     public List<BiFunction<Boolean, Double, Double>> get(@NotNull ItemStack item, @Nullable Player player) {
         List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
-        double  base    = 0;
-        double  percent = 0;
-        boolean has     = false;
+        double                                    base    = 0;
+        double                                    percent = 0;
+        boolean                                   has     = false;
 
         // Get from old format
         ItemMeta meta = item.getItemMeta();
@@ -232,10 +232,10 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         if (lore == null) return item;
 
         for (int i = 0; i < amount; i++) {
-            int loreIndex = -1;
-            String metaId = "";
+            int    loreIndex = -1;
+            String metaId    = "";
             for (NamespacedKey key : this.keys) {
-                metaId = key.getKey()+i;
+                metaId = key.getKey() + i;
                 loreIndex = ItemUT.getLoreIndex(item, metaId);
                 if (loreIndex >= 0) break;
             }
@@ -257,9 +257,10 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
     @NotNull
     public String getFormat(@Nullable Player p, @NotNull ItemStack item, @NotNull StatBonus value) {
         StatBonus.Condition<?> condition = value.getCondition();
-        return StringUT.colorFix(super.getFormat(item, value).replace("%condition%", condition == null || !EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE
-                ? ""
-                : condition.getFormat(p, item)));
+        return StringUT.colorFix(super.getFormat(item, value)
+                .replace("%condition%", condition == null || !EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE
+                        ? ""
+                        : condition.getFormat(p, item)));
     }
 
     public enum ItemType {

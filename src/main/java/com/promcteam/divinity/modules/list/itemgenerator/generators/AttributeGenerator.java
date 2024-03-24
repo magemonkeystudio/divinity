@@ -70,12 +70,12 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
             double chance = cfg.getDouble(path2 + "chance");
             //if (chance <= 0) return; Removed so that Bonuses can be applied
 
-            double            m1         = cfg.getDouble(path2 + "min", 0D);
-            double            m2         = cfg.getDouble(path2 + "max", 0D);
-            double            scale      = cfg.getDouble(path2 + "scale-by-level", 1D);
-            boolean           flatRange  = cfg.getBoolean(path2 + "flat-range", false);
-            boolean           roundValues  = cfg.getBoolean(path2 + "round", false);
-            DamageInformation damageInfo = new DamageInformation(chance, m1, m2, scale, flatRange, roundValues);
+            double            m1          = cfg.getDouble(path2 + "min", 0D);
+            double            m2          = cfg.getDouble(path2 + "max", 0D);
+            double            scale       = cfg.getDouble(path2 + "scale-by-level", 1D);
+            boolean           flatRange   = cfg.getBoolean(path2 + "flat-range", false);
+            boolean           roundValues = cfg.getBoolean(path2 + "round", false);
+            DamageInformation damageInfo  = new DamageInformation(chance, m1, m2, scale, flatRange, roundValues);
             this.attributes.put(att, damageInfo);
         });
     }
@@ -164,8 +164,10 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
             // If min. stats are ADDED, picks random stat and check it chance manually.
             @Nullable A stat;
             if (count < rollMin) { // Let's roll only 100% until we have our minimum or all the 100s are used.
-                Map<A, Double> filtered = mapChance.keySet().stream()
-                        .filter(a -> mapChance.get(a) >= 100D).collect(Collectors.toMap(a -> a, mapChance::get, (a1, b) -> b));
+                Map<A, Double> filtered = mapChance.keySet()
+                        .stream()
+                        .filter(a -> mapChance.get(a) >= 100D)
+                        .collect(Collectors.toMap(a -> a, mapChance::get, (a1, b) -> b));
                 stat = filtered.isEmpty() ? Rnd.getRandomItem(mapChance) : Rnd.getRandomItem(filtered);
             } else
                 stat = Rnd.get(new ArrayList<>(mapChance.keySet()));

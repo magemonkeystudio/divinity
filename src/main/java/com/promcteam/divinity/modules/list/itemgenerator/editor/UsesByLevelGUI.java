@@ -16,7 +16,10 @@ import java.util.TreeMap;
 public class UsesByLevelGUI extends AbstractEditorGUI {
 
     public UsesByLevelGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.USES_BY_LEVEL.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.USES_BY_LEVEL.getTitle(),
+                itemGenerator);
     }
 
     @Override
@@ -30,11 +33,15 @@ public class UsesByLevelGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
 
             setSlot(i, level == null ?
                     new Slot(createItem(Material.REDSTONE, "&eAdd new level")) {
@@ -47,7 +54,9 @@ public class UsesByLevelGUI extends AbstractEditorGUI {
                                         new BukkitRunnable() {
                                             @Override
                                             public void run() {
-                                                sendSetMessage(EditorGUI.ItemType.USES_BY_LEVEL.getTitle() + " " + level, String.valueOf(map.get(level)),
+                                                sendSetMessage(
+                                                        EditorGUI.ItemType.USES_BY_LEVEL.getTitle() + " " + level,
+                                                        String.valueOf(map.get(level)),
                                                         s1 -> {
                                                             map.put(level, Integer.parseInt(s1));
                                                             setUsesByLevel(map);
@@ -65,7 +74,8 @@ public class UsesByLevelGUI extends AbstractEditorGUI {
                             "&6Drop: &eRemove")) {
                         @Override
                         public void onLeftClick() {
-                            sendSetMessage(EditorGUI.ItemType.USES_BY_LEVEL.getTitle() + " " + level, String.valueOf(map.get(level)),
+                            sendSetMessage(EditorGUI.ItemType.USES_BY_LEVEL.getTitle() + " " + level,
+                                    String.valueOf(map.get(level)),
                                     s -> {
                                         map.put(level, Integer.parseInt(s));
                                         setUsesByLevel(map);
@@ -89,19 +99,21 @@ public class UsesByLevelGUI extends AbstractEditorGUI {
 
     public static Map<Integer, Integer> getUsesByLevel(JYML cfg) {
         Map<Integer, Integer> map                  = new TreeMap<>();
-        ConfigurationSection  configurationSection = cfg.getConfigurationSection(EditorGUI.ItemType.USES_BY_LEVEL.getPath());
+        ConfigurationSection  configurationSection =
+                cfg.getConfigurationSection(EditorGUI.ItemType.USES_BY_LEVEL.getPath());
         if (configurationSection != null) {
             for (String key : configurationSection.getKeys(false)) {
                 try {
                     map.put(Integer.parseInt(key), configurationSection.getInt(key));
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
             }
         }
         return map;
     }
 
     protected void setUsesByLevel(Map<Integer, Integer> usesByLevel) {
-        JYML cfg = this.itemGenerator.getConfig();
+        JYML   cfg  = this.itemGenerator.getConfig();
         String path = EditorGUI.ItemType.USES_BY_LEVEL.getPath();
         cfg.remove(EditorGUI.ItemType.USES_BY_LEVEL.getPath());
         path = path + '.';

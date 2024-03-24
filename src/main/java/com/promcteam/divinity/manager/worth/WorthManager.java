@@ -38,9 +38,9 @@ public class WorthManager implements Loadable {
 
     private final QuantumRPG                                         plugin;
     private final Map<ItemStack, Double>                             worthCache = new HashMap<>();
-    private       Map<String, Double>          priceItemMaterial;
-    private       Map<SimpleStat.Type, Double> priceItemStats;
-    private       TreeMap<Integer, Double>     priceRefineLvl;
+    private       Map<String, Double>                                priceItemMaterial;
+    private       Map<SimpleStat.Type, Double>                       priceItemStats;
+    private       TreeMap<Integer, Double>                           priceRefineLvl;
     private       Map<String, Double>                                priceDefenseTypes;
     private       Map<String, Double>                                priceDamageTypes;
     private       Map<SocketAttribute.Type, Map<String, Double>>     priceSocketTypes;

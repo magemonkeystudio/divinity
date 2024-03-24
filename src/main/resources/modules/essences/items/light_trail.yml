@@ -1,11 +1,11 @@
 material: GLOWSTONE_DUST
 name: Essence of Trail
 lore:
-- '&7Creates a &fLight Trail %ITEM_LEVEL_ROMAN% &7behind you.'
+  - '&7Creates a &fLight Trail %ITEM_LEVEL_ROMAN% &7behind you.'
 socket-display: '&eLight Trail %ITEM_LEVEL_ROMAN%'
 enchanted: true
 item-flags:
-- '*'
+  - '*'
 tier: common
 level:
   min: 1
@@ -26,9 +26,9 @@ effect:
   offset-z: 0.25
 target-requirements:
   type:
-  - ARMOR
+    - ARMOR
   level:
     '1': 10
   module:
-  - '*'
+    - '*'
   socket: default

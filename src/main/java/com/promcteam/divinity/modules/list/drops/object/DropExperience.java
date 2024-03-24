@@ -7,7 +7,7 @@ import com.promcteam.divinity.config.EngineCfg;
 
 public class DropExperience extends DropNonItem {
     private final double chance;
-    private final int min, max;
+    private final int    min, max;
 
     public DropExperience(ConfigurationSection config) {
         super(config);

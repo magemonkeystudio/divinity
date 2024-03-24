@@ -117,7 +117,8 @@ public class ItemRequirementListener extends IListener<QuantumRPG> {
         ItemStack item = e.getCurrentItem();
         if (item == null) return;
 
-        if (e.getAction() == InventoryAction.HOTBAR_SWAP && !ItemUtils.canUse(item, player) && !EngineCfg.ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS) {
+        if (e.getAction() == InventoryAction.HOTBAR_SWAP && !ItemUtils.canUse(item, player)
+                && !EngineCfg.ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS) {
             e.setCancelled(true);
             return;
         }

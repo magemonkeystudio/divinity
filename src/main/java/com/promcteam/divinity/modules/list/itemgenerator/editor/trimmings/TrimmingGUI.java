@@ -12,13 +12,17 @@ public class TrimmingGUI extends AbstractEditorGUI {
     private final TrimmingListGUI.TrimmingEntry entry;
 
     public TrimmingGUI(Player player, ItemGeneratorReference itemGenerator, TrimmingListGUI.TrimmingEntry entry) {
-        super(player, 1, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.ARMOR_TRIMINGS.getTitle(), itemGenerator);
+        super(player,
+                1,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.ARMOR_TRIMINGS.getTitle(),
+                itemGenerator);
         this.entry = entry;
     }
 
     @Override
     public void setContents() {
-        String name = entry.getArmorTrim().getMaterial() == null ? "Any" : entry.getArmorTrim().getMaterial().getKey().getKey();
+        String name = entry.getArmorTrim().getMaterial() == null ? "Any"
+                : entry.getArmorTrim().getMaterial().getKey().getKey();
         setSlot(0, new Slot(createItem(fromMaterial(entry.getArmorTrim().getMaterial()),
                 "&eTrim Material",
                 "&bCurrent: &a" + name.substring(0, 1).toUpperCase() + name.substring(1),
@@ -48,7 +52,8 @@ public class TrimmingGUI extends AbstractEditorGUI {
                         String.valueOf(entry.getWeight()),
                         s -> {
                             entry.setWeight(Double.parseDouble(s));
-                            itemGenerator.getConfig().set(TrimmingListGUI.getPath(entry.getArmorTrim()), entry.getWeight());
+                            itemGenerator.getConfig()
+                                    .set(TrimmingListGUI.getPath(entry.getArmorTrim()), entry.getWeight());
                             saveAndReopen();
                         });
             }

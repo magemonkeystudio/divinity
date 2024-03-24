@@ -17,7 +17,10 @@ import java.util.Map;
 public class MainModelDataGUI extends AbstractEditorGUI {
 
     public MainModelDataGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(),
+                itemGenerator);
     }
 
     @Override
@@ -27,7 +30,8 @@ public class MainModelDataGUI extends AbstractEditorGUI {
         List<String>               list = new ArrayList<>();
         map.put("default", cfg.getIntegerList(MainMaterialsGUI.ItemType.MODEL_DATA.getPath() + ".default"));
         list.add("default");
-        ConfigurationSection modelDataCfg = cfg.getConfigurationSection(MainMaterialsGUI.ItemType.MODEL_DATA.getPath() + ".special");
+        ConfigurationSection modelDataCfg =
+                cfg.getConfigurationSection(MainMaterialsGUI.ItemType.MODEL_DATA.getPath() + ".special");
         if (modelDataCfg != null) {
             for (String key : modelDataCfg.getKeys(false)) {
                 String path = "special." + key;
@@ -42,11 +46,15 @@ public class MainModelDataGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             if (path == null) {
                 setSlot(i, new Slot(createItem(Material.REDSTONE, "&eAdd new material")) {
                     @Override
@@ -54,14 +62,17 @@ public class MainModelDataGUI extends AbstractEditorGUI {
                         sendSetMessage("material for the model data",
                                 null,
                                 s -> {
-                                    cfg.set(MainMaterialsGUI.ItemType.MODEL_DATA.getPath() + ".special." + s, List.of());
+                                    cfg.set(MainMaterialsGUI.ItemType.MODEL_DATA.getPath() + ".special." + s,
+                                            List.of());
                                     saveAndReopen();
                                 });
                     }
                 });
             } else if (path.equals("default")) {
                 List<String> stringList = new ArrayList<>();
-                for (int cmd : map.get(path)) {stringList.add(String.valueOf(cmd));}
+                for (int cmd : map.get(path)) {
+                    stringList.add(String.valueOf(cmd));
+                }
                 setSlot(i, new Slot(createItem(Material.STONE,
                         "&e" + path, StringUT.replace(CURRENT_PLACEHOLDER, stringList,
                                 "&bCurrent:",
@@ -75,7 +86,9 @@ public class MainModelDataGUI extends AbstractEditorGUI {
             } else {
                 String       id         = path.replace("special.", "");
                 List<String> stringList = new ArrayList<>();
-                for (int cmd : map.get(path)) {stringList.add(String.valueOf(cmd));}
+                for (int cmd : map.get(path)) {
+                    stringList.add(String.valueOf(cmd));
+                }
                 setSlot(i, new Slot(createItem(MainMaterialsGUI.getMaterialGroup(id),
                         "&e" + id, StringUT.replace(CURRENT_PLACEHOLDER, stringList,
                                 "&bCurrent:",
@@ -92,7 +105,8 @@ public class MainModelDataGUI extends AbstractEditorGUI {
                         map.remove(path);
                         cfg.remove(MainMaterialsGUI.ItemType.MODEL_DATA.getPath());
                         for (Map.Entry<String, List<Integer>> entry : map.entrySet()) {
-                            cfg.set(MainMaterialsGUI.ItemType.MODEL_DATA.getPath() + '.' + entry.getKey(), entry.getValue());
+                            cfg.set(MainMaterialsGUI.ItemType.MODEL_DATA.getPath() + '.' + entry.getKey(),
+                                    entry.getValue());
                         }
                         saveAndReopen();
                     }

@@ -80,11 +80,11 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
     private ResourceManager    resourceManager;
     private ItemAbilityHandler abilityHandler;
 
-    public static final String PLACE_GEN_DAMAGE        = "%GENERATOR_DAMAGE%";
-    public static final String PLACE_GEN_DEFENSE       = "%GENERATOR_DEFENSE%";
-    public static final String PLACE_GEN_STATS         = "%GENERATOR_STATS%";
-    public static final String PLACE_GEN_SOCKETS       = "%GENERATOR_SOCKETS_%TYPE%%";
-    public static final String PLACE_GEN_ABILITY       = "%GENERATOR_SKILLS%";
+    public static final String PLACE_GEN_DAMAGE      = "%GENERATOR_DAMAGE%";
+    public static final String PLACE_GEN_DEFENSE     = "%GENERATOR_DEFENSE%";
+    public static final String PLACE_GEN_STATS       = "%GENERATOR_STATS%";
+    public static final String PLACE_GEN_SOCKETS     = "%GENERATOR_SOCKETS_%TYPE%%";
+    public static final String PLACE_GEN_ABILITY     = "%GENERATOR_SKILLS%";
     public static final String PLACE_GEN_FABLED_ATTR = "%GENERATOR_FABLED_ATTR%";
 
     public ItemGeneratorManager(@NotNull QuantumRPG plugin) {
@@ -180,19 +180,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private List<Integer>              modelDataList;
         private Map<String, List<Integer>> modelDataSpecial;
 
-        private Map<String, BonusMap> materialsModifiers;
+        private Map<String, BonusMap>                     materialsModifiers;
         private Map<String, Map<ItemLoreStat<?>, String>> classModifiers;
 
         private TreeMap<Integer, String[]> reqUserLvl;
         private TreeMap<Integer, String[]> reqUserClass;
         private TreeMap<Integer, String[]> reqBannedUserClass;
 
-        private int                        enchantsMinAmount;
-        private int                        enchantsMaxAmount;
-        private boolean                    enchantsSafeOnly;
-        private boolean                    enchantsSafeLevels;
+        private       int                        enchantsMinAmount;
+        private       int                        enchantsMaxAmount;
+        private       boolean                    enchantsSafeOnly;
+        private       boolean                    enchantsSafeLevels;
         private       Map<Enchantment, String[]> enchantsList;
-        private final TreeMap<Double, String> armorTrims = new TreeMap<>();
+        private final TreeMap<Double, String>    armorTrims = new TreeMap<>();
 
         private Set<IAttributeGenerator> attributeGenerators;
         private AbilityGenerator         abilityGenerator;
@@ -209,10 +209,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             if (this.materialsWhitelist) {
                 this.materialsList = new HashSet<>();
                 Set<String> startWildcards = new HashSet<>();
-                Set<String> endWildcards = new HashSet<>();
+                Set<String> endWildcards   = new HashSet<>();
 
                 for (String mat : cfg.getStringList(path + "materials.black-list")) {
-                    String[] split = mat.split('\\'+JStrings.MASK_ANY, 2);
+                    String[] split = mat.split('\\' + JStrings.MASK_ANY, 2);
                     if (split.length == 2) { // We have a wildcard
                         if (split[0].isEmpty()) startWildcards.add(split[1].toUpperCase());
                         else if (split[1].isEmpty()) endWildcards.add(split[0].toUpperCase());
@@ -220,14 +220,17 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     }
                     try {
                         ItemType itemType = CodexEngine.get().getItemManager().getItemType(mat);
-                        if (itemType.getNamespace().equals(DivinityProvider.NAMESPACE)) continue; // Avoid self-reference
+                        if (itemType.getNamespace().equals(DivinityProvider.NAMESPACE))
+                            continue; // Avoid self-reference
                         this.materialsList.add(itemType);
-                    } catch (MissingProviderException | MissingItemException ignored) {}
+                    } catch (MissingProviderException | MissingItemException ignored) {
+                    }
                 }
 
                 for (ItemType itemType : Config.getAllRegisteredMaterials()) {
                     String name = itemType.getNamespacedID().toUpperCase();
-                    if (startWildcards.stream().anyMatch(name::endsWith) || endWildcards.stream().anyMatch(name::startsWith)) {
+                    if (startWildcards.stream().anyMatch(name::endsWith) || endWildcards.stream()
+                            .anyMatch(name::startsWith)) {
                         this.materialsList.add(itemType);
                     }
                 }
@@ -235,11 +238,11 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 this.materialsList = new HashSet<>(Config.getAllRegisteredMaterials());
                 Set<String> materials = new HashSet<>(cfg.getStringList(path + "materials.black-list"));
                 this.materialsList.removeIf(matAll -> {
-                    String namespacedID = matAll.getNamespacedID();
+                    String namespacedID          = matAll.getNamespacedID();
                     String upperCaseNamespacedID = namespacedID.toUpperCase();
                     for (String mat : materials) {
-                        String[] split = mat.split('\\'+JStrings.MASK_ANY, 2);
-                        if (split.length == 2 ) { // We have a wildcard
+                        String[] split = mat.split('\\' + JStrings.MASK_ANY, 2);
+                        if (split.length == 2) { // We have a wildcard
                             if (split[0].isEmpty() && upperCaseNamespacedID.endsWith(split[1])) return true;
                             else if (split[1].isEmpty() && upperCaseNamespacedID.startsWith(split[0])) return true;
                         }
@@ -305,10 +308,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (sVal == null) continue;
 
                     String[] split = sVal.split("%", 2);
-                    boolean perc = split.length == 2 && split[1].isEmpty();
-                    double  val  = StringUT.getDouble(split[0], 0, true);
+                    boolean  perc  = split.length == 2 && split[1].isEmpty();
+                    double   val   = StringUT.getDouble(split[0], 0, true);
 
-                    statMap.put(dt, val+(perc ? "%" : ""));
+                    statMap.put(dt, val + (perc ? "%" : ""));
                 }
 
                 path2 = path + group + ".defense-types";
@@ -320,10 +323,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (sVal == null) continue;
 
                     String[] split = sVal.split("%", 2);
-                    boolean perc = split.length == 2 && split[1].isEmpty();
-                    double  val  = StringUT.getDouble(split[0], 0, true);
+                    boolean  perc  = split.length == 2 && split[1].isEmpty();
+                    double   val   = StringUT.getDouble(split[0], 0, true);
 
-                    statMap.put(dt, val+(perc ? "%" : ""));
+                    statMap.put(dt, val + (perc ? "%" : ""));
                 }
 
                 path2 = path + group + ".item-stats";
@@ -337,10 +340,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (sVal == null) continue;
 
                     String[] split = sVal.split("%", 2);
-                    boolean perc = split.length == 2 && split[1].isEmpty();
-                    double  val  = StringUT.getDouble(split[0], 0, true);
+                    boolean  perc  = split.length == 2 && split[1].isEmpty();
+                    double   val   = StringUT.getDouble(split[0], 0, true);
 
-                    statMap.put(mainStat, val+(perc ? "%" : ""));
+                    statMap.put(mainStat, val + (perc ? "%" : ""));
                 }
 
                 this.classModifiers.put(group.toLowerCase(), statMap);
@@ -411,7 +414,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 path = "generator.armor-trimmings";
                 double totalWeight = 0;
                 for (String key : cfg.getSection(path)) {
-                    double weight = cfg.getDouble(path+'.'+key);
+                    double weight = cfg.getDouble(path + '.' + key);
                     if (weight == 0) {
                         continue;
                     }
@@ -420,11 +423,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                         armorTrims.put(totalWeight, null);
                         continue;
                     }
-                    String[]     split        = key.toLowerCase().split(":");
+                    String[] split = key.toLowerCase().split(":");
                     if (split.length != 2) {
                         continue;
                     }
-                    if (!split[0].equals("*") && Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(split[0])) == null) {
+                    if (!split[0].equals("*")
+                            && Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(split[0])) == null) {
                         continue;
                     }
                     if (!split[1].equals("*") && Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(split[1])) == null) {
@@ -572,12 +576,13 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             for (Map.Entry<String, Map<ItemLoreStat<?>, String>> entry : this.classModifiers.entrySet()) {
                 for (Map.Entry<ItemLoreStat<?>, String> entry1 : entry.getValue().entrySet()) {
                     if (entry1.getKey().equals(stat)) {
-                        String sVal = entry1.getValue();
+                        String   sVal  = entry1.getValue();
                         String[] split = sVal.split("%", 2);
                         list.add(new StatBonus(
                                 new double[]{Double.parseDouble(split[0])},
                                 split.length == 2 && split[1].isEmpty(),
-                                new StatBonus.Condition<>(ItemRequirements.getUserRequirement(ClassRequirement.class), new String[]{entry.getKey()})));
+                                new StatBonus.Condition<>(ItemRequirements.getUserRequirement(ClassRequirement.class),
+                                        new String[]{entry.getKey()})));
                     }
                 }
             }
@@ -716,12 +721,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             }
 
             if (!armorTrims.isEmpty() && meta instanceof ArmorMeta) {
-                String trimString = armorTrims.ceilingEntry(Rnd.nextDouble()*armorTrims.lastKey()).getValue();
+                String    trimString = armorTrims.ceilingEntry(Rnd.nextDouble() * armorTrims.lastKey()).getValue();
                 ArmorTrim armorTrim;
                 if (trimString == null) {
                     armorTrim = null;
                 } else {
-                    String[] split = trimString.split(":");
+                    String[]     split        = trimString.split(":");
                     TrimMaterial trimMaterial = null;
                     if (split[0].equals("*")) {
                         int size = 0;
@@ -729,8 +734,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                             size++;
                         }
                         int index = Rnd.get(size);
-                        int i = 0;
-                        for (Iterator<TrimMaterial> iterator = Registry.TRIM_MATERIAL.iterator(); iterator.hasNext();) {
+                        int i     = 0;
+                        for (Iterator<TrimMaterial> iterator = Registry.TRIM_MATERIAL.iterator();
+                             iterator.hasNext(); ) {
                             TrimMaterial next = iterator.next();
                             if (index == i) {
                                 trimMaterial = next;
@@ -748,8 +754,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                             size++;
                         }
                         int index = Rnd.get(size);
-                        int i = 0;
-                        for (Iterator<TrimPattern> iterator = Registry.TRIM_PATTERN.iterator(); iterator.hasNext();) {
+                        int i     = 0;
+                        for (Iterator<TrimPattern> iterator = Registry.TRIM_PATTERN.iterator(); iterator.hasNext(); ) {
                             TrimPattern next = iterator.next();
                             if (index == i) {
                                 trimPattern = next;
@@ -760,7 +766,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     } else {
                         trimPattern = Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(split[1]));
                     }
-                    armorTrim = new ArmorTrim(Objects.requireNonNull(trimMaterial), Objects.requireNonNull(trimPattern));
+                    armorTrim =
+                            new ArmorTrim(Objects.requireNonNull(trimMaterial), Objects.requireNonNull(trimPattern));
                 }
                 ((ArmorMeta) meta).setTrim(armorTrim);
             }
@@ -768,7 +775,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             item.setItemMeta(meta);
 
             // Add enchants
-            int                                    enchRoll  =
+            int enchRoll =
                     Rnd.get(this.getMinEnchantments(), this.getMaxEnchantments());
             int                                    enchCount = 0;
             List<Map.Entry<Enchantment, String[]>> enchants  = new ArrayList<>(this.enchantsList.entrySet());

@@ -14,19 +14,19 @@ import java.util.Objects;
 public class CreateCommand extends MCmd<ItemGeneratorManager> {
 
     public CreateCommand(@NotNull ItemGeneratorManager module) {
-        super(module, new String[] {"create"}, Perms.ADMIN);
+        super(module, new String[]{"create"}, Perms.ADMIN);
     }
 
     @NotNull
     @Override
-    public String usage() { return "<id>"; }
+    public String usage() {return "<id>";}
 
     @NotNull
     @Override
-    public String description() { return plugin.lang().ItemGenerator_Cmd_Create_Desc.getMsg(); }
+    public String description() {return plugin.lang().ItemGenerator_Cmd_Create_Desc.getMsg();}
 
     @Override
-    public boolean playersOnly() { return false; }
+    public boolean playersOnly() {return false;}
 
     @Override
     protected void perform(@NotNull CommandSender commandSender, @NotNull String s, @NotNull String[] strings) {
@@ -38,17 +38,20 @@ public class CreateCommand extends MCmd<ItemGeneratorManager> {
             plugin.lang().ItemGenerator_Cmd_Create_Error_ExistingId.send(commandSender);
             return;
         }
-        File file = new File(plugin.getDataFolder()+module.getPath()+"items/"+strings[1]+".yml");
+        File file = new File(plugin.getDataFolder() + module.getPath() + "items/" + strings[1] + ".yml");
         if (file.exists()) {
             plugin.lang().ItemGenerator_Cmd_Create_Error_ExistingFile.send(commandSender);
             return;
         }
-        try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(plugin.getClass().getResourceAsStream(module.getPath()+"items/common.yml")))) {
+        try (InputStreamReader in = new InputStreamReader(Objects.requireNonNull(plugin.getClass()
+                .getResourceAsStream(module.getPath() + "items/common.yml")))) {
             JYML cfg = new JYML(file);
             cfg.load(in);
             cfg.save();
             module.load(strings[1], cfg);
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         plugin.lang().ItemGenerator_Cmd_Create_Done.replace("%id%", strings[1]).send(commandSender);
     }
 }

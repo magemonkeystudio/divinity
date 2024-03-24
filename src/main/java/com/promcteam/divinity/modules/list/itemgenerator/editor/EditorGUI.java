@@ -66,7 +66,8 @@ public class EditorGUI extends AbstractEditorGUI {
             }
         });
         setSlot(2, new Slot(createItem(Material.WRITABLE_BOOK,
-                "&eLore format", StringUT.replace(CURRENT_PLACEHOLDER, itemGenerator.getConfig().getStringList(ItemType.LORE.getPath()),
+                "&eLore format",
+                StringUT.replace(CURRENT_PLACEHOLDER, itemGenerator.getConfig().getStringList(ItemType.LORE.getPath()),
                         "&bCurrent:",
                         "&a----------",
                         "&f%current%",
@@ -74,7 +75,10 @@ public class EditorGUI extends AbstractEditorGUI {
                         "&6Left-Click: &eModify"))) {
             @Override
             public void onLeftClick() {
-                openSubMenu(new LoreGUI(player, "[&d" + itemGenerator.getId() + "&r] editor/" + ItemType.LORE.getTitle(), itemGenerator, ItemType.LORE.getPath()));
+                openSubMenu(new LoreGUI(player,
+                        "[&d" + itemGenerator.getId() + "&r] editor/" + ItemType.LORE.getTitle(),
+                        itemGenerator,
+                        ItemType.LORE.getPath()));
             }
 
             @Override
@@ -92,13 +96,17 @@ public class EditorGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(ItemType.MODEL_DATA.getPath(), Math.max(0, itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0) - 1));
+                itemGenerator.getConfig()
+                        .set(ItemType.MODEL_DATA.getPath(),
+                                Math.max(0, itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0) - 1));
                 saveAndReopen();
             }
 
             @Override
             public void onRightClick() {
-                itemGenerator.getConfig().set(ItemType.MODEL_DATA.getPath(), Math.max(0, itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0) + 1));
+                itemGenerator.getConfig()
+                        .set(ItemType.MODEL_DATA.getPath(),
+                                Math.max(0, itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0) + 1));
                 saveAndReopen();
             }
 
@@ -107,14 +115,14 @@ public class EditorGUI extends AbstractEditorGUI {
                 sendSetMessage(ItemType.MODEL_DATA.getTitle(),
                         String.valueOf(itemGenerator.getConfig().getInt(ItemType.MODEL_DATA.getPath(), 0)),
                         s -> {
-                    int cmd = Integer.parseInt(s);
-                    if (cmd >= 0) {
-                        itemGenerator.getConfig().set(ItemType.MODEL_DATA.getPath(), cmd);
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
-                    saveAndReopen();
-                });
+                            int cmd = Integer.parseInt(s);
+                            if (cmd >= 0) {
+                                itemGenerator.getConfig().set(ItemType.MODEL_DATA.getPath(), cmd);
+                            } else {
+                                throw new IllegalArgumentException();
+                            }
+                            saveAndReopen();
+                        });
             }
 
             @Override
@@ -123,7 +131,7 @@ public class EditorGUI extends AbstractEditorGUI {
                 saveAndReopen();
             }
         });
-        int[] color = itemGenerator.getHandle().getColor();
+        int[]     color = itemGenerator.getHandle().getColor();
         ItemStack itemStack;
         if (color == null) {
             itemStack = createItem(Material.GLASS_BOTTLE,
@@ -153,12 +161,15 @@ public class EditorGUI extends AbstractEditorGUI {
                         color == null ? "null" : color[0] + "," + color[1] + "," + color[2],
                         s -> {
                             String[] splitString = s.split(",");
-                            if (splitString.length != 3) {throw new IllegalArgumentException();}
+                            if (splitString.length != 3) {
+                                throw new IllegalArgumentException();
+                            }
                             int[] rgb = new int[3];
                             rgb[0] = Integer.parseInt(splitString[0].strip());
                             rgb[1] = Integer.parseInt(splitString[1].strip());
                             rgb[2] = Integer.parseInt(splitString[2].strip());
-                            itemGenerator.getConfig().set(ItemType.COLOR.getPath(), rgb[0] + "," + rgb[1] + "," + rgb[2]);
+                            itemGenerator.getConfig()
+                                    .set(ItemType.COLOR.getPath(), rgb[0] + "," + rgb[1] + "," + rgb[2]);
                             saveAndReopen();
                         });
             }
@@ -178,13 +189,17 @@ public class EditorGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(ItemType.DURABILITY.getPath(), Math.max(0, itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0) - 1));
+                itemGenerator.getConfig()
+                        .set(ItemType.DURABILITY.getPath(),
+                                Math.max(0, itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0) - 1));
                 saveAndReopen();
             }
 
             @Override
             public void onRightClick() {
-                itemGenerator.getConfig().set(ItemType.DURABILITY.getPath(), Math.max(0, itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0) + 1));
+                itemGenerator.getConfig()
+                        .set(ItemType.DURABILITY.getPath(),
+                                Math.max(0, itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0) + 1));
                 saveAndReopen();
             }
 
@@ -193,14 +208,14 @@ public class EditorGUI extends AbstractEditorGUI {
                 sendSetMessage(ItemType.DURABILITY.getTitle(),
                         String.valueOf(itemGenerator.getConfig().getInt(ItemType.DURABILITY.getPath(), 0)),
                         s -> {
-                    int durability = Integer.parseInt(s);
-                    if (durability >= 0) {
-                        itemGenerator.getConfig().set(ItemType.DURABILITY.getPath(), durability);
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
-                    saveAndReopen();
-                });
+                            int durability = Integer.parseInt(s);
+                            if (durability >= 0) {
+                                itemGenerator.getConfig().set(ItemType.DURABILITY.getPath(), durability);
+                            } else {
+                                throw new IllegalArgumentException();
+                            }
+                            saveAndReopen();
+                        });
             }
 
             @Override
@@ -224,7 +239,8 @@ public class EditorGUI extends AbstractEditorGUI {
         setSlot(6, new Slot(itemStack) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(ItemType.UNBREAKABLE.getPath(), !itemGenerator.getHandle().isUnbreakable());
+                itemGenerator.getConfig()
+                        .set(ItemType.UNBREAKABLE.getPath(), !itemGenerator.getHandle().isUnbreakable());
                 saveAndReopen();
             }
 
@@ -290,7 +306,9 @@ public class EditorGUI extends AbstractEditorGUI {
             });
         }
         List<String> lore = new ArrayList<>();
-        for (ItemFlag flag : itemGenerator.getHandle().getFlags()) {lore.add("- " + flag.name().toLowerCase());}
+        for (ItemFlag flag : itemGenerator.getHandle().getFlags()) {
+            lore.add("- " + flag.name().toLowerCase());
+        }
         setSlot(12, new Slot(createItem(Material.OAK_SIGN,
                 "&eItemFlags", StringUT.replace(CURRENT_PLACEHOLDER, lore,
                         "&bCurrent:",
@@ -316,7 +334,9 @@ public class EditorGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(ItemType.ENCHANTED.getPath(), !itemGenerator.getConfig().getBoolean(ItemType.ENCHANTED.getPath()));
+                itemGenerator.getConfig()
+                        .set(ItemType.ENCHANTED.getPath(),
+                                !itemGenerator.getConfig().getBoolean(ItemType.ENCHANTED.getPath()));
                 saveAndReopen();
             }
 
@@ -370,13 +390,15 @@ public class EditorGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(ItemType.MIN_LEVEL.getPath(), Math.max(0, itemGenerator.getHandle().getMinLevel() - 1));
+                itemGenerator.getConfig()
+                        .set(ItemType.MIN_LEVEL.getPath(), Math.max(0, itemGenerator.getHandle().getMinLevel() - 1));
                 saveAndReopen();
             }
 
             @Override
             public void onRightClick() {
-                itemGenerator.getConfig().set(ItemType.MIN_LEVEL.getPath(), Math.max(0, itemGenerator.getHandle().getMinLevel() + 1));
+                itemGenerator.getConfig()
+                        .set(ItemType.MIN_LEVEL.getPath(), Math.max(0, itemGenerator.getHandle().getMinLevel() + 1));
                 saveAndReopen();
             }
 
@@ -385,14 +407,14 @@ public class EditorGUI extends AbstractEditorGUI {
                 sendSetMessage(ItemType.MIN_LEVEL.getTitle(),
                         String.valueOf(itemGenerator.getHandle().getMinLevel()),
                         s -> {
-                    int level = Integer.parseInt(s);
-                    if (level >= 0) {
-                        itemGenerator.getConfig().set(ItemType.MIN_LEVEL.getPath(), level);
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
-                    saveAndReopen();
-                });
+                            int level = Integer.parseInt(s);
+                            if (level >= 0) {
+                                itemGenerator.getConfig().set(ItemType.MIN_LEVEL.getPath(), level);
+                            } else {
+                                throw new IllegalArgumentException();
+                            }
+                            saveAndReopen();
+                        });
             }
 
             @Override
@@ -410,13 +432,15 @@ public class EditorGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(ItemType.MAX_LEVEL.getPath(), itemGenerator.getHandle().getMaxLevel() - 1);
+                itemGenerator.getConfig()
+                        .set(ItemType.MAX_LEVEL.getPath(), itemGenerator.getHandle().getMaxLevel() - 1);
                 saveAndReopen();
             }
 
             @Override
             public void onRightClick() {
-                itemGenerator.getConfig().set(ItemType.MAX_LEVEL.getPath(), itemGenerator.getHandle().getMaxLevel() + 1);
+                itemGenerator.getConfig()
+                        .set(ItemType.MAX_LEVEL.getPath(), itemGenerator.getHandle().getMaxLevel() + 1);
                 saveAndReopen();
             }
 
@@ -425,14 +449,14 @@ public class EditorGUI extends AbstractEditorGUI {
                 sendSetMessage(ItemType.MAX_LEVEL.getTitle(),
                         String.valueOf(itemGenerator.getHandle().getMaxLevel()),
                         s -> {
-                    int level = Integer.parseInt(s);
-                    if (level >= 0) {
-                        itemGenerator.getConfig().set(ItemType.MAX_LEVEL.getPath(), level);
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
-                    saveAndReopen();
-                });
+                            int level = Integer.parseInt(s);
+                            if (level >= 0) {
+                                itemGenerator.getConfig().set(ItemType.MAX_LEVEL.getPath(), level);
+                            } else {
+                                throw new IllegalArgumentException();
+                            }
+                            saveAndReopen();
+                        });
             }
 
             @Override
@@ -442,7 +466,8 @@ public class EditorGUI extends AbstractEditorGUI {
             }
         });
         setSlot(22, new Slot(createItem(Material.DIAMOND,
-                "&eTier", StringUT.replace(CURRENT_PLACEHOLDER, StringUT.wrap(itemGenerator.getHandle().getTier().getName(), 12),
+                "&eTier",
+                StringUT.replace(CURRENT_PLACEHOLDER, StringUT.wrap(itemGenerator.getHandle().getTier().getName(), 12),
                         "&bCurrent: &a%current%",
                         "&6Left-Click: &eSet"))) {
             @Override
@@ -457,7 +482,8 @@ public class EditorGUI extends AbstractEditorGUI {
             }
         });
         lore = new ArrayList<>();
-        ConfigurationSection ammoSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.AMMO_TYPES.getPath());
+        ConfigurationSection ammoSection =
+                this.itemGenerator.getConfig().getConfigurationSection(ItemType.AMMO_TYPES.getPath());
         if (ammoSection != null) {
             for (String ammoType : ammoSection.getKeys(false)) {
                 lore.add("&a " + ammoType + ": &f" + ammoSection.getDouble(ammoType));
@@ -474,7 +500,8 @@ public class EditorGUI extends AbstractEditorGUI {
             }
         });
         lore = new ArrayList<>();
-        ConfigurationSection handSection = this.itemGenerator.getConfig().getConfigurationSection(ItemType.HAND_TYPES.getPath());
+        ConfigurationSection handSection =
+                this.itemGenerator.getConfig().getConfigurationSection(ItemType.HAND_TYPES.getPath());
         if (handSection != null) {
             for (String handType : handSection.getKeys(false)) {
                 lore.add("&a " + handType + ": &f" + handSection.getDouble(handType));
@@ -555,7 +582,8 @@ public class EditorGUI extends AbstractEditorGUI {
             }
         });
         lore = new ArrayList<>();
-        for (Map.Entry<Integer, Integer> entry : UsesByLevelGUI.getUsesByLevel(this.itemGenerator.getConfig()).entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : UsesByLevelGUI.getUsesByLevel(this.itemGenerator.getConfig())
+                .entrySet()) {
             lore.add("&a " + entry.getKey() + ": &f" + entry.getValue());
         }
         setSlot(35, new Slot(createItem(Material.CAULDRON,

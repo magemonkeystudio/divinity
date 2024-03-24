@@ -1,14 +1,14 @@
 material: ENCHANTED_BOOK
 name: 'Identify Tome %ITEM_LEVEL_ROMAN%'
 lore:
-- '&8&m               &f  「 INFO 」  &8&m               '
-- '&7Tier: %TIER_NAME%'
-- '%ITEM_CHARGES%'
-- '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
-- '%TARGET_LEVEL%'
-- '%TARGET_TYPE%'
-- '&8&m              &f  「 USAGE 」  &8&m              '
-- '&7Drag & Drop onto item to identify.'
+  - '&8&m               &f  「 INFO 」  &8&m               '
+  - '&7Tier: %TIER_NAME%'
+  - '%ITEM_CHARGES%'
+  - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+  - '%TARGET_LEVEL%'
+  - '%TARGET_TYPE%'
+  - '&8&m              &f  「 USAGE 」  &8&m              '
+  - '&7Drag & Drop onto item to identify.'
 tier: rare
 uses-by-level:
   '1': 1
@@ -23,9 +23,9 @@ level:
   max: 3
 target-requirements:
   type:
-  - '*'
+    - '*'
   level:
     '1': 0
   module:
-  - '*'
+    - '*'
 

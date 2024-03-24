@@ -27,26 +27,31 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
     private final MainBonusesGUI.ItemType category;
 
     public BonusCategoryGUI(Player player, ItemGeneratorReference itemGenerator, MainBonusesGUI.ItemType category) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.BONUSES.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.BONUSES.getTitle(),
+                itemGenerator);
         this.category = category;
     }
 
     private void loadLore(ConfigurationSection section, List<String> lore, Function<String, String> function) {
         for (String statId : section.getKeys(false)) {
-            lore.add(StringUT.color(" "+function.apply(statId).replace("%value%", Objects.requireNonNull(section.getString(statId)))));
+            lore.add(StringUT.color(" " + function.apply(statId)
+                    .replace("%value%", Objects.requireNonNull(section.getString(statId)))));
         }
     }
 
     @Override
     public void setContents() {
-        JYML                      cfg                 = this.itemGenerator.getConfig();
-        Map<String, List<String>> map                 = new HashMap<>();
-        List<String>              list                = new ArrayList<>();
+        JYML                      cfg            = this.itemGenerator.getConfig();
+        Map<String, List<String>> map            = new HashMap<>();
+        List<String>              list           = new ArrayList<>();
         ConfigurationSection      bonusesSection = cfg.getConfigurationSection(this.category.getPath());
         if (bonusesSection != null) {
             for (String key : bonusesSection.getKeys(false)) {
                 List<String>         lore    = new ArrayList<>();
-                ConfigurationSection section = bonusesSection.getConfigurationSection(key + '.' + ItemType.DAMAGE.getPath());
+                ConfigurationSection section =
+                        bonusesSection.getConfigurationSection(key + '.' + ItemType.DAMAGE.getPath());
                 if (section != null && !section.getKeys(false).isEmpty()) {
                     lore.add("&2Damage types:");
                     loadLore(section, lore, s -> {
@@ -84,16 +89,18 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
                 // Only permanent bonuses should handle these (i.e. class bonuses are applied dynamically)
                 switch (this.category) {
                     case MATERIAL: {
-                        section = bonusesSection.getConfigurationSection(key + '.' + ItemType.FABLED_ATTRIBUTE.getPath());
+                        section =
+                                bonusesSection.getConfigurationSection(key + '.' + ItemType.FABLED_ATTRIBUTE.getPath());
                         if (section != null) {
                             Set<String> keys = section.getKeys(false);
                             if (!keys.isEmpty()) {
                                 lore.add("&2Fabled Attributes:");
                                 loadLore(section, lore, s -> {
-                                    FabledHook fabledHook = (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
+                                    FabledHook fabledHook =
+                                            (FabledHook) QuantumRPG.getInstance().getHook(EHook.SKILL_API);
                                     if (fabledHook != null) {
                                         ProAttribute proAttribute = Fabled.getAttributeManager().getAttribute(s);
-                                        if (proAttribute != null) return proAttribute.getName()+": &6%value%";
+                                        if (proAttribute != null) return proAttribute.getName() + ": &6%value%";
                                     }
                                     return "&f" + s + ": &6%value%";
                                 });
@@ -129,13 +136,17 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             setSlot(i, group == null ?
-                    new Slot(createItem(Material.REDSTONE, "&eAdd new "+this.category.getDescription())) {
+                    new Slot(createItem(Material.REDSTONE, "&eAdd new " + this.category.getDescription())) {
                         @Override
                         public void onLeftClick() {
                             sendSetMessage(BonusCategoryGUI.this.category.getDescription(),
@@ -155,7 +166,9 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
                                     "&6Drop: &eRemove"))) {
                         @Override
                         public void onLeftClick() {
-                            openSubMenu(new BonusesGUI(player, itemGenerator, BonusCategoryGUI.this.category.getPath() + '.' + group));
+                            openSubMenu(new BonusesGUI(player,
+                                    itemGenerator,
+                                    BonusCategoryGUI.this.category.getPath() + '.' + group));
                         }
 
                         @Override
@@ -176,8 +189,7 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
         ITEM_STAT("item-stats"),
         FABLED_ATTRIBUTE("fabled-attributes"),
         HAND("hands"),
-        AMMO("ammo")
-        ;
+        AMMO("ammo");
 
         private final String path;
 

@@ -39,7 +39,11 @@ public class IPOMangoQuest extends IPartyObjective {
             if (playerData != null) {
                 if (Main.getHooker().hasMythicMobEnabled()) {
                     if (Main.getHooker().getMythicMobsAPI().isMythicMob(entity)) {
-                        String type = Main.getHooker().getMythicMobsAPI().getMythicMobInstance(entity).getType().getInternalName();
+                        String type = Main.getHooker()
+                                .getMythicMobsAPI()
+                                .getMythicMobInstance(entity)
+                                .getType()
+                                .getInternalName();
                         playerData.killMythicMob(type);
                         return;
                     }

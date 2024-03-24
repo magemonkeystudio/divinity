@@ -15,19 +15,19 @@ import java.util.List;
 public class EditCommand extends MCmd<ItemGeneratorManager> {
 
     public EditCommand(@NotNull ItemGeneratorManager module) {
-        super(module, new String[] {"edit"}, Perms.ADMIN);
+        super(module, new String[]{"edit"}, Perms.ADMIN);
     }
 
     @NotNull
     @Override
-    public String usage() { return "<id>"; }
+    public String usage() {return "<id>";}
 
     @NotNull
     @Override
-    public String description() { return plugin.lang().ItemGenerator_Cmd_Editor_Desc.getMsg(); }
+    public String description() {return plugin.lang().ItemGenerator_Cmd_Editor_Desc.getMsg();}
 
     @Override
-    public boolean playersOnly() { return true; }
+    public boolean playersOnly() {return true;}
 
     @Override
     @NotNull
@@ -54,7 +54,8 @@ public class EditCommand extends MCmd<ItemGeneratorManager> {
         try {
             new EditorGUI((Player) commandSender, new AbstractEditorGUI.ItemGeneratorReference(itemGenerator)).open(1);
         } catch (IllegalStateException e) {
-            plugin.lang().ItemGenerator_Cmd_Editor_Error_AlreadyOpen.replace("%player%", commandSender.getName()).send(commandSender);
+            plugin.lang().ItemGenerator_Cmd_Editor_Error_AlreadyOpen.replace("%player%", commandSender.getName())
+                    .send(commandSender);
         }
     }
 }

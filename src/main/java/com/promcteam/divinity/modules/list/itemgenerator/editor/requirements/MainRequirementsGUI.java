@@ -9,7 +9,10 @@ import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 public class MainRequirementsGUI extends AbstractEditorGUI {
 
     public MainRequirementsGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 1, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.REQUIREMENTS.getTitle(), itemGenerator);
+        super(player,
+                1,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.REQUIREMENTS.getTitle(),
+                itemGenerator);
     }
 
     @Override
@@ -19,7 +22,10 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
                 "&6Left-Click: &eModify")) {
             @Override
             public void onLeftClick() {
-                openSubMenu(new RequirementsGUI(player, itemGenerator, MainRequirementsGUI.ItemType.LEVEL.getPath(), Material.EXPERIENCE_BOTTLE));
+                openSubMenu(new RequirementsGUI(player,
+                        itemGenerator,
+                        MainRequirementsGUI.ItemType.LEVEL.getPath(),
+                        Material.EXPERIENCE_BOTTLE));
             }
         });
         setSlot(1, new Slot(createItem(Material.BOW,
@@ -27,7 +33,10 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
                 "&6Left-Click: &eModify")) {
             @Override
             public void onLeftClick() {
-                openSubMenu(new RequirementsGUI(player, itemGenerator, MainRequirementsGUI.ItemType.CLASS.getPath(), Material.BOW));
+                openSubMenu(new RequirementsGUI(player,
+                        itemGenerator,
+                        MainRequirementsGUI.ItemType.CLASS.getPath(),
+                        Material.BOW));
             }
         });
         setSlot(2, new Slot(createItem(Material.BARRIER,
@@ -35,7 +44,10 @@ public class MainRequirementsGUI extends AbstractEditorGUI {
                 "&6Left-Click: &eModify")) {
             @Override
             public void onLeftClick() {
-                openSubMenu(new RequirementsGUI(player, itemGenerator, MainRequirementsGUI.ItemType.BANNED_CLASS.getPath(), Material.BARRIER));
+                openSubMenu(new RequirementsGUI(player,
+                        itemGenerator,
+                        MainRequirementsGUI.ItemType.BANNED_CLASS.getPath(),
+                        Material.BARRIER));
             }
         });
     }

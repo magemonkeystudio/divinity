@@ -9,7 +9,10 @@ import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 public class MainBonusesGUI extends AbstractEditorGUI {
 
     public MainBonusesGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 1, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.BONUSES.getTitle(), itemGenerator);
+        super(player,
+                1,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.BONUSES.getTitle(),
+                itemGenerator);
     }
 
     @Override

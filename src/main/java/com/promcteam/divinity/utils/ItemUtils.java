@@ -209,7 +209,8 @@ public class ItemUtils {
 
         try {
             if (ItemGroup.valueOf(group.toUpperCase()).isItemOfThis(item)) return true;
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
 
         return CodexEngine.get().getItemManager().isCustomItemOfId(item, group);
     }
@@ -238,11 +239,13 @@ public class ItemUtils {
         try {
             ItemGroup.valueOf(group.toUpperCase());
             return true;
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
 
         try {
             if (CodexEngine.get().getItemManager().getItemType(group) != null) return true;
-        } catch (ProItemException ignored) {}
+        } catch (ProItemException ignored) {
+        }
         return false;
     }
 

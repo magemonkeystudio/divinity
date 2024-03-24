@@ -47,8 +47,8 @@ public class EngineCfg {
     public static boolean ATTRIBUTES_EFFECTIVE_IN_OFFHAND;
     public static boolean ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS;
 
-    public static boolean ATTRIBUTES_DURABILITY_BREAK_ITEMS;
-    public static boolean ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS;
+    public static boolean     ATTRIBUTES_DURABILITY_BREAK_ITEMS;
+    public static boolean     ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS;
     public static Set<String> ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API;
 
 
@@ -119,7 +119,8 @@ public class EngineCfg {
 
         String path = "packets.";
         EngineCfg.PACKETS_ENABLED = cfg.getBoolean(path + "enabled");
-        EngineCfg.PACKETS_MOD_GLOW_COLOR = cfg.getBoolean(path + "modules.glow-color") && plugin.cfg().isModuleEnabled(EModule.ITEM_HINTS);
+        EngineCfg.PACKETS_MOD_GLOW_COLOR =
+                cfg.getBoolean(path + "modules.glow-color") && plugin.cfg().isModuleEnabled(EModule.ITEM_HINTS);
         EngineCfg.PACKETS_REDUCE_COMBAT_PARTICLES = cfg.getBoolean(path + "modules.reduce-damage-particles");
 
         // C O M P A T I B I L I T Y //
@@ -183,21 +184,21 @@ public class EngineCfg {
             Object skills = cfg.get(path + "effective-for.skill-api-skills");
             if (skills instanceof Boolean) {
                 cfg.remove(path + "effective-for.skill-api-skills");
-                cfg.set(path + "effective-for.skill-api-skills"+".cast", skills);
-                cfg.set(path + "effective-for.skill-api-skills"+".left_click", skills);
-                cfg.set(path + "effective-for.skill-api-skills"+".right_click", skills);
+                cfg.set(path + "effective-for.skill-api-skills" + ".cast", skills);
+                cfg.set(path + "effective-for.skill-api-skills" + ".left_click", skills);
+                cfg.set(path + "effective-for.skill-api-skills" + ".right_click", skills);
             }
         }
-        cfg.addMissing(path + "effective-for.skill-api-skills"+".initialize", false);
-        cfg.addMissing(path + "effective-for.skill-api-skills"+".cleanup", false);
+        cfg.addMissing(path + "effective-for.skill-api-skills" + ".initialize", false);
+        cfg.addMissing(path + "effective-for.skill-api-skills" + ".cleanup", false);
         if (Bukkit.getPluginManager().isPluginEnabled("Fabled")) {
             for (String triggerKey : ComponentRegistry.getTriggers().keySet()) {
-                cfg.addMissing(path + "effective-for.skill-api-skills"+'.'+triggerKey.toLowerCase(), false);
+                cfg.addMissing(path + "effective-for.skill-api-skills" + '.' + triggerKey.toLowerCase(), false);
             }
         }
         EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API = new HashSet<>();
         for (String key : cfg.getSection(path + "effective-for.skill-api-skills")) {
-            if (cfg.getBoolean(path + "effective-for.skill-api-skills"+'.'+key)) {
+            if (cfg.getBoolean(path + "effective-for.skill-api-skills" + '.' + key)) {
                 EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API.add(key.toLowerCase());
             }
         }
@@ -231,12 +232,14 @@ public class EngineCfg {
 
         path = "lore.stats.style.damage.";
         EngineCfg.LORE_STYLE_DAMAGE_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.single", "&f%value%"));
-        EngineCfg.LORE_STYLE_DAMAGE_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.double", "&f%min% &7- &f%max%"));
+        EngineCfg.LORE_STYLE_DAMAGE_FORMAT_RANGE =
+                StringUT.color(cfg.getString(path + "format.double", "&f%min% &7- &f%max%"));
 
         path = "lore.stats.style.durability.";
         EngineCfg.LORE_STYLE_DURA_FORMAT_MAP = new TreeMap<>();
         EngineCfg.LORE_STYLE_DURA_FORMAT_NAME = cfg.getString(path + "format", "default");
-        EngineCfg.LORE_STYLE_DURA_FORMAT_UNBREAKABLE = StringUT.color(cfg.getString(path + "unbreakable", "&fUnbreakable"));
+        EngineCfg.LORE_STYLE_DURA_FORMAT_UNBREAKABLE =
+                StringUT.color(cfg.getString(path + "unbreakable", "&fUnbreakable"));
 
         for (String pId : cfg.getSection(path + "format-list." + EngineCfg.LORE_STYLE_DURA_FORMAT_NAME)) {
             String format = cfg.getString(path + "format-list." + EngineCfg.LORE_STYLE_DURA_FORMAT_NAME + "." + pId);
@@ -259,8 +262,10 @@ public class EngineCfg {
             String aName   = StringUT.color(cfg.getString(path + "name", "Charges"));
             String aFormat = StringUT.color(cfg.getString(path + "format.main", "&7%name%: &f%value%"));
 
-            EngineCfg.LORE_STYLE_ATT_CHARGES_FORMAT_DEFAULT = StringUT.color(cfg.getString(path + "format.value.default", "&f%min%&7/&f%max%"));
-            EngineCfg.LORE_STYLE_ATT_CHARGES_FORMAT_UNLIMITED = StringUT.color(cfg.getString(path + "format.value.unlimited", "Unlimited"));
+            EngineCfg.LORE_STYLE_ATT_CHARGES_FORMAT_DEFAULT =
+                    StringUT.color(cfg.getString(path + "format.value.default", "&f%min%&7/&f%max%"));
+            EngineCfg.LORE_STYLE_ATT_CHARGES_FORMAT_UNLIMITED =
+                    StringUT.color(cfg.getString(path + "format.value.unlimited", "Unlimited"));
 
             if (CHARGES_BREAK_ITEMS_ENABLED = cfg.getBoolean(path + "break-items-on-zero.enabled", true)) {
                 CHARGES_BREAK_ITEMS_STOP_MODULES = cfg.getStringSet(path + "break-items-on-zero.excluded-modules");
@@ -288,8 +293,10 @@ public class EngineCfg {
             String rName   = StringUT.color(cfg.getString(path + "name", "Player Level"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
 
-            EngineCfg.LORE_STYLE_REQ_USER_LVL_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%value%+"));
-            EngineCfg.LORE_STYLE_REQ_USER_LVL_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%min%-%max%"));
+            EngineCfg.LORE_STYLE_REQ_USER_LVL_FORMAT_SINGLE =
+                    StringUT.color(cfg.getString(path + "format.value.single", "%value%+"));
+            EngineCfg.LORE_STYLE_REQ_USER_LVL_FORMAT_RANGE =
+                    StringUT.color(cfg.getString(path + "format.value.range", "%min%-%max%"));
 
             LevelRequirement reqLvl = new LevelRequirement(rName, rFormat);
             ItemRequirements.registerUserRequirement(reqLvl);
@@ -302,10 +309,13 @@ public class EngineCfg {
             String rName   = StringUT.color(cfg.getString(path + "name", "Player Class"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
 
-            EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
-            EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR = StringUT.color(cfg.getString(path + "format.value.color", "&f"));
+            EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_SEPAR =
+                    StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
+            EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_COLOR =
+                    StringUT.color(cfg.getString(path + "format.value.color", "&f"));
             EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_MAX = cfg.getInt(path + "format.max-classes-per-line", -1);
-            EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE = StringUT.color(cfg.getString(path + "format.value.newline", "&7  "));
+            EngineCfg.LORE_STYLE_REQ_USER_CLASS_FORMAT_NEWLINE =
+                    StringUT.color(cfg.getString(path + "format.value.newline", "&7  "));
 
             ClassRequirement reqClass = new ClassRequirement(rName, rFormat);
             ItemRequirements.registerUserRequirement(reqClass);
@@ -323,10 +333,13 @@ public class EngineCfg {
             String rName   = StringUT.color(cfg.getString(path + "name", "Banned Player Class"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "%state%%name%: %value%"));
 
-            EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_SEPAR = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
-            EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_COLOR = StringUT.color(cfg.getString(path + "format.value.color", "&f"));
+            EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_SEPAR =
+                    StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
+            EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_COLOR =
+                    StringUT.color(cfg.getString(path + "format.value.color", "&f"));
             EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_MAX = cfg.getInt(path + "format.max-classes-per-line", 4);
-            EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_NEWLINE = StringUT.color(cfg.getString(path + "format.value.newline", "&7  "));
+            EngineCfg.LORE_STYLE_REQ_USER_BANNED_CLASS_FORMAT_NEWLINE =
+                    StringUT.color(cfg.getString(path + "format.value.newline", "&7  "));
 
             BannedClassRequirement bannedClass = new BannedClassRequirement(rName, rFormat);
             ItemRequirements.registerUserRequirement(bannedClass);
@@ -337,8 +350,10 @@ public class EngineCfg {
             String rName   = StringUT.color(cfg.getString(path + "name", "Item Level"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "&c▸ %name%: %value%"));
 
-            EngineCfg.LORE_STYLE_REQ_ITEM_LVL_FORMAT_SINGLE = StringUT.color(cfg.getString(path + "format.value.single", "%value%+"));
-            EngineCfg.LORE_STYLE_REQ_ITEM_LVL_FORMAT_RANGE = StringUT.color(cfg.getString(path + "format.value.range", "%min%-%max%"));
+            EngineCfg.LORE_STYLE_REQ_ITEM_LVL_FORMAT_SINGLE =
+                    StringUT.color(cfg.getString(path + "format.value.single", "%value%+"));
+            EngineCfg.LORE_STYLE_REQ_ITEM_LVL_FORMAT_RANGE =
+                    StringUT.color(cfg.getString(path + "format.value.range", "%min%-%max%"));
 
             ItemLevelRequirement reqLevel = new ItemLevelRequirement(rName, rFormat);
             ItemRequirements.registerItemRequirement(reqLevel);
@@ -349,8 +364,10 @@ public class EngineCfg {
             String rName   = StringUT.color(cfg.getString(path + "name", "Item Type"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "&c▸ %name%: %value%"));
 
-            EngineCfg.LORE_STYLE_REQ_ITEM_TYPE_FORMAT_SEPAR = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
-            EngineCfg.LORE_STYLE_REQ_ITEM_TYPE_FORMAT_COLOR = StringUT.color(cfg.getString(path + "format.value.color", "&f"));
+            EngineCfg.LORE_STYLE_REQ_ITEM_TYPE_FORMAT_SEPAR =
+                    StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
+            EngineCfg.LORE_STYLE_REQ_ITEM_TYPE_FORMAT_COLOR =
+                    StringUT.color(cfg.getString(path + "format.value.color", "&f"));
 
             ItemTypeRequirement reqClass = new ItemTypeRequirement(rName, rFormat);
             ItemRequirements.registerItemRequirement(reqClass);
@@ -361,15 +378,18 @@ public class EngineCfg {
             String rName   = StringUT.color(cfg.getString(path + "name", "Item Module"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "&c▸ %name%: %value%"));
 
-            EngineCfg.LORE_STYLE_REQ_ITEM_MODULE_FORMAT_SEPAR = StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
-            EngineCfg.LORE_STYLE_REQ_ITEM_MODULE_FORMAT_COLOR = StringUT.color(cfg.getString(path + "format.value.color", "&f"));
+            EngineCfg.LORE_STYLE_REQ_ITEM_MODULE_FORMAT_SEPAR =
+                    StringUT.color(cfg.getString(path + "format.value.separator", "&7/"));
+            EngineCfg.LORE_STYLE_REQ_ITEM_MODULE_FORMAT_COLOR =
+                    StringUT.color(cfg.getString(path + "format.value.color", "&f"));
 
             ItemModuleRequirement reqModule = new ItemModuleRequirement(rName, rFormat);
             ItemRequirements.registerItemRequirement(reqModule);
         }
 
         path = "lore.stats.style.requirements.item.socket.";
-        if (plugin.cfg().isModuleEnabled(EModule.GEMS) || plugin.cfg().isModuleEnabled(EModule.ESSENCES) || plugin.cfg().isModuleEnabled(EModule.RUNES)) {
+        if (plugin.cfg().isModuleEnabled(EModule.GEMS) || plugin.cfg().isModuleEnabled(EModule.ESSENCES) || plugin.cfg()
+                .isModuleEnabled(EModule.RUNES)) {
             String rName   = StringUT.color(cfg.getString(path + "name", "Socket"));
             String rFormat = StringUT.color(cfg.getString(path + "format.main", "&c▸ %name%: %value%"));
 
@@ -393,12 +413,14 @@ public class EngineCfg {
         path = "lore.stats.style.enchantments.";
         cfg.addMissing(path + "format.main", "&c▸ %name% %value%");
         cfg.addMissing(path + "format.max-roman", 10);
-        EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN = StringUT.color(cfg.getString(path + "format.main", "&c▸ %name% %value%"));
+        EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN =
+                StringUT.color(cfg.getString(path + "format.main", "&c▸ %name% %value%"));
         EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN = cfg.getInt(path + "format.max-roman", 10);
 
         path = "lore.stats.style.fabled-attribute-format";
         cfg.addMissing(path, "&7%attrPre%&3%name%&7%attrPost%");
-        EngineCfg.LORE_STYLE_FABLED_ATTRIBUTE_FORMAT = StringUT.color(cfg.getString(path, "&7%attrPre%&3%name%&7%attrPost%"));
+        EngineCfg.LORE_STYLE_FABLED_ATTRIBUTE_FORMAT =
+                StringUT.color(cfg.getString(path, "&7%attrPre%&3%name%&7%attrPost%"));
 
         cfg.saveChanges();
     }

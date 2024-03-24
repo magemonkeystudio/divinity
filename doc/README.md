@@ -20,6 +20,7 @@ or snapshots through Sonatype.
 ```
 
 ### A huge thanks to our contributors
+
 <a href="https://github.com/promcteam/prorpgitems/graphs/contributors">
 <img src="https://contrib.rocks/image?repo=promcteam/prorpgitems" />
 </a>

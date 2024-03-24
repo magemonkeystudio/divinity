@@ -53,7 +53,7 @@ dependencies:
   - name: RacesOfThana
     required: false
     bootstrap: true
-  - name : Vault
+  - name: Vault
     required: false
     bootstrap: true
   - name: WorldGuard

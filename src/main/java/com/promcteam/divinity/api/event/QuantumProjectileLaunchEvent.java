@@ -21,7 +21,12 @@ public class QuantumProjectileLaunchEvent extends Event implements Cancellable {
     private              LivingEntity shooter;
     private              double       power;
 
-    public QuantumProjectileLaunchEvent(@NotNull Entity pj, @NotNull Location loc, @NotNull LivingEntity shooter, @Nullable ItemStack bow, double power, boolean isBowEvent) {
+    public QuantumProjectileLaunchEvent(@NotNull Entity pj,
+                                        @NotNull Location loc,
+                                        @NotNull LivingEntity shooter,
+                                        @Nullable ItemStack bow,
+                                        double power,
+                                        boolean isBowEvent) {
         setProjectile(pj);
         this.loc = loc;
         setShooter(shooter);
@@ -96,7 +101,8 @@ public class QuantumProjectileLaunchEvent extends Event implements Cancellable {
     }
 
     public void setWeapon(@NotNull ItemStack bow) {
-        if (this.pj instanceof Projectile && (this.shooter instanceof org.bukkit.entity.Player || EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS))
+        if (this.pj instanceof Projectile && (this.shooter instanceof org.bukkit.entity.Player
+                || EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS))
             ProjectileStats.setSrcWeapon((Projectile) this.pj, bow);
         this.bow = bow;
     }

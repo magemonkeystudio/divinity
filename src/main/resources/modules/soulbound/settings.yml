@@ -28,9 +28,9 @@ interact:
   allow-drop: true
   drop-on-death: false
   blocked-commands:
-  - 'market'
-  - 'auc'
-  - 'ah'
+    - 'market'
+    - 'auc'
+    - 'ah'
 gui:
   title: '&2&l<&2&nSoulbound&2&l>'
   size: 9
@@ -43,7 +43,7 @@ gui:
       skull-hash: ''
       enchanted: false
       name: ''
-      lore: []
+      lore: [ ]
       slots: 0,1,2,3,4,5,6,7,8
       type: NONE
     accept:
@@ -52,11 +52,11 @@ gui:
       enchanted: false
       name: '&2« &aAccept &2»'
       lore:
-      - '&7The item will be soulbounded'
-      - '&7with you.'
-      - ''
-      - '&7After that, you can not'
-      - '&7trade your item &canymore&7.'
+        - '&7The item will be soulbounded'
+        - '&7with you.'
+        - ''
+        - '&7After that, you can not'
+        - '&7trade your item &canymore&7.'
       slots: '8'
       type: ACCEPT
     exit:
@@ -64,6 +64,6 @@ gui:
       skull-hash: ''
       enchanted: false
       name: '&4« &cCancel &4»'
-      lore: []
+      lore: [ ]
       slots: '0'
       type: EXIT

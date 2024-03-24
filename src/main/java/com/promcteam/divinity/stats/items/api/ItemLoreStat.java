@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ItemLoreStat<Z> {
-    private final    String                   id;
-    protected        String                   name;
-    protected final  String                   format;
-    protected final  String                   placeholder;
-    protected final  List<NamespacedKey>      keys;
-    protected        PersistentDataType<?, Z> dataType;
-    protected final  String                   metaId;
+    private final   String                   id;
+    protected       String                   name;
+    protected final String                   format;
+    protected final String                   placeholder;
+    protected final List<NamespacedKey>      keys;
+    protected       PersistentDataType<?, Z> dataType;
+    protected final String                   metaId;
 
     public ItemLoreStat(
             @NotNull String id,
@@ -105,7 +105,7 @@ public abstract class ItemLoreStat<Z> {
     }
 
     @NotNull
-    public String getFormat() { return this.format; }
+    public String getFormat() {return this.format;}
 
     @NotNull
     public String getFormat(@NotNull ItemStack item, @NotNull Z value) {
@@ -129,7 +129,8 @@ public abstract class ItemLoreStat<Z> {
         // *** PREPARE PLACEHOLDER ***
         // Add raw placeholder to item lore or
         // replace the old requirement string
-        if (!lore.contains(this.getPlaceholder()) && !this.formatValue(item, value).equals(EngineCfg.LORE_STYLE_ATT_CHARGES_FORMAT_UNLIMITED)) {
+        if (!lore.contains(this.getPlaceholder()) && !this.formatValue(item, value)
+                .equals(EngineCfg.LORE_STYLE_ATT_CHARGES_FORMAT_UNLIMITED)) {
             LoreUT.addOrReplace(lore, pos, line, this.getPlaceholder());
         }
 
@@ -141,7 +142,9 @@ public abstract class ItemLoreStat<Z> {
             if (container.has(key, this.dataType)) container.remove(key);
         }
 
-        String[] format  = StringUT.colorFix(this instanceof DynamicStat ? ((DynamicStat<Z>) this).getFormat(null, item, value) : this.getFormat(item, value)).split("\n");
+        String[] format  = StringUT.colorFix(
+                this instanceof DynamicStat ? ((DynamicStat<Z>) this).getFormat(null, item, value)
+                        : this.getFormat(item, value)).split("\n");
         boolean  isEmpty = true;
         for (String formatLine : format) {
             if (!formatLine.isEmpty()) {
@@ -169,7 +172,7 @@ public abstract class ItemLoreStat<Z> {
         if (this instanceof DuplicableItemLoreStat) {
             int amount = ((DuplicableItemLoreStat<?>) this).getAmount(item);
             for (NamespacedKey key : this.keys) {
-                ItemUT.delLoreTag(item, key.getKey()+amount);
+                ItemUT.delLoreTag(item, key.getKey() + amount);
             }
         } else {
             for (NamespacedKey key : this.keys) {
@@ -197,7 +200,7 @@ public abstract class ItemLoreStat<Z> {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
-        boolean foundAny = false;
+        boolean                 foundAny  = false;
         PersistentDataContainer container = meta.getPersistentDataContainer();
         for (NamespacedKey key : this.keys) {
             if (container.has(key, this.dataType)) {
@@ -225,7 +228,7 @@ public abstract class ItemLoreStat<Z> {
         if (this instanceof DuplicableItemLoreStat) {
             int amount = ((DuplicableItemLoreStat<?>) this).getAmount(item);
             for (NamespacedKey key : this.keys) {
-                ItemUT.delLoreTag(item, key.getKey()+amount);
+                ItemUT.delLoreTag(item, key.getKey() + amount);
             }
         } else {
             for (NamespacedKey key : this.keys) {
@@ -260,9 +263,9 @@ public abstract class ItemLoreStat<Z> {
 
     public final int getLoreIndex(@NotNull ItemStack item) {
         if (this instanceof DuplicableItemLoreStat) {
-            int amount = ((DuplicableItemLoreStat <?>) this).getAmount(item);
+            int amount = ((DuplicableItemLoreStat<?>) this).getAmount(item);
             for (NamespacedKey key : this.keys) {
-                int found = ItemUT.getLoreIndex(item, key.getKey()+amount);
+                int found = ItemUT.getLoreIndex(item, key.getKey() + amount);
                 if (found >= 0) return found;
             }
         } else {
@@ -318,7 +321,8 @@ public abstract class ItemLoreStat<Z> {
 
     private final void validateMethod() {
         if (this instanceof DuplicableItemLoreStat) {
-            throw new UnsupportedOperationException("Attempt to manage duplicable stat at NULL index. Index must be provided.");
+            throw new UnsupportedOperationException(
+                    "Attempt to manage duplicable stat at NULL index. Index must be provided.");
         }
     }
 }

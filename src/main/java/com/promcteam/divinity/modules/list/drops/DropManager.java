@@ -242,7 +242,7 @@ public class DropManager extends QModule {
                 List<String> dropConditions = dropConfig.getConditions();
                 if (!ActionManipulator.processConditions(plugin, killer, dropConditions, mapTarget)) continue;
 
-                String itemId  = dropConfig.getItemId();
+                String itemId = dropConfig.getItemId();
                 for (int i = 0; i < dropItem.getCount(); i++) {
                     int itemLvl = dropConfig.getLevel(killer, dead);
 

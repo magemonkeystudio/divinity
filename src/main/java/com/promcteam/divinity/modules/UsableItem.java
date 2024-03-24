@@ -167,7 +167,9 @@ public class UsableItem extends LimitedItem {
 
             Entry  eVar;
             String valueFormat;
-            for (Iterator var6 = vars.entrySet().iterator(); var6.hasNext(); str = str.replace("%var_" + eVar.getKey() + "%", valueFormat)) {
+            for (Iterator var6 = vars.entrySet().iterator();
+                 var6.hasNext();
+                 str = str.replace("%var_" + eVar.getKey() + "%", valueFormat)) {
                 eVar = (Entry) var6.next();
                 Object value = eVar.getValue();
                 valueFormat = value.toString();

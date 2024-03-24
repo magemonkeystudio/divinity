@@ -33,15 +33,15 @@ import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class MockedTest {
-    protected ServerMock                server;
-    protected CodexEngine               engine;
-    protected QuantumRPG                plugin;
+    protected ServerMock                      server;
+    protected CodexEngine                     engine;
+    protected QuantumRPG                      plugin;
     protected List<PlayerMock>                players          = new ArrayList<>();
     protected Map<UUID, PlayerData>           activePlayerData = new HashMap<>();
     protected MockedStatic<ReflectionManager> reflectionManager;
-    protected ReflectionUtil            reflectionUtil;
-    protected MockedStatic<CodexEngine> codexEngine;
-    protected NMS                       nms;
+    protected ReflectionUtil                  reflectionUtil;
+    protected MockedStatic<CodexEngine>       codexEngine;
+    protected NMS                             nms;
 
     @BeforeAll
     public void setupServer() {

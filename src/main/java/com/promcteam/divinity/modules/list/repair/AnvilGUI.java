@@ -29,7 +29,8 @@ public class AnvilGUI extends NGUI<QuantumRPG> {
     protected int           sourceSlot;
     protected int           resultSlot;
 
-    private static final NamespacedKey META_KEY_REPAIR_SELECT = new NamespacedKey(QuantumRPG.getInstance(), "QRPG_REPAIR_GUI_SELECTOR");
+    private static final NamespacedKey META_KEY_REPAIR_SELECT =
+            new NamespacedKey(QuantumRPG.getInstance(), "QRPG_REPAIR_GUI_SELECTOR");
 
     public AnvilGUI(@NotNull RepairManager repairManager) {
         super(repairManager.plugin, repairManager.getJYML(), "gui.");

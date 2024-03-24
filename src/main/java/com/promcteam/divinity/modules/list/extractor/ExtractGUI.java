@@ -32,8 +32,10 @@ import java.util.Map;
 
 class ExtractGUI extends NGUI<QuantumRPG> {
 
-    private static final NamespacedKey    META_KEY_SOCKET_SELECT  = new NamespacedKey(QuantumRPG.getInstance(), "QRPG_EXTRACTOR_GUI_SOCKET_SELECTOR");
-    private static final NamespacedKey    META_KEY_SOCKET_SELECT2 = NamespacedKey.fromString("quantumrpg:qrpg_extractor_gui_socket_selector");
+    private static final NamespacedKey    META_KEY_SOCKET_SELECT  =
+            new NamespacedKey(QuantumRPG.getInstance(), "QRPG_EXTRACTOR_GUI_SOCKET_SELECTOR");
+    private static final NamespacedKey    META_KEY_SOCKET_SELECT2 =
+            NamespacedKey.fromString("quantumrpg:qrpg_extractor_gui_socket_selector");
     private final        int[]            socketSlots;
     protected            ExtractorManager extractorManager;
     protected            int              itemSlot;
@@ -142,8 +144,8 @@ class ExtractGUI extends NGUI<QuantumRPG> {
             ModuleSocket<?> mod = type.getModule();
             if (mod == null) break Label_Sockets;
 
-            ItemMeta     meta      = target.getItemMeta();
-            int          indexMain = 0;
+            ItemMeta meta      = target.getItemMeta();
+            int      indexMain = 0;
             for (SocketAttribute socketAtt : ItemStats.getSockets(type)) {
                 String socketCategory = socketAtt.getId();
                 for (Map.Entry<Integer, String[]> en : mod.getFilledSocketKeys(meta, socketCategory).entrySet()) {

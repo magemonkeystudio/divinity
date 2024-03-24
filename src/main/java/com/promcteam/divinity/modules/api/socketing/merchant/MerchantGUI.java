@@ -186,7 +186,8 @@ public class MerchantGUI extends ISocketGUI {
 
         this.takeItem(inv, this.getResultSlot());
         if (hasTarget && hasSocket) {
-            ItemStack result = new ItemStack(this.module.insertSocket(new ItemStack(targetHas), new ItemStack(socketHas)));
+            ItemStack result =
+                    new ItemStack(this.module.insertSocket(new ItemStack(targetHas), new ItemStack(socketHas)));
             inv.setItem(this.getResultSlot(), result);
         }
 

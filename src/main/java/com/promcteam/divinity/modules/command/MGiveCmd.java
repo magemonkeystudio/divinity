@@ -119,7 +119,8 @@ public class MGiveCmd extends MCmd<QModuleDrop<?>> {
         } catch (MissingProviderException | MissingItemException e) {
             material = null;
         }
-        ItemGeneratorManager itemGenerator = this.module instanceof ItemGeneratorManager ? (ItemGeneratorManager) this.module : null;
+        ItemGeneratorManager itemGenerator =
+                this.module instanceof ItemGeneratorManager ? (ItemGeneratorManager) this.module : null;
         GeneratorItem        generatorItem = itemGenerator != null ? itemGenerator.getItemById(id) : null;
 
         Map<String, Integer> addedItems = new HashMap<>();

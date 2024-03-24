@@ -48,7 +48,10 @@ public abstract class QModuleUsage<I extends UsableItem> extends QModuleDrop<I> 
         }
     }
 
-    private final boolean useItem(@NotNull Player p, @NotNull ItemStack item, @NotNull UsableItem uItem, @NotNull QClickType type) {
+    private final boolean useItem(@NotNull Player p,
+                                  @NotNull ItemStack item,
+                                  @NotNull UsableItem uItem,
+                                  @NotNull QClickType type) {
         UsableItem.Usage aUsage = uItem.getUsage(type);
         if (aUsage == null)
             return false;

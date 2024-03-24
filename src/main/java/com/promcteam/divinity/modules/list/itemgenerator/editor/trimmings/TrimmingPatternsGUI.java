@@ -11,8 +11,13 @@ import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 public class TrimmingPatternsGUI extends AbstractEditorGUI {
     private final TrimmingListGUI.TrimmingEntry entry;
 
-    public TrimmingPatternsGUI(Player player, ItemGeneratorReference itemGenerator, TrimmingListGUI.TrimmingEntry entry) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.ARMOR_TRIMINGS.getTitle(), itemGenerator);
+    public TrimmingPatternsGUI(Player player,
+                               ItemGeneratorReference itemGenerator,
+                               TrimmingListGUI.TrimmingEntry entry) {
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.ARMOR_TRIMINGS.getTitle(),
+                itemGenerator);
         this.entry = entry;
     }
 
@@ -24,11 +29,15 @@ public class TrimmingPatternsGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             if (i == 1) {
                 setSlot(i, new Slot(createItem(Material.CRAFTING_TABLE,
                         "&eAny")) {

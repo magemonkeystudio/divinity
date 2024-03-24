@@ -2,17 +2,17 @@ package com.promcteam.divinity.stats.items;
 
 public class ItemTags {
 
-    public static final String TAG_ITEM_MODULE        = "ITEM_MODULE";
-    public static final String TAG_ITEM_ID            = "ITEM_ID";
-    public static final String TAG_ITEM_LEVEL         = "ITEM_LEVEL";
-    public static final String TAG_ITEM_SOCKET_RATE   = "ITEM_SOCKET_RATE";
-    public static final String TAG_ITEM_SOCKET        = "ITEM_SOCKET_";
-    public static final String TAG_ITEM_AMMO          = "ITEM_AMMO_";
-    public static final String TAG_ITEM_HAND          = "ITEM_HAND_";
-    public static final String TAG_ITEM_CHARGES       = "ITEM_CHARGES";
-    public static final String TAG_ITEM_STAT          = "ITEM_STAT_";
-    public static final String TAG_ITEM_DAMAGE        = "ITEM_DAMAGE_";
-    public static final String TAG_ITEM_DEFENSE       = "ITEM_DEFENSE_";
+    public static final String TAG_ITEM_MODULE      = "ITEM_MODULE";
+    public static final String TAG_ITEM_ID          = "ITEM_ID";
+    public static final String TAG_ITEM_LEVEL       = "ITEM_LEVEL";
+    public static final String TAG_ITEM_SOCKET_RATE = "ITEM_SOCKET_RATE";
+    public static final String TAG_ITEM_SOCKET      = "ITEM_SOCKET_";
+    public static final String TAG_ITEM_AMMO        = "ITEM_AMMO_";
+    public static final String TAG_ITEM_HAND        = "ITEM_HAND_";
+    public static final String TAG_ITEM_CHARGES     = "ITEM_CHARGES";
+    public static final String TAG_ITEM_STAT        = "ITEM_STAT_";
+    public static final String TAG_ITEM_DAMAGE      = "ITEM_DAMAGE_";
+    public static final String TAG_ITEM_DEFENSE     = "ITEM_DEFENSE_";
     public static final String TAG_ITEM_FABLED_ATTR = "ITEM_FABLED_ATTR_";
 
 

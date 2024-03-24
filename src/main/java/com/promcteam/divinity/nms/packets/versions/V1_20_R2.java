@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class V1_20_R2 extends V1_20_R1 {
-    private Class  playoutUpdateAttributes = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutUpdateAttributes");
-    private Class  craftServerClass        = Reflex.getCraftClass("CraftServer");
-    private Class  nmsEntityClass          = Reflex.getClass("net.minecraft.world.entity", "Entity");
-    private Class  worldServerClass        = Reflex.getClass("net.minecraft.server.level", "WorldServer");
-    private Method getEntity               = Reflex.getMethod(worldServerClass, "a", int.class);
-    private Method getServer               = Reflex.getMethod(craftServerClass, "getServer");
+    private final Class  playoutUpdateAttributes = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutUpdateAttributes");
+    private final Class  craftServerClass        = Reflex.getCraftClass("CraftServer");
+    private final Class  nmsEntityClass          = Reflex.getClass("net.minecraft.world.entity", "Entity");
+    private final Class  worldServerClass        = Reflex.getClass("net.minecraft.server.level", "WorldServer");
+    private final Method getEntity               = Reflex.getMethod(worldServerClass, "a", int.class);
+    private final Method getServer               = Reflex.getMethod(craftServerClass, "getServer");
 
     public V1_20_R2(@NotNull QuantumRPG plugin) {super(plugin);}
 
@@ -68,7 +68,8 @@ public class V1_20_R2 extends V1_20_R1 {
                     CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 
             if (!(bukkitEntity instanceof LivingEntity)) return;
-            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity) || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
+            if (EntityManager.isPacketDuplicatorFixed(bukkitEntity)
+                    || !EntityManager.isEquipmentNew((LivingEntity) bukkitEntity)) return;
 
             EntityEquipmentChangeEvent event = new EntityEquipmentChangeEvent((LivingEntity) bukkitEntity);
             plugin.getServer().getPluginManager().callEvent(event);

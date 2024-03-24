@@ -82,7 +82,8 @@ public class DropItem implements DropCalculator {
         double p_lvl = EngineCfg.HOOK_PLAYER_LEVEL_PLUGIN.getLevel(player);
         double e_lvl = EngineCfg.HOOK_MOB_LEVEL_PLUGIN.getMobLevel(src);
 
-        String ex = this.levelMin.replace("%mob_lvl%", String.valueOf(e_lvl)).replace("%player_lvl%", String.valueOf(p_lvl));
+        String ex = this.levelMin.replace("%mob_lvl%", String.valueOf(e_lvl))
+                .replace("%player_lvl%", String.valueOf(p_lvl));
         return (int) Evaluator.eval(ex, 1);
     }
 
@@ -90,7 +91,8 @@ public class DropItem implements DropCalculator {
         double p_lvl = EngineCfg.HOOK_PLAYER_LEVEL_PLUGIN.getLevel(player);
         double e_lvl = EngineCfg.HOOK_MOB_LEVEL_PLUGIN.getMobLevel(src);
 
-        String ex = this.levelMax.replace("%mob_lvl%", String.valueOf(e_lvl)).replace("%player_lvl%", String.valueOf(p_lvl));
+        String ex = this.levelMax.replace("%mob_lvl%", String.valueOf(e_lvl))
+                .replace("%player_lvl%", String.valueOf(p_lvl));
         return (int) Evaluator.eval(ex, 1);
     }
 
@@ -130,6 +132,7 @@ public class DropItem implements DropCalculator {
 
     @Override
     public String toString() {
-        return "Drop [itemId=" + itemId + ", minAmount=" + amountMin + ", maxAmount=" + amountMax + ", chance=" + chance + ", noReduce=" + noModifier + "]";
+        return "Drop [itemId=" + itemId + ", minAmount=" + amountMin + ", maxAmount=" + amountMax + ", chance=" + chance
+                + ", noReduce=" + noModifier + "]";
     }
 }

@@ -43,6 +43,7 @@ public interface TypedStat {
         }
         return value;
     }
+
     enum Type {
 
         //        DIRECT_DAMAGE(ItemType.WEAPON, true, false, true),

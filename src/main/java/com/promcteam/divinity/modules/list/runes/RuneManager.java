@@ -90,7 +90,8 @@ public class RuneManager extends ModuleSocket<Rune> {
 
             PotionEffectType type = PotionEffectType.getByName(cfg.getString("effect", "").toUpperCase());
             if (type == null) {
-                throw new IllegalArgumentException("Invalid potion effect for rune: '" + cfg.getFile().getName() + "'.");
+                throw new IllegalArgumentException(
+                        "Invalid potion effect for rune: '" + cfg.getFile().getName() + "'.");
             }
 
             int dur = EntityStatsTask.POTION_DURATION;

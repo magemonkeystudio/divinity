@@ -57,21 +57,27 @@ public class BonusMap {
     public Map<DamageAttribute, BiFunction<Boolean, Double, Double>> getDamageBonuses() {
         return this.bonus.entrySet().stream()
                 .filter(entry -> entry.getKey() instanceof DamageAttribute)
-                .collect(Collectors.toMap(key -> (DamageAttribute) key.getKey(), Map.Entry::getValue, (has, add) -> has));
+                .collect(Collectors.toMap(key -> (DamageAttribute) key.getKey(),
+                        Map.Entry::getValue,
+                        (has, add) -> has));
     }
 
     @NotNull
     public Map<DefenseAttribute, BiFunction<Boolean, Double, Double>> getDefenseBonuses() {
         return this.bonus.entrySet().stream()
                 .filter(entry -> entry.getKey() instanceof DefenseAttribute)
-                .collect(Collectors.toMap(key -> (DefenseAttribute) key.getKey(), Map.Entry::getValue, (has, add) -> has));
+                .collect(Collectors.toMap(key -> (DefenseAttribute) key.getKey(),
+                        Map.Entry::getValue,
+                        (has, add) -> has));
     }
 
     @NotNull
     public Map<FabledAttribute, BiFunction<Boolean, Double, Double>> getFabledAttributeBonuses() {
         return this.bonus.entrySet().stream()
                 .filter(entry -> entry.getKey() instanceof FabledAttribute)
-                .collect(Collectors.toMap(key -> (FabledAttribute) key.getKey(), Map.Entry::getValue, (has, add) -> has));
+                .collect(Collectors.toMap(key -> (FabledAttribute) key.getKey(),
+                        Map.Entry::getValue,
+                        (has, add) -> has));
     }
 
     @NotNull
@@ -103,8 +109,8 @@ public class BonusMap {
             if (sVal == null) continue;
 
             String[] split = sVal.split("%", 2);
-            boolean perc = split.length == 2 && split[1].isEmpty();
-            double  val  = StringUT.getDouble(split[0], 0, true);
+            boolean  perc  = split.length == 2 && split[1].isEmpty();
+            double   val   = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
             this.bonus.put(mainStat, func);
@@ -120,8 +126,8 @@ public class BonusMap {
             if (sVal == null) continue;
 
             String[] split = sVal.split("%", 2);
-            boolean perc = split.length == 2 && split[1].isEmpty();
-            double  val  = StringUT.getDouble(split[0], 0, true);
+            boolean  perc  = split.length == 2 && split[1].isEmpty();
+            double   val   = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (bonus, apply) -> perc == bonus ? apply + val : apply;
             this.bonus.put(dt, func);
@@ -137,8 +143,8 @@ public class BonusMap {
             if (sVal == null) continue;
 
             String[] split = sVal.split("%", 2);
-            boolean perc = split.length == 2 && split[1].isEmpty();
-            double  val  = StringUT.getDouble(split[0], 0, true);
+            boolean  perc  = split.length == 2 && split[1].isEmpty();
+            double   val   = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (bonus, apply) -> perc == bonus ? apply + val : apply;
             this.bonus.put(dt, func);
@@ -160,8 +166,8 @@ public class BonusMap {
             if (sVal == null) continue;
 
             String[] split = sVal.split("%", 2);
-            boolean perc = split.length == 2 && split[1].isEmpty();
-            double  val  = StringUT.getDouble(split[0], 0, true);
+            boolean  perc  = split.length == 2 && split[1].isEmpty();
+            double   val   = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
             this.bonus.put(stat, func);
@@ -182,8 +188,8 @@ public class BonusMap {
             if (sVal == null) continue;
 
             String[] split = sVal.split("%", 2);
-            boolean perc = split.length == 2 && split[1].isEmpty();
-            double  val  = StringUT.getDouble(split[0], 0, true);
+            boolean  perc  = split.length == 2 && split[1].isEmpty();
+            double   val   = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
             this.bonus.put(stat, func);
@@ -204,8 +210,8 @@ public class BonusMap {
             if (sVal == null) continue;
 
             String[] split = sVal.split("%", 2);
-            boolean perc = split.length == 2 && split[1].isEmpty();
-            double  val  = StringUT.getDouble(split[0], 0, true);
+            boolean  perc  = split.length == 2 && split[1].isEmpty();
+            double   val   = StringUT.getDouble(split[0], 0, true);
 
             BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
             this.bonus.put(stat, func);

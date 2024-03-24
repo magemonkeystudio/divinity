@@ -238,8 +238,8 @@ public class LevelingManager extends IListener<QuantumRPG> implements Loadable {
         boolean mythic = this.mmHook != null && mmHook.isMythicMob(from);
         String  type   = mythic ? this.mmHook.getMythicNameByEntity(from) : from.getType().name();
 
-        Map<String, ExpObject> expMap    = mythic ? this.expSrcMythic : this.expSrcVanilla;
-        ExpObject              expObject =
+        Map<String, ExpObject> expMap = mythic ? this.expSrcMythic : this.expSrcVanilla;
+        ExpObject expObject =
                 expMap.getOrDefault(type.toLowerCase(), expMap.getOrDefault(JStrings.DEFAULT.toLowerCase(), null));
 
         return expObject == null ? 0 : expObject.getExp();

@@ -221,7 +221,10 @@ public abstract class ISocketGUI extends NGUI<QuantumRPG> {
     }
 
     @NotNull
-    private ClickText getResultMessage(@NotNull ItemStack target, @NotNull ItemStack src, boolean isSuccess, boolean fSave) {
+    private ClickText getResultMessage(@NotNull ItemStack target,
+                                       @NotNull ItemStack src,
+                                       boolean isSuccess,
+                                       boolean fSave) {
         String result = plugin.lang().Module_Item_Socketing_Result_Total.normalizeLines();
 
         String stateTarget = plugin.lang().Module_Item_Socketing_Result_State_Success.getMsg();

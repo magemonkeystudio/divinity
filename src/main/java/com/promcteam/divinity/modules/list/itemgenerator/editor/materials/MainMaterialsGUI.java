@@ -19,7 +19,10 @@ import com.promcteam.divinity.types.ItemSubType;
 
 public class MainMaterialsGUI extends AbstractEditorGUI {
     public MainMaterialsGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 1, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(), itemGenerator);
+        super(player,
+                1,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(),
+                itemGenerator);
     }
 
     @Override
@@ -40,7 +43,8 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
         setSlot(1, new Slot(createItem(Material.BOOK,
                 "&e" + (reversed
                         ? "Whitelist"
-                        : "Blacklist"), StringUT.replace(CURRENT_PLACEHOLDER, itemGenerator.getConfig().getStringList(ItemType.LIST.getPath()),
+                        : "Blacklist"),
+                StringUT.replace(CURRENT_PLACEHOLDER, itemGenerator.getConfig().getStringList(ItemType.LIST.getPath()),
                         "&bCurrent:",
                         "&a%current%",
                         "&6Left-Click: &eModify"
@@ -63,30 +67,34 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
     public static ItemStack getMaterial(String string) {
         try {
             return CodexEngine.get().getItemManager().getItemType(string).create();
-        } catch (MissingProviderException | MissingItemException ignored) {}
+        } catch (MissingProviderException | MissingItemException ignored) {
+        }
 
         try {
             return new ItemStack(Material.valueOf(string.toUpperCase()));
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+        }
 
-        String[] split = string.toUpperCase().split('\\'+JStrings.MASK_ANY, 2);
+        String[] split = string.toUpperCase().split('\\' + JStrings.MASK_ANY, 2);
         if (split.length == 2) { // We have a wildcard
             // First attempt to look literally
             if (split[0].isEmpty()) {
                 try {
                     return CodexEngine.get().getItemManager().getItemType(split[1]).create();
-                } catch (ProItemException ignored) {}
+                } catch (ProItemException ignored) {
+                }
             } else if (split[1].isEmpty()) {
                 try {
                     return CodexEngine.get().getItemManager().getItemType(split[0]).create();
-                } catch (ProItemException ignored) {}
+                } catch (ProItemException ignored) {
+                }
             }
 
             // If not found, find first thing that matches
             for (com.promcteam.codex.items.ItemType material : Config.getAllRegisteredMaterials()) {
                 String materialName = material.getNamespacedID().toUpperCase();
                 if (split[0].isEmpty() && materialName.endsWith(split[1])
-                || split[1].isEmpty() && materialName.startsWith(split[0])) return material.create();
+                        || split[1].isEmpty() && materialName.startsWith(split[0])) return material.create();
             }
         }
         return new ItemStack(Material.STONE);
@@ -95,16 +103,27 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
     public static ItemStack getMaterialGroup(String materialGroup) {
         try {
             return CodexEngine.get().getItemManager().getItemType(materialGroup).create();
-        } catch (MissingProviderException | MissingItemException ignored) {}
+        } catch (MissingProviderException | MissingItemException ignored) {
+        }
 
         ItemSubType subType = Config.getSubTypeById(materialGroup);
         if (subType != null) {
-            return subType.getMaterials().stream().findAny().orElse(new VanillaProvider.VanillaItemType(Material.STONE)).create();
+            return subType.getMaterials()
+                    .stream()
+                    .findAny()
+                    .orElse(new VanillaProvider.VanillaItemType(Material.STONE))
+                    .create();
         }
 
         try {
-            return ItemGroup.valueOf(materialGroup.toUpperCase()).getMaterials().stream().findAny().orElse(new VanillaProvider.VanillaItemType(Material.STONE)).create();
-        } catch (IllegalArgumentException ignored) {}
+            return ItemGroup.valueOf(materialGroup.toUpperCase())
+                    .getMaterials()
+                    .stream()
+                    .findAny()
+                    .orElse(new VanillaProvider.VanillaItemType(Material.STONE))
+                    .create();
+        } catch (IllegalArgumentException ignored) {
+        }
 
         return getMaterial(materialGroup.toUpperCase());
     }

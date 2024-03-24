@@ -49,7 +49,9 @@ public class QuantumRPGHook implements HookLevel, HookClass {
 
         UserProfile   prof  = user.getActiveProfile();
         UserClassData cData = prof.getClassData();
-        if (cData == null) { return; }
+        if (cData == null) {
+            return;
+        }
         cData.addExp(amount);
     }
 

@@ -12,12 +12,16 @@ import java.util.List;
 public class MaterialListGUI extends AbstractEditorGUI {
 
     public MaterialListGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(),
+                itemGenerator);
     }
 
     @Override
     public void setContents() {
-        List<String> materialList = new ArrayList<>(itemGenerator.getConfig().getStringList(MainMaterialsGUI.ItemType.LIST.getPath()));
+        List<String> materialList =
+                new ArrayList<>(itemGenerator.getConfig().getStringList(MainMaterialsGUI.ItemType.LIST.getPath()));
         materialList.add(null);
         int i = 0;
         for (String entry : materialList) {
@@ -25,11 +29,15 @@ public class MaterialListGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             setSlot(i, entry == null ?
                     new Slot(createItem(Material.REDSTONE, "&eAdd new material")) {
                         @Override
@@ -38,7 +46,8 @@ public class MaterialListGUI extends AbstractEditorGUI {
                                     null,
                                     s -> {
                                         materialList.add(s);
-                                        itemGenerator.getConfig().set(MainMaterialsGUI.ItemType.LIST.getPath(), materialList);
+                                        itemGenerator.getConfig()
+                                                .set(MainMaterialsGUI.ItemType.LIST.getPath(), materialList);
                                         saveAndReopen();
                                     });
                         }

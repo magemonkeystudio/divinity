@@ -14,7 +14,10 @@ public class ModelDataGUI extends AbstractEditorGUI {
     private final String id;
 
     public ModelDataGUI(Player player, ItemGeneratorReference itemGenerator, String material) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(),
+                itemGenerator);
         this.id = material;
     }
 
@@ -30,11 +33,15 @@ public class ModelDataGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             setSlot(i, model == null ?
                     new Slot(createItem(Material.REDSTONE, "&eAdd new model data")) {
                         @Override

@@ -407,7 +407,8 @@ public class ClassManager extends QModule {
     private void updateHealthBar(@NotNull Player player) {
         if (!this.barHealthEnabled) return;
 
-        BossBar bb = this.barHp.computeIfAbsent(player, bar -> plugin.getServer().createBossBar("", this.barHealthColor, this.barHealthStyle));
+        BossBar bb = this.barHp.computeIfAbsent(player,
+                bar -> plugin.getServer().createBossBar("", this.barHealthColor, this.barHealthStyle));
 
         double hp  = player.getHealth();
         double max = Math.max(hp, EntityStats.getEntityMaxHealth(player));
@@ -435,7 +436,8 @@ public class ClassManager extends QModule {
     private void updateManaBar(@NotNull Player player) {
         if (!this.barManaEnabled) return;
 
-        BossBar bb = this.barMana.computeIfAbsent(player, bar -> plugin.getServer().createBossBar("", this.barManaColor, this.barManaStyle));
+        BossBar bb = this.barMana.computeIfAbsent(player,
+                bar -> plugin.getServer().createBossBar("", this.barManaColor, this.barManaStyle));
 
         UserClassData data = this.getUserData(player);
         if (data == null) {
@@ -793,12 +795,14 @@ public class ClassManager extends QModule {
                 Class<?> c = Class.forName(className, false, cl); // second was 'true'
                 if (IAbstractSkill.class.isAssignableFrom(c)) {
                     Class<? extends IAbstractSkill>       requirementClass = c.asSubclass(IAbstractSkill.class);
-                    Constructor<? extends IAbstractSkill> cstrctr          = requirementClass.getConstructor(QuantumRPG.class);
+                    Constructor<? extends IAbstractSkill> cstrctr          =
+                            requirementClass.getConstructor(QuantumRPG.class);
                     IAbstractSkill                        qskill           = cstrctr.newInstance(plugin);
                     if (qskill == null) continue;
 
                     this.skills.put(qskill.getId().toLowerCase(), qskill);
-                    this.info("Loaded Skill: " + qskill.getId() + " by " + qskill.getAuthor() + " [" + jar.getName() + "]");
+                    this.info("Loaded Skill: " + qskill.getId() + " by " + qskill.getAuthor() + " [" + jar.getName()
+                            + "]");
                 }
             }
             //jarFile.close();

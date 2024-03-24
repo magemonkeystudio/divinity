@@ -38,7 +38,8 @@ import java.util.function.BiFunction;
 
 public class RefineManager extends QModuleDrop<RefineItem> {
 
-    private static final NamespacedKey             TAG_REFINE_LVL     = new NamespacedKey(QuantumRPG.getInstance(), "REFINE_LVL");
+    private static final NamespacedKey             TAG_REFINE_LVL     =
+            new NamespacedKey(QuantumRPG.getInstance(), "REFINE_LVL");
     private static final String                    TAG_REFINE_LORE    = "refine_lore_global";
     private static final String                    TAG_REFINE_NAME    = "refine_name_display";
     private final        int                       silentRateBonusCap = 20; // TODO INIT
@@ -112,7 +113,8 @@ public class RefineManager extends QModuleDrop<RefineItem> {
             int lvl = StringUT.getInteger(sLvl, -1);
             if (lvl <= 0) continue;
 
-            this.formatNamePrefix.put(lvl, StringUT.color(cfg.getString(path + "format-by-level." + sLvl, "+%level% ")));
+            this.formatNamePrefix.put(lvl,
+                    StringUT.color(cfg.getString(path + "format-by-level." + sLvl, "+%level% ")));
         }
 
         path = "format.item-lore.";
@@ -361,15 +363,18 @@ public class RefineManager extends QModuleDrop<RefineItem> {
 
         Map<ItemLoreStat<?>, Double> refineValues = new HashMap<>();
         bMap.getStatBonuses().forEach((bStat, bFunc) -> {
-            refineValues.put(bStat, BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Arrays.asList(bFunc)));
+            refineValues.put(bStat,
+                    BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Arrays.asList(bFunc)));
         });
 
         bMap.getDamageBonuses().forEach((bStat, bFunc) -> {
-            refineValues.put(bStat, BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null)[1], Arrays.asList(bFunc)));
+            refineValues.put(bStat,
+                    BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null)[1], Arrays.asList(bFunc)));
         });
 
         bMap.getDefenseBonuses().forEach((bStat, bFunc) -> {
-            refineValues.put(bStat, BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Arrays.asList(bFunc)));
+            refineValues.put(bStat,
+                    BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Arrays.asList(bFunc)));
         });
 
         Map<ItemLoreStat<?>, String> statTags = new HashMap<>();
@@ -441,7 +446,7 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         ItemStats.getStats().forEach((stat) -> {
             if (stat instanceof SimpleStat) {
                 SimpleStat simpleStat = (SimpleStat) stat;
-                int i = 0;
+                int        i          = 0;
                 for (StatBonus bonus : simpleStat.getAllRaw(item)) {
                     int pos = simpleStat.getLoreIndex(item, i);
                     if (pos >= 0) simpleStat.add(item, bonus, pos);

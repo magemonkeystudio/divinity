@@ -44,14 +44,14 @@ public class MainStatsGUI extends AbstractEditorGUI {
                 sendSetMessage(ItemType.MINIMUM.getPath() + " " + itemType.getTitle(),
                         String.valueOf(itemGenerator.getConfig().getInt(ItemType.MINIMUM.getPath(itemType))),
                         s -> {
-                    int minimum = Integer.parseInt(s);
-                    if (minimum >= 0) {
-                        itemGenerator.getConfig().set(ItemType.MINIMUM.getPath(itemType), minimum);
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
-                    saveAndReopen();
-                });
+                            int minimum = Integer.parseInt(s);
+                            if (minimum >= 0) {
+                                itemGenerator.getConfig().set(ItemType.MINIMUM.getPath(itemType), minimum);
+                            } else {
+                                throw new IllegalArgumentException();
+                            }
+                            saveAndReopen();
+                        });
             }
 
             @Override
@@ -86,13 +86,13 @@ public class MainStatsGUI extends AbstractEditorGUI {
                 sendSetMessage(ItemType.MAXIMUM.getPath() + " " + itemType.getTitle(),
                         String.valueOf(itemGenerator.getConfig().getInt(ItemType.MAXIMUM.getPath(itemType))),
                         s -> {
-                    int maximum = Integer.parseInt(s);
-                    if (maximum >= 0) {
-                        itemGenerator.getConfig().set(ItemType.MAXIMUM.getPath(itemType), maximum);
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
-                    saveAndReopen();
+                            int maximum = Integer.parseInt(s);
+                            if (maximum >= 0) {
+                                itemGenerator.getConfig().set(ItemType.MAXIMUM.getPath(itemType), maximum);
+                            } else {
+                                throw new IllegalArgumentException();
+                            }
+                            saveAndReopen();
                         });
             }
 
@@ -103,7 +103,9 @@ public class MainStatsGUI extends AbstractEditorGUI {
             }
         });
         setSlot(2, new Slot(createItem(Material.WRITABLE_BOOK,
-                "&eLore format", StringUT.replace(CURRENT_PLACEHOLDER, itemGenerator.getConfig().getStringList(ItemType.LORE.getPath(this.itemType)),
+                "&eLore format",
+                StringUT.replace(CURRENT_PLACEHOLDER,
+                        itemGenerator.getConfig().getStringList(ItemType.LORE.getPath(this.itemType)),
                         "&bCurrent:",
                         "&a----------",
                         "&f%current%",

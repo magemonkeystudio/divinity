@@ -34,7 +34,7 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
     protected final List<NamespacedKey> getKeys(int index) {
         List<NamespacedKey> indexedKeys = new ArrayList<>();
         for (NamespacedKey key : this.keys) {
-            indexedKeys.add(NamespacedKey.fromString(key.toString()+index));
+            indexedKeys.add(NamespacedKey.fromString(key.toString() + index));
         }
         return indexedKeys;
     }
@@ -73,7 +73,7 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         if (format.isEmpty()) {
             LoreUT.replacePlaceholder(item, this.getPlaceholder(), null);
             for (NamespacedKey key : keys) {
-                ItemUT.delLoreTag(item, key.getKey()+index);
+                ItemUT.delLoreTag(item, key.getKey() + index);
             }
         } else {
             LoreUT.replacePlaceholder(item, this.getPlaceholder(), format);
@@ -119,7 +119,7 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         item.setItemMeta(meta);
 
         for (NamespacedKey key : this.keys) {
-            ItemUT.delLoreTag(item, key.getKey()+index);
+            ItemUT.delLoreTag(item, key.getKey() + index);
         }
 
         if (!onlyTag) {
@@ -137,12 +137,13 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         PersistentDataContainer container  = meta.getPersistentDataContainer();
-        List<Z> valuesLeft = new ArrayList<>();
+        List<Z>                 valuesLeft = new ArrayList<>();
 
         container.getKeys().stream()
                 .filter(namespacedKey -> {
                     for (NamespacedKey key : this.keys) {
-                        if (namespacedKey.toString().startsWith(key.toString()) && container.has(namespacedKey, this.dataType)) return true;
+                        if (namespacedKey.toString().startsWith(key.toString()) && container.has(namespacedKey,
+                                this.dataType)) return true;
                     }
                     return false;
                 }).forEach(namespacedKey -> {
@@ -185,7 +186,8 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         return container.getKeys().stream()
                 .filter(namespacedKey -> {
                     for (NamespacedKey key : this.keys) {
-                        if (namespacedKey.toString().startsWith(key.toString()) && container.has(namespacedKey, this.dataType)) return true;
+                        if (namespacedKey.toString().startsWith(key.toString()) && container.has(namespacedKey,
+                                this.dataType)) return true;
                     }
                     return false;
                 })
@@ -204,7 +206,8 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         return (int) container.getKeys().stream()
                 .filter(namespacedKey -> {
                     for (NamespacedKey key : this.keys) {
-                        if (namespacedKey.toString().startsWith(key.toString()) && container.has(namespacedKey, this.dataType)) return true;
+                        if (namespacedKey.toString().startsWith(key.toString()) && container.has(namespacedKey,
+                                this.dataType)) return true;
                     }
                     return false;
                 }).count();
@@ -222,7 +225,7 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         for (int i = 0; i < lore.size(); i++) {
             int found = 0;
             for (NamespacedKey key : this.keys) {
-                found = ItemUT.getLoreIndex(item, key.getKey()+i);
+                found = ItemUT.getLoreIndex(item, key.getKey() + i);
                 if (found >= 0) break;
             }
 

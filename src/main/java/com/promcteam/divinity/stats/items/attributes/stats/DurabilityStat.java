@@ -20,7 +20,7 @@ import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
 import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
 
 public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat {
-    private   double          cap;
+    private double cap;
 
     public DurabilityStat(
             @NotNull String name,

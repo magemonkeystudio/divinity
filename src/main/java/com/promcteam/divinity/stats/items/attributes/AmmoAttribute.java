@@ -19,7 +19,12 @@ public class AmmoAttribute extends ItemLoreStat<String> {
             @NotNull String name,
             @NotNull String format
     ) {
-        super(type.name(), name, format, ItemTags.PLACEHOLDER_ITEM_AMMO, ItemTags.TAG_ITEM_AMMO, PersistentDataType.STRING);
+        super(type.name(),
+                name,
+                format,
+                ItemTags.PLACEHOLDER_ITEM_AMMO,
+                ItemTags.TAG_ITEM_AMMO,
+                PersistentDataType.STRING);
         this.type = type;
 
         // Legacy keys
@@ -91,7 +96,8 @@ public class AmmoAttribute extends ItemLoreStat<String> {
             case LLAMA_SPIT:
             case SHULKER_BULLET: {
                 Location   eye = shooter.getEyeLocation();
-                Projectile sb  = (Projectile) shooter.getWorld().spawnEntity(eye.add(eye.getDirection()), this.getType().eType);
+                Projectile sb  =
+                        (Projectile) shooter.getWorld().spawnEntity(eye.add(eye.getDirection()), this.getType().eType);
                 return sb;
             }
         }

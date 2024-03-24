@@ -17,15 +17,15 @@ gui:
   size: 27
   aspect-slots: '10,11,15,16'
   aspect-lore:
-  - '&7Current: &f%aspect_current%&7/&f%aspect_max%'
-  - '&7'
-  - '&c&lAffected Stats:'
-  - '&7%att_name%: &6+%att_inc% &7[&f%att_total%&7]'
-  - '&7%item_stat_name% &6+%item_stat_inc% &7[&f%item_stat_total%&7]'
-  - '&7%damage_name% &6+%damage_inc% &7[&f%damage_total%&7]'
-  - '&7%defense_name% &6+%defense_inc% &7[&f%defense_total%&7]'
-  - '&7'
-  - '&7Click to increase for &c%cost% AP&7!'
+    - '&7Current: &f%aspect_current%&7/&f%aspect_max%'
+    - '&7'
+    - '&c&lAffected Stats:'
+    - '&7%att_name%: &6+%att_inc% &7[&f%att_total%&7]'
+    - '&7%item_stat_name% &6+%item_stat_inc% &7[&f%item_stat_total%&7]'
+    - '&7%damage_name% &6+%damage_inc% &7[&f%damage_total%&7]'
+    - '&7%defense_name% &6+%defense_inc% &7[&f%defense_total%&7]'
+    - '&7'
+    - '&7Click to increase for &c%cost% AP&7!'
   content:
     filler_1:
       material: BLACK_STAINED_GLASS_PANE
@@ -48,9 +48,9 @@ gui:
       material: MILK_BUCKET
       name: '&fReset'
       lore:
-      - '&7Click to reset and return'
-      - '&7your &fAspect Points&7.'
+        - '&7Click to reset and return'
+        - '&7your &fAspect Points&7.'
       item-flags:
-      - '*'
+        - '*'
       slots: 4
       type: RESET

@@ -29,9 +29,21 @@ public class ParticleUtils {
                 final double n2 = (0.5 + n * 0.15) % 3.0;
                 for (int n3 = 0; n3 < n2 * 10.0; ++n3) {
                     final double n4 = 6.283185307179586 / (n2 * 10.0) * n3;
-                    EffectUT.playEffect(LocUT.getPointOnCircle(loc, false, n4, n2, 1.0), eff1, 0.1f, 0.1f, 0.1f, 0.0f, 2);
+                    EffectUT.playEffect(LocUT.getPointOnCircle(loc, false, n4, n2, 1.0),
+                            eff1,
+                            0.1f,
+                            0.1f,
+                            0.1f,
+                            0.0f,
+                            2);
                     if (n < 15) {
-                        EffectUT.playEffect(LocUT.getPointOnCircle(loc, false, n4, n2, 1.0), eff2, 0.1f, 0.1f, 0.1f, 0.0f, 1);
+                        EffectUT.playEffect(LocUT.getPointOnCircle(loc, false, n4, n2, 1.0),
+                                eff2,
+                                0.1f,
+                                0.1f,
+                                0.1f,
+                                0.0f,
+                                1);
                     }
                 }
             }
@@ -51,9 +63,21 @@ public class ParticleUtils {
                 final double n2 = (0.5 + n * 0.15) % 3.0;
                 for (int n3 = 0; n3 < n2 * 10.0; ++n3) {
                     final double n4 = 6.283185307179586 / (n2 * 10.0) * n3;
-                    EffectUT.playEffect(LocUT.getPointOnCircle(e.getLocation(), false, n4, n2, 1.0), eff1, 0.1f, 0.1f, 0.1f, 0f, 2);
+                    EffectUT.playEffect(LocUT.getPointOnCircle(e.getLocation(), false, n4, n2, 1.0),
+                            eff1,
+                            0.1f,
+                            0.1f,
+                            0.1f,
+                            0f,
+                            2);
                     if (n < 15) {
-                        EffectUT.playEffect(LocUT.getPointOnCircle(e.getLocation(), false, n4, n2, 1.0), eff2, 0.1f, 0.1f, 0.1f, 0f, 1);
+                        EffectUT.playEffect(LocUT.getPointOnCircle(e.getLocation(), false, n4, n2, 1.0),
+                                eff2,
+                                0.1f,
+                                0.1f,
+                                0.1f,
+                                0f,
+                                1);
                     }
                 }
             }
@@ -74,22 +98,118 @@ public class ParticleUtils {
                 if (k == 3) this.cancel();
                 EffectUT.playEffect(new Location(localWorld, d3, d5 + 1.8D, d7), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
                 EffectUT.playEffect(new Location(localWorld, d3, d5 + 1.5D, d7), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.8D, d7), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.5D, d7), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.8D, d7 + 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.5D, d7 + 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.8D, d7), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.5D, d7), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.8D, d7 + 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.5D, d7 + 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3, d5 + 1.8D, d7 + 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.5D, d7 + 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.8D, d7 - 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.5D, d7 - 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3, d5 + 1.8D, d7 - 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3, d5 + 1.5D, d7 - 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.8D, d7 - 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
-                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.5D, d7 - 0.6D), eff1, 0.0F, 0.0F, 0.0F, 0.0F, i);
+                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.8D, d7),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.5D, d7),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.8D, d7 + 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.5D, d7 + 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.8D, d7),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.5D, d7),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.8D, d7 + 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.5D, d7 + 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3, d5 + 1.8D, d7 + 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.5D, d7 + 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.8D, d7 - 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 + 0.6D, d5 + 1.5D, d7 - 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3, d5 + 1.8D, d7 - 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3, d5 + 1.5D, d7 - 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.8D, d7 - 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
+                EffectUT.playEffect(new Location(localWorld, d3 - 0.6D, d5 + 1.5D, d7 - 0.6D),
+                        eff1,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        0.0F,
+                        i);
                 EffectUT.playEffect(new Location(localWorld, d3, d5 + 1.0D, d7), eff2, 0.0F, 0.0F, 0.0F, 0.0F, 2);
                 k++;
             }
@@ -173,7 +293,8 @@ public class ParticleUtils {
                 final double   n3             = n * 0.1 % 2.5;
                 final double   n4             = 0.45;
                 final Location pointOnCircle  = LocUT.getPointOnCircle(LocUT.getCenter(loc), true, n2, n4, n3);
-                final Location pointOnCircle2 = LocUT.getPointOnCircle(LocUT.getCenter(loc), true, n2 - 3.141592653589793, n4, n3);
+                final Location pointOnCircle2 =
+                        LocUT.getPointOnCircle(LocUT.getCenter(loc), true, n2 - 3.141592653589793, n4, n3);
                 EffectUT.playEffect(pointOnCircle, "FLAME", 0.0f, 0.0f, 0.0f, 0.0f, 1);
                 EffectUT.playEffect(pointOnCircle2, "FLAME", 0.0f, 0.0f, 0.0f, 0.0f, 1);
                 EffectUT.playEffect(LocUT.getCenter(loc).add(0, 0.5, 0), eff, 0.2f, 0.0f, 0.2f, 0.0f, 5);
@@ -181,7 +302,14 @@ public class ParticleUtils {
         }.runTaskTimerAsynchronously(plugin, 0L, 1L);
     }
 
-    public static void drawParticleLine(Location from, Location to, String pe, float offX, float offY, float offZ, float speed, int amount) {
+    public static void drawParticleLine(Location from,
+                                        Location to,
+                                        String pe,
+                                        float offX,
+                                        float offY,
+                                        float offZ,
+                                        float speed,
+                                        int amount) {
         Location origin = from;
         Vector   target = new Location(to.getWorld(), to.getX(), to.getY(), to.getZ()).toVector();
         origin.setDirection(target.subtract(origin.toVector()));

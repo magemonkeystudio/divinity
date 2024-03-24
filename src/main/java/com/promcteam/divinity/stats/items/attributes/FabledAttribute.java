@@ -15,7 +15,12 @@ public class FabledAttribute extends ItemLoreStat<Integer> {
             @NotNull String id,
             @NotNull String name,
             @NotNull String format) {
-        super(id, name, format.replace("%name%", name), "%FABLED_ATTRIBUTE_"+id+"%", ItemTags.TAG_ITEM_FABLED_ATTR, PersistentDataType.INTEGER);
+        super(id,
+                name,
+                format.replace("%name%", name),
+                "%FABLED_ATTRIBUTE_" + id + "%",
+                ItemTags.TAG_ITEM_FABLED_ATTR,
+                PersistentDataType.INTEGER);
 
         // Legacy keys
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_skillapi_attr_" + this.getId()));

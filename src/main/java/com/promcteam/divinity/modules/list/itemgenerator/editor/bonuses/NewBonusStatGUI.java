@@ -23,8 +23,14 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
     private final String                    path;
     private final BonusCategoryGUI.ItemType statType;
 
-    public NewBonusStatGUI(Player player, ItemGeneratorReference itemGenerator, String path, BonusCategoryGUI.ItemType statType) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(), itemGenerator);
+    public NewBonusStatGUI(Player player,
+                           ItemGeneratorReference itemGenerator,
+                           String path,
+                           BonusCategoryGUI.ItemType statType) {
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.MATERIALS.getTitle(),
+                itemGenerator);
         this.path = path;
         this.statType = statType;
     }
@@ -46,7 +52,9 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
                             break;
                         }
                     }
-                    if (!exists) {list.add(damageAttribute.getId());}
+                    if (!exists) {
+                        list.add(damageAttribute.getId());
+                    }
                 }
                 break;
             }
@@ -60,7 +68,9 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
                             break;
                         }
                     }
-                    if (!exists) {list.add(defenseAttribute.getId());}
+                    if (!exists) {
+                        list.add(defenseAttribute.getId());
+                    }
                 }
                 break;
             }
@@ -74,7 +84,9 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
                             break;
                         }
                     }
-                    if (!exists) {list.add(itemStat.name());}
+                    if (!exists) {
+                        list.add(itemStat.name());
+                    }
                 }
                 break;
             }
@@ -90,7 +102,9 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
                                 break;
                             }
                         }
-                        if (!exists) {list.add(fabledAttribute.getId());}
+                        if (!exists) {
+                            list.add(fabledAttribute.getId());
+                        }
                     }
                 }
                 break;
@@ -105,7 +119,9 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
                             break;
                         }
                     }
-                    if (!exists) {list.add(handAttribute.getId());}
+                    if (!exists) {
+                        list.add(handAttribute.getId());
+                    }
                 }
                 break;
             }
@@ -119,7 +135,9 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
                             break;
                         }
                     }
-                    if (!exists) {list.add(ammoAttribute.getId());}
+                    if (!exists) {
+                        list.add(ammoAttribute.getId());
+                    }
                 }
                 break;
             }
@@ -134,11 +152,15 @@ public class NewBonusStatGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             setSlot(i, new Slot(createItem(material,
                     "&e" + stat,
                     "&6Left-Click: &eCreate")) {

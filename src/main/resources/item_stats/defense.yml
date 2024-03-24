@@ -3,7 +3,7 @@ physical:
   name: Physical Defense
   format: '&6▸ %name%: &f%value% %condition%'
   block-damage-types:
-  - physical
+    - physical
   protection-factor: 0.8
 
 magical:
@@ -11,7 +11,7 @@ magical:
   name: Magical Defense
   format: '&d▸ %name%: &f%value% %condition%'
   block-damage-types:
-  - magical
+    - magical
   protection-factor: 0.8
 
 fire:
@@ -19,7 +19,7 @@ fire:
   name: Fire Defense
   format: '&c▸ %name%: &f%value% %condition%'
   block-damage-types:
-  - fire
+    - fire
   protection-factor: 0.8
 
 poison:
@@ -27,7 +27,7 @@ poison:
   name: Poison Defense
   format: '&a▸ %name%: &f%value% %condition%'
   block-damage-types:
-  - poison
+    - poison
   protection-factor: 0.8
 
 water:
@@ -35,7 +35,7 @@ water:
   name: Water Defense
   format: '&9▸ %name%: &f%value% %condition%'
   block-damage-types:
-  - water
+    - water
   protection-factor: 0.8
 
 wind:
@@ -43,5 +43,5 @@ wind:
   name: Wind Defense
   format: '&7▸ %name%: &f%value% %condition%'
   block-damage-types:
-  - wind
+    - wind
   protection-factor: 0.8

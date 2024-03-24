@@ -14,7 +14,10 @@ public class SkillGUI extends AbstractEditorGUI {
     private final String path;
 
     public SkillGUI(Player player, ItemGeneratorReference itemGenerator, String path) {
-        super(player, 1, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.SKILLS.getTitle(), itemGenerator);
+        super(player,
+                1,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.SKILLS.getTitle(),
+                itemGenerator);
         this.path = path;
     }
 
@@ -50,13 +53,17 @@ public class SkillGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(ItemType.MIN.getPath(path), Math.max(1, itemGenerator.getConfig().getInt(ItemType.MIN.getPath(path)) - 1));
+                itemGenerator.getConfig()
+                        .set(ItemType.MIN.getPath(path),
+                                Math.max(1, itemGenerator.getConfig().getInt(ItemType.MIN.getPath(path)) - 1));
                 saveAndReopen();
             }
 
             @Override
             public void onRightClick() {
-                itemGenerator.getConfig().set(ItemType.MIN.getPath(path), itemGenerator.getConfig().getInt(ItemType.MIN.getPath(path)) + 1);
+                itemGenerator.getConfig()
+                        .set(ItemType.MIN.getPath(path),
+                                itemGenerator.getConfig().getInt(ItemType.MIN.getPath(path)) + 1);
                 saveAndReopen();
             }
 
@@ -85,13 +92,17 @@ public class SkillGUI extends AbstractEditorGUI {
                 "&6Drop: &eSet to default value")) {
             @Override
             public void onLeftClick() {
-                itemGenerator.getConfig().set(ItemType.MAX.getPath(path), Math.max(1, itemGenerator.getConfig().getInt(ItemType.MAX.getPath(path)) - 1));
+                itemGenerator.getConfig()
+                        .set(ItemType.MAX.getPath(path),
+                                Math.max(1, itemGenerator.getConfig().getInt(ItemType.MAX.getPath(path)) - 1));
                 saveAndReopen();
             }
 
             @Override
             public void onRightClick() {
-                itemGenerator.getConfig().set(ItemType.MAX.getPath(path), itemGenerator.getConfig().getInt(ItemType.MAX.getPath(path)) + 1);
+                itemGenerator.getConfig()
+                        .set(ItemType.MAX.getPath(path),
+                                itemGenerator.getConfig().getInt(ItemType.MAX.getPath(path)) + 1);
                 saveAndReopen();
             }
 
@@ -112,7 +123,9 @@ public class SkillGUI extends AbstractEditorGUI {
             }
         });
         setSlot(3, new Slot(createItem(Material.WRITABLE_BOOK,
-                "&eLore format", StringUT.replace(CURRENT_PLACEHOLDER, itemGenerator.getConfig().getStringList(ItemType.LORE.getPath(path)),
+                "&eLore format",
+                StringUT.replace(CURRENT_PLACEHOLDER,
+                        itemGenerator.getConfig().getStringList(ItemType.LORE.getPath(path)),
                         "&bCurrent:",
                         "&a----------",
                         "&f%current%",
@@ -126,7 +139,9 @@ public class SkillGUI extends AbstractEditorGUI {
 
             @Override
             public void onDrop() {
-                itemGenerator.getConfig().set(ItemType.LORE.getPath(path), List.of("&b" + path.substring(path.lastIndexOf('.') + 1) + " &7Lvl. &f%level%"));
+                itemGenerator.getConfig()
+                        .set(ItemType.LORE.getPath(path),
+                                List.of("&b" + path.substring(path.lastIndexOf('.') + 1) + " &7Lvl. &f%level%"));
                 saveAndReopen();
             }
         });

@@ -3,23 +3,23 @@ _vanilla_generic:
   name: 'Generic'
   format: '&6⚔ %name%: &f%value% %condition%'
   attached-damage-causes:
-  - DROWNING
-  - STARVATION
-  - SUFFOCATION
-  - SUICIDE
-  - THORNS
-  - VOID
-  on-hit-actions: {}
-  biome-damage-modifier: {}
-  entity-type-modifier: {}
-  mythic-mob-faction-modifier: {}
+    - DROWNING
+    - STARVATION
+    - SUFFOCATION
+    - SUICIDE
+    - THORNS
+    - VOID
+  on-hit-actions: { }
+  biome-damage-modifier: { }
+  entity-type-modifier: { }
+  mythic-mob-faction-modifier: { }
 
 physical:
   priority: 1000
   name: Physical Damage
   format: '&6⚔ %name%: &f%value% %condition%'
-  attached-damage-causes: []
-  on-hit-actions: {}
+  attached-damage-causes: [ ]
+  on-hit-actions: { }
   biome-damage-modifier:
     PLAINS: 1.0
   entity-type-modifier:
@@ -32,11 +32,11 @@ magical:
   name: Magical Damage
   format: '&d⚡ %name%: &f%value% %condition%'
   attached-damage-causes:
-  - DRAGON_BREATH
-  - LIGHTNING
-  - MAGIC
-  - WITHER
-  on-hit-actions: {}
+    - DRAGON_BREATH
+    - LIGHTNING
+    - MAGIC
+    - WITHER
+  on-hit-actions: { }
   biome-damage-modifier:
     PLAINS: 1.0
   entity-type-modifier:
@@ -49,11 +49,11 @@ fire:
   name: Fire Damage
   format: '&c☀ %name%: &f%value% %condition%'
   attached-damage-causes:
-  - FIRE
-  - FIRE_TICK
-  - LAVA
-  - HOT_FLOOR
-  on-hit-actions: {}
+    - FIRE
+    - FIRE_TICK
+    - LAVA
+    - HOT_FLOOR
+  on-hit-actions: { }
   biome-damage-modifier:
     PLAINS: 1.0
     NETHER: 1.25
@@ -67,8 +67,8 @@ poison:
   name: Poison Damage
   format: '&a☣ %name%: &f%value% %condition%'
   attached-damage-causes:
-  - POISON
-  on-hit-actions: {}
+    - POISON
+  on-hit-actions: { }
   biome-damage-modifier:
     PLAINS: 1.0
     SWAMPLAND: 1.25
@@ -81,8 +81,8 @@ water:
   priority: 10
   name: Water Damage
   format: '&9⚓ %name%: &f%value% %condition%'
-  attached-damage-causes: []
-  on-hit-actions: {}
+  attached-damage-causes: [ ]
+  on-hit-actions: { }
   biome-damage-modifier:
     PLAINS: 1.0
     OCEAN: 1.25
@@ -95,8 +95,8 @@ wind:
   priority: 10
   name: Wind Damage
   format: '&7⚕ %name%: &f%value% %condition%'
-  attached-damage-causes: []
-  on-hit-actions: {}
+  attached-damage-causes: [ ]
+  on-hit-actions: { }
   biome-damage-modifier:
     PLAINS: 1.0
   entity-type-modifier:

@@ -16,7 +16,12 @@ public class HandAttribute extends ItemLoreStat<String> {
             @NotNull String name,
             @NotNull String format
     ) {
-        super(type.name(), name, format, ItemTags.PLACEHOLDER_ITEM_HAND, ItemTags.TAG_ITEM_HAND, PersistentDataType.STRING);
+        super(type.name(),
+                name,
+                format,
+                ItemTags.PLACEHOLDER_ITEM_HAND,
+                ItemTags.TAG_ITEM_HAND,
+                PersistentDataType.STRING);
         this.type = type;
 
         // Legacy keys

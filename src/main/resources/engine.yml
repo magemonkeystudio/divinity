@@ -153,7 +153,7 @@ lore:
         break-items-on-zero:
           enabled: true
           excluded-modules:
-          - 'item_generator'
+            - 'item_generator'
       requirements:
         user:
           dynamic:

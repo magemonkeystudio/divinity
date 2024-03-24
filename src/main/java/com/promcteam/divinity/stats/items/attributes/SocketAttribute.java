@@ -39,18 +39,27 @@ public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements
             @NotNull String formatValueEmpty,
             @NotNull String formatValueFilled
     ) {
-        super(id, name, format, "%SOCKET_" + type.name() + "_" + id + "%", ItemTags.TAG_ITEM_SOCKET + type.name() + '_', DataUT.STRING_ARRAY);
+        super(id,
+                name,
+                format,
+                "%SOCKET_" + type.name() + "_" + id + "%",
+                ItemTags.TAG_ITEM_SOCKET + type.name() + '_',
+                DataUT.STRING_ARRAY);
         this.type = type;
         this.tier = tier;
 
         this.name = this.getTier().format(this.name);
-        this.formatValueEmpty = this.getTier().format(StringUT.color(formatValueEmpty).replace("%name%", this.getName()));
-        this.formatValueFilled = this.getTier().format(StringUT.color(formatValueFilled).replace("%name%", this.getName()));
+        this.formatValueEmpty =
+                this.getTier().format(StringUT.color(formatValueEmpty).replace("%name%", this.getName()));
+        this.formatValueFilled =
+                this.getTier().format(StringUT.color(formatValueFilled).replace("%name%", this.getName()));
 
         // Legacy keys
         this.keys.add(NamespacedKey.fromString("prorpgitems:item_socket_" + type.name().toLowerCase() + this.getId()));
-        this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_socket_" + type.name().toLowerCase() + this.getId()));
-        this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_socket_" + type.name().toLowerCase() + this.getId()));
+        this.keys.add(NamespacedKey.fromString(
+                "prorpgitems:qrpg_item_socket_" + type.name().toLowerCase() + this.getId()));
+        this.keys.add(NamespacedKey.fromString(
+                "quantumrpg:qrpg_item_socket_" + type.name().toLowerCase() + this.getId()));
     }
 
     @Override

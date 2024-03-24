@@ -12,12 +12,16 @@ import java.util.List;
 
 public class MainSocketsGUI extends AbstractEditorGUI {
     public MainSocketsGUI(Player player, ItemGeneratorReference itemGenerator) {
-        super(player, 6, "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.SOCKETS.getTitle(), itemGenerator);
+        super(player,
+                6,
+                "[&d" + itemGenerator.getId() + "&r] editor/" + EditorGUI.ItemType.SOCKETS.getTitle(),
+                itemGenerator);
     }
 
     @Override
     public void setContents() {
-        ConfigurationSection cfg  = this.itemGenerator.getConfig().getConfigurationSection(EditorGUI.ItemType.SOCKETS.getPath());
+        ConfigurationSection cfg  =
+                this.itemGenerator.getConfig().getConfigurationSection(EditorGUI.ItemType.SOCKETS.getPath());
         List<String>         list = new ArrayList<>();
         if (cfg != null) {
             list.addAll(cfg.getKeys(false));
@@ -28,11 +32,15 @@ public class MainSocketsGUI extends AbstractEditorGUI {
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
                 i++;
-            } else if (i % 9 == 8) {i++;}
+            } else if (i % 9 == 8) {
+                i++;
+            }
             if (i % this.inventory.getSize() == 45) {
                 this.setSlot(i, getPrevButton());
                 i++;
-            } else if (i % 9 == 0) {i++;}
+            } else if (i % 9 == 0) {
+                i++;
+            }
             setSlot(i, new Slot(createItem(Material.EMERALD,
                     "&e" + entry,
                     "&6Left-Click: &eModify")) {

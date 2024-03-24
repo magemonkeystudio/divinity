@@ -7,7 +7,8 @@ import com.promcteam.divinity.modules.list.classes.api.UserSkillData;
 import java.lang.reflect.Type;
 
 public class SkillDataDeserializer implements JsonDeserializer<UserSkillData> {
-    public UserSkillData deserialize(JsonElement json, Type type, JsonDeserializationContext contex) throws JsonParseException {
+    public UserSkillData deserialize(JsonElement json, Type type, JsonDeserializationContext contex) throws
+            JsonParseException {
         JsonObject              o      = json.getAsJsonObject();
         String                  id     = o.get("id").getAsString();
         int                     lvl    = o.get("lvl").getAsInt();
@@ -18,7 +19,7 @@ public class SkillDataDeserializer implements JsonDeserializer<UserSkillData> {
             combo = new ComboManager.ComboKey[jCombo.size()];
             int i = 0;
             for (JsonElement e : jCombo)
-                combo[i++] = (ComboManager.ComboKey) contex.deserialize(e, ComboManager.ComboKey.class);
+                combo[i++] = contex.deserialize(e, ComboManager.ComboKey.class);
         }
         return new UserSkillData(id, lvl, combo);
     }

@@ -168,13 +168,13 @@ public class SetManager extends QModule {
         List<String> lore = meta.getLore();
         if (lore == null) return;
 
-        StringBuilder loreTag     = new StringBuilder();
+        StringBuilder loreTag   = new StringBuilder();
         String        storedTag = null;
         for (String key : SET_LORE_TAG) {
             storedTag = ItemUT.getLoreTag(item, key);
             if (storedTag != null) break;
         }
-        String[]      storedLines = storedTag != null ? storedTag.split(LoreUT.TAG_SPLITTER) : new String[]{};
+        String[] storedLines = storedTag != null ? storedTag.split(LoreUT.TAG_SPLITTER) : new String[]{};
 
         int pos = lore.indexOf(ItemTags.PLACEHOLDER_ITEM_SET);
         if (pos < 0) {
@@ -367,7 +367,9 @@ public class SetManager extends QModule {
                     continue;
                 }
 
-                String eName = StringUT.oneSpace(StringUT.color(eRawName).replace("%suffix%", suffix).replace("%prefix%", prefix));
+                String eName = StringUT.oneSpace(StringUT.color(eRawName)
+                        .replace("%suffix%", suffix)
+                        .replace("%prefix%", prefix));
 
                 SetElement setElement = new SetElement(eId, eMaterials, eName);
                 this.elements.put(setElement.getId(), setElement);

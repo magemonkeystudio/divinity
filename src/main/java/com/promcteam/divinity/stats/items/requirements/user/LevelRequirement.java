@@ -47,8 +47,8 @@ public class LevelRequirement extends DynamicUserRequirement<int[]> {
     public boolean canUse(@NotNull Player player, int[] value) {
         if (value == null) return true;
 
-        int min = value[0];
-        int max = value.length == 2 ? value[1] : min;
+        int min       = value[0];
+        int max       = value.length == 2 ? value[1] : min;
         int userLevel = EngineCfg.HOOK_PLAYER_LEVEL_PLUGIN.getLevel(player);
 
         return min == max ? (userLevel >= min) : (userLevel >= min && userLevel <= max);

@@ -58,6 +58,6 @@ public class PwingRacesHK extends NHook<QuantumRPG> implements HookClass, HookLe
         RacePlayer  racePlayer  = raceManager.getRacePlayer(player);
         Race        race        = racePlayer.getActiveRace();
         RaceData    raceData    = racePlayer.getRaceData(race);
-        raceData.setExperience(raceData.getExperience()+amount);
+        raceData.setExperience(raceData.getExperience() + amount);
     }
 }

@@ -69,6 +69,7 @@ public class ItemLevelRequirement extends ItemRequirement<int[]> {
         int[] arr = this.getRaw(src);
         if (arr == null) throw new IllegalStateException("Item does not have stat!");
 
-        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Level.replace("%value%", this.formatValue(src, arr));
+        return QuantumRPG.getInstance().lang().Module_Item_Apply_Error_Level.replace("%value%",
+                this.formatValue(src, arr));
     }
 }
