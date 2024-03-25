@@ -1,5 +1,6 @@
 package su.nightexpress.quantumrpg.stats.items.api;
 
+import mc.promcteam.engine.utils.DataUT;
 import mc.promcteam.engine.utils.ItemUT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -51,11 +52,32 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
 
     public boolean add(@NotNull ItemStack item, @NotNull Z value, int index, int line) {
         if (index < 0 && value instanceof StatBonus) {
-            for (int i = 0, size = this.getAmount(item); i < size; i++) {
-                StatBonus existing = (StatBonus) this.getRaw(item, i);
-                if (existing != null && Objects.equals(existing.getCondition(), ((StatBonus) value).getCondition())) {
-                    index = i;
-                    break;
+            StatBonus statBonus = ((StatBonus) value);
+
+            // Look for legacy format
+            if (statBonus.getCondition() == null && !statBonus.isPercent()) {
+                ItemMeta meta = item.getItemMeta();
+                if (meta != null) {
+                    PersistentDataContainer container = meta.getPersistentDataContainer();
+                    for (NamespacedKey key : this.keys) {
+                        if (container.has(key, PersistentDataType.DOUBLE) || container.has(key, DataUT.DOUBLE_ARRAY)) {
+                            line = ItemUT.getLoreIndex(item, key.getKey());
+                            index = 0;
+                            container.remove(key);
+                            item.setItemMeta(meta);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (index < 0) {
+                // Look for existing stats with same condition
+                for (int i = 0, size = this.getAmount(item); i < size; i++) {
+                    StatBonus existing = (StatBonus) this.getRaw(item, i);
+                    if (existing != null && Objects.equals(existing.getCondition(), (statBonus).getCondition())) {
+                        index = i;
+                        break;
+                    }
                 }
             }
         }
@@ -223,6 +245,10 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
             int found = 0;
             for (NamespacedKey key : this.keys) {
                 found = ItemUT.getLoreIndex(item, key.getKey()+i);
+                if (found >= 0) break;
+
+                // Try legacy format
+                found = ItemUT.getLoreIndex(item, key.getKey());
                 if (found >= 0) break;
             }
 
