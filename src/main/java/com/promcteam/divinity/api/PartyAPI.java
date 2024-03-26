@@ -1,12 +1,12 @@
 package com.promcteam.divinity.api;
 
 import com.promcteam.divinity.Divinity;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.modules.list.party.PartyManager;
 import com.promcteam.divinity.modules.list.party.PartyManager.Party;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class PartyAPI {
 

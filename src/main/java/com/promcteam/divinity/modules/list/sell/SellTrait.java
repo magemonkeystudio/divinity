@@ -1,11 +1,11 @@
 package com.promcteam.divinity.modules.list.sell;
 
+import com.promcteam.divinity.api.DivinityAPI;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import com.promcteam.divinity.api.DivinityAPI;
 
 @TraitName("sell")
 public class SellTrait extends Trait {

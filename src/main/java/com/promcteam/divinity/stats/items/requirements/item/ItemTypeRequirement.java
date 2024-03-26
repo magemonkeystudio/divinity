@@ -1,17 +1,17 @@
 package com.promcteam.divinity.stats.items.requirements.item;
 
 import com.promcteam.codex.config.api.ILangMsg;
-import com.promcteam.codex.utils.DataUT;
+import com.promcteam.codex.util.DataUT;
 import com.promcteam.divinity.Divinity;
-import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.stats.items.ItemTags;
 import com.promcteam.divinity.stats.items.requirements.api.ItemRequirement;
 import com.promcteam.divinity.utils.ItemUtils;
 import com.promcteam.divinity.utils.LoreUT;
+import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemTypeRequirement extends ItemRequirement<String[]> {
 

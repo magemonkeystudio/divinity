@@ -1,13 +1,13 @@
 package com.promcteam.divinity.hooks.external.mimic;
 
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
-import ru.endlesscode.mimic.level.ExpLevelConverter;
-import ru.endlesscode.mimic.util.ExistingWeakReference;
 import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.api.RPGClass;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
+import ru.endlesscode.mimic.level.ExpLevelConverter;
+import ru.endlesscode.mimic.util.ExistingWeakReference;
 
 import java.util.Objects;
 

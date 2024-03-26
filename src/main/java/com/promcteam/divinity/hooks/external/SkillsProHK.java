@@ -11,16 +11,16 @@ import org.skills.types.Skill;
 
 import su.nexmedia.engine.hooks.HookState;
 import su.nexmedia.engine.hooks.NHook;
-import su.nexmedia.engine.utils.StringUT;
-import com.promcteam.divinity.QuantumRPG;
+import su.nexmedia.engine.util.StringUT;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.HookClass;
 import com.promcteam.divinity.hooks.HookLevel;
 import com.promcteam.divinity.stats.EntityStats;
 import com.promcteam.divinity.stats.items.attributes.api.AbstractStat;
 
-public class SkillsProHK extends NHook<QuantumRPG> implements HookLevel, HookClass {
+public class SkillsProHK extends NHook<Divinity> implements HookLevel, HookClass {
 	
-	public SkillsProHK(@NotNull QuantumRPG plugin) {
+	public SkillsProHK(@NotNull Divinity plugin) {
 		super(plugin);
 	}
 

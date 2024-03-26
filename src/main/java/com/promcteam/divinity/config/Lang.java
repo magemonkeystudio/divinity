@@ -3,12 +3,12 @@ package com.promcteam.divinity.config;
 import com.promcteam.codex.config.api.ILangMsg;
 import com.promcteam.codex.core.config.CoreLang;
 import com.promcteam.codex.manager.types.ClickType;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.data.api.UserEntityNamesMode;
 import com.promcteam.divinity.modules.list.classes.object.ClassAttributeType;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyDropMode;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyExpMode;
+import org.jetbrains.annotations.NotNull;
 
 
 public class Lang extends CoreLang {
@@ -301,7 +301,8 @@ public class Lang extends CoreLang {
             new ILangMsg(this, "Opened Dismantle GUI for &a%player%&7.");
     public ILangMsg Dismantle_Dismantle_Error_TooExpensive            =
             new ILangMsg(this, "&cYou can't arrord this operation! You need: &e$%cost%, &cyou have: &e$%balance%");
-    public ILangMsg Dismantle_Dismantle_Single_Free                   = new ILangMsg(this, "&a%item%&7 dismantled!");
+    public ILangMsg Dismantle_Dismantle_Single_Free                   =
+            new ILangMsg(this, "&a%item%&7 dismantled!");
     public ILangMsg Dismantle_Dismantle_Single_Paid                   =
             new ILangMsg(this, "&a%item%&7 dismantled for &a$%cost%!");
     public ILangMsg Dismantle_Dismantle_Many_Free                     = new ILangMsg(this, "Items dismantled!");
@@ -351,7 +352,8 @@ public class Lang extends CoreLang {
             new ILangMsg(this, "&cA file with that name already exists.");
     public ILangMsg ItemGenerator_Cmd_Editor_Desc                     =
             new ILangMsg(this, "Opens the ItemGenerator in-game editor.");
-    public ILangMsg ItemGenerator_Cmd_Editor_Error_InvalidItem        = new ILangMsg(this, "&cNo such item generator!");
+    public ILangMsg ItemGenerator_Cmd_Editor_Error_InvalidItem        =
+            new ILangMsg(this, "&cNo such item generator!");
     public ILangMsg ItemGenerator_Cmd_Editor_Error_AlreadyOpen        =
             new ILangMsg(this, "&cAn editor for this item generator is already open by %player%");
     public ILangMsg ItemGenerator_Cmd_Editor_Error_InvalidInput       =
@@ -508,7 +510,8 @@ public class Lang extends CoreLang {
     public ILangMsg Refine_Enchanting_Error_MaxLevel                  =
             new ILangMsg(this, "&cCould not refine &e%item%&c: Maximal level.");
     public ILangMsg Refine_Enchanting_Error_WrongStone                =
-            new ILangMsg(this, "&cCould not refine &e%item%&c: Wrong Enchantment Stone. You should use: &e%stone%&c.");
+            new ILangMsg(this,
+                    "&cCould not refine &e%item%&c: Wrong Enchantment Stone. You should use: &e%stone%&c.");
     public ILangMsg Refine_Enchanting_Result_Total                    = new ILangMsg(
             this,
             "{message: ~prefix: false;}"
@@ -554,7 +557,8 @@ public class Lang extends CoreLang {
     public ILangMsg Soulbound_Cmd_Soul_Usage                          = new ILangMsg(this, "<add|remove> [position]");
     public ILangMsg Soulbound_Cmd_Soul_Done                           =
             new ILangMsg(this, "Item soulbound requirement: &e%state%");
-    public ILangMsg Soulbound_Cmd_Untradeable_Desc                    = new ILangMsg(this, "Manage item trade state.");
+    public ILangMsg Soulbound_Cmd_Untradeable_Desc                    =
+            new ILangMsg(this, "Manage item trade state.");
     public ILangMsg Soulbound_Cmd_Untradeable_Usage                   = new ILangMsg(this, "<add|remove> [position]");
     public ILangMsg Soulbound_Cmd_Untradeable_Done                    =
             new ILangMsg(this, "Item untradeable: &e%state%");

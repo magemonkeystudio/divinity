@@ -2,7 +2,7 @@ package com.promcteam.divinity.modules.list.soulbound;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.gui.*;
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.ItemUT;
 import com.promcteam.divinity.Divinity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

@@ -2,10 +2,6 @@ package com.promcteam.divinity.stats.items.requirements.item;
 
 import com.promcteam.codex.config.api.ILangMsg;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.config.Config;
 import com.promcteam.divinity.modules.LeveledItem;
 import com.promcteam.divinity.modules.ModuleItem;
@@ -14,6 +10,10 @@ import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.ItemTags;
 import com.promcteam.divinity.stats.items.requirements.api.ItemRequirement;
 import com.promcteam.divinity.stats.tiers.Tier;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemTierRequirement extends ItemRequirement<String> {
 

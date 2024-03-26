@@ -1,6 +1,8 @@
 package com.promcteam.divinity.modules.list.party.compat.quest;
 
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.list.party.PartyManager;
+import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 import me.Cutiemango.MangoQuest.Main;
 import me.Cutiemango.MangoQuest.QuestUtil;
 import me.Cutiemango.MangoQuest.data.QuestPlayerData;
@@ -9,8 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.modules.list.party.PartyManager;
-import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 
 import java.util.Set;
 

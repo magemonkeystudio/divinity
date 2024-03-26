@@ -4,11 +4,21 @@ import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.external.VaultHK;
 import com.promcteam.codex.hooks.external.citizens.CitizensHK;
 import com.promcteam.codex.manager.api.gui.*;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.actions.ActionManipulator;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.actions.ActionManipulator;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.Perms;
+import com.promcteam.divinity.modules.EModule;
+import com.promcteam.divinity.modules.LimitedItem;
+import com.promcteam.divinity.modules.ModuleItem;
+import com.promcteam.divinity.modules.RatedItem;
+import com.promcteam.divinity.modules.api.QModuleDrop;
+import com.promcteam.divinity.modules.list.magicdust.MagicDustManager.MagicDust;
+import com.promcteam.divinity.modules.list.magicdust.command.DustOpenCmd;
+import com.promcteam.divinity.modules.list.magicdust.event.PlayerImproveItemSocketRateEvent;
+import com.promcteam.divinity.stats.items.ItemStats;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,16 +31,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.modules.EModule;
-import com.promcteam.divinity.modules.LimitedItem;
-import com.promcteam.divinity.modules.ModuleItem;
-import com.promcteam.divinity.modules.RatedItem;
-import com.promcteam.divinity.modules.api.QModuleDrop;
-import com.promcteam.divinity.modules.list.magicdust.MagicDustManager.MagicDust;
-import com.promcteam.divinity.modules.list.magicdust.command.DustOpenCmd;
-import com.promcteam.divinity.modules.list.magicdust.event.PlayerImproveItemSocketRateEvent;
-import com.promcteam.divinity.stats.items.ItemStats;
 
 import java.util.*;
 
@@ -407,9 +407,9 @@ public class MagicDustManager extends QModuleDrop<MagicDust> {
                 List<String> lore = meta.getLore();
                 if (lore != null) {
                     // Accessing button values via module config is the only way.
-                    int    rateAmount = cfg.getInt("gui.paid.dust-buttons." + gi.getId() + ".rate-amount");
-                    int    rateCap    = cfg.getInt("gui.paid.dust-buttons." + gi.getId() + ".rate-max");
-                    double rateCost   =
+                    int rateAmount = cfg.getInt("gui.paid.dust-buttons." + gi.getId() + ".rate-amount");
+                    int rateCap    = cfg.getInt("gui.paid.dust-buttons." + gi.getId() + ".rate-max");
+                    double rateCost =
                             this.hasVault ? cfg.getInt("gui.paid.dust-buttons." + gi.getId() + ".rate-cost") : 0D;
 
                     int rateDiff    = (rateCap - rateHas);

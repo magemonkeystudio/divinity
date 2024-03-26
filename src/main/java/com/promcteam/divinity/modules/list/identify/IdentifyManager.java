@@ -3,20 +3,12 @@ package com.promcteam.divinity.modules.list.identify;
 import com.promcteam.codex.CodexEngine;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.items.ItemType;
-import com.promcteam.codex.items.providers.IProItemProvider;
+import com.promcteam.codex.items.providers.ICodexItemProvider;
 import com.promcteam.codex.items.providers.VanillaProvider;
 import com.promcteam.codex.modules.IModule;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.actions.ActionManipulator;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.actions.ActionManipulator;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.manager.listener.object.DynamicStatListener;
 import com.promcteam.divinity.modules.EModule;
@@ -28,6 +20,14 @@ import com.promcteam.divinity.modules.list.identify.event.PlayerIdentifyItemEven
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import com.promcteam.divinity.stats.items.ItemStats;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -163,7 +163,7 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
             GeneratorItem result = generatorManager.getItemById(uItem.getResultId());
             if (result != null) {
                 unlock = result.create(lvl, -1, CodexEngine.get().getItemManager().getItemTypes(unknown).stream()
-                        .filter(itemType -> itemType.getCategory() != IProItemProvider.Category.PRO)
+                        .filter(itemType -> itemType.getCategory() != ICodexItemProvider.Category.PRO)
                         .max(Comparator.comparing(ItemType::getCategory))
                         .orElseGet(() -> new VanillaProvider.VanillaItemType(unknown.getType())));
             }
@@ -267,7 +267,8 @@ public class IdentifyManager extends QModuleDrop<IdentifyItem> {
 
             String finalId = cfg.getString("item-id");
             if (finalId == null || this.itemModule.getItemById(finalId) == null) {
-                throw new IllegalArgumentException("Invalid 'item-id' provided (" + finalId + ")! No such item.");
+                throw new IllegalArgumentException(
+                        "Invalid 'item-id' provided (" + finalId + ")! No such item.");
             }
             this.setResultId(finalId);
 

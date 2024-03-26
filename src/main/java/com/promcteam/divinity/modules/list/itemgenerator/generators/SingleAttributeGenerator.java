@@ -1,11 +1,7 @@
 package com.promcteam.divinity.modules.list.itemgenerator.generators;
 
 import com.promcteam.codex.config.api.JYML;
-import com.promcteam.codex.utils.random.Rnd;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import com.promcteam.divinity.modules.list.itemgenerator.api.AbstractAttributeGenerator;
@@ -13,6 +9,10 @@ import com.promcteam.divinity.stats.bonus.BonusCalculator;
 import com.promcteam.divinity.stats.items.api.ItemLoreStat;
 import com.promcteam.divinity.utils.ItemUtils;
 import com.promcteam.divinity.utils.LoreUT;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;

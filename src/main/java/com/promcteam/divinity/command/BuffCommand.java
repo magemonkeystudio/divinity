@@ -1,18 +1,18 @@
 package com.promcteam.divinity.command;
 
 import com.promcteam.codex.commands.api.ISubCommand;
-import com.promcteam.codex.utils.PlayerUT;
-import com.promcteam.codex.utils.TimeUT;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Perms;
+import com.promcteam.codex.util.PlayerUT;
+import com.promcteam.codex.util.TimeUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.data.api.DivinityUser;
 import com.promcteam.divinity.manager.effects.buffs.SavedBuff;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.api.ItemLoreStat;
 import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;

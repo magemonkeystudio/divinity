@@ -1,7 +1,7 @@
 package com.promcteam.divinity.nms.packets.versions;
 
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Divinity;
+import org.jetbrains.annotations.NotNull;
 
 public class V1_13_R2 extends UniversalPacketHandler {
 

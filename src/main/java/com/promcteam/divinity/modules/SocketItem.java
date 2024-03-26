@@ -1,19 +1,19 @@
 package com.promcteam.divinity.modules;
 
 import com.promcteam.codex.config.api.JYML;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.Material;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 import com.promcteam.divinity.modules.list.gems.GemManager.Gem;
 import com.promcteam.divinity.stats.bonus.BonusMap;
 import com.promcteam.divinity.stats.items.ItemTags;
 import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
 import com.promcteam.divinity.stats.items.requirements.item.ItemSocketRequirement;
+import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class SocketItem extends RatedItem {
 

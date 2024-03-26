@@ -2,13 +2,13 @@ package com.promcteam.divinity.hooks.external;
 
 import com.promcteam.codex.hooks.HookState;
 import com.promcteam.codex.hooks.NHook;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.hooks.HookMobLevel;
 import me.lokka30.levelledmobs.LevelledMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.hooks.HookMobLevel;
 
 public class LevelledMobsHK extends NHook<Divinity> implements HookMobLevel {
 

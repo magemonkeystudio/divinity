@@ -1,10 +1,16 @@
 package com.promcteam.divinity.modules.api;
 
 import com.promcteam.codex.config.api.JYML;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.modules.ModuleItem;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.ItemTags;
+import com.promcteam.divinity.stats.items.attributes.ChargesAttribute;
+import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,12 +22,6 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.modules.ModuleItem;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.ItemTags;
-import com.promcteam.divinity.stats.items.attributes.ChargesAttribute;
-import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

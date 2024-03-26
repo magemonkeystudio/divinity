@@ -2,8 +2,18 @@ package com.promcteam.divinity.stats.items;
 
 import com.promcteam.codex.api.meta.NBTAttribute;
 import com.promcteam.codex.modules.IModule;
-import com.promcteam.codex.utils.DataUT;
+import com.promcteam.codex.util.DataUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.api.QModuleDrop;
+import com.promcteam.divinity.stats.items.api.DuplicableItemLoreStat;
+import com.promcteam.divinity.stats.items.api.DynamicStat;
+import com.promcteam.divinity.stats.items.api.ItemLoreStat;
+import com.promcteam.divinity.stats.items.attributes.*;
+import com.promcteam.divinity.stats.items.attributes.SocketAttribute.Type;
+import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
+import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
+import com.promcteam.divinity.utils.ItemUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
@@ -15,16 +25,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.modules.api.QModuleDrop;
-import com.promcteam.divinity.stats.items.api.DuplicableItemLoreStat;
-import com.promcteam.divinity.stats.items.api.DynamicStat;
-import com.promcteam.divinity.stats.items.api.ItemLoreStat;
-import com.promcteam.divinity.stats.items.attributes.*;
-import com.promcteam.divinity.stats.items.attributes.SocketAttribute.Type;
-import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
-import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
-import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
-import com.promcteam.divinity.utils.ItemUtils;
 
 import java.util.*;
 
@@ -38,9 +38,9 @@ public class ItemStats {
     private static final Map<Type, Map<String, SocketAttribute>> SOCKETS          = new HashMap<>();
     private static final Map<String, ItemLoreStat<?>>            ATTRIBUTES       = new HashMap<>();
     private static final Map<String, DuplicableItemLoreStat<?>>  MULTI_ATTRIBUTES = new HashMap<>();
-    private static final Set<DynamicStat>    DYNAMIC_STATS = new HashSet<>();
-    private static final Divinity            plugin        = Divinity.getInstance();
-    private static final List<NamespacedKey> KEY_ID        = List.of(
+    private static final Set<DynamicStat>                        DYNAMIC_STATS    = new HashSet<>();
+    private static final Divinity                                plugin           = Divinity.getInstance();
+    private static final List<NamespacedKey>                     KEY_ID           = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID),
             new NamespacedKey(plugin, "qrpg_" + ItemTags.TAG_ITEM_ID),
             Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_ID.toLowerCase())));

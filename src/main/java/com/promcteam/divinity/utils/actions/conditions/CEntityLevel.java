@@ -1,16 +1,16 @@
 package com.promcteam.divinity.utils.actions.conditions;
 
-import com.promcteam.codex.utils.actions.conditions.IConditionValidator;
-import com.promcteam.codex.utils.actions.params.IParamResult;
-import com.promcteam.codex.utils.actions.params.IParamType;
-import com.promcteam.codex.utils.actions.params.IParamValue;
-import com.promcteam.codex.utils.actions.params.IParamValue.IOperator;
+import com.promcteam.codex.util.actions.conditions.IConditionValidator;
+import com.promcteam.codex.util.actions.params.IParamResult;
+import com.promcteam.codex.util.actions.params.IParamType;
+import com.promcteam.codex.util.actions.params.IParamValue;
+import com.promcteam.codex.util.actions.params.IParamValue.IOperator;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.config.EngineCfg;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.config.EngineCfg;
 
 import java.util.Arrays;
 import java.util.List;

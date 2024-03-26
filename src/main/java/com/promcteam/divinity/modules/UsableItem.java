@@ -6,15 +6,10 @@
 package com.promcteam.divinity.modules;
 
 import com.promcteam.codex.config.api.JYML;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.actions.ActionManipulator;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.actions.ActionManipulator;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.modules.api.QModuleUsage;
 import com.promcteam.divinity.stats.items.ItemTags;
 import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
@@ -23,6 +18,11 @@ import com.promcteam.divinity.stats.items.requirements.user.ClassRequirement;
 import com.promcteam.divinity.stats.items.requirements.user.LevelRequirement;
 import com.promcteam.divinity.types.QClickType;
 import com.promcteam.divinity.utils.LoreUT;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.Map.Entry;

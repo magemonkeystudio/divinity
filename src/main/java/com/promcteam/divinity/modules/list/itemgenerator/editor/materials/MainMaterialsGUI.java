@@ -1,21 +1,21 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor.materials;
 
 import com.promcteam.codex.CodexEngine;
+import com.promcteam.codex.items.exception.CodexItemException;
 import com.promcteam.codex.items.exception.MissingItemException;
 import com.promcteam.codex.items.exception.MissingProviderException;
-import com.promcteam.codex.items.exception.ProItemException;
 import com.promcteam.codex.items.providers.VanillaProvider;
 import com.promcteam.codex.manager.api.menu.Slot;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.constants.JStrings;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.constants.JStrings;
 import com.promcteam.divinity.config.Config;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 import com.promcteam.divinity.types.ItemGroup;
 import com.promcteam.divinity.types.ItemSubType;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class MainMaterialsGUI extends AbstractEditorGUI {
     public MainMaterialsGUI(Player player, ItemGeneratorReference itemGenerator) {
@@ -81,12 +81,12 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
             if (split[0].isEmpty()) {
                 try {
                     return CodexEngine.get().getItemManager().getItemType(split[1]).create();
-                } catch (ProItemException ignored) {
+                } catch (CodexItemException ignored) {
                 }
             } else if (split[1].isEmpty()) {
                 try {
                     return CodexEngine.get().getItemManager().getItemType(split[0]).create();
-                } catch (ProItemException ignored) {
+                } catch (CodexItemException ignored) {
                 }
             }
 

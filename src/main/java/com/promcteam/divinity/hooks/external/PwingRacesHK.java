@@ -3,6 +3,8 @@ package com.promcteam.divinity.hooks.external;
 import com.promcteam.codex.hooks.HookState;
 import com.promcteam.codex.hooks.NHook;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.hooks.HookClass;
+import com.promcteam.divinity.hooks.HookLevel;
 import net.pwing.races.api.PwingRacesAPI;
 import net.pwing.races.api.race.Race;
 import net.pwing.races.api.race.RaceData;
@@ -10,8 +12,6 @@ import net.pwing.races.api.race.RaceManager;
 import net.pwing.races.api.race.RacePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.hooks.HookClass;
-import com.promcteam.divinity.hooks.HookLevel;
 
 public class PwingRacesHK extends NHook<Divinity> implements HookClass, HookLevel {
 

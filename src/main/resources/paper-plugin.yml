@@ -2,6 +2,7 @@ main: com.promcteam.divinity.Divinity
 version: ${project.version}
 name: ${project.name}
 provides:
+  - ProRPGItems
   - QuantumRPG
 api-version: '1.19'
 authors:

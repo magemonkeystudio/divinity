@@ -2,7 +2,7 @@ package com.promcteam.divinity.nms.packets;
 
 import com.promcteam.codex.core.Version;
 import com.promcteam.codex.nms.packets.IPacketHandler;
-import com.promcteam.codex.utils.Reflex;
+import com.promcteam.codex.util.Reflex;
 import com.promcteam.divinity.Divinity;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

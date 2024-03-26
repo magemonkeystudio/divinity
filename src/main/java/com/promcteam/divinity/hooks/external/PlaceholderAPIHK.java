@@ -2,12 +2,8 @@ package com.promcteam.divinity.hooks.external;
 
 import com.promcteam.codex.hooks.HookState;
 import com.promcteam.codex.hooks.NHook;
-import com.promcteam.codex.utils.NumberUT;
+import com.promcteam.codex.util.NumberUT;
 import com.promcteam.divinity.Divinity;
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
 import com.promcteam.divinity.modules.list.classes.object.ClassAttributeType;
@@ -17,6 +13,10 @@ import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
 import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
 import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
 import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class PlaceholderAPIHK extends NHook<Divinity> {
 

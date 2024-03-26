@@ -1,7 +1,7 @@
 package com.promcteam.divinity.manager.effects.buffs;
 
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.stats.items.api.ItemLoreStat;
+import org.jetbrains.annotations.NotNull;
 
 public class SavedBuff {
 

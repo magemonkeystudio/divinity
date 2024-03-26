@@ -1,12 +1,12 @@
 package com.promcteam.divinity.utils.actions.executors;
 
-import com.promcteam.codex.utils.actions.actions.IActionExecutor;
-import com.promcteam.codex.utils.actions.params.IParamResult;
-import com.promcteam.codex.utils.actions.params.IParamType;
+import com.promcteam.codex.util.actions.actions.IActionExecutor;
+import com.promcteam.codex.util.actions.params.IParamResult;
+import com.promcteam.codex.util.actions.params.IParamType;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.utils.ParticleUtils;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.utils.ParticleUtils;
 
 import java.util.Arrays;
 import java.util.List;

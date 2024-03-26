@@ -2,12 +2,12 @@ package com.promcteam.divinity.modules.list.party.compat.level;
 
 import com.promcteam.codex.manager.IListener;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.list.party.PartyManager;
 import com.promcteam.divinity.modules.list.party.PartyManager.Party;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyExpMode;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 

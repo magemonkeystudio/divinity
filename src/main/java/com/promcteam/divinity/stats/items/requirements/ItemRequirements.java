@@ -1,12 +1,12 @@
 package com.promcteam.divinity.stats.items.requirements;
 
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.divinity.stats.items.requirements.api.ItemRequirement;
+import com.promcteam.divinity.stats.items.requirements.api.UserRequirement;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.stats.items.requirements.api.ItemRequirement;
-import com.promcteam.divinity.stats.items.requirements.api.UserRequirement;
 
 import java.util.Collection;
 import java.util.HashMap;

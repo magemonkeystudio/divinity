@@ -1,12 +1,12 @@
 package com.promcteam.divinity.modules.list.extractor.event;
 
+import com.promcteam.codex.manager.api.event.ICancellableEvent;
+import com.promcteam.divinity.stats.items.attributes.SocketAttribute;
 import lombok.Getter;
 import lombok.Setter;
-import com.promcteam.codex.manager.api.event.ICancellableEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.stats.items.attributes.SocketAttribute;
 
 import java.util.List;
 

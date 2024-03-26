@@ -1,12 +1,12 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor.enchantments;
 
 import com.promcteam.codex.manager.api.menu.Slot;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -24,7 +24,7 @@ public class EnchantmentListGUI extends AbstractEditorGUI {
 
     @Override
     public void setContents() {
-        Map<String, String>  map     = new LinkedHashMap<>();
+        Map<String, String> map = new LinkedHashMap<>();
         ConfigurationSection section = this.itemGenerator.getConfig()
                 .getConfigurationSection(EditorGUI.ItemType.ENCHANTMENTS.getPath() + ".list");
         if (section != null) {

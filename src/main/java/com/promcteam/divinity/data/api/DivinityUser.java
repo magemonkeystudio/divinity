@@ -1,7 +1,7 @@
 package com.promcteam.divinity.data.api;
 
 import com.promcteam.codex.data.users.IAbstractUser;
-import com.promcteam.codex.utils.constants.JStrings;
+import com.promcteam.codex.util.constants.JStrings;
 import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -4,8 +4,19 @@ import com.google.common.collect.Sets;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.Hooks;
 import com.promcteam.codex.manager.types.MobGroup;
-import com.promcteam.codex.utils.actions.ActionManipulator;
-import com.promcteam.codex.utils.constants.JStrings;
+import com.promcteam.codex.util.actions.ActionManipulator;
+import com.promcteam.codex.util.constants.JStrings;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.api.DivinityAPI;
+import com.promcteam.divinity.hooks.external.MyPetHK;
+import com.promcteam.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
+import com.promcteam.divinity.modules.EModule;
+import com.promcteam.divinity.modules.api.QModule;
+import com.promcteam.divinity.modules.list.drops.commands.DropsDropCmd;
+import com.promcteam.divinity.modules.list.drops.commands.DropsGiveCmd;
+import com.promcteam.divinity.modules.list.drops.object.*;
+import com.promcteam.divinity.stats.EntityStats;
+import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -23,17 +34,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.api.DivinityAPI;
-import com.promcteam.divinity.hooks.external.MyPetHK;
-import com.promcteam.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
-import com.promcteam.divinity.modules.EModule;
-import com.promcteam.divinity.modules.api.QModule;
-import com.promcteam.divinity.modules.list.drops.commands.DropsDropCmd;
-import com.promcteam.divinity.modules.list.drops.commands.DropsGiveCmd;
-import com.promcteam.divinity.modules.list.drops.object.*;
-import com.promcteam.divinity.stats.EntityStats;
-import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -246,7 +246,8 @@ public class DropManager extends QModule {
                 for (int i = 0; i < dropItem.getCount(); i++) {
                     int itemLvl = dropConfig.getLevel(killer, dead);
 
-                    ItemStack dropStack = DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
+                    ItemStack dropStack =
+                            DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
                     if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
                     dropConfig.executeActions(killer, mapTarget);

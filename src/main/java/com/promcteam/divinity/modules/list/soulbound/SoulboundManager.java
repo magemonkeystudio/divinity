@@ -1,8 +1,17 @@
 package com.promcteam.divinity.modules.list.soulbound;
 
 import com.promcteam.codex.commands.CommandRegister;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.Perms;
+import com.promcteam.divinity.modules.EModule;
+import com.promcteam.divinity.modules.api.QModule;
+import com.promcteam.divinity.modules.list.soulbound.command.SoulboundSoulCmd;
+import com.promcteam.divinity.modules.list.soulbound.command.SoulboundUntradeCmd;
+import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
+import com.promcteam.divinity.stats.items.requirements.user.SoulboundRequirement;
+import com.promcteam.divinity.stats.items.requirements.user.UntradeableRequirement;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -23,15 +32,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.modules.EModule;
-import com.promcteam.divinity.modules.api.QModule;
-import com.promcteam.divinity.modules.list.soulbound.command.SoulboundSoulCmd;
-import com.promcteam.divinity.modules.list.soulbound.command.SoulboundUntradeCmd;
-import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
-import com.promcteam.divinity.stats.items.requirements.user.SoulboundRequirement;
-import com.promcteam.divinity.stats.items.requirements.user.UntradeableRequirement;
 
 import java.util.*;
 

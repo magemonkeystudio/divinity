@@ -1,13 +1,13 @@
 package com.promcteam.divinity.stats.items.attributes.stats;
 
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.eval.Evaluator;
-import org.bukkit.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.eval.Evaluator;
 import com.promcteam.divinity.manager.effects.main.BleedEffect;
 import com.promcteam.divinity.stats.EntityStats;
 import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
 import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 

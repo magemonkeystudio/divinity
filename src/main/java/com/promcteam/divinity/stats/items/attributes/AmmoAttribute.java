@@ -95,8 +95,8 @@ public class AmmoAttribute extends ItemLoreStat<String> {
             case EXP_POTION:
             case LLAMA_SPIT:
             case SHULKER_BULLET: {
-                Location   eye = shooter.getEyeLocation();
-                Projectile sb  =
+                Location eye = shooter.getEyeLocation();
+                Projectile sb =
                         (Projectile) shooter.getWorld().spawnEntity(eye.add(eye.getDirection()), this.getType().eType);
                 return sb;
             }

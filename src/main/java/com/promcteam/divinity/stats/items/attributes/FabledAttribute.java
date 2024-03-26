@@ -1,6 +1,6 @@
 package com.promcteam.divinity.stats.items.attributes;
 
-import com.promcteam.codex.utils.NumberUT;
+import com.promcteam.codex.util.NumberUT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;

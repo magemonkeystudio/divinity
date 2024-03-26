@@ -5,7 +5,7 @@ authors: [ Travja, goflish ]
 description: The most advanced, customizable and configurable RPG-Core plugin!
 depend: [ Codex ]
 loadafter: [ Magic, Fabled ]
-provides: [ QuantumRPG ]
+provides: [ ProRPGItems, QuantumRPG ]
 softdepend:
   - Citizens
   - HolographicDisplays

@@ -2,13 +2,13 @@ package com.promcteam.divinity.stats.items.requirements.user;
 
 import com.promcteam.codex.config.api.ILangMsg;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.Perms;
+import com.promcteam.divinity.modules.list.soulbound.SoulboundManager;
+import com.promcteam.divinity.stats.items.ItemTags;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.modules.list.soulbound.SoulboundManager;
-import com.promcteam.divinity.stats.items.ItemTags;
 
 import java.util.UUID;
 

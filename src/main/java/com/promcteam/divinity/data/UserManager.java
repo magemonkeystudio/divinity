@@ -2,9 +2,9 @@ package com.promcteam.divinity.data;
 
 import com.promcteam.codex.data.users.IUserManager;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.data.api.DivinityUser;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.data.api.DivinityUser;
 
 public class UserManager extends IUserManager<Divinity, DivinityUser> {
 

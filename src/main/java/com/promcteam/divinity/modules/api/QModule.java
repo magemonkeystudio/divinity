@@ -3,9 +3,9 @@ package com.promcteam.divinity.modules.api;
 import com.promcteam.codex.commands.list.HelpCommand;
 import com.promcteam.codex.modules.IModule;
 import com.promcteam.divinity.Divinity;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 import com.promcteam.divinity.modules.command.*;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class QModule extends IModule<Divinity> {
 

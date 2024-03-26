@@ -1,14 +1,14 @@
 package com.promcteam.divinity.manager.damage;
 
+import com.promcteam.divinity.modules.list.arrows.ArrowManager.QArrow;
+import com.promcteam.divinity.stats.EntityStats;
+import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
+import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.modules.list.arrows.ArrowManager.QArrow;
-import com.promcteam.divinity.stats.EntityStats;
-import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
-import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
 
 import java.util.HashMap;
 import java.util.Map;

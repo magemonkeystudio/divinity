@@ -1,12 +1,12 @@
 package com.promcteam.divinity.manager.effects.main;
 
+import com.promcteam.divinity.manager.effects.IEffectType;
+import com.promcteam.divinity.manager.effects.IPeriodicEffect;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.manager.effects.IEffectType;
-import com.promcteam.divinity.manager.effects.IPeriodicEffect;
 
 public class StunEffect extends IPeriodicEffect {
 

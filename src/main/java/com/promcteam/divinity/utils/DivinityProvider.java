@@ -1,19 +1,19 @@
 package com.promcteam.divinity.utils;
 
+import com.promcteam.codex.items.CodexItemManager;
 import com.promcteam.codex.items.ItemType;
-import com.promcteam.codex.items.ProItemManager;
-import com.promcteam.codex.items.providers.IProItemProvider;
+import com.promcteam.codex.items.providers.ICodexItemProvider;
 import com.promcteam.codex.modules.IModule;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.modules.ModuleItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.stats.items.ItemStats;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class DivinityProvider implements IProItemProvider<DivinityProvider.DivinityItemType> {
+public class DivinityProvider implements ICodexItemProvider<DivinityProvider.DivinityItemType> {
     public static final String NAMESPACE = "DIVINITY";
 
     @Override
@@ -35,7 +35,7 @@ public class DivinityProvider implements IProItemProvider<DivinityProvider.Divin
     public DivinityItemType getItem(String id) {
         if (id == null || id.isBlank()) return null;
 
-        id = ProItemManager.stripPrefix(NAMESPACE, id).replaceAll("[ -]", "_");
+        id = CodexItemManager.stripPrefix(NAMESPACE, id).replaceAll("[ -]", "_");
 
         String[] split = id.split(":", 2);
         if (split.length == 2) { // Module name
@@ -72,7 +72,7 @@ public class DivinityProvider implements IProItemProvider<DivinityProvider.Divin
 
     @Override
     public boolean isCustomItemOfId(ItemStack item, String id) {
-        id = ProItemManager.stripPrefix(NAMESPACE, id);
+        id = CodexItemManager.stripPrefix(NAMESPACE, id);
 
         String itemId = ItemStats.getId(item);
         return itemId != null && itemId.equals(id);

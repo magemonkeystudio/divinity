@@ -1,12 +1,12 @@
 package com.promcteam.divinity.modules.list.dismantle.command;
 
-import com.promcteam.codex.utils.PlayerUT;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.PlayerUT;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.modules.command.MCmd;
 import com.promcteam.divinity.modules.list.dismantle.DismantleManager;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;

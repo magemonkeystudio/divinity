@@ -1,7 +1,7 @@
 package com.promcteam.divinity.modules.list.classes.api;
 
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.list.classes.ComboManager.ComboKey;
+import org.jetbrains.annotations.NotNull;
 
 public class UserSkillData {
 

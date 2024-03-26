@@ -1,10 +1,10 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor.bonuses;
 
 import com.promcteam.codex.manager.api.menu.Slot;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public class MainBonusesGUI extends AbstractEditorGUI {
 

@@ -1,16 +1,16 @@
 package com.promcteam.divinity.stats.items.requirements.api;
 
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.api.DynamicStat;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.api.DynamicStat;
 
 import java.util.List;
 

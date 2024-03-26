@@ -1,11 +1,11 @@
 package com.promcteam.divinity.api;
 
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.*;
+import com.promcteam.divinity.modules.api.QModuleDrop;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.modules.*;
-import com.promcteam.divinity.modules.api.QModuleDrop;
 
 public class DivinityAPI {
 

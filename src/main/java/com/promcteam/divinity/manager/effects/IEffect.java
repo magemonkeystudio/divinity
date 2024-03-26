@@ -1,12 +1,12 @@
 package com.promcteam.divinity.manager.effects;
 
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.divinity.stats.EntityStats;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.stats.EntityStats;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,11 +1,11 @@
 package com.promcteam.divinity.stats.items.attributes;
 
-import com.promcteam.codex.utils.DataUT;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.actions.ActionManipulator;
-import com.promcteam.codex.utils.constants.JStrings;
+import com.promcteam.codex.util.DataUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.actions.ActionManipulator;
+import com.promcteam.codex.util.constants.JStrings;
 import com.promcteam.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;

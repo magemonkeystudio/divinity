@@ -1,11 +1,11 @@
 package com.promcteam.divinity.modules.list.itemgenerator.command;
 
 import com.promcteam.codex.config.api.JYML;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.modules.command.MCmd;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.InputStreamReader;

@@ -1,7 +1,7 @@
 package com.promcteam.divinity.nms.engine;
 
-import com.promcteam.codex.utils.reflection.ReflectionManager;
-import com.promcteam.codex.utils.reflection.ReflectionUtil;
+import com.promcteam.codex.util.reflection.ReflectionManager;
+import com.promcteam.codex.util.reflection.ReflectionUtil;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

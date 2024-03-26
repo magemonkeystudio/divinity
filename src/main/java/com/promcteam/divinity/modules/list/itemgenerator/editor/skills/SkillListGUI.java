@@ -2,17 +2,17 @@ package com.promcteam.divinity.modules.list.itemgenerator.editor.skills;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.menu.Slot;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.hooks.EHook;
+import com.promcteam.divinity.hooks.external.FabledHook;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import com.promcteam.divinity.hooks.EHook;
-import com.promcteam.divinity.hooks.external.FabledHook;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 
 import java.util.ArrayList;
 import java.util.Collections;

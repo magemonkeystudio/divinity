@@ -1,18 +1,14 @@
 package com.promcteam.divinity.config;
 
-import com.promcteam.fabled.dynamic.ComponentRegistry;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.NHook;
-import com.promcteam.codex.utils.StringUT;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.HookClass;
 import com.promcteam.divinity.hooks.HookLevel;
 import com.promcteam.divinity.hooks.HookMobLevel;
 import com.promcteam.divinity.hooks.internal.DefaultHook;
-import com.promcteam.divinity.hooks.internal.QuantumRPGHook;
+import com.promcteam.divinity.hooks.internal.DivinityHook;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.attributes.ChargesAttribute;
@@ -21,6 +17,10 @@ import com.promcteam.divinity.stats.items.requirements.item.*;
 import com.promcteam.divinity.stats.items.requirements.user.BannedClassRequirement;
 import com.promcteam.divinity.stats.items.requirements.user.ClassRequirement;
 import com.promcteam.divinity.stats.items.requirements.user.LevelRequirement;
+import com.promcteam.fabled.dynamic.ComponentRegistry;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -126,8 +126,8 @@ public class EngineCfg {
         // C O M P A T I B I L I T Y //
 
         path = "compatibility.";
-        QuantumRPGHook internalHook = new QuantumRPGHook(this.plugin);
-        DefaultHook    defHook      = new DefaultHook(this.plugin);
+        DivinityHook internalHook = new DivinityHook(this.plugin);
+        DefaultHook  defHook      = new DefaultHook();
 
         String pUserLevel = cfg.getString(path + "player-level-plugin", plugin.getName());
         String pUserClass = cfg.getString(path + "player-class-plugin", plugin.getName());

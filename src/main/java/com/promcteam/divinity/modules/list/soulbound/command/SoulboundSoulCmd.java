@@ -1,15 +1,15 @@
 package com.promcteam.divinity.modules.list.soulbound.command;
 
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.modules.command.MCmd;
 import com.promcteam.divinity.modules.list.soulbound.SoulboundManager;
 import com.promcteam.divinity.stats.items.requirements.user.SoulboundRequirement;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;

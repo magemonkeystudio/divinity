@@ -1,11 +1,11 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor;
 
 import com.promcteam.codex.manager.api.menu.Slot;
-import com.promcteam.codex.utils.constants.JStrings;
+import com.promcteam.codex.util.constants.JStrings;
+import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
-import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -113,7 +113,7 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
                 public void onDrop() {
                     Set<String> defaultFlags =
                             new HashSet<>(ItemGeneratorManager.commonItemGenerator.getStringList(PATH));
-                    Set<String> itemFlags    = new HashSet<>(itemGenerator.getConfig().getStringList(PATH));
+                    Set<String> itemFlags = new HashSet<>(itemGenerator.getConfig().getStringList(PATH));
                     if (itemFlags.contains(JStrings.MASK_ANY)) {
                         itemFlags.remove(JStrings.MASK_ANY);
                         for (ItemFlag itemFlag : ItemFlag.values()) {

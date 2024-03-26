@@ -1,7 +1,11 @@
 package com.promcteam.divinity.stats.bonus;
 
-import com.promcteam.codex.utils.DataUT;
+import com.promcteam.codex.util.DataUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
+import com.promcteam.divinity.stats.items.requirements.api.DynamicUserRequirement;
+import com.promcteam.divinity.stats.items.requirements.api.UserRequirement;
+import com.promcteam.divinity.stats.items.requirements.user.ClassRequirement;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -10,10 +14,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
-import com.promcteam.divinity.stats.items.requirements.api.DynamicUserRequirement;
-import com.promcteam.divinity.stats.items.requirements.api.UserRequirement;
-import com.promcteam.divinity.stats.items.requirements.user.ClassRequirement;
 
 import java.util.Arrays;
 import java.util.Objects;

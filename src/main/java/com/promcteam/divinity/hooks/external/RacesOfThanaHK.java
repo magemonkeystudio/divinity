@@ -9,15 +9,15 @@ import com.zthana.racesofthana.objects.Race;
 
 import su.nexmedia.engine.hooks.HookState;
 import su.nexmedia.engine.hooks.NHook;
-import su.nexmedia.engine.utils.StringUT;
-import com.promcteam.divinity.QuantumRPG;
+import su.nexmedia.engine.util.StringUT;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.HookClass;
 
-public class RacesOfThanaHK extends NHook<QuantumRPG> implements HookClass {
+public class RacesOfThanaHK extends NHook<Divinity> implements HookClass {
 
 	private RacesOfThana races;
 	
-	public RacesOfThanaHK(@NotNull QuantumRPG plugin) {
+	public RacesOfThanaHK(@NotNull Divinity plugin) {
 		super(plugin);
 	}
 	

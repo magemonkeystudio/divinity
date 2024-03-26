@@ -1,11 +1,11 @@
 package com.promcteam.divinity.stats.items.requirements.user;
 
-import com.promcteam.codex.utils.DataUT;
+import com.promcteam.codex.util.DataUT;
+import com.promcteam.divinity.stats.items.ItemTags;
+import com.promcteam.divinity.stats.items.requirements.api.DynamicUserRequirement;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.stats.items.ItemTags;
-import com.promcteam.divinity.stats.items.requirements.api.DynamicUserRequirement;
 
 import java.util.UUID;
 

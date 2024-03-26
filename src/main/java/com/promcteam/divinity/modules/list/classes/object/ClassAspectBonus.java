@@ -1,7 +1,7 @@
 package com.promcteam.divinity.modules.list.classes.object;
 
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.stats.bonus.BonusMap;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 

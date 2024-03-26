@@ -5,13 +5,22 @@ import com.mojang.authlib.properties.Property;
 import com.promcteam.codex.CodexEngine;
 import com.promcteam.codex.hooks.Hooks;
 import com.promcteam.codex.items.ItemType;
-import com.promcteam.codex.items.exception.ProItemException;
-import com.promcteam.codex.items.providers.IProItemProvider;
+import com.promcteam.codex.items.exception.CodexItemException;
+import com.promcteam.codex.items.providers.ICodexItemProvider;
 import com.promcteam.codex.items.providers.VanillaProvider;
-import com.promcteam.codex.utils.CollectionsUT;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.CollectionsUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.config.Config;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.modules.list.identify.IdentifyManager;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
+import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
+import com.promcteam.divinity.stats.items.requirements.api.UserRequirement;
+import com.promcteam.divinity.types.ItemGroup;
+import com.promcteam.divinity.types.ItemSubType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -27,15 +36,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.config.Config;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.modules.list.identify.IdentifyManager;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
-import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
-import com.promcteam.divinity.stats.items.requirements.api.UserRequirement;
-import com.promcteam.divinity.types.ItemGroup;
-import com.promcteam.divinity.types.ItemSubType;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -196,7 +196,7 @@ public class ItemUtils {
         }
 
         return CodexEngine.get().getItemManager().getItemTypes(item).stream()
-                .filter(itemType -> itemType.getCategory() != IProItemProvider.Category.PRO)
+                .filter(itemType -> itemType.getCategory() != ICodexItemProvider.Category.PRO)
                 .max(Comparator.comparing(ItemType::getCategory))
                 .orElseGet(() -> new VanillaProvider.VanillaItemType(item.getType())).getNamespacedID();
     }
@@ -244,7 +244,7 @@ public class ItemUtils {
 
         try {
             if (CodexEngine.get().getItemManager().getItemType(group) != null) return true;
-        } catch (ProItemException ignored) {
+        } catch (CodexItemException ignored) {
         }
         return false;
     }

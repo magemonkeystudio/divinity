@@ -6,29 +6,13 @@ import com.elmakers.mine.bukkit.api.spell.MageSpell;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.Hooks;
 import com.promcteam.codex.manager.api.task.ITask;
-import com.promcteam.codex.utils.FileUT;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.TimeUT;
-import com.promcteam.divinity.data.api.DivinityUser;
-import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.promcteam.codex.util.FileUT;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.TimeUT;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.api.event.EntityStatsBonusUpdateEvent;
+import com.promcteam.divinity.data.api.DivinityUser;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.hooks.external.MagicHK;
 import com.promcteam.divinity.manager.profile.ProfileManager;
@@ -51,6 +35,22 @@ import com.promcteam.divinity.modules.list.classes.object.ClassAttributeType;
 import com.promcteam.divinity.stats.EntityStats;
 import com.promcteam.divinity.stats.bonus.BonusMap;
 import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -794,10 +794,10 @@ public class ClassManager extends QModule {
                 className = className.replace('/', '.');
                 Class<?> c = Class.forName(className, false, cl); // second was 'true'
                 if (IAbstractSkill.class.isAssignableFrom(c)) {
-                    Class<? extends IAbstractSkill>       requirementClass = c.asSubclass(IAbstractSkill.class);
-                    Constructor<? extends IAbstractSkill> cstrctr          =
+                    Class<? extends IAbstractSkill> requirementClass = c.asSubclass(IAbstractSkill.class);
+                    Constructor<? extends IAbstractSkill> cstrctr =
                             requirementClass.getConstructor(Divinity.class);
-                    IAbstractSkill                        qskill           = cstrctr.newInstance(plugin);
+                    IAbstractSkill qskill = cstrctr.newInstance(plugin);
                     if (qskill == null) continue;
 
                     this.skills.put(qskill.getId().toLowerCase(), qskill);

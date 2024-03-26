@@ -1,15 +1,15 @@
 package com.promcteam.divinity.modules.command;
 
 import com.promcteam.codex.modules.IModuleExecutor;
-import com.promcteam.codex.utils.ClickText;
-import com.promcteam.codex.utils.CollectionsUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.ClickText;
+import com.promcteam.codex.util.CollectionsUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.modules.ModuleItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;

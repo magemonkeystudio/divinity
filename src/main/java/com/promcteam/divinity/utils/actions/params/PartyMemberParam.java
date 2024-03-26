@@ -1,15 +1,15 @@
 package com.promcteam.divinity.utils.actions.params;
 
-import com.promcteam.codex.utils.actions.params.IAutoValidated;
-import com.promcteam.codex.utils.actions.params.IParamValue;
-import com.promcteam.codex.utils.actions.params.defaults.IParamBoolean;
+import com.promcteam.codex.util.actions.params.IAutoValidated;
+import com.promcteam.codex.util.actions.params.IParamValue;
+import com.promcteam.codex.util.actions.params.defaults.IParamBoolean;
+import com.promcteam.divinity.api.PartyAPI;
+import com.promcteam.divinity.modules.list.party.PartyManager;
+import com.promcteam.divinity.modules.list.party.PartyManager.Party;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.api.PartyAPI;
-import com.promcteam.divinity.modules.list.party.PartyManager;
-import com.promcteam.divinity.modules.list.party.PartyManager.Party;
 
 import java.util.HashSet;
 import java.util.Set;

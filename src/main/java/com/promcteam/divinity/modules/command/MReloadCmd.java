@@ -1,9 +1,9 @@
 package com.promcteam.divinity.modules.command;
 
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.modules.api.QModule;
+import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 public class MReloadCmd extends MCmd<QModule> {
 

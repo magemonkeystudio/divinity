@@ -1,10 +1,12 @@
 package com.promcteam.divinity.command;
 
 import com.promcteam.codex.commands.api.ISubCommand;
-import com.promcteam.codex.utils.CollectionsUT;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.CollectionsUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.Perms;
+import com.promcteam.divinity.utils.ItemUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Color;
 import org.bukkit.NamespacedKey;
@@ -15,8 +17,6 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.utils.ItemUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

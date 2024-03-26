@@ -1,6 +1,19 @@
 package com.promcteam.divinity.hooks.external;
 
+import com.promcteam.codex.hooks.HookState;
+import com.promcteam.codex.hooks.NHook;
+import com.promcteam.codex.util.DataUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.hooks.HookClass;
+import com.promcteam.divinity.hooks.HookLevel;
+import com.promcteam.divinity.modules.list.itemgenerator.generators.AbilityGenerator;
+import com.promcteam.divinity.stats.EntityStats;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.attributes.FabledAttribute;
+import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
 import com.promcteam.fabled.Fabled;
 import com.promcteam.fabled.api.DefaultCombatProtection;
 import com.promcteam.fabled.api.enums.ExpSource;
@@ -11,10 +24,6 @@ import com.promcteam.fabled.api.player.PlayerData;
 import com.promcteam.fabled.api.player.PlayerSkill;
 import com.promcteam.fabled.api.skills.Skill;
 import com.promcteam.fabled.manager.ProAttribute;
-import com.promcteam.codex.hooks.HookState;
-import com.promcteam.codex.hooks.NHook;
-import com.promcteam.codex.utils.DataUT;
-import com.promcteam.codex.utils.StringUT;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -26,15 +35,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.hooks.HookClass;
-import com.promcteam.divinity.hooks.HookLevel;
-import com.promcteam.divinity.modules.list.itemgenerator.generators.AbilityGenerator;
-import com.promcteam.divinity.stats.EntityStats;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.attributes.FabledAttribute;
-import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
-import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
 
 import java.util.*;
 

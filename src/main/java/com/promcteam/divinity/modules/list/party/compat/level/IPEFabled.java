@@ -1,13 +1,13 @@
 package com.promcteam.divinity.modules.list.party.compat.level;
 
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.list.party.PartyManager;
 import com.promcteam.fabled.Fabled;
 import com.promcteam.fabled.api.enums.ExpSource;
 import com.promcteam.fabled.api.event.PlayerExperienceGainEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.modules.list.party.PartyManager;
 
 public class IPEFabled extends IPartyLevelManager {
 

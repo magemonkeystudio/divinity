@@ -1,11 +1,11 @@
 package com.promcteam.divinity.modules.list.identify.event;
 
 import com.promcteam.codex.manager.api.event.ICancellableEvent;
+import com.promcteam.divinity.modules.list.identify.IdentifyManager.IdentifyTome;
+import com.promcteam.divinity.modules.list.identify.IdentifyManager.UnidentifiedItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.modules.list.identify.IdentifyManager.IdentifyTome;
-import com.promcteam.divinity.modules.list.identify.IdentifyManager.UnidentifiedItem;
 
 public class PlayerIdentifyItemEvent extends ICancellableEvent {
 

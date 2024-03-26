@@ -1,8 +1,8 @@
 package com.promcteam.divinity.modules.list.itemgenerator.api;
 
 import com.promcteam.divinity.Divinity;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 

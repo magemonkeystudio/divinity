@@ -1,8 +1,8 @@
 package com.promcteam.divinity.stats.tiers;
 
-import com.promcteam.codex.utils.StringUT;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.stats.items.ItemTags;
+import org.jetbrains.annotations.NotNull;
 
 public class Tier {
 

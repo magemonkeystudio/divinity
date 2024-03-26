@@ -1,6 +1,6 @@
 package com.promcteam.divinity.modules.list.classes.object;
 
-import com.promcteam.codex.utils.NumberUT;
+import com.promcteam.codex.util.NumberUT;
 import org.jetbrains.annotations.NotNull;
 
 public class ClassAttribute {

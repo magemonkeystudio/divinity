@@ -1,16 +1,8 @@
 package com.promcteam.divinity.stats.items.attributes.api;
 
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.modules.list.gems.GemManager;
@@ -23,6 +15,14 @@ import com.promcteam.divinity.stats.items.ItemTags;
 import com.promcteam.divinity.stats.items.api.DuplicableItemLoreStat;
 import com.promcteam.divinity.stats.items.api.DynamicStat;
 import com.promcteam.divinity.utils.ItemUtils;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;

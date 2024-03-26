@@ -1,9 +1,9 @@
 package com.promcteam.divinity.modules.list.drops.object;
 
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.random.Rnd;
+import com.promcteam.divinity.config.EngineCfg;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import com.promcteam.divinity.config.EngineCfg;
 
 public class DropExperience extends DropNonItem {
     private final double chance;

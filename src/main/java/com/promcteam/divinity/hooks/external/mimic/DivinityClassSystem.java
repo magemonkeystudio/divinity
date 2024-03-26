@@ -1,13 +1,13 @@
 package com.promcteam.divinity.hooks.external.mimic;
 
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.divinity.api.DivinityAPI;
+import com.promcteam.divinity.modules.list.classes.ClassManager;
+import com.promcteam.divinity.modules.list.classes.api.RPGClass;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.mimic.classes.BukkitClassSystem;
-import com.promcteam.divinity.api.DivinityAPI;
-import com.promcteam.divinity.modules.list.classes.ClassManager;
-import com.promcteam.divinity.modules.list.classes.api.RPGClass;
 
 import java.util.ArrayList;
 import java.util.Collections;

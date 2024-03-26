@@ -1,13 +1,13 @@
 package com.promcteam.divinity.manager.interactions.api;
 
+import com.promcteam.codex.manager.api.task.ITask;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.random.Rnd;
+import com.promcteam.divinity.Divinity;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import com.promcteam.codex.manager.api.task.ITask;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.random.Rnd;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
 
 import java.util.function.Function;
 

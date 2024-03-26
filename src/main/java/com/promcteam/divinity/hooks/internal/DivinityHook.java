@@ -1,21 +1,20 @@
 package com.promcteam.divinity.hooks.internal;
 
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.divinity.data.api.DivinityUser;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.data.api.DivinityUser;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.hooks.HookClass;
 import com.promcteam.divinity.hooks.HookLevel;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-public class QuantumRPGHook implements HookLevel, HookClass {
-
+public class DivinityHook implements HookLevel, HookClass {
     private Divinity plugin;
 
-    public QuantumRPGHook(@NotNull Divinity plugin) {
+    public DivinityHook(@NotNull Divinity plugin) {
         this.plugin = plugin;
     }
 

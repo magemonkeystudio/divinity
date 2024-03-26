@@ -4,10 +4,24 @@ import com.promcteam.codex.config.api.ILangMsg;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.Hooks;
 import com.promcteam.codex.manager.api.task.ITask;
-import com.promcteam.codex.utils.CollectionsUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.TimeUT;
+import com.promcteam.codex.util.CollectionsUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.TimeUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.hooks.EHook;
+import com.promcteam.divinity.hooks.HookLevel;
+import com.promcteam.divinity.hooks.external.FabledHook;
+import com.promcteam.divinity.hooks.internal.DivinityHook;
+import com.promcteam.divinity.modules.EModule;
+import com.promcteam.divinity.modules.api.QModule;
+import com.promcteam.divinity.modules.list.party.command.*;
+import com.promcteam.divinity.modules.list.party.compat.level.IPEFabled;
+import com.promcteam.divinity.modules.list.party.compat.level.IPEInternal;
+import com.promcteam.divinity.modules.list.party.compat.level.IPartyLevelManager;
+import com.promcteam.divinity.modules.list.party.compat.quest.IPOMangoQuest;
+import com.promcteam.divinity.modules.list.party.compat.quest.IPartyObjective;
+import com.promcteam.divinity.modules.list.party.event.PlayerLeavePartyEvent;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -22,20 +36,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.hooks.EHook;
-import com.promcteam.divinity.hooks.HookLevel;
-import com.promcteam.divinity.hooks.external.FabledHook;
-import com.promcteam.divinity.hooks.internal.QuantumRPGHook;
-import com.promcteam.divinity.modules.EModule;
-import com.promcteam.divinity.modules.api.QModule;
-import com.promcteam.divinity.modules.list.party.command.*;
-import com.promcteam.divinity.modules.list.party.compat.level.IPEInternal;
-import com.promcteam.divinity.modules.list.party.compat.level.IPEFabled;
-import com.promcteam.divinity.modules.list.party.compat.level.IPartyLevelManager;
-import com.promcteam.divinity.modules.list.party.compat.quest.IPOMangoQuest;
-import com.promcteam.divinity.modules.list.party.compat.quest.IPartyObjective;
-import com.promcteam.divinity.modules.list.party.event.PlayerLeavePartyEvent;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -105,7 +105,7 @@ public class PartyManager extends QModule {
 
                 if (hLvl instanceof FabledHook) {
                     this.iLevelManager = new IPEFabled(plugin, this);
-                } else if (hLvl instanceof QuantumRPGHook) {
+                } else if (hLvl instanceof DivinityHook) {
                     this.iLevelManager = new IPEInternal(plugin, this);
                 }
 

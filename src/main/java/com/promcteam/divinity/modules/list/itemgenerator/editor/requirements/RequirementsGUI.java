@@ -1,14 +1,14 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor.requirements;
 
 import com.promcteam.codex.manager.api.menu.Slot;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,9 +105,9 @@ public class RequirementsGUI extends AbstractEditorGUI {
     }
 
     protected TreeMap<Integer, String> getRequirements() {
-        ConfigurationSection     requirementsSection =
+        ConfigurationSection requirementsSection =
                 this.itemGenerator.getConfig().getConfigurationSection(this.path);
-        TreeMap<Integer, String> requirements        = new TreeMap<>();
+        TreeMap<Integer, String> requirements = new TreeMap<>();
         if (requirementsSection != null) {
             for (String key : requirementsSection.getKeys(false)) {
                 int itemLvl = StringUT.getInteger(key, -1);

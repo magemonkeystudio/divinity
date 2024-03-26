@@ -1,23 +1,15 @@
 package com.promcteam.divinity.hooks.internal;
 
+import com.promcteam.divinity.Perms;
+import com.promcteam.divinity.hooks.HookClass;
+import com.promcteam.divinity.hooks.HookLevel;
+import com.promcteam.divinity.hooks.HookMobLevel;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.hooks.HookClass;
-import com.promcteam.divinity.hooks.HookLevel;
-import com.promcteam.divinity.hooks.HookMobLevel;
 
 public class DefaultHook implements HookLevel, HookClass, HookMobLevel {
-
-    //private QuantumRPG plugin;
-
-    public DefaultHook(@NotNull Divinity plugin) {
-        //this.plugin = plugin;
-    }
-
     @Override
     public int getLevel(@NotNull Player player) {
         return player.getLevel();

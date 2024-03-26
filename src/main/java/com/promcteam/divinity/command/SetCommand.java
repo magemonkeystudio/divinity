@@ -1,14 +1,10 @@
 package com.promcteam.divinity.command;
 
 import com.promcteam.codex.commands.api.ISubCommand;
-import com.promcteam.codex.utils.CollectionsUT;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.CollectionsUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.stats.bonus.StatBonus;
 import com.promcteam.divinity.stats.items.ItemStats;
@@ -20,6 +16,10 @@ import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
 import com.promcteam.divinity.stats.items.requirements.user.ClassRequirement;
 import com.promcteam.divinity.stats.items.requirements.user.LevelRequirement;
 import com.promcteam.divinity.utils.ItemUtils;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,9 +1,9 @@
 package com.promcteam.divinity.hooks.external;
 
-import com.promcteam.divinity.Divinity;
-import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import com.promcteam.codex.hooks.HookState;
 import com.promcteam.codex.hooks.NHook;
+import com.promcteam.divinity.Divinity;
+import de.Keyle.MyPet.api.entity.MyPetBukkitEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

@@ -2,18 +2,11 @@ package com.promcteam.divinity.modules.list.fortify;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.modules.IModule;
-import com.promcteam.codex.utils.DataUT;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.DataUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.LimitedItem;
@@ -23,6 +16,13 @@ import com.promcteam.divinity.modules.list.fortify.command.FortifyCmd;
 import com.promcteam.divinity.modules.list.fortify.command.UnfortifyCmd;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.utils.LoreUT;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 

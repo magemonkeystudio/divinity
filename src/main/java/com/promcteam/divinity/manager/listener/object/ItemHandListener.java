@@ -1,7 +1,10 @@
 package com.promcteam.divinity.manager.listener.object;
 
 import com.promcteam.codex.manager.IListener;
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.attributes.HandAttribute;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,9 +18,6 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.attributes.HandAttribute;
 
 import java.util.Set;
 

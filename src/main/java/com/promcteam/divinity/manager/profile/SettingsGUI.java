@@ -5,15 +5,15 @@ import com.promcteam.codex.manager.api.gui.ContentType;
 import com.promcteam.codex.manager.api.gui.GuiClick;
 import com.promcteam.codex.manager.api.gui.GuiItem;
 import com.promcteam.codex.manager.api.gui.NGUI;
-import com.promcteam.codex.utils.CollectionsUT;
+import com.promcteam.codex.util.CollectionsUT;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.data.api.DivinityUser;
+import com.promcteam.divinity.data.api.UserProfile;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.data.api.UserProfile;
 
 import java.util.List;
 

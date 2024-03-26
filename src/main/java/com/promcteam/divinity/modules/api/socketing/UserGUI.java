@@ -1,11 +1,11 @@
 package com.promcteam.divinity.modules.api.socketing;
 
 import com.promcteam.codex.manager.api.gui.JIcon;
+import com.promcteam.divinity.stats.items.ItemStats;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.stats.items.ItemStats;
 
 class UserGUI extends ISocketGUI {
 

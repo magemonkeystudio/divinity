@@ -2,17 +2,17 @@ package com.promcteam.divinity.modules.list.party;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.gui.*;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.list.party.PartyManager.Party;
+import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.modules.list.party.PartyManager.Party;
-import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 
 import java.util.ArrayList;
 import java.util.List;

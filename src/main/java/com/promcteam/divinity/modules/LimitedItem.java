@@ -1,11 +1,7 @@
 package com.promcteam.divinity.modules;
 
 import com.promcteam.codex.config.api.JYML;
-import com.promcteam.codex.utils.StringUT;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.modules.list.identify.IdentifyManager;
@@ -13,6 +9,10 @@ import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.ItemTags;
 import com.promcteam.divinity.stats.items.attributes.ChargesAttribute;
 import com.promcteam.divinity.utils.LoreUT;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.TreeMap;

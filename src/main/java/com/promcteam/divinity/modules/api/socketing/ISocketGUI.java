@@ -2,21 +2,21 @@ package com.promcteam.divinity.modules.api.socketing;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.gui.*;
-import com.promcteam.codex.utils.ClickText;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.random.Rnd;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.ClickText;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.manager.interactions.api.AnimatedSuccessBar;
 import com.promcteam.divinity.modules.SocketItem;
 import com.promcteam.divinity.modules.api.socketing.merchant.MerchantGUI;
 import com.promcteam.divinity.modules.api.socketing.merchant.MerchantSocket;
 import com.promcteam.divinity.modules.list.fortify.FortifyManager;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 

@@ -1,6 +1,6 @@
 package com.promcteam.divinity.modules.list.classes.object;
 
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.random.Rnd;
 
 public class ExpObject {
 

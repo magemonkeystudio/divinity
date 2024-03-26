@@ -1,8 +1,8 @@
 package com.promcteam.divinity.manager.effects.main;
 
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.manager.effects.IEffectType;
 import com.promcteam.divinity.manager.effects.IExpirableEffect;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;

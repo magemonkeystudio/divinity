@@ -1,12 +1,12 @@
 package com.promcteam.divinity.modules.list.classes.api;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.modules.list.classes.ComboManager.ComboKey;
 import com.promcteam.divinity.modules.list.classes.object.ClassAspect;
 import com.promcteam.divinity.modules.list.classes.object.ClassAspectBonus;
 import com.promcteam.divinity.modules.list.classes.object.ClassAttribute;
 import com.promcteam.divinity.modules.list.classes.object.ClassAttributeType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Collection;

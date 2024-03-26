@@ -1,10 +1,10 @@
 package com.promcteam.divinity.stats.items.requirements.api;
 
 import com.promcteam.codex.config.api.ILangMsg;
+import com.promcteam.divinity.stats.items.api.ItemLoreStat;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.stats.items.api.ItemLoreStat;
 
 public abstract class ItemRequirement<Z> extends ItemLoreStat<Z> {
 

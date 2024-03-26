@@ -1,16 +1,16 @@
 package com.promcteam.divinity.modules.list.party.compat.quest;
 
 import com.promcteam.codex.manager.IListener;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.list.party.PartyManager;
+import com.promcteam.divinity.modules.list.party.PartyManager.Party;
+import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.modules.list.party.PartyManager;
-import com.promcteam.divinity.modules.list.party.PartyManager.Party;
-import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 
 import java.util.Set;
 

@@ -4,11 +4,11 @@ import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.Loadable;
 import com.promcteam.codex.modules.IModuleExecutor;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.Perms;
+import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 
 public class MerchantSocket implements Loadable {
 

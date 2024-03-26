@@ -2,12 +2,12 @@ package com.promcteam.divinity.modules.list.itemgenerator.editor.materials;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.menu.Slot;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;

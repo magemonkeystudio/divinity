@@ -1,10 +1,10 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor;
 
 import com.promcteam.codex.manager.api.menu.Slot;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.attributes.AmmoAttribute;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 public class AmmoTypesGUI extends AbstractEditorGUI {
 

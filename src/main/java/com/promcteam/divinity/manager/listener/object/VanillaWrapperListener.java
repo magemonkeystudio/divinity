@@ -3,7 +3,24 @@ package com.promcteam.divinity.manager.listener.object;
 import com.promcteam.codex.hooks.Hooks;
 import com.promcteam.codex.manager.IListener;
 import com.promcteam.codex.registry.attribute.AttributeRegistry;
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.api.event.DivinityDamageEvent;
+import com.promcteam.divinity.api.event.DivinityProjectileLaunchEvent;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.hooks.EHook;
+import com.promcteam.divinity.hooks.external.FabledHook;
+import com.promcteam.divinity.manager.damage.DamageMeta;
+import com.promcteam.divinity.modules.list.arrows.ArrowManager;
+import com.promcteam.divinity.modules.list.arrows.ArrowManager.QArrow;
+import com.promcteam.divinity.stats.EntityStats;
+import com.promcteam.divinity.stats.ProjectileStats;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.attributes.AmmoAttribute;
+import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
+import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
+import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
+import com.promcteam.divinity.utils.ItemUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -20,23 +37,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.api.event.DivinityProjectileLaunchEvent;
-import com.promcteam.divinity.api.event.DivinityDamageEvent;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.hooks.EHook;
-import com.promcteam.divinity.hooks.external.FabledHook;
-import com.promcteam.divinity.manager.damage.DamageMeta;
-import com.promcteam.divinity.modules.list.arrows.ArrowManager;
-import com.promcteam.divinity.modules.list.arrows.ArrowManager.QArrow;
-import com.promcteam.divinity.stats.EntityStats;
-import com.promcteam.divinity.stats.ProjectileStats;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.attributes.AmmoAttribute;
-import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
-import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
-import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
-import com.promcteam.divinity.utils.ItemUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -295,7 +295,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                     defaultDamage = e.getDamage();
                 }
 
-//                QuantumRPG.getInstance().getLogger().info("Default damage is " + defaultDamage);
+//                Divinity.getInstance().getLogger().info("Default damage is " + defaultDamage);
                 damageStart = Math.max(0D, damageStart - defaultDamage);
             } else {
                 damageStart = damageStart - 1D; // Reduce the damage by 1 for non-weapon item/hand.
@@ -314,11 +314,12 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
         scaleValuesWithCore(damager, projectile, damages, defenses, victim);
 
-        DivinityDamageEvent.Start eventStart = new DivinityDamageEvent.Start(victim, damager, projectile, damages, defenses,
-                stats, e, meta, exempt);
+        DivinityDamageEvent.Start eventStart =
+                new DivinityDamageEvent.Start(victim, damager, projectile, damages, defenses,
+                        stats, e, meta, exempt);
         plugin.getPluginManager().callEvent(eventStart);
         if (eventStart.isCancelled() || e.isCancelled()) {
-//            QuantumRPG.getInstance().info("Damage event was cancelled.");
+//            Divinity.getInstance().info("Damage event was cancelled.");
             return;
         }
 
@@ -330,14 +331,14 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         // +----------------------------------------------------+
         // | Fix final damage value of the vanilla damage event.|
         // +----------------------------------------------------+
-//        QuantumRPG.getInstance().info("Damage Final Check: " + e.getFinalDamage() + "/" + e.getDamage());
+//        Divinity.getInstance().info("Damage Final Check: " + e.getFinalDamage() + "/" + e.getDamage());
         if (e.getFinalDamage() != e.getDamage()) {
             double absorption = Math.min(e.getDamage(), victim.getAbsorptionAmount());
             for (DamageModifier dmgModifier : DamageModifier.values()) {
                 if (dmgModifier == DamageModifier.ABSORPTION) continue;
                 if (e.isApplicable(dmgModifier)) {
                     if (dmgModifier == DamageModifier.BASE) {
-//                        QuantumRPG.getInstance().info("FINAL - " + dmgModifier.name() + ": " + e.getDamage());
+//                        Divinity.getInstance().info("FINAL - " + dmgModifier.name() + ": " + e.getDamage());
                         e.setDamage(dmgModifier, e.getDamage() - absorption);
                     } else if (dmgModifier == DamageModifier.ABSORPTION) {
                         e.setDamage(dmgModifier, absorption);
@@ -346,7 +347,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
             }
         }
 
-//        QuantumRPG.getInstance().info("event took: " + (System.currentTimeMillis() - l1) + " millis");
+//        Divinity.getInstance().info("event took: " + (System.currentTimeMillis() - l1) + " millis");
     }
 
     /**

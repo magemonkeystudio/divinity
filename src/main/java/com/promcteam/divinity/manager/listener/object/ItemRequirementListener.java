@@ -2,7 +2,10 @@ package com.promcteam.divinity.manager.listener.object;
 
 import com.google.common.collect.Sets;
 import com.promcteam.codex.manager.IListener;
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.utils.ItemUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -20,9 +23,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.utils.ItemUtils;
 
 import java.util.Set;
 

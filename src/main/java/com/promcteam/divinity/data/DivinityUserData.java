@@ -6,11 +6,11 @@ import com.promcteam.codex.data.DataTypes;
 import com.promcteam.codex.data.IDataHandler;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.data.api.DivinityUser;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.data.api.serialize.SkillDataSerializer;
 import com.promcteam.divinity.data.api.serialize.UserProfileSerializer;
 import com.promcteam.divinity.modules.list.classes.api.UserSkillData;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

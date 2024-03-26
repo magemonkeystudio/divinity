@@ -2,7 +2,9 @@ package com.promcteam.divinity.manager.listener.object;
 
 import com.promcteam.codex.api.meta.NBTAttribute;
 import com.promcteam.codex.manager.IListener;
-import com.promcteam.codex.utils.DataUT;
+import com.promcteam.codex.util.DataUT;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.stats.items.ItemStats;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
@@ -21,8 +23,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.stats.items.ItemStats;
 
 public class ItemUpdaterListener extends IListener<Divinity> {
 

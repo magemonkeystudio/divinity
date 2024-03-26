@@ -1,6 +1,9 @@
 package com.promcteam.divinity.stats.items.api;
 
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.divinity.stats.bonus.StatBonus;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.utils.LoreUT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -8,9 +11,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.stats.bonus.StatBonus;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.utils.LoreUT;
 
 import java.util.ArrayList;
 import java.util.List;

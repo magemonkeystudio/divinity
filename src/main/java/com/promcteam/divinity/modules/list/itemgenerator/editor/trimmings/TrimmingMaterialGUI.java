@@ -1,12 +1,12 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor.trimmings;
 
 import com.promcteam.codex.manager.api.menu.Slot;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 import org.bukkit.Material;
 import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 
 public class TrimmingMaterialGUI extends AbstractEditorGUI {
     private final TrimmingListGUI.TrimmingEntry entry;

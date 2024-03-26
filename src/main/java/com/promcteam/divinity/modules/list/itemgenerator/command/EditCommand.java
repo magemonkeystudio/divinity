@@ -1,14 +1,14 @@
 package com.promcteam.divinity.modules.list.itemgenerator.command;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.modules.command.MCmd;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 

@@ -1,6 +1,8 @@
 package com.promcteam.divinity.manager.listener.object;
 
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
+import com.promcteam.divinity.api.event.DivinityDamageEvent;
+import com.promcteam.divinity.testutil.MockedTest;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
@@ -8,8 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import com.promcteam.divinity.api.event.DivinityDamageEvent;
-import com.promcteam.divinity.testutil.MockedTest;
 
 import static org.junit.Assert.assertEquals;
 

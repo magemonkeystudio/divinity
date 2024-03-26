@@ -1,7 +1,10 @@
 package com.promcteam.divinity.modules.list.itemhints;
 
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.EModule;
+import com.promcteam.divinity.modules.api.QModule;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Item;
@@ -15,9 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.modules.EModule;
-import com.promcteam.divinity.modules.api.QModule;
 
 import java.util.HashSet;
 import java.util.List;

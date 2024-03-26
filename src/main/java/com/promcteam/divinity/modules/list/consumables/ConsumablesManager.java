@@ -1,19 +1,19 @@
 package com.promcteam.divinity.modules.list.consumables;
 
-import com.promcteam.divinity.Divinity;
-import lombok.Getter;
 import com.promcteam.codex.config.api.JYML;
-import com.promcteam.codex.utils.ItemUT;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.api.event.DivinityPlayerItemUseEvent;
 import com.promcteam.divinity.modules.LimitedItem;
 import com.promcteam.divinity.modules.UsableItem;
 import com.promcteam.divinity.modules.api.QModuleUsage;
 import com.promcteam.divinity.stats.EntityStats;
+import lombok.Getter;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume> {
     private boolean allowConsumeFullHealth;
@@ -51,12 +51,14 @@ public class ConsumablesManager extends QModuleUsage<ConsumablesManager.Consume>
         ItemStack i         = e.getItemStack();
         double    maxHealth = EntityStats.getEntityMaxHealth(p);
         if (c.getHealth() > 0.0D && !isConsumingAllowedOnFullHealth() && p.getHealth() >= maxHealth) {
-            (this.plugin.lang()).Consumables_Consume_Error_HealthLevel.replace("%item%", ItemUT.getItemName(i)).send(p);
+            (this.plugin.lang()).Consumables_Consume_Error_HealthLevel.replace("%item%", ItemUT.getItemName(i))
+                    .send(p);
             e.setCancelled(true);
             return;
         }
         if (c.getHunger() > 0.0D && !isConsumingAllowedOnFullFood() && p.getFoodLevel() >= 20) {
-            (this.plugin.lang()).Consumables_Consume_Error_FoodLevel.replace("%item%", ItemUT.getItemName(i)).send(p);
+            (this.plugin.lang()).Consumables_Consume_Error_FoodLevel.replace("%item%", ItemUT.getItemName(i))
+                    .send(p);
             e.setCancelled(true);
             return;
         }

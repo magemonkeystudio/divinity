@@ -4,17 +4,17 @@ import com.promcteam.codex.CodexEngine;
 import com.promcteam.codex.items.ItemType;
 import com.promcteam.codex.items.exception.MissingItemException;
 import com.promcteam.codex.items.exception.MissingProviderException;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.random.Rnd;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -106,7 +106,7 @@ public class MGetCmd extends MCmd<QModuleDrop<?>> {
         }
         ItemGeneratorManager itemGenerator =
                 this.module instanceof ItemGeneratorManager ? (ItemGeneratorManager) this.module : null;
-        GeneratorItem        generatorItem = itemGenerator != null ? itemGenerator.getItemById(id) : null;
+        GeneratorItem generatorItem = itemGenerator != null ? itemGenerator.getItemById(id) : null;
 
         Map<String, Integer> addedItems = new HashMap<>();
 

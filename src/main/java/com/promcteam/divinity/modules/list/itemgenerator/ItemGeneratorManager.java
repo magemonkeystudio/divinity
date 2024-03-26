@@ -6,31 +6,13 @@ import com.promcteam.codex.core.Version;
 import com.promcteam.codex.items.ItemType;
 import com.promcteam.codex.items.exception.MissingItemException;
 import com.promcteam.codex.items.exception.MissingProviderException;
-import com.promcteam.codex.items.providers.IProItemProvider;
+import com.promcteam.codex.items.providers.ICodexItemProvider;
 import com.promcteam.codex.items.providers.VanillaProvider;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.constants.JStrings;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.constants.JStrings;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.DyeColor;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
-import org.bukkit.block.Banner;
-import org.bukkit.block.banner.Pattern;
-import org.bukkit.block.banner.PatternType;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ArmorMeta;
-import org.bukkit.inventory.meta.BlockStateMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.trim.ArmorTrim;
-import org.bukkit.inventory.meta.trim.TrimMaterial;
-import org.bukkit.inventory.meta.trim.TrimPattern;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.config.Config;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
@@ -63,9 +45,27 @@ import com.promcteam.divinity.stats.items.requirements.user.BannedClassRequireme
 import com.promcteam.divinity.stats.items.requirements.user.ClassRequirement;
 import com.promcteam.divinity.stats.items.requirements.user.LevelRequirement;
 import com.promcteam.divinity.stats.items.requirements.user.SoulboundRequirement;
+import com.promcteam.divinity.utils.DivinityProvider;
 import com.promcteam.divinity.utils.ItemUtils;
 import com.promcteam.divinity.utils.LoreUT;
-import com.promcteam.divinity.utils.DivinityProvider;
+import org.bukkit.DyeColor;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.block.Banner;
+import org.bukkit.block.banner.Pattern;
+import org.bukkit.block.banner.PatternType;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ArmorMeta;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.trim.ArmorTrim;
+import org.bukkit.inventory.meta.trim.TrimMaterial;
+import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -664,7 +664,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             String itemGroupName = ItemUtils.getItemGroupNameFor(item);
 
             String itemMaterial = CodexEngine.get().getItemManager().getItemTypes(item).stream()
-                    .filter(itemType -> itemType.getCategory() != IProItemProvider.Category.PRO)
+                    .filter(itemType -> itemType.getCategory() != ICodexItemProvider.Category.PRO)
                     .max(Comparator.comparing(ItemType::getCategory))
                     .orElseGet(() -> new VanillaProvider.VanillaItemType(item.getType())).getNamespacedID();
 

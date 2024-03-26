@@ -1,8 +1,12 @@
 package com.promcteam.divinity.stats.items.api;
 
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import com.promcteam.divinity.utils.LoreUT;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -11,10 +15,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
-import com.promcteam.divinity.utils.LoreUT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,10 +142,10 @@ public abstract class ItemLoreStat<Z> {
             if (container.has(key, this.dataType)) container.remove(key);
         }
 
-        String[] format  = StringUT.colorFix(
+        String[] format = StringUT.colorFix(
                 this instanceof DynamicStat ? ((DynamicStat<Z>) this).getFormat(null, item, value)
                         : this.getFormat(item, value)).split("\n");
-        boolean  isEmpty = true;
+        boolean isEmpty = true;
         for (String formatLine : format) {
             if (!formatLine.isEmpty()) {
                 isEmpty = false;

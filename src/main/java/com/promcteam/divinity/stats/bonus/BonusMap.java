@@ -1,10 +1,9 @@
 package com.promcteam.divinity.stats.bonus;
 
 import com.promcteam.codex.config.api.JYML;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.config.EngineCfg;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
@@ -13,6 +12,7 @@ import com.promcteam.divinity.stats.items.api.ItemLoreStat;
 import com.promcteam.divinity.stats.items.attributes.*;
 import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
 import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;

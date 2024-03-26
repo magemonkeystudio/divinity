@@ -2,17 +2,17 @@ package com.promcteam.divinity.manager.listener;
 
 import com.promcteam.codex.manager.api.Loadable;
 import com.promcteam.divinity.Divinity;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.hooks.HookListener;
 import com.promcteam.divinity.manager.listener.object.*;
 import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
 import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
+import org.jetbrains.annotations.NotNull;
 
 public class ListenerManager implements Loadable {
 
-    private final Divinity               plugin;
-    private       ItemDurabilityListener lisDurability;
+    private final Divinity                plugin;
+    private       ItemDurabilityListener  lisDurability;
     private       ItemHandListener        lisHand;
     private       ItemRequirementListener lisReq;
     private       DynamicStatListener     lisDynamic;

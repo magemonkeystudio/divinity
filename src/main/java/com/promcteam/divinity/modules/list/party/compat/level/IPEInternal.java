@@ -1,8 +1,5 @@
 package com.promcteam.divinity.modules.list.party.compat.level;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
@@ -10,6 +7,9 @@ import com.promcteam.divinity.modules.list.classes.event.PlayerClassExpGainEvent
 import com.promcteam.divinity.modules.list.classes.object.ExpSource;
 import com.promcteam.divinity.modules.list.party.PartyManager;
 import com.promcteam.divinity.modules.list.party.PartyManager.Party;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class IPEInternal extends IPartyLevelManager {
 

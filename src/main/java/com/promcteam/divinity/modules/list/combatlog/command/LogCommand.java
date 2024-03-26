@@ -1,12 +1,12 @@
 package com.promcteam.divinity.modules.list.combatlog.command;
 
-import com.promcteam.codex.utils.ClickText;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.ClickText;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.modules.command.MCmd;
 import com.promcteam.divinity.modules.list.combatlog.CombatLogManager;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class LogCommand extends MCmd<CombatLogManager> {
 

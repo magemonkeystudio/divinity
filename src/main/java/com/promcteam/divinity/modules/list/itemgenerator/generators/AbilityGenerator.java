@@ -2,17 +2,17 @@ package com.promcteam.divinity.modules.list.itemgenerator.generators;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.types.ClickType;
-import com.promcteam.codex.utils.DataUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.DataUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
+import com.promcteam.divinity.modules.list.itemgenerator.api.AbstractAttributeGenerator;
+import com.promcteam.divinity.utils.LoreUT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
-import com.promcteam.divinity.modules.list.itemgenerator.api.AbstractAttributeGenerator;
-import com.promcteam.divinity.utils.LoreUT;
 
 import java.util.HashMap;
 import java.util.List;

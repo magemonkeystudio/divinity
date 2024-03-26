@@ -1,15 +1,15 @@
 package com.promcteam.divinity.modules.list.drops.object;
 
-import com.promcteam.codex.utils.actions.ActionManipulator;
-import com.promcteam.codex.utils.eval.Evaluator;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.actions.ActionManipulator;
+import com.promcteam.codex.util.eval.Evaluator;
+import com.promcteam.codex.util.random.Rnd;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.modules.api.QModuleDrop;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.modules.api.QModuleDrop;
 
 import java.util.HashSet;
 import java.util.List;

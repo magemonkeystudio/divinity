@@ -1,7 +1,14 @@
 package com.promcteam.divinity.stats.items.attributes.stats;
 
-import com.promcteam.codex.utils.DataUT;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.DataUT;
+import com.promcteam.codex.util.random.Rnd;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.api.event.DivinityItemDamageEvent;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.stats.items.ItemTags;
+import com.promcteam.divinity.stats.items.api.ItemLoreStat;
+import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
+import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -11,13 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.api.event.DivinityItemDamageEvent;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.stats.items.ItemTags;
-import com.promcteam.divinity.stats.items.api.ItemLoreStat;
-import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
-import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
 
 public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat {
     private double cap;

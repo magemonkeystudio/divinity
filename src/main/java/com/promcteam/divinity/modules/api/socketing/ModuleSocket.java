@@ -1,18 +1,11 @@
 package com.promcteam.divinity.modules.api.socketing;
 
-import com.promcteam.codex.utils.CollectionsUT;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.actions.ActionManipulator;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Perms;
+import com.promcteam.codex.util.CollectionsUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.actions.ActionManipulator;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.manager.interactions.api.AnimatedSuccessBar;
 import com.promcteam.divinity.modules.SocketItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -21,6 +14,13 @@ import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.attributes.SocketAttribute;
 import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
 import com.promcteam.divinity.stats.items.requirements.item.ItemSocketRequirement;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -70,19 +70,19 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
         this.cfg.addMissing(path2 + "min-success", 50);
 
         if (this.cfg.getBoolean(path + "animated-bar.enabled")) {
-            String    barTitle        = cfg.getString(path2 + "bar-title", "&e&lSocketing...");
-            String    barChar         = cfg.getString(path2 + "bar-char", "◼");
-            String    barFormat       = cfg.getString(path2 + "bar-format", "%bar%");
-            int       barSize         = cfg.getInt(path2 + "bar-size", 20);
+            String barTitle  = cfg.getString(path2 + "bar-title", "&e&lSocketing...");
+            String barChar   = cfg.getString(path2 + "bar-char", "◼");
+            String barFormat = cfg.getString(path2 + "bar-format", "%bar%");
+            int    barSize   = cfg.getInt(path2 + "bar-size", 20);
             ChatColor barColorNeutral =
                     CollectionsUT.getEnum(cfg.getString(path2 + "color-neutral", "DARK_GRAY"), ChatColor.class);
-            ChatColor barColorGood    =
+            ChatColor barColorGood =
                     CollectionsUT.getEnum(cfg.getString(path2 + "color-success", "GREEN"), ChatColor.class);
-            ChatColor barColorBad     =
+            ChatColor barColorBad =
                     CollectionsUT.getEnum(cfg.getString(path2 + "color-failure", "RED"), ChatColor.class);
-            long      fillInterval    = cfg.getLong(path2 + "fill-interval", 1L);
-            int       fillAmount      = cfg.getInt(path2 + "fill-amount", 1);
-            int       minSuccess      = cfg.getInt(path2 + "min-success", 50);
+            long fillInterval = cfg.getLong(path2 + "fill-interval", 1L);
+            int  fillAmount   = cfg.getInt(path2 + "fill-amount", 1);
+            int  minSuccess   = cfg.getInt(path2 + "min-success", 50);
 
             this.animation = new AnimatedSuccessBar.Builder(plugin, barTitle, barChar)
                     .setBarFormat(barFormat)

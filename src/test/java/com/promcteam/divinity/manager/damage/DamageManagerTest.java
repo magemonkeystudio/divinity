@@ -3,13 +3,12 @@ package com.promcteam.divinity.manager.damage;
 import be.seeseemelk.mockbukkit.entity.FishHookMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import be.seeseemelk.mockbukkit.entity.ZombieMock;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.testutil.MockedTest;
 import org.bukkit.entity.FishHook;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.testutil.MockedTest;
 
 import java.util.UUID;
 

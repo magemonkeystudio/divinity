@@ -1,13 +1,13 @@
 package com.promcteam.divinity.hooks.external.mimic;
 
 import com.promcteam.codex.modules.ModuleManager;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.ModuleItem;
+import com.promcteam.divinity.modules.api.QModuleDrop;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.endlesscode.mimic.items.BukkitItemsRegistry;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.modules.ModuleItem;
-import com.promcteam.divinity.modules.api.QModuleDrop;
 
 import java.util.Collection;
 import java.util.Objects;

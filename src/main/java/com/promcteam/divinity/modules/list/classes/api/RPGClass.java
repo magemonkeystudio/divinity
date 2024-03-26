@@ -2,16 +2,11 @@ package com.promcteam.divinity.modules.list.classes.api;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.LoadableItem;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.actions.ActionManipulator;
-import com.promcteam.codex.utils.eval.Evaluator;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.actions.ActionManipulator;
+import com.promcteam.codex.util.eval.Evaluator;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.object.ClassAspect;
@@ -19,6 +14,11 @@ import com.promcteam.divinity.modules.list.classes.object.ClassAspectBonus;
 import com.promcteam.divinity.modules.list.classes.object.ClassAttribute;
 import com.promcteam.divinity.modules.list.classes.object.ClassAttributeType;
 import com.promcteam.divinity.stats.bonus.BonusMap;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 

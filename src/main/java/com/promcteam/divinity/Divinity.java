@@ -6,11 +6,6 @@ import com.promcteam.codex.commands.api.IGeneralCommand;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.Hooks;
 import com.promcteam.codex.registry.damage.DamageRegistry;
-import lombok.Getter;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPluginLoader;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.command.BuffCommand;
 import com.promcteam.divinity.command.ModifyCommand;
 import com.promcteam.divinity.command.SetCommand;
@@ -44,6 +39,11 @@ import com.promcteam.divinity.utils.actions.executors.ActionParticlePulse;
 import com.promcteam.divinity.utils.actions.executors.ActionTakeMana;
 import com.promcteam.divinity.utils.actions.params.AttackableParam;
 import com.promcteam.divinity.utils.actions.params.PartyMemberParam;
+import lombok.Getter;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPluginLoader;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -235,7 +235,7 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
     }
 
     @Override
-    public void registerCmds(@NotNull IGeneralCommand<Divinity> mainCommand) {
+    public void registerCommands(@NotNull IGeneralCommand<Divinity> mainCommand) {
         mainCommand.addSubCommand(new ModifyCommand(this));
         mainCommand.addSubCommand(new SetCommand(this));
         mainCommand.addSubCommand(new BuffCommand(this));

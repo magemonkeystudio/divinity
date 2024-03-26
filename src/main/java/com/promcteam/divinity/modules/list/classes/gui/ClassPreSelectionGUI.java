@@ -5,11 +5,11 @@ import com.promcteam.codex.manager.api.gui.ContentType;
 import com.promcteam.codex.manager.api.gui.GuiClick;
 import com.promcteam.codex.manager.api.gui.GuiItem;
 import com.promcteam.codex.manager.api.gui.NGUI;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.list.classes.ClassManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.modules.list.classes.ClassManager;
 
 public class ClassPreSelectionGUI extends NGUI<Divinity> {
 

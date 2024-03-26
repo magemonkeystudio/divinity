@@ -2,10 +2,10 @@ package com.promcteam.divinity.modules.list.itemgenerator;
 
 import com.promcteam.codex.items.ItemType;
 import com.promcteam.codex.manager.api.Loadable;
-import com.promcteam.codex.utils.FileUT;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.FileUT;
 import com.promcteam.divinity.config.Config;
 import com.promcteam.divinity.stats.tiers.Tier;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -101,7 +101,7 @@ public class ResourceManager implements Loadable {
         List<String> list = new ArrayList<>();
 
         String folder = type.getFolder();
-        String path   =
+        String path =
                 itemGen.getFullPath() + "resources/names/" + folder + "/" + cat.getFolder() + "/" + file + ".txt";
 
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {

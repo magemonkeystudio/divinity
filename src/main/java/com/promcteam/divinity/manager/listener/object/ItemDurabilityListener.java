@@ -1,8 +1,13 @@
 package com.promcteam.divinity.manager.listener.object;
 
 import com.promcteam.codex.manager.IListener;
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.ItemUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.api.event.DivinityDamageEvent;
+import com.promcteam.divinity.api.event.DivinityProjectileLaunchEvent;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -16,11 +21,6 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.api.event.DivinityProjectileLaunchEvent;
-import com.promcteam.divinity.api.event.DivinityDamageEvent;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
-import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
 
 public class ItemDurabilityListener extends IListener<Divinity> {
 

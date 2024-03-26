@@ -2,9 +2,6 @@ package com.promcteam.divinity.modules.list.itemgenerator.editor.bonuses;
 
 import com.promcteam.codex.manager.api.menu.Slot;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
 import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
@@ -13,6 +10,9 @@ import com.promcteam.divinity.stats.items.ItemStats;
 import com.promcteam.divinity.stats.items.attributes.*;
 import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
 import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.HashSet;

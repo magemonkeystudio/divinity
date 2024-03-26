@@ -1,13 +1,13 @@
 package com.promcteam.divinity.modules.list.gems.merchant;
 
+import com.promcteam.divinity.api.DivinityAPI;
+import com.promcteam.divinity.modules.api.socketing.merchant.MerchantSocket;
+import com.promcteam.divinity.modules.list.gems.GemManager;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import com.promcteam.divinity.api.DivinityAPI;
-import com.promcteam.divinity.modules.api.socketing.merchant.MerchantSocket;
-import com.promcteam.divinity.modules.list.gems.GemManager;
 
 @TraitName("gems-merchant")
 public class MerchantTrait extends Trait {

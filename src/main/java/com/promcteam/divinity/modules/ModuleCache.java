@@ -1,9 +1,6 @@
 package com.promcteam.divinity.modules;
 
 import com.promcteam.divinity.Divinity;
-import lombok.Getter;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.modules.list.arrows.ArrowManager;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.combatlog.CombatLogManager;
@@ -28,6 +25,9 @@ import com.promcteam.divinity.modules.list.runes.RuneManager;
 import com.promcteam.divinity.modules.list.sell.SellManager;
 import com.promcteam.divinity.modules.list.sets.SetManager;
 import com.promcteam.divinity.modules.list.soulbound.SoulboundManager;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ModuleCache {
 

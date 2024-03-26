@@ -1,14 +1,10 @@
 package com.promcteam.divinity.modules.list.itemgenerator.generators;
 
 import com.promcteam.codex.config.api.JYML;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import com.promcteam.divinity.modules.list.itemgenerator.api.AbstractAttributeGenerator;
@@ -22,6 +18,10 @@ import com.promcteam.divinity.stats.items.attributes.FabledAttribute;
 import com.promcteam.divinity.stats.items.attributes.SocketAttribute;
 import com.promcteam.divinity.utils.ItemUtils;
 import com.promcteam.divinity.utils.LoreUT;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.BiFunction;

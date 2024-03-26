@@ -2,18 +2,18 @@ package com.promcteam.divinity.manager.profile;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.gui.*;
-import com.promcteam.codex.utils.CollectionsUT;
+import com.promcteam.codex.util.CollectionsUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.data.api.DivinityUser;
+import com.promcteam.divinity.data.api.UserProfile;
+import com.promcteam.divinity.modules.list.classes.ClassManager;
+import com.promcteam.divinity.modules.list.classes.api.UserClassData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.data.api.DivinityUser;
-import com.promcteam.divinity.data.api.UserProfile;
-import com.promcteam.divinity.modules.list.classes.ClassManager;
-import com.promcteam.divinity.modules.list.classes.api.UserClassData;
 
 import java.util.ArrayList;
 import java.util.Collections;

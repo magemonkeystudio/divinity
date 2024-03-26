@@ -1,15 +1,15 @@
 package com.promcteam.divinity.utils.actions.executors;
 
-import com.promcteam.codex.utils.actions.actions.IActionExecutor;
-import com.promcteam.codex.utils.actions.params.IParamResult;
-import com.promcteam.codex.utils.actions.params.IParamType;
+import com.promcteam.codex.util.actions.actions.IActionExecutor;
+import com.promcteam.codex.util.actions.params.IParamResult;
+import com.promcteam.codex.util.actions.params.IParamType;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.utils.ParticleUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.utils.ParticleUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +56,7 @@ public class ActionParticleLine extends IActionExecutor {
         } else {
             if (exe instanceof LivingEntity) {
                 LivingEntity caster = (LivingEntity) exe;
-                Location     to     =
+                Location to =
                         caster.getTargetBlock(null, (int) EngineCfg.COMBAT_MAX_GET_TARGET_DISTANCE).getLocation();
 
                 ParticleUtils.drawParticleLine(

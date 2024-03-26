@@ -1,11 +1,11 @@
 package com.promcteam.divinity.modules.list.classes.event;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.list.classes.ComboManager.ComboInfo;
 import com.promcteam.divinity.modules.list.classes.ComboManager.ComboKey;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerComboProcessEvent extends PlayerClassEvent implements Cancellable {
 

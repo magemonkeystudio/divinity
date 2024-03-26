@@ -1,11 +1,11 @@
 package com.promcteam.divinity.modules.list.dismantle;
 
+import com.promcteam.divinity.api.DivinityAPI;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.trait.TraitName;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import com.promcteam.divinity.api.DivinityAPI;
 
 @TraitName("dismantle")
 public class DismantleTrait extends Trait {

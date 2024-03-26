@@ -1,8 +1,13 @@
 package com.promcteam.divinity.modules.api.socketing.merchant;
 
 import com.promcteam.codex.hooks.external.VaultHK;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.NumberUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.divinity.modules.SocketItem;
+import com.promcteam.divinity.modules.api.socketing.ISocketGUI;
+import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -11,11 +16,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.modules.SocketItem;
-import com.promcteam.divinity.modules.api.socketing.ISocketGUI;
-import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.requirements.ItemRequirements;
 
 import java.util.List;
 

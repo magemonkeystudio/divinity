@@ -1,13 +1,13 @@
 package com.promcteam.divinity.modules.list.refine.command;
 
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.divinity.Perms;
+import com.promcteam.divinity.modules.command.MCmd;
+import com.promcteam.divinity.modules.list.refine.RefineManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Perms;
-import com.promcteam.divinity.modules.command.MCmd;
-import com.promcteam.divinity.modules.list.refine.RefineManager;
 
 public class DowngradeCmd extends MCmd<RefineManager> {
 

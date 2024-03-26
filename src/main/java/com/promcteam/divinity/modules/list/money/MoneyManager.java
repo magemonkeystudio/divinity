@@ -3,13 +3,13 @@ package com.promcteam.divinity.modules.list.money;
 import com.promcteam.codex.commands.list.HelpCommand;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.external.VaultHK;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.ModuleItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.modules.command.MReloadCmd;
+import org.jetbrains.annotations.NotNull;
 
 public class MoneyManager extends QModuleDrop<MoneyManager.QMoney> {
 

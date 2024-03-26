@@ -1,12 +1,12 @@
 package com.promcteam.divinity.manager.effects.main;
 
-import com.promcteam.codex.utils.EffectUT;
+import com.promcteam.codex.util.EffectUT;
+import com.promcteam.divinity.manager.effects.IEffectType;
+import com.promcteam.divinity.manager.effects.IPeriodicEffect;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.manager.effects.IEffectType;
-import com.promcteam.divinity.manager.effects.IPeriodicEffect;
 
 import java.util.function.Function;
 

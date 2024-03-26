@@ -1,11 +1,11 @@
 package com.promcteam.divinity.manager.effects.main;
 
 import com.google.common.collect.Sets;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.manager.effects.IEffectType;
 import com.promcteam.divinity.manager.effects.IExpirableEffect;
 import com.promcteam.divinity.stats.items.api.ItemLoreStat;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;

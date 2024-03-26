@@ -1,10 +1,10 @@
 package com.promcteam.divinity.modules.list.dismantle.event;
 
 import com.promcteam.codex.manager.api.event.IEvent;
+import com.promcteam.divinity.modules.list.dismantle.DismantleManager.OutputContainer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.modules.list.dismantle.DismantleManager.OutputContainer;
 
 import java.util.HashMap;
 import java.util.Map;

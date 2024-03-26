@@ -1,11 +1,11 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor.sockets;
 
 import com.promcteam.codex.manager.api.menu.Slot;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +20,9 @@ public class MainSocketsGUI extends AbstractEditorGUI {
 
     @Override
     public void setContents() {
-        ConfigurationSection cfg  =
+        ConfigurationSection cfg =
                 this.itemGenerator.getConfig().getConfigurationSection(EditorGUI.ItemType.SOCKETS.getPath());
-        List<String>         list = new ArrayList<>();
+        List<String> list = new ArrayList<>();
         if (cfg != null) {
             list.addAll(cfg.getKeys(false));
         }

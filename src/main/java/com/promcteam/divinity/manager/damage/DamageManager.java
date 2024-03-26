@@ -1,12 +1,26 @@
 package com.promcteam.divinity.manager.damage;
 
 import com.promcteam.codex.hooks.Hooks;
-import com.promcteam.codex.items.ProItemManager;
+import com.promcteam.codex.items.CodexItemManager;
 import com.promcteam.codex.manager.IListener;
 import com.promcteam.codex.registry.damage.DamageTypeProvider;
-import com.promcteam.codex.utils.LocUT;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.LocUT;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.api.PartyAPI;
+import com.promcteam.divinity.api.event.DivinityDamageEvent;
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
+import com.promcteam.divinity.manager.effects.main.AdjustStatEffect;
+import com.promcteam.divinity.manager.effects.main.DisarmEffect;
+import com.promcteam.divinity.modules.list.party.PartyManager.Party;
+import com.promcteam.divinity.stats.EntityStats;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
+import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
+import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
+import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import com.promcteam.divinity.stats.items.attributes.stats.BleedStat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -29,20 +43,6 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.api.PartyAPI;
-import com.promcteam.divinity.api.event.DivinityDamageEvent;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
-import com.promcteam.divinity.manager.effects.main.AdjustStatEffect;
-import com.promcteam.divinity.manager.effects.main.DisarmEffect;
-import com.promcteam.divinity.modules.list.party.PartyManager.Party;
-import com.promcteam.divinity.stats.EntityStats;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
-import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
-import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
-import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
-import com.promcteam.divinity.stats.items.attributes.stats.BleedStat;
 
 import java.util.*;
 import java.util.function.DoubleUnaryOperator;
@@ -237,7 +237,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         for (Map.Entry<DamageAttribute, Double> en : e.getDamageMap().entrySet()) {
             DamageAttribute dmgAtt  = en.getKey();
             double          dmgType = en.getValue();
-//            QuantumRPG.getInstance().getLogger().info("*" + dmgAtt.getName() + ": " + dmgType);
+//            Divinity.getInstance().getLogger().info("*" + dmgAtt.getName() + ": " + dmgType);
 
             dmgType *= pveDamageMod;
             dmgType *= critMod;
@@ -266,7 +266,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
             }
             //Should we reactivate direct damage, remove directType here and deal the damage straight.
             meta.setDamage(dmgAtt, dmgType + directType);
-//            QuantumRPG.getInstance().getLogger().info(dmgAtt.getName() + ": " + meta.getDamage(dmgAtt) + " (" + directType + ")");
+//            Divinity.getInstance().getLogger().info(dmgAtt.getName() + ": " + meta.getDamage(dmgAtt) + " (" + directType + ")");
 
             // Actions Executor
             if (damager != null && dmgAtt != null) {
@@ -275,8 +275,8 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         }
 
         double dmgTotal = meta.getTotalDamage();
-//        QuantumRPG.getInstance().getLogger().info("Damage total: " + dmgTotal);
-//        QuantumRPG.getInstance().getLogger().info("Defended: " + meta.getDefendedDamage());
+//        Divinity.getInstance().getLogger().info("Damage total: " + dmgTotal);
+//        Divinity.getInstance().getLogger().info("Defended: " + meta.getDefendedDamage());
         orig.setDamage(dmgTotal);
 
         // We want to terminate early since the post-effects could introduce RPGItems effects not intended for skills
@@ -388,7 +388,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
 
         ItemStack offHand  = player.getInventory().getItemInOffHand();
         ItemStack mainHand = player.getInventory().getItemInMainHand();
-        ItemStack shield   = offHand.getType() == Material.SHIELD ? offHand
+        ItemStack shield = offHand.getType() == Material.SHIELD ? offHand
                 : mainHand.getType() == Material.SHIELD ? mainHand : null;
         if (shield == null) return;
 
@@ -505,7 +505,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                               String damageType,
                               @Nullable LivingEntity damager) {
         DamageAttribute damageAttribute =
-                ItemStats.getDamageById(ProItemManager.stripPrefix(getNamespace(), damageType));
+                ItemStats.getDamageById(CodexItemManager.stripPrefix(getNamespace(), damageType));
         if (damageAttribute == null) return false;
         final boolean[] success = {false};
         Listener listener = new Listener() {

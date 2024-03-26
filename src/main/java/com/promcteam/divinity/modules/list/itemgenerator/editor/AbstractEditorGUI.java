@@ -3,8 +3,9 @@ package com.promcteam.divinity.modules.list.itemgenerator.editor;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.core.Version;
 import com.promcteam.codex.manager.api.menu.Menu;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -17,7 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 
 import java.util.ArrayList;
 import java.util.List;

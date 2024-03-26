@@ -1,7 +1,9 @@
 package com.promcteam.divinity.utils;
 
-import com.promcteam.codex.utils.EffectUT;
-import com.promcteam.codex.utils.LocUT;
+import com.promcteam.codex.util.EffectUT;
+import com.promcteam.codex.util.LocUT;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.list.essences.EssencesManager.EssenceEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -9,8 +11,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.modules.list.essences.EssencesManager.EssenceEffect;
 
 public class ParticleUtils {
 
@@ -288,11 +288,11 @@ public class ParticleUtils {
                 if (++i == 72) {
                     this.cancel();
                 }
-                int            n              = i;
-                final double   n2             = 0.3141592653589793 * n;
-                final double   n3             = n * 0.1 % 2.5;
-                final double   n4             = 0.45;
-                final Location pointOnCircle  = LocUT.getPointOnCircle(LocUT.getCenter(loc), true, n2, n4, n3);
+                int            n             = i;
+                final double   n2            = 0.3141592653589793 * n;
+                final double   n3            = n * 0.1 % 2.5;
+                final double   n4            = 0.45;
+                final Location pointOnCircle = LocUT.getPointOnCircle(LocUT.getCenter(loc), true, n2, n4, n3);
                 final Location pointOnCircle2 =
                         LocUT.getPointOnCircle(LocUT.getCenter(loc), true, n2 - 3.141592653589793, n4, n3);
                 EffectUT.playEffect(pointOnCircle, "FLAME", 0.0f, 0.0f, 0.0f, 0.0f, 1);

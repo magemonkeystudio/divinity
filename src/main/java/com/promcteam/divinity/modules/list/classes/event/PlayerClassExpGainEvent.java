@@ -1,10 +1,10 @@
 package com.promcteam.divinity.modules.list.classes.event;
 
+import com.promcteam.divinity.modules.list.classes.api.UserClassData;
+import com.promcteam.divinity.modules.list.classes.object.ExpSource;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.modules.list.classes.api.UserClassData;
-import com.promcteam.divinity.modules.list.classes.object.ExpSource;
 
 public class PlayerClassExpGainEvent extends PlayerClassEvent implements Cancellable {
 

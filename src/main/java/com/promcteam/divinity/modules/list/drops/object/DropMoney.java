@@ -1,7 +1,7 @@
 package com.promcteam.divinity.modules.list.drops.object;
 
 import com.promcteam.codex.CodexEngine;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.random.Rnd;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 

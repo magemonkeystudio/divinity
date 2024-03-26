@@ -1,15 +1,15 @@
 package com.promcteam.divinity.modules.list.drops.object;
 
-import lombok.Getter;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.LoadableItem;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.random.Rnd;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.modules.list.drops.DropManager;
+import lombok.Getter;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.modules.list.drops.DropManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;

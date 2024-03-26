@@ -2,9 +2,9 @@ package com.promcteam.divinity.hooks.external.mythicmobs;
 
 import com.promcteam.codex.hooks.NHook;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.hooks.HookMobLevel;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.hooks.HookMobLevel;
 
 public abstract class AbstractMythicMobsHK extends NHook<Divinity> implements HookMobLevel {
 

@@ -1,6 +1,8 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor.trimmings;
 
 import com.promcteam.codex.manager.api.menu.Slot;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
+import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -12,8 +14,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
-import com.promcteam.divinity.modules.list.itemgenerator.editor.EditorGUI;
 
 import java.util.*;
 
@@ -30,7 +30,7 @@ public class TrimmingListGUI extends AbstractEditorGUI {
     public void setContents() {
         List<ArmorTrim>        list = new ArrayList<>();
         Map<ArmorTrim, Double> map  = new HashMap<>();
-        ConfigurationSection   cfg  =
+        ConfigurationSection cfg =
                 itemGenerator.getConfig().getConfigurationSection(EditorGUI.ItemType.ARMOR_TRIMINGS.getPath());
         if (cfg != null) {
             for (String key : cfg.getKeys(false)) {

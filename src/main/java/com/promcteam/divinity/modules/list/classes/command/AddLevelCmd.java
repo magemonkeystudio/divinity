@@ -1,16 +1,16 @@
 package com.promcteam.divinity.modules.list.classes.command;
 
-import com.promcteam.codex.utils.PlayerUT;
-import com.promcteam.divinity.data.api.DivinityUser;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.PlayerUT;
 import com.promcteam.divinity.Perms;
+import com.promcteam.divinity.data.api.DivinityUser;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.modules.command.MCmd;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
 import com.promcteam.divinity.modules.list.classes.object.ExpSource;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;

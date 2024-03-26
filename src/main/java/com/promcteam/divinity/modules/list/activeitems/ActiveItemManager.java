@@ -1,10 +1,10 @@
 package com.promcteam.divinity.modules.list.activeitems;
 
 import com.promcteam.codex.config.api.JYML;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.UsableItem;
 import com.promcteam.divinity.modules.api.QModuleUsage;
+import org.jetbrains.annotations.NotNull;
 
 public class ActiveItemManager extends QModuleUsage<ActiveItemManager.ActiveItem> {
     public ActiveItemManager(@NotNull Divinity plugin) {

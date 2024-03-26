@@ -1,9 +1,9 @@
 package com.promcteam.divinity.hooks.external.mythicmobs;
 
+import com.promcteam.codex.hooks.HookState;
 import com.promcteam.divinity.Divinity;
 import io.lumine.mythic.bukkit.MythicBukkit;
 import io.lumine.mythic.core.mobs.ActiveMob;
-import com.promcteam.codex.hooks.HookState;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 

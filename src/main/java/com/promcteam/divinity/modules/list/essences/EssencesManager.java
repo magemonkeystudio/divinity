@@ -2,18 +2,18 @@ package com.promcteam.divinity.modules.list.essences;
 
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.external.citizens.CitizensHK;
-import com.promcteam.codex.utils.EffectUT;
+import com.promcteam.codex.util.EffectUT;
 import com.promcteam.divinity.Divinity;
-import net.citizensnpcs.api.trait.TraitInfo;
-import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.SocketItem;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
 import com.promcteam.divinity.modules.list.essences.EssencesManager.Essence;
 import com.promcteam.divinity.modules.list.essences.merchant.MerchantTrait;
 import com.promcteam.divinity.utils.ParticleUtils;
+import net.citizensnpcs.api.trait.TraitInfo;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class EssencesManager extends ModuleSocket<Essence> {
 

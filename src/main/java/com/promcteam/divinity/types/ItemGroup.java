@@ -2,14 +2,14 @@ package com.promcteam.divinity.types;
 
 import com.promcteam.codex.CodexEngine;
 import com.promcteam.codex.items.ItemType;
-import com.promcteam.codex.items.exception.ProItemException;
+import com.promcteam.codex.items.exception.CodexItemException;
 import com.promcteam.codex.items.providers.VanillaProvider;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Divinity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +48,7 @@ public enum ItemGroup {
         for (String mat : mats) {
             try {
                 this.mats.add(CodexEngine.get().getItemManager().getItemType(mat));
-            } catch (ProItemException e) {
+            } catch (CodexItemException e) {
                 Divinity.getInstance().warn("Unknown item group: \"" + mat + '\"');
             }
         }

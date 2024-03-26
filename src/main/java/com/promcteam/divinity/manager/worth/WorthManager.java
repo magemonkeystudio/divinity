@@ -3,20 +3,12 @@ package com.promcteam.divinity.manager.worth;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.Loadable;
 import com.promcteam.codex.modules.IModule;
-import com.promcteam.codex.utils.CollectionsUT;
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.CollectionsUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.ModuleItem;
 import com.promcteam.divinity.modules.SocketItem;
 import com.promcteam.divinity.modules.api.QModuleDrop;
@@ -28,6 +20,14 @@ import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
 import com.promcteam.divinity.stats.items.attributes.SocketAttribute;
 import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
 import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,8 +36,8 @@ import java.util.TreeMap;
 
 public class WorthManager implements Loadable {
 
-    private final Divinity               plugin;
-    private final Map<ItemStack, Double> worthCache = new HashMap<>();
+    private final Divinity                                           plugin;
+    private final Map<ItemStack, Double>                             worthCache = new HashMap<>();
     private       Map<String, Double>                                priceItemMaterial;
     private       Map<SimpleStat.Type, Double>                       priceItemStats;
     private       TreeMap<Integer, Double>                           priceRefineLvl;
@@ -100,7 +100,8 @@ public class WorthManager implements Loadable {
 
             for (ModuleItem item : md.getItems()) {
                 if (item == null) continue;
-                cfg.addMissing(path + "by-item-id-level." + md.getId() + "." + item.getId() + ".1", Rnd.get(100, 200));
+                cfg.addMissing(path + "by-item-id-level." + md.getId() + "." + item.getId() + ".1",
+                        Rnd.get(100, 200));
             }
         }
 

@@ -1,7 +1,7 @@
 package com.promcteam.divinity.stats.items.attributes;
 
-import com.promcteam.codex.utils.DataUT;
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.DataUT;
+import com.promcteam.codex.util.StringUT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

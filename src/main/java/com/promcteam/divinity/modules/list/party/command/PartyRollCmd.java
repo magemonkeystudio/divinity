@@ -1,14 +1,14 @@
 package com.promcteam.divinity.modules.list.party.command;
 
-import com.promcteam.codex.utils.random.Rnd;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Perms;
 import com.promcteam.divinity.modules.command.MCmd;
 import com.promcteam.divinity.modules.list.loot.LootHolder.RollTask;
 import com.promcteam.divinity.modules.list.loot.LootManager;
 import com.promcteam.divinity.modules.list.party.PartyManager;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class PartyRollCmd extends MCmd<PartyManager> {
 

@@ -1,10 +1,9 @@
 package com.promcteam.divinity.data.api.serialize;
 
 import com.google.gson.*;
-import com.promcteam.codex.utils.CollectionsUT;
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.CollectionsUT;
+import com.promcteam.codex.util.ItemUT;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.inventory.ItemStack;
 import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.data.api.UserEntityNamesMode;
 import com.promcteam.divinity.data.api.UserProfile;
@@ -13,6 +12,7 @@ import com.promcteam.divinity.modules.EModule;
 import com.promcteam.divinity.modules.list.classes.ClassManager;
 import com.promcteam.divinity.modules.list.classes.api.RPGClass;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Type;
 import java.util.HashSet;
@@ -85,9 +85,9 @@ public class UserProfileSerializer implements JsonSerializer<UserProfile>, JsonD
             }
         }
 
-        JsonElement         eNames       = j.get("namesMode");
-        String              namesModeRaw = eNames != null ? eNames.getAsString() : null;
-        UserEntityNamesMode namesMode    =
+        JsonElement eNames       = j.get("namesMode");
+        String      namesModeRaw = eNames != null ? eNames.getAsString() : null;
+        UserEntityNamesMode namesMode =
                 namesModeRaw != null ? CollectionsUT.getEnum(namesModeRaw, UserEntityNamesMode.class)
                         : UserEntityNamesMode.DEFAULT;
 

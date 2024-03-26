@@ -1,18 +1,12 @@
 package com.promcteam.divinity.modules;
 
 import com.promcteam.codex.config.api.JYML;
-import com.promcteam.codex.utils.NumberUT;
-import com.promcteam.codex.utils.StringUT;
-import com.promcteam.codex.utils.constants.JStrings;
-import com.promcteam.codex.utils.eval.Evaluator;
-import com.promcteam.codex.utils.random.Rnd;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.codex.util.StringUT;
+import com.promcteam.codex.util.constants.JStrings;
+import com.promcteam.codex.util.eval.Evaluator;
+import com.promcteam.codex.util.random.Rnd;
 import com.promcteam.divinity.Divinity;
-import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import com.promcteam.divinity.config.Config;
 import com.promcteam.divinity.modules.api.QModuleDrop;
 import com.promcteam.divinity.stats.items.ItemStats;
@@ -24,6 +18,12 @@ import com.promcteam.divinity.stats.items.requirements.item.ItemTierRequirement;
 import com.promcteam.divinity.stats.items.requirements.item.ItemTypeRequirement;
 import com.promcteam.divinity.stats.tiers.Tier;
 import com.promcteam.divinity.utils.LoreUT;
+import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 

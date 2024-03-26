@@ -1,18 +1,18 @@
 package com.promcteam.divinity.data.api;
 
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.constants.JStrings;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.constants.JStrings;
 import com.promcteam.divinity.manager.effects.buffs.SavedBuff;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
 import com.promcteam.divinity.stats.items.api.ItemLoreStat;
 import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
 import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
 import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;

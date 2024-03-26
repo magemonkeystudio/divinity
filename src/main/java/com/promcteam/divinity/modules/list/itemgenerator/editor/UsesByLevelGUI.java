@@ -98,8 +98,8 @@ public class UsesByLevelGUI extends AbstractEditorGUI {
     }
 
     public static Map<Integer, Integer> getUsesByLevel(JYML cfg) {
-        Map<Integer, Integer> map                  = new TreeMap<>();
-        ConfigurationSection  configurationSection =
+        Map<Integer, Integer> map = new TreeMap<>();
+        ConfigurationSection configurationSection =
                 cfg.getConfigurationSection(EditorGUI.ItemType.USES_BY_LEVEL.getPath());
         if (configurationSection != null) {
             for (String key : configurationSection.getKeys(false)) {

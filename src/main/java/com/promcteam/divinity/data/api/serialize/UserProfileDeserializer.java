@@ -1,16 +1,16 @@
 package com.promcteam.divinity.data.api.serialize;
 
 import com.google.gson.*;
-import com.promcteam.codex.utils.CollectionsUT;
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.CollectionsUT;
+import com.promcteam.codex.util.ItemUT;
 import com.promcteam.divinity.Divinity;
-import org.bukkit.inventory.ItemStack;
 import com.promcteam.divinity.api.DivinityAPI;
 import com.promcteam.divinity.data.api.UserEntityNamesMode;
 import com.promcteam.divinity.data.api.UserProfile;
 import com.promcteam.divinity.manager.effects.buffs.SavedBuff;
 import com.promcteam.divinity.modules.list.classes.api.RPGClass;
 import com.promcteam.divinity.modules.list.classes.api.UserClassData;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.Type;
 import java.util.HashSet;
@@ -53,15 +53,15 @@ public class UserProfileDeserializer implements JsonDeserializer<UserProfile> {
             for (JsonElement item : eInventory.getAsJsonArray())
                 inventory[count++] = ItemUT.fromBase64(item.getAsString());
         }
-        JsonElement         eNames       = j.get("namesMode");
-        String              namesModeRaw = (eNames != null) ? eNames.getAsString() : null;
-        UserEntityNamesMode namesMode    =
+        JsonElement eNames       = j.get("namesMode");
+        String      namesModeRaw = (eNames != null) ? eNames.getAsString() : null;
+        UserEntityNamesMode namesMode =
                 (namesModeRaw != null) ? CollectionsUT.getEnum(namesModeRaw, UserEntityNamesMode.class)
                         : UserEntityNamesMode.DEFAULT;
-        JsonElement         eHideHelmet  = j.get("hideHelmet");
-        boolean             hideHelmet   = eHideHelmet != null && eHideHelmet.getAsBoolean();
-        UserClassData       cData        = null;
-        JsonElement         jData        = j.get("cData");
+        JsonElement   eHideHelmet = j.get("hideHelmet");
+        boolean       hideHelmet  = eHideHelmet != null && eHideHelmet.getAsBoolean();
+        UserClassData cData       = null;
+        JsonElement   jData       = j.get("cData");
         if (jData != null && Divinity.getInstance().cfg().isModuleEnabled("classes")) {
             JsonObject jClass = jData.getAsJsonObject();
             cData = context.deserialize(jClass, UserClassData.class);

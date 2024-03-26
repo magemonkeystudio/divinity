@@ -1,5 +1,7 @@
 package com.promcteam.divinity.api.event;
 
+import com.promcteam.divinity.config.EngineCfg;
+import com.promcteam.divinity.stats.ProjectileStats;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.Cancellable;
@@ -8,8 +10,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.config.EngineCfg;
-import com.promcteam.divinity.stats.ProjectileStats;
 
 public class DivinityProjectileLaunchEvent extends Event implements Cancellable {
     private static final HandlerList  handlers = new HandlerList();

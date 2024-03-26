@@ -1,13 +1,13 @@
 package com.promcteam.divinity.utils;
 
-import com.promcteam.codex.utils.NumberUT;
+import com.promcteam.codex.util.NumberUT;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.config.EngineCfg;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.config.EngineCfg;
 
 import java.util.List;
 import java.util.Set;
@@ -93,7 +93,7 @@ public class LoreUT {
     }
 
     public static void replacePlaceholder(
-            @NotNull ItemStack item, @NotNull String placeholder, @Nullable String replacer) {
+            @NotNull ItemStack item, @NotNull String placeholder, @Nullable String r) {
 
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
@@ -103,8 +103,8 @@ public class LoreUT {
         int pos = lore.indexOf(placeholder);
         if (pos < 0) return;
 
-        if (replacer != null && !replacer.isEmpty()) {
-            lore.set(pos, replacer);
+        if (r != null && !r.isEmpty()) {
+            lore.set(pos, r);
         } else {
             lore.remove(pos);
         }

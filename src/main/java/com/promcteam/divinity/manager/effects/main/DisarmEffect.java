@@ -1,13 +1,13 @@
 package com.promcteam.divinity.manager.effects.main;
 
-import com.promcteam.codex.utils.ItemUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.divinity.manager.effects.IEffect;
+import com.promcteam.divinity.manager.effects.IEffectType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.manager.effects.IEffect;
-import com.promcteam.divinity.manager.effects.IEffectType;
 
 public class DisarmEffect extends IEffect {
 

@@ -2,11 +2,11 @@ package com.promcteam.divinity.hooks.external;
 
 import com.promcteam.codex.hooks.HookState;
 import com.promcteam.codex.hooks.NHook;
+import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.hooks.HookMobLevel;
 import me.lorinth.rpgmobs.LorinthsRpgMobs;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.Divinity;
-import com.promcteam.divinity.hooks.HookMobLevel;
 
 public class LorinthsRpgMobsHK extends NHook<Divinity> implements HookMobLevel {
 

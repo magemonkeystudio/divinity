@@ -1,6 +1,6 @@
 package com.promcteam.divinity.modules.list.classes.object;
 
-import com.promcteam.codex.utils.StringUT;
+import com.promcteam.codex.util.StringUT;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 

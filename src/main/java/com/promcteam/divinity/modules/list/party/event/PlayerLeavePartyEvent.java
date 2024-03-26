@@ -1,10 +1,10 @@
 package com.promcteam.divinity.modules.list.party.event;
 
 import com.promcteam.codex.manager.api.event.IEvent;
+import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 
 public class PlayerLeavePartyEvent extends IEvent {
 

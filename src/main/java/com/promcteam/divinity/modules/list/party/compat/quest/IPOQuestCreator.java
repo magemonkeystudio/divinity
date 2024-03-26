@@ -12,14 +12,14 @@ import com.guillaumevdn.questcreator.QuestCreator;
 import com.guillaumevdn.questcreator.data.QCDataManager;
 import com.guillaumevdn.questcreator.module.quest.Quest;
 
-import com.promcteam.divinity.QuantumRPG;
+import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.modules.list.party.PartyManager;
 import com.promcteam.divinity.modules.list.party.PartyManager.PartyMember;
 
 @Deprecated
 public class IPOQuestCreator extends IPartyObjective {
 
-	public IPOQuestCreator(@NotNull QuantumRPG plugin, @NotNull PartyManager partyManager) {
+	public IPOQuestCreator(@NotNull Divinity plugin, @NotNull PartyManager partyManager) {
 		super(plugin, partyManager);
 	}
 

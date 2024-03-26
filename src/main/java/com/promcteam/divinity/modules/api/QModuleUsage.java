@@ -1,8 +1,15 @@
 package com.promcteam.divinity.modules.api;
 
-import com.promcteam.codex.utils.ItemUT;
-import com.promcteam.codex.utils.TimeUT;
+import com.promcteam.codex.util.ItemUT;
+import com.promcteam.codex.util.TimeUT;
 import com.promcteam.divinity.Divinity;
+import com.promcteam.divinity.api.event.DivinityPlayerItemUseEvent;
+import com.promcteam.divinity.modules.UsableItem;
+import com.promcteam.divinity.modules.list.consumables.ConsumablesManager;
+import com.promcteam.divinity.stats.items.ItemStats;
+import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
+import com.promcteam.divinity.types.QClickType;
+import com.promcteam.divinity.utils.ItemUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -14,13 +21,6 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.promcteam.divinity.api.event.DivinityPlayerItemUseEvent;
-import com.promcteam.divinity.modules.UsableItem;
-import com.promcteam.divinity.modules.list.consumables.ConsumablesManager;
-import com.promcteam.divinity.stats.items.ItemStats;
-import com.promcteam.divinity.stats.items.attributes.stats.DurabilityStat;
-import com.promcteam.divinity.types.QClickType;
-import com.promcteam.divinity.utils.ItemUtils;
 
 import java.util.HashMap;
 import java.util.HashSet;

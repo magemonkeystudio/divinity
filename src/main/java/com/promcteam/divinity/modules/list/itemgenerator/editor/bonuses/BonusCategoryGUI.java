@@ -1,13 +1,8 @@
 package com.promcteam.divinity.modules.list.itemgenerator.editor.bonuses;
 
-import com.promcteam.fabled.Fabled;
-import com.promcteam.fabled.manager.ProAttribute;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.manager.api.menu.Slot;
-import com.promcteam.codex.utils.StringUT;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
+import com.promcteam.codex.util.StringUT;
 import com.promcteam.divinity.Divinity;
 import com.promcteam.divinity.hooks.EHook;
 import com.promcteam.divinity.hooks.external.FabledHook;
@@ -19,6 +14,11 @@ import com.promcteam.divinity.stats.items.attributes.DamageAttribute;
 import com.promcteam.divinity.stats.items.attributes.DefenseAttribute;
 import com.promcteam.divinity.stats.items.attributes.api.SimpleStat;
 import com.promcteam.divinity.stats.items.attributes.api.TypedStat;
+import com.promcteam.fabled.Fabled;
+import com.promcteam.fabled.manager.ProAttribute;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.function.Function;
@@ -49,7 +49,7 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
         ConfigurationSection      bonusesSection = cfg.getConfigurationSection(this.category.getPath());
         if (bonusesSection != null) {
             for (String key : bonusesSection.getKeys(false)) {
-                List<String>         lore    = new ArrayList<>();
+                List<String> lore = new ArrayList<>();
                 ConfigurationSection section =
                         bonusesSection.getConfigurationSection(key + '.' + ItemType.DAMAGE.getPath());
                 if (section != null && !section.getKeys(false).isEmpty()) {

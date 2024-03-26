@@ -1,7 +1,7 @@
 package com.promcteam.divinity;
 
-import org.jetbrains.annotations.NotNull;
 import com.promcteam.divinity.modules.api.socketing.ModuleSocket;
+import org.jetbrains.annotations.NotNull;
 
 public class Perms {
 
