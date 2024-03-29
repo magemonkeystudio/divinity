@@ -79,7 +79,7 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
                     "&e" + name,
                     "&bCurrent: &a" + this.itemGenerator.getHandle().getFlags().contains(flag),
                     "&6Left-Click: &eToggle",
-                    "&6Drop: &eSet to default value")) {
+                    "&6Right-Click: &eSet to default value")) {
                 @Override
                 public void onLeftClick() {
                     Set<String> itemFlags = new HashSet<>(itemGenerator.getConfig().getStringList(PATH));

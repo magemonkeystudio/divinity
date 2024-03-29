@@ -71,7 +71,7 @@ public class UsesByLevelGUI extends AbstractEditorGUI {
                             "&e" + level,
                             "&bCurrent: &a" + map.get(level),
                             "&6Left-Click: &eSet",
-                            "&6Drop: &eRemove")) {
+                            "&6Right-Click: &eRemove")) {
                         @Override
                         public void onLeftClick() {
                             sendSetMessage(EditorGUI.ItemType.USES_BY_LEVEL.getTitle() + " " + level,
@@ -84,7 +84,7 @@ public class UsesByLevelGUI extends AbstractEditorGUI {
                         }
 
                         @Override
-                        public void onDrop() {
+                        public void onRightClick() {
                             map.remove(level);
                             setUsesByLevel(map);
                             saveAndReopen();

@@ -124,7 +124,7 @@ public class TrimmingListGUI extends AbstractEditorGUI {
                         "&eNone",
                         "&bWeight: &a" + weight,
                         "&6Left-Click: &eModify",
-                        "&6Drop: &eRemove")) {
+                        "&6Right-Click: &eRemove")) {
                     @Override
                     public void onLeftClick() {
                         sendSetMessage("weight for this trim",
@@ -136,7 +136,7 @@ public class TrimmingListGUI extends AbstractEditorGUI {
                     }
 
                     @Override
-                    public void onDrop() {
+                    public void onRightClick() {
                         itemGenerator.getConfig().remove(TrimmingListGUI.getPath(null));
                         saveAndReopen();
                     }
@@ -161,7 +161,7 @@ public class TrimmingListGUI extends AbstractEditorGUI {
                     }
 
                     @Override
-                    public void onDrop() {
+                    public void onRightClick() {
                         itemGenerator.getConfig().remove(getPath(trim));
                         saveAndReopen();
                     }
@@ -229,7 +229,7 @@ public class TrimmingListGUI extends AbstractEditorGUI {
                     "&e" + trimMaterial.substring(0, 1).toUpperCase() + trimMaterial.substring(1) + ' ' + trimPattern,
                     "&bWeight: &a" + weight,
                     "&6Left-Click: &eModify",
-                    "&6Drop: &eRemove");
+                    "&6Right-Click: &eRemove");
             ItemMeta meta = itemStack.getItemMeta();
             if (meta instanceof ArmorMeta) {
                 ((ArmorMeta) meta).setTrim(new org.bukkit.inventory.meta.trim.ArmorTrim(this.trimMaterial,

@@ -52,12 +52,12 @@ public class LoreGUI extends AbstractEditorGUI {
                     } :
                     new Slot(createItem(Material.WRITABLE_BOOK,
                             loreLine.isEmpty() ? "''" : loreLine,
-                            "&6Left-Click: &eAdd to left",
-                            "&6Right-Click: &eAdd to right",
-                            "&6Shift-Left-Click: &eSet",
-                            "&6Drop: &eRemove")) {
+                            "&6Left-Click: &eSet",
+                            "&6Shift-Left-Click: &eAdd to left",
+                            "&6Shift-Right-Click: &eAdd to right",
+                            "&6Right-Click: &eRemove")) {
                         @Override
-                        public void onLeftClick() {
+                        public void onShiftLeftClick() {
                             lore.add(k, "");
                             sendSetMessage("lore line " + k,
                                     null,
@@ -69,7 +69,7 @@ public class LoreGUI extends AbstractEditorGUI {
                         }
 
                         @Override
-                        public void onRightClick() {
+                        public void onShiftRightClick() {
                             lore.add(k + 1, "");
                             sendSetMessage("lore line " + (k + 1),
                                     null,
@@ -81,7 +81,7 @@ public class LoreGUI extends AbstractEditorGUI {
                         }
 
                         @Override
-                        public void onShiftLeftClick() {
+                        public void onLeftClick() {
                             sendSetMessage("lore line " + k,
                                     lore.get(k),
                                     s -> {
@@ -92,7 +92,7 @@ public class LoreGUI extends AbstractEditorGUI {
                         }
 
                         @Override
-                        public void onDrop() {
+                        public void onRightClick() {
                             lore.remove(k);
                             itemGenerator.getConfig().set(path, lore);
                             saveAndReopen();

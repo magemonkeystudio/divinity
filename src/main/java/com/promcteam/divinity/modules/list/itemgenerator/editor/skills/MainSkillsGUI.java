@@ -20,12 +20,12 @@ public class MainSkillsGUI extends AbstractEditorGUI {
         setSlot(0, new Slot(createItem(Material.BROWN_MUSHROOM,
                 "&eMinimum skills",
                 "&bCurrent: &a" + itemGenerator.getHandle().getAbilityGenerator().getMinAmount(),
-                "&6Shift-Left-Click: &eSet",
-                "&6Left-Click: &eDecrease",
-                "&6Right-Click: &eIncrease",
-                "&6Drop: &eSet to default value")) {
+                "&6Left-Click: &eSet",
+                "&6Shift-Left-Click: &eDecrease",
+                "&6Shift-Right-Click: &eIncrease",
+                "&6Right-Click: &eSet to default value")) {
             @Override
-            public void onLeftClick() {
+            public void onShiftLeftClick() {
                 itemGenerator.getConfig()
                         .set(EditorGUI.ItemType.SKILLS.getPath() + ".minimum",
                                 Math.max(0, itemGenerator.getHandle().getAbilityGenerator().getMinAmount() - 1));
@@ -33,7 +33,7 @@ public class MainSkillsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onRightClick() {
+            public void onShiftRightClick() {
                 itemGenerator.getConfig()
                         .set(EditorGUI.ItemType.SKILLS.getPath() + ".minimum",
                                 itemGenerator.getHandle().getAbilityGenerator().getMinAmount() + 1);
@@ -41,7 +41,7 @@ public class MainSkillsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onShiftLeftClick() {
+            public void onLeftClick() {
                 sendSetMessage(ItemType.MINIMUM.name() + " skills",
                         String.valueOf(itemGenerator.getHandle().getAbilityGenerator().getMinAmount()),
                         s -> {
@@ -52,7 +52,7 @@ public class MainSkillsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 setDefault(EditorGUI.ItemType.SKILLS.getPath() + ".minimum");
                 saveAndReopen();
             }
@@ -60,12 +60,12 @@ public class MainSkillsGUI extends AbstractEditorGUI {
         setSlot(1, new Slot(createItem(Material.RED_MUSHROOM,
                 "&eMaximum skills",
                 "&bCurrent: &a" + itemGenerator.getHandle().getAbilityGenerator().getMaxAmount(),
-                "&6Shift-Left-Click: &eSet",
-                "&6Left-Click: &eDecrease",
-                "&6Right-Click: &eIncrease",
-                "&6Drop: &eSet to default value")) {
+                "&6Left-Click: &eSet",
+                "&6Shift-Left-Click: &eDecrease",
+                "&6Shift-Right-Click: &eIncrease",
+                "&6Right-Click: &eSet to default value")) {
             @Override
-            public void onLeftClick() {
+            public void onShiftLeftClick() {
                 itemGenerator.getConfig()
                         .set(EditorGUI.ItemType.SKILLS.getPath() + ".maximum",
                                 Math.max(0, itemGenerator.getHandle().getAbilityGenerator().getMaxAmount() - 1));
@@ -73,7 +73,7 @@ public class MainSkillsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onRightClick() {
+            public void onShiftRightClick() {
                 itemGenerator.getConfig()
                         .set(EditorGUI.ItemType.SKILLS.getPath() + ".maximum",
                                 itemGenerator.getHandle().getAbilityGenerator().getMaxAmount() + 1);
@@ -81,7 +81,7 @@ public class MainSkillsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onShiftLeftClick() {
+            public void onLeftClick() {
                 sendSetMessage(ItemType.MAXIMUM.name() + " skills",
                         String.valueOf(itemGenerator.getHandle().getAbilityGenerator().getMaxAmount()),
                         s -> {
@@ -92,14 +92,14 @@ public class MainSkillsGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 setDefault(EditorGUI.ItemType.SKILLS.getPath() + ".maximum");
                 saveAndReopen();
             }
         });
         setSlot(2, new Slot(createItem(Material.FIRE_CHARGE,
                 "&eList of skills",
-                "&6Left-Click: &eModify")) {
+                "&eModify")) {
             @Override
             public void onLeftClick() {
                 openSubMenu(new SkillListGUI(player, itemGenerator));

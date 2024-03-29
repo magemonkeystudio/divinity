@@ -33,10 +33,17 @@ public class MainMaterialsGUI extends AbstractEditorGUI {
                         : Material.BARRIER,
                 "&eIs whitelist/reversed",
                 "&bCurrent: &a" + reversed,
-                "&6Left-Click: &eToggle")) {
+                "&6Left-Click: &eToggle",
+                "&6Right-Click: &eSet to default value")) {
             @Override
             public void onLeftClick() {
                 itemGenerator.getConfig().set(ItemType.REVERSE.getPath(), !reversed);
+                saveAndReopen();
+            }
+
+            @Override
+            public void onRightClick() {
+                setDefault(ItemType.REVERSE.getPath());
                 saveAndReopen();
             }
         });

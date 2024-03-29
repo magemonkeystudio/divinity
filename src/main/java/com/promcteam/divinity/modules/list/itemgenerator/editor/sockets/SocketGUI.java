@@ -30,12 +30,12 @@ public class SocketGUI extends AbstractEditorGUI {
         setSlot(0, new Slot(createItem(Material.BROWN_MUSHROOM,
                 "&eMinimum " + this.name + " sockets",
                 "&bCurrent: &a" + itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MINIMUM.getPath()),
-                "&6Shift-Left-Click: &eSet",
-                "&6Left-Click: &eDecrease",
-                "&6Right-Click: &eIncrease",
-                "&6Drop: &eSet to default value")) {
+                "&6Left-Click: &eSet",
+                "&6Shift-Left-Click: &eDecrease",
+                "&6Shift-Right-Click: &eIncrease",
+                "&6Right-Click: &eSet to default value")) {
             @Override
-            public void onLeftClick() {
+            public void onShiftLeftClick() {
                 itemGenerator.getConfig()
                         .set(path + MainStatsGUI.ItemType.MINIMUM.getPath(),
                                 Math.max(0,
@@ -45,7 +45,7 @@ public class SocketGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onRightClick() {
+            public void onShiftRightClick() {
                 itemGenerator.getConfig()
                         .set(path + MainStatsGUI.ItemType.MINIMUM.getPath(),
                                 Math.max(0,
@@ -55,7 +55,7 @@ public class SocketGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onShiftLeftClick() {
+            public void onLeftClick() {
                 sendSetMessage(MainStatsGUI.ItemType.MINIMUM.name().toLowerCase() + ' ' + name + " sockets",
                         String.valueOf(itemGenerator.getConfig()
                                 .getInt(path + MainStatsGUI.ItemType.MINIMUM.getPath())),
@@ -71,7 +71,7 @@ public class SocketGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(path + MainStatsGUI.ItemType.MINIMUM.getPath(), 0);
                 saveAndReopen();
             }
@@ -79,12 +79,12 @@ public class SocketGUI extends AbstractEditorGUI {
         setSlot(1, new Slot(createItem(Material.RED_MUSHROOM,
                 "&eMaximum " + this.name + " sockets",
                 "&bCurrent: &a" + itemGenerator.getConfig().getInt(path + MainStatsGUI.ItemType.MAXIMUM.getPath()),
-                "&6Shift-Left-Click: &eSet",
-                "&6Left-Click: &eDecrease",
-                "&6Right-Click: &eIncrease",
-                "&6Drop: &eSet to default value")) {
+                "&6Left-Click: &eSet",
+                "&6Shift-Left-Click: &eDecrease",
+                "&6Shift-Right-Click: &eIncrease",
+                "&6Right-Click: &eSet to default value")) {
             @Override
-            public void onLeftClick() {
+            public void onShiftLeftClick() {
                 itemGenerator.getConfig()
                         .set(path + MainStatsGUI.ItemType.MAXIMUM.getPath(),
                                 Math.max(0,
@@ -94,7 +94,7 @@ public class SocketGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onRightClick() {
+            public void onShiftRightClick() {
                 itemGenerator.getConfig()
                         .set(path + MainStatsGUI.ItemType.MAXIMUM.getPath(),
                                 Math.max(0,
@@ -104,7 +104,7 @@ public class SocketGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onShiftLeftClick() {
+            public void onLeftClick() {
                 sendSetMessage(MainStatsGUI.ItemType.MAXIMUM.name().toLowerCase() + ' ' + name + " sockets",
                         String.valueOf(itemGenerator.getConfig()
                                 .getInt(path + MainStatsGUI.ItemType.MAXIMUM.getPath())),
@@ -120,7 +120,7 @@ public class SocketGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(path + MainStatsGUI.ItemType.MAXIMUM.getPath(), 0);
                 saveAndReopen();
             }
@@ -133,7 +133,8 @@ public class SocketGUI extends AbstractEditorGUI {
                         "&a----------",
                         "&f%current%",
                         "&a----------",
-                        "&6Left-Click: &eModify")
+                        "&6Left-Click: &eModify",
+                        "&6Right-Click: &eSet to default value")
         )) {
             @Override
             public void onLeftClick() {
@@ -164,8 +165,7 @@ public class SocketGUI extends AbstractEditorGUI {
                 "&eList of chances per tier", StringUT.replace(CURRENT_PLACEHOLDER, lore,
                         "&bCurrent:",
                         "%current%",
-                        "&6Left-Click: &eModify",
-                        "&6Drop: &eSet to default value"))) {
+                        "&eModify"))) {
             @Override
             public void onLeftClick() {
                 openSubMenu(new SocketListGUI(player, itemGenerator, name));

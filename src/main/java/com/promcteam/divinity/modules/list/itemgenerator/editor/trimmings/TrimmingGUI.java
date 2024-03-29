@@ -26,7 +26,7 @@ public class TrimmingGUI extends AbstractEditorGUI {
         setSlot(0, new Slot(createItem(fromMaterial(entry.getArmorTrim().getMaterial()),
                 "&eTrim Material",
                 "&bCurrent: &a" + name.substring(0, 1).toUpperCase() + name.substring(1),
-                "&6Left-Click: &eModify")) {
+                "&eModify")) {
             @Override
             public void onLeftClick() {
                 openSubMenu(new TrimmingMaterialGUI(player, itemGenerator, entry));
@@ -36,7 +36,7 @@ public class TrimmingGUI extends AbstractEditorGUI {
         setSlot(1, new Slot(createItem(fromPattern(entry.getArmorTrim().getPattern()),
                 "&eTrim Pattern",
                 "&bCurrent: &a" + name.substring(0, 1).toUpperCase() + name.substring(1),
-                "&6Left-Click: &eModify")) {
+                "&eModify")) {
             @Override
             public void onLeftClick() {
                 openSubMenu(new TrimmingPatternsGUI(player, itemGenerator, entry));
@@ -45,7 +45,7 @@ public class TrimmingGUI extends AbstractEditorGUI {
         setSlot(2, new Slot(createItem(Material.DROPPER,
                 "&eWeight",
                 "&bCurrent: &a" + entry.getWeight(),
-                "&6Left-Click: &eSet")) {
+                "&eSet")) {
             @Override
             public void onLeftClick() {
                 sendSetMessage("weight for this trim",

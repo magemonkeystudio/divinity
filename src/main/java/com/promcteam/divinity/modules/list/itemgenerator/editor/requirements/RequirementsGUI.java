@@ -77,7 +77,7 @@ public class RequirementsGUI extends AbstractEditorGUI {
                             "&e" + level,
                             "&bCurrent: &a" + requirements.get(level),
                             "&6Left-Click: &eSet",
-                            "&6Drop: &eRemove")) {
+                            "&6Right-Click: &eRemove")) {
                         @Override
                         public void onLeftClick() {
                             sendSetMessage("requirement for level " + level,
@@ -91,7 +91,7 @@ public class RequirementsGUI extends AbstractEditorGUI {
                         }
 
                         @Override
-                        public void onDrop() {
+                        public void onRightClick() {
                             TreeMap<Integer, String> requirements = getRequirements();
                             requirements.remove(level);
                             setRequirements(requirements);

@@ -58,7 +58,7 @@ public class ModelDataGUI extends AbstractEditorGUI {
                     } :
                     new Slot(createItem(Material.END_CRYSTAL,
                             "&e" + model,
-                            "&6Left-Click: &eRemove")) {
+                            "&eRemove")) {
                         @Override
                         public void onLeftClick() {
                             modelList.remove(model);

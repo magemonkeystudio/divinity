@@ -22,7 +22,7 @@ public class StatGUI extends AbstractEditorGUI {
                 "&eChance",
                 "&bCurrent: &a" + itemGenerator.getConfig().getDouble(ItemType.CHANCE.getPath(this.path)),
                 "&6Left-Click: &eSet",
-                "&6Drop: &eSet to default value")) {
+                "&6Right-Click: &eSet to default value")) {
             @Override
             public void onLeftClick() {
                 sendSetMessage(ItemType.CHANCE.getTitle(),
@@ -34,7 +34,7 @@ public class StatGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(ItemType.CHANCE.getPath(path), 0);
                 saveAndReopen();
             }
@@ -43,7 +43,7 @@ public class StatGUI extends AbstractEditorGUI {
                 "&eScale by Level",
                 "&bCurrent: &a" + itemGenerator.getConfig().getDouble(ItemType.SCALE_BY_LEVEL.getPath(this.path)),
                 "&6Left-Click: &eSet",
-                "&6Drop: &eSet to default value")) {
+                "&6Right-Click: &eSet to default value")) {
             @Override
             public void onLeftClick() {
                 sendSetMessage(ItemType.SCALE_BY_LEVEL.getTitle(),
@@ -55,7 +55,7 @@ public class StatGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(ItemType.SCALE_BY_LEVEL.getPath(path), 0);
                 saveAndReopen();
             }
@@ -64,7 +64,7 @@ public class StatGUI extends AbstractEditorGUI {
                 "&eMinimum Value",
                 "&bCurrent: &a" + itemGenerator.getConfig().getDouble(ItemType.MIN.getPath(this.path)),
                 "&6Left-Click: &eSet",
-                "&6Drop: &eSet to default value")) {
+                "&6Right-Click: &eSet to default value")) {
             @Override
             public void onLeftClick() {
                 sendSetMessage(ItemType.MIN.getTitle(),
@@ -76,7 +76,7 @@ public class StatGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(ItemType.MIN.getPath(path), 0);
                 saveAndReopen();
             }
@@ -85,7 +85,7 @@ public class StatGUI extends AbstractEditorGUI {
                 "&eMaximum Value",
                 "&bCurrent: &a" + itemGenerator.getConfig().getDouble(ItemType.MAX.getPath(this.path)),
                 "&6Left-Click: &eSet",
-                "&6Drop: &eSet to default value")) {
+                "&6Right-Click: &eSet to default value")) {
             @Override
             public void onLeftClick() {
                 sendSetMessage(ItemType.MAX.getTitle(),
@@ -97,7 +97,7 @@ public class StatGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(ItemType.MAX.getPath(path), 0);
                 saveAndReopen();
             }
@@ -107,7 +107,7 @@ public class StatGUI extends AbstractEditorGUI {
                 "&eFlat Range",
                 "&bCurrent: &a" + flatRange,
                 "&6Left-Click: &eToggle",
-                "&6Drop: &eSet to default value")) {
+                "&6Right-Click: &eSet to default value")) {
             @Override
             public void onLeftClick() {
                 itemGenerator.getConfig().set(ItemType.FLAT_RANGE.getPath(path), !flatRange);
@@ -115,7 +115,7 @@ public class StatGUI extends AbstractEditorGUI {
             }
 
             @Override
-            public void onDrop() {
+            public void onRightClick() {
                 itemGenerator.getConfig().set(ItemType.FLAT_RANGE.getPath(path), false);
                 saveAndReopen();
             }
@@ -126,7 +126,7 @@ public class StatGUI extends AbstractEditorGUI {
                     "&eRound",
                     "&bCurrent: &a" + round,
                     "&6Left-Click: &eToggle",
-                    "&6Drop: &eSet to default value")) {
+                    "&6Right-Click: &eSet to default value")) {
                 @Override
                 public void onLeftClick() {
                     itemGenerator.getConfig().set(ItemType.ROUND.getPath(path), !round);
@@ -134,7 +134,7 @@ public class StatGUI extends AbstractEditorGUI {
                 }
 
                 @Override
-                public void onDrop() {
+                public void onRightClick() {
                     itemGenerator.getConfig().set(ItemType.ROUND.getPath(path), false);
                     saveAndReopen();
                 }

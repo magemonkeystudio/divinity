@@ -70,7 +70,7 @@ public class EnchantmentListGUI extends AbstractEditorGUI {
                             "&e" + key,
                             "&bCurrent: &a" + map.get(key),
                             "&6Left-Click: &eSet",
-                            "&6Drop: &eRemove")) {
+                            "&6Right-Click: &eRemove")) {
                         @Override
                         public void onLeftClick() {
                             sendSetMessage("desired level range",
