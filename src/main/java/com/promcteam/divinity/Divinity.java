@@ -5,6 +5,7 @@ import com.promcteam.codex.CodexEngine;
 import com.promcteam.codex.commands.api.IGeneralCommand;
 import com.promcteam.codex.config.api.JYML;
 import com.promcteam.codex.hooks.Hooks;
+import com.promcteam.codex.migration.MigrationUtil;
 import com.promcteam.codex.registry.damage.DamageRegistry;
 import com.promcteam.divinity.command.BuffCommand;
 import com.promcteam.divinity.command.ModifyCommand;
@@ -74,11 +75,13 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
 
     public Divinity() {
         instance = this;
+        MigrationUtil.renameDirectory("plugins/ProRPGItems", "plugins/Divinity");
     }
 
     public Divinity(JavaPluginLoader loader, PluginDescriptionFile description, File dataFolder, File file) {
         super(loader, description, dataFolder, file);
         instance = this;
+        MigrationUtil.renameDirectory("plugins/ProRPGItems", "plugins/Divinity");
     }
 
     @Override
