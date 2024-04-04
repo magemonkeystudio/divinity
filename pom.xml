@@ -5,19 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.promcteam</groupId>
-        <artifactId>promc-parent</artifactId>
-        <version>1.20.4-R1-SNAPSHOT</version>
+        <groupId>studio.magemonkey</groupId>
+        <artifactId>magemonkey-parent</artifactId>
+        <version>1.20.4-SNAPSHOT</version>
     </parent>
+
+    <artifactId>divinity</artifactId>
+    <version>1.0.0-R0.1-SNAPSHOT</version>
+    <name>Divinity</name>
+    <description>Custom items, combat, and more!</description>
 
     <properties>
         <codex.version>1.0.0-R0.1-SNAPSHOT</codex.version>
         <fabled.version>1.0.0-R0.1-SNAPSHOT</fabled.version>
     </properties>
-
-    <artifactId>divinity</artifactId>
-    <version>1.0.0-R0.1-SNAPSHOT</version>
-    <name>Divinity</name>
 
     <repositories>
         <repository>
@@ -53,14 +54,14 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- ProMCTeam -->
+        <!-- Mage Monkey Studios -->
         <dependency>
-            <groupId>com.promcteam</groupId>
+            <groupId>studio.magemonkey</groupId>
             <artifactId>codex</artifactId>
             <version>${codex.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.promcteam</groupId>
+            <groupId>studio.magemonkey</groupId>
             <artifactId>fabled</artifactId>
             <version>${fabled.version}</version>
         </dependency>
@@ -229,9 +230,9 @@
 
     <developers>
         <developer>
-            <name>ProMCTeam</name>
-            <organization>ProMCTeam</organization>
-            <organizationUrl>https://promcteam.com</organizationUrl>
+            <name>Mage Monkey Studios</name>
+            <organization>Mage Monkey Studios</organization>
+            <organizationUrl>https://magemonkey.studio</organizationUrl>
         </developer>
     </developers>
 

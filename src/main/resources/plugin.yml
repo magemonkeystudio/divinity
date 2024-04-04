@@ -1,4 +1,4 @@
-main: com.promcteam.divinity.Divinity
+main: studio.magemonkey.divinity.Divinity
 version: ${project.version}
 name: ${project.name}
 authors: [ Travja, goflish ]
