@@ -1,21 +1,6 @@
 package studio.magemonkey.divinity.modules.list.combatlog;
 
-import studio.magemonkey.codex.hooks.Hooks;
-import studio.magemonkey.codex.manager.api.task.ITask;
-import studio.magemonkey.codex.util.ClickText;
-import studio.magemonkey.codex.util.MsgUT;
-import studio.magemonkey.codex.util.NumberUT;
-import studio.magemonkey.codex.util.StringUT;
-import studio.magemonkey.codex.util.constants.JStrings;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.hooks.EHook;
-import studio.magemonkey.divinity.manager.damage.DamageMeta;
-import studio.magemonkey.divinity.modules.EModule;
-import studio.magemonkey.divinity.modules.api.QModule;
-import studio.magemonkey.divinity.modules.list.combatlog.command.LogCommand;
-import studio.magemonkey.divinity.stats.EntityStats;
-import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
-import studio.magemonkey.fabled.api.DefaultCombatProtection;
+import lombok.Getter;
 import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
 import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import org.bukkit.Location;
@@ -33,6 +18,22 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.hooks.Hooks;
+import studio.magemonkey.codex.manager.api.task.ITask;
+import studio.magemonkey.codex.util.ClickText;
+import studio.magemonkey.codex.util.MsgUT;
+import studio.magemonkey.codex.util.NumberUT;
+import studio.magemonkey.codex.util.StringUT;
+import studio.magemonkey.codex.util.constants.JStrings;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.hooks.EHook;
+import studio.magemonkey.divinity.hooks.external.FabledHook;
+import studio.magemonkey.divinity.manager.damage.DamageMeta;
+import studio.magemonkey.divinity.modules.EModule;
+import studio.magemonkey.divinity.modules.api.QModule;
+import studio.magemonkey.divinity.modules.list.combatlog.command.LogCommand;
+import studio.magemonkey.divinity.stats.EntityStats;
+import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -52,6 +53,7 @@ public class CombatLogManager extends QModule {
     private List<String>      genLogFormatButtonDetailsText;
     private String            genLogFormatButtonWeaponName;
 
+    @Getter
     private boolean ignoreZeroDamage;
 
     private List<String>        indicatorOrder;
@@ -122,7 +124,7 @@ public class CombatLogManager extends QModule {
             if (soundStr != null && !soundStr.equalsIgnoreCase(JStrings.NONE)) {
                 try {
                     sound = Sound.valueOf(soundStr.toUpperCase());
-                } catch (IllegalArgumentException ex) {
+                } catch (IllegalArgumentException ignored) {
                 }
             }
 
@@ -274,18 +276,14 @@ public class CombatLogManager extends QModule {
                 }
 
                 List<String> damageDetails = new ArrayList<>(genLogFormatButtonDetailsText);
-                for (int i = 0; i < damageDetails.size(); i++) {
-                    String line = damageDetails.get(i)
-                            .replace("%enchantment_protection_factor%",
-                                    NumberUT.format(meta.getEnchantProtectionModifier()))
-                            .replace("%pvpe_modifier%", NumberUT.format(meta.getPvEDamageModifier()))
-                            .replace("%penetrate_modifier%", NumberUT.format(meta.getPenetrateModifier()))
-                            .replace("%block_modifier%", NumberUT.format(meta.getBlockModifier()))
-                            .replace("%critical_modifier%", NumberUT.format(meta.getCriticalModifier()))
-                            .replace("%direct_modifier%", NumberUT.format(meta.getDirectModifier()));
-
-                    damageDetails.set(i, line);
-                }
+                damageDetails.replaceAll(s -> s
+                        .replace("%enchantment_protection_factor%",
+                                NumberUT.format(meta.getEnchantProtectionModifier()))
+                        .replace("%pvpe_modifier%", NumberUT.format(meta.getPvEDamageModifier()))
+                        .replace("%penetrate_modifier%", NumberUT.format(meta.getPenetrateModifier()))
+                        .replace("%block_modifier%", NumberUT.format(meta.getBlockModifier()))
+                        .replace("%critical_modifier%", NumberUT.format(meta.getCriticalModifier()))
+                        .replace("%direct_modifier%", NumberUT.format(meta.getDirectModifier())));
 
                 ItemStack weapon = meta.getWeapon();
                 ClickText text   = new ClickText(main);
@@ -390,7 +388,7 @@ public class CombatLogManager extends QModule {
         String line = this.getRegenTypeFormat(regenSource);
         if (line == null) return;
 
-        List<String> list = Arrays.asList(line.replace("%hp%", NumberUT.format(health)));
+        List<String> list = List.of(line.replace("%hp%", NumberUT.format(health)));
 
         LivingEntity li  = (LivingEntity) e1;
         Location     loc = li.getEyeLocation().clone().add(0, 0.9D, 0);
@@ -398,18 +396,22 @@ public class CombatLogManager extends QModule {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onDamageIndicator(EntityDamageEvent ex) {
-        if (ex.isCancelled() || (ex instanceof EntityDamageByEntityEvent
-                && DefaultCombatProtection.isFakeDamageEvent((EntityDamageByEntityEvent) ex))) return;
-        if (!(ex.getEntity() instanceof LivingEntity)) return;
-        LivingEntity zertva = (LivingEntity) ex.getEntity();
+    public void onDamageIndicator(EntityDamageEvent e) {
+        if (e instanceof EntityDamageByEntityEvent && plugin.getPluginManager().isPluginEnabled("Fabled")) {
+            EntityDamageByEntityEvent ede        = (EntityDamageByEntityEvent) e;
+            FabledHook                fabledHook = (FabledHook) this.plugin.getHook(EHook.SKILL_API);
+            if (Objects.requireNonNull(fabledHook).isFakeDamage(ede)) return;
+        }
+
+        if (!(e.getEntity() instanceof LivingEntity)) return;
+        LivingEntity zertva = (LivingEntity) e.getEntity();
 
         // Quick fix for stupid plugins
         if (zertva instanceof ArmorStand || zertva.isInvulnerable()) return;
 
         DamageMeta meta = EntityStats.get(zertva).getLastDamageMeta();
-        if (meta == null || (ex.isCancelled() && !meta.isDodged())) return;
-        meta.addMissingDmg(ex.getDamage());
+        if (meta == null || (e.isCancelled() && !meta.isDodged())) return;
+        meta.addMissingDmg(e.getDamage());
 
         double dmgTotal = meta.getTotalDamage();
         if (dmgTotal <= 0 && this.ignoreZeroDamage && !meta.isDodged()) return;
@@ -423,10 +425,6 @@ public class CombatLogManager extends QModule {
 
     // -------------------------------------------------------------------- //
     // CLASSES
-
-    public boolean isIgnoreZeroDamage() {
-        return this.ignoreZeroDamage;
-    }
 
     enum MessageType {
 
