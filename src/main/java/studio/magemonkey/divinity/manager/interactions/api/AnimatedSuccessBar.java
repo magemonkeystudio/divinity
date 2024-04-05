@@ -1,13 +1,13 @@
 package studio.magemonkey.divinity.manager.interactions.api;
 
-import studio.magemonkey.codex.manager.api.task.ITask;
-import studio.magemonkey.codex.util.StringUT;
-import studio.magemonkey.codex.util.random.Rnd;
-import studio.magemonkey.divinity.Divinity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.codex.manager.api.task.ITask;
+import studio.magemonkey.codex.util.StringUT;
+import studio.magemonkey.codex.util.random.Rnd;
+import studio.magemonkey.divinity.Divinity;
 
 import java.util.function.Function;
 
@@ -147,9 +147,11 @@ public class AnimatedSuccessBar extends ICustomInteraction {
     }
 
     class Task extends ITask<Divinity> {
+        private final int calculatedResult;
 
         Task() {
             super(AnimatedSuccessBar.this.plugin, AnimatedSuccessBar.this.fillInterval, true);
+            this.calculatedResult = (int) Rnd.get(true);
         }
 
         @Override
@@ -162,13 +164,14 @@ public class AnimatedSuccessBar extends ICustomInteraction {
             display();
 
             if (succ + unsucc >= 100) {
-                plugin.getServer().getScheduler().runTask(plugin, () -> result.apply(succ >= minSuccess));
+                plugin.getServer().getScheduler()
+                        .runTask(plugin, () -> result.apply(succ >= minSuccess));
                 endAction();
                 this.stop();
                 return;
             }
 
-            if (Rnd.get(true) < chance) succ += fillAmount;
+            if (Rnd.get(true) < calculatedResult) succ += fillAmount;
             else unsucc += fillAmount;
         }
     }
