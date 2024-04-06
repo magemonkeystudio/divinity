@@ -99,11 +99,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.elmakers.mine.bukkit</groupId>
             <artifactId>MagicAPI</artifactId>
             <version>7.5</version>
@@ -112,7 +107,7 @@
         <dependency>
             <groupId>me.filoghost.holographicdisplays</groupId>
             <artifactId>holographicdisplays-api</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -224,7 +219,7 @@
     <licenses>
         <license>
             <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <url>https://www.opensource.org/licenses/mit-license.php</url>
         </license>
     </licenses>
 
