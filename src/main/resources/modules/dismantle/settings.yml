@@ -4,36 +4,36 @@ general:
     default:
       target-selectors:
         self:
-        - '[SELF]'
+          - '[SELF]'
       conditions:
-        list: []
+        list: [ ]
         actions-on-fail: 'null'
       action-executors:
-      - '[SOUND] ~name: BLOCK_ANVIL_USE; ~target: self;'
+        - '[SOUND] ~name: BLOCK_ANVIL_USE; ~target: self;'
   actions-error:
     default:
       target-selectors:
         self:
-        - '[SELF]'
+          - '[SELF]'
       conditions:
-        list: []
+        list: [ ]
         actions-on-fail: 'null'
       action-executors:
-      - '[SOUND] ~name: ENTITY_VILLAGER_NO; ~target: self;'
+        - '[SOUND] ~name: ENTITY_VILLAGER_NO; ~target: self;'
 item-format:
   name: '%TIER_COLOR%%ITEM_NAME% %ITEM_LEVEL_ROMAN%'
   lore:
-  - '&8&m               &f  「 INFO 」  &8&m               '
-  - '&7Tier: %TIER_NAME%'
-  - '%ITEM_CHARGES%'
-  - '%ITEM_LORE%'
-  - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
-  - '%TARGET_LEVEL%'
-  - '%TARGET_TYPE%'
-  - '%TARGET_MODULE%'
-  - '%TARGET_TIER%'
-  - '&8&m              &f  「 USAGE 」  &8&m              '
-  - '&7Drag & Drop onto item to dismantle.'
+    - '&8&m               &f  「 INFO 」  &8&m               '
+    - '&7Tier: %TIER_NAME%'
+    - '%ITEM_CHARGES%'
+    - '%ITEM_LORE%'
+    - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+    - '%TARGET_LEVEL%'
+    - '%TARGET_TYPE%'
+    - '%TARGET_MODULE%'
+    - '%TARGET_TIER%'
+    - '&8&m              &f  「 USAGE 」  &8&m              '
+    - '&7Drag & Drop onto item to dismantle.'
 gui:
   title: '&4&l<&4&nDismantle&4&l>'
   size: 54
@@ -65,7 +65,7 @@ gui:
       skull-hash: ''
       enchanted: false
       name: '&6&l&nResult'
-      lore: []
+      lore: [ ]
       slots: '22'
       type: NONE
     accept:
@@ -74,9 +74,9 @@ gui:
       enchanted: false
       name: '&a&l&nConfirm'
       lore:
-      - '&eDismantle Cost: &c$%cost%'
-      - '&7'
-      - '&eAll selected items will be dismantled.'
+        - '&eDismantle Cost: &c$%cost%'
+        - '&7'
+        - '&eAll selected items will be dismantled.'
       slots: '53'
       type: ACCEPT
     exit:
@@ -84,6 +84,6 @@ gui:
       skull-hash: ''
       enchanted: false
       name: '&c&l&nCancel'
-      lore: []
+      lore: [ ]
       slots: '45'
       type: EXIT

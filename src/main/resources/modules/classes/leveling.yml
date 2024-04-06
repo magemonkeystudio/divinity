@@ -6,14 +6,14 @@ world-levels:
 world-whitelist:
   reverse: false
   list:
-  - world
-  - world_nether
-  - world_the_end
+    - world
+    - world_nether
+    - world_the_end
 
 region-blacklist:
   reverse: false
   list:
-  - pvp_arena
+    - pvp_arena
 
 exp:
   use-tables: true
@@ -24,14 +24,14 @@ exp:
     style: SOLID
   sources:
     prevent-from:
-    - EGG
-    - DISPENSE_EGG
-    - SPAWNER
-    - SPAWNER_EGG
-    - SLIME_SPLIT
-    - BUILD_WITHER
-    - BUILD_SNOWMAN
-    - BUILD_IRONGOLEM
+      - EGG
+      - DISPENSE_EGG
+      - SPAWNER
+      - SPAWNER_EGG
+      - SLIME_SPLIT
+      - BUILD_WITHER
+      - BUILD_SNOWMAN
+      - BUILD_IRONGOLEM
     vanilla-mobs:
       default:
         min: 1

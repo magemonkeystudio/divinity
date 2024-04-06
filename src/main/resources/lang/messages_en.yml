@@ -1,34 +1,34 @@
 Command:
   Modify:
     List:
-    - '{message: ~prefix: false;}&8&m-----------&8&l[ &aQuantum RPG &7- &aModify &8&l]&8&m-----------'
-    - '&2> &a/qrpg modify name <Name> &7- Change display name of the item.'
-    - '&2> &a/qrpg modify lore add [text] [line] &7- Add lore line.'
-    - '&2> &a/qrpg modify lore del [line] &7- Remove lore line.'
-    - '&2> &a/qrpg modify lore clear &7- Clear item lore.'
-    - '&2> &a/qrpg modify flag add <flag> &7- Add a flag to item.'
-    - '&2> &a/qrpg modify flag del <flag> &7- Remove a flag from the item.'
-    - '&2> &a/qrpg modify enchant <enchantment> <level> &7- Enchants/Disenchants the
+      - '{message: ~prefix: false;}&8&m-----------&8&l[ &aQuantum RPG &7- &aModify &8&l]&8&m-----------'
+      - '&2> &a/qrpg modify name <Name> &7- Change display name of the item.'
+      - '&2> &a/qrpg modify lore add [text] [line] &7- Add lore line.'
+      - '&2> &a/qrpg modify lore del [line] &7- Remove lore line.'
+      - '&2> &a/qrpg modify lore clear &7- Clear item lore.'
+      - '&2> &a/qrpg modify flag add <flag> &7- Add a flag to item.'
+      - '&2> &a/qrpg modify flag del <flag> &7- Remove a flag from the item.'
+      - '&2> &a/qrpg modify enchant <enchantment> <level> &7- Enchants/Disenchants the
       item.'
-    - '&2> &a/qrpg modify potion <effect> <level> <duration> [ambient(true/false)]
+      - '&2> &a/qrpg modify potion <effect> <level> <duration> [ambient(true/false)]
       [particles(true/false)] [icon(true/false)] &7- Modify potion effects.'
-    - '&2> &a/qrpg modify color <r,g,b> &7- Change the color of leather armor or potion.'
+      - '&2> &a/qrpg modify color <r,g,b> &7- Change the color of leather armor or potion.'
     Desc: Modify an item.
     Done: Done!
   Set:
     List:
-    - '{message: ~prefix: false;}&8&m-----------&8&l[ &aQuantum RPG &7- &aSet &8&l]&8&m-----------'
-    - '&2> &a/qrpg set stat <type> <value> [position] &7- Set the attribute to item.'
-    - '&2> &a/qrpg set level <number> [position] &7- Add level requirements to item.'
-    - '&2> &a/qrpg set class <class1,class2,etc> [position] &7- Add class requirements
+      - '{message: ~prefix: false;}&8&m-----------&8&l[ &aQuantum RPG &7- &aSet &8&l]&8&m-----------'
+      - '&2> &a/qrpg set stat <type> <value> [position] &7- Set the attribute to item.'
+      - '&2> &a/qrpg set level <number> [position] &7- Add level requirements to item.'
+      - '&2> &a/qrpg set class <class1,class2,etc> [position] &7- Add class requirements
       to item.'
-    - '&2> &a/qrpg set damage <type> <min> <max> [position] &7- Add the damage type
+      - '&2> &a/qrpg set damage <type> <min> <max> [position] &7- Add the damage type
       to item.'
-    - '&2> &a/qrpg set defense <type> <value> [position] &7- Add the defense type
+      - '&2> &a/qrpg set defense <type> <value> [position] &7- Add the defense type
       to item.'
-    - '&2> &a/qrpg set ammo <type> [position] &7- Set the ammo type to bow.'
-    - '&2> &a/qrpg set hand <type> [position] &7- Set the hand type to item.'
-    - '&2> &a/qrpg set socket <type> [position] &7- Add an empty slot to item.'
+      - '&2> &a/qrpg set ammo <type> [position] &7- Set the ammo type to bow.'
+      - '&2> &a/qrpg set hand <type> [position] &7- Set the hand type to item.'
+      - '&2> &a/qrpg set socket <type> [position] &7- Add an empty slot to item.'
   Buff:
     Desc: Temporary increases specified attribute.
     Usage: <player> <type> <id> <amount> <duration>
@@ -41,10 +41,10 @@ Module:
       Desc: List of module items.
       Format:
         List:
-        - '{message: ~prefix: false;}'
-        - '&8&m-------- &e List of %module% &8&m--------'
-        - '&6%pos%. &e%item% %button_get%'
-        - '&8&m-------- &e Page &7%page% &e of &7 %pages% &8&m--------'
+          - '{message: ~prefix: false;}'
+          - '&8&m-------- &e List of %module% &8&m--------'
+          - '&6%pos%. &e%item% %button_get%'
+          - '&8&m-------- &e Page &7%page% &e of &7 %pages% &8&m--------'
       Button:
         Get:
           Name: '&a&l[Get Item]'
@@ -102,13 +102,13 @@ Module:
         AlreadyHave: '&e%item% &calready have this item socketed.'
       Result:
         Total:
-        - '{message: ~prefix: false;}&6&m                   &e&l[&e Socketing Result
+          - '{message: ~prefix: false;}&6&m                   &e&l[&e Socketing Result
           &6&l]&6&m                   &r'
-        - '&7'
-        - '&6Items Used:'
-        - '&e▸ %state-target% %item-target%'
-        - '&e▸ %state-source% %item-source%'
-        - '&7'
+          - '&7'
+          - '&6Items Used:'
+          - '&e▸ %state-target% %item-target%'
+          - '&e▸ %state-source% %item-source%'
+          - '&7'
         State:
           Success: '&a(Success) &f'
           Destroyed: '&c(Destroyed) &f'
@@ -211,10 +211,10 @@ Loot:
     Roll:
       Notify:
         List:
-        - '{message: ~prefix: false;}&8&m-----------&8&l[ &e&lRoll The Dice &8&l]&8&m-----------'
-        - '              &7Item: &a%item%&7!'
-        - '                      %roll%'
-        - '&8&m-----------&8&l[ &8&m-------------&8&l ]&8&m-----------'
+          - '{message: ~prefix: false;}&8&m-----------&8&l[ &e&lRoll The Dice &8&l]&8&m-----------'
+          - '              &7Item: &a%item%&7!'
+          - '                      %roll%'
+          - '&8&m-----------&8&l[ &8&m-------------&8&l ]&8&m-----------'
         Roll:
           Name: '&a&l[Roll!]'
           Hint: '&aClick me to roll the dice!'
@@ -335,11 +335,11 @@ Profiles:
       Unexpected: '&cAn unexpected error while creating profile! Please contact administrator.'
     Tip:
       Name:
-      - '{message: ~type: TITLES; ~fadeIn: 20; ~stay: -1; ~fadeOut: 20;}&b&lNew Profile'
-      - '&7Enter profile name...'
+        - '{message: ~type: TITLES; ~fadeIn: 20; ~stay: -1; ~fadeOut: 20;}&b&lNew Profile'
+        - '&7Enter profile name...'
       Error:
-      - '{message: ~type: TITLES; ~fadeIn: 20; ~stay: 60; ~fadeOut: 20;}&c&lError!'
-      - '&7See details in chat.'
+        - '{message: ~type: TITLES; ~fadeIn: 20; ~stay: 60; ~fadeOut: 20;}&c&lError!'
+        - '&7See details in chat.'
       Done: '{message: ~type: TITLES; ~fadeIn: 20; ~stay: 60; ~fadeOut: 20;}&a&lProfile
         Created!'
   Switch:
@@ -362,11 +362,11 @@ Refine:
         use: &e%stone%&c.'
     Result:
       Total:
-      - '{message: ~prefix: false;}&6&m                   &e&l[&e Refine Result &6&l]&6&m                   &r'
-      - '&7'
-      - '&e▸ %state-target% %item-target%'
-      - '&e▸ %state-source% %item-source%'
-      - '&7'
+        - '{message: ~prefix: false;}&6&m                   &e&l[&e Refine Result &6&l]&6&m                   &r'
+        - '&7'
+        - '&e▸ %state-target% %item-target%'
+        - '&e▸ %state-source% %item-source%'
+        - '&7'
       State:
         Success: '&a(Success) &f'
         Destroyed: '&c(Destroyed) &f'

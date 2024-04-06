@@ -25,7 +25,7 @@ gui:
       skull-hash: ''
       enchanted: false
       name: ''
-      lore: []
+      lore: [ ]
       slots: 2,3,4,5,6,10,11,15,16,19,28,29,25,34,33,38,39,40,41,42,12,21,30,14,23,32
       type: NONE
     filler_2:
@@ -37,10 +37,10 @@ gui:
       material: PURPLE_STAINED_GLASS_PANE
       name: '&5&lItem Slot'
       lore:
-      - '&f» &7Click on item with at least &fone'
-      - '&7free socket to put it into the GUI.'
-      - ''
-      - '&f» &7Click on item in GUI to take it back.'
+        - '&f» &7Click on item with at least &fone'
+        - '&7free socket to put it into the GUI.'
+        - ''
+        - '&f» &7Click on item in GUI to take it back.'
       slots: 11,29
       animation:
         auto-play: true
@@ -50,19 +50,19 @@ gui:
           material: MAGENTA_STAINED_GLASS_PANE
           name: '&d&lItem Slot'
           lore:
-          - '&f» &7Click on item with at least &fone'
-          - '&7free socket to put it into the GUI.'
-          - ''
-          - '&f» &7Click on item in GUI to take it back.'
+            - '&f» &7Click on item with at least &fone'
+            - '&7free socket to put it into the GUI.'
+            - ''
+            - '&f» &7Click on item in GUI to take it back.'
     
     filler_4_a3:
       material: PURPLE_STAINED_GLASS_PANE
       name: '&5&lGem Slot'
       lore:
-      - '&f» &7Click on a &fgem &7item in inventory'
-      - '&7to put it into the GUI.'
-      - ''
-      - '&f» &7Click on item in GUI to take it back.'
+        - '&f» &7Click on a &fgem &7item in inventory'
+        - '&7to put it into the GUI.'
+        - ''
+        - '&f» &7Click on item in GUI to take it back.'
       slots: 13,31
       animation:
         auto-play: true
@@ -72,10 +72,10 @@ gui:
           material: MAGENTA_STAINED_GLASS_PANE
           name: '&d&lGem Slot'
           lore:
-          - '&f» &7Click on a &fgem &7item in inventory'
-          - '&7to put it into the GUI.'
-          - ''
-          - '&f» &7Click on item in GUI to take it back.'
+            - '&f» &7Click on a &fgem &7item in inventory'
+            - '&7to put it into the GUI.'
+            - ''
+            - '&f» &7Click on item in GUI to take it back.'
     
     filler_4_a5:
       material: PURPLE_STAINED_GLASS_PANE
@@ -95,11 +95,11 @@ gui:
       enchanted: false
       name: '&2« &aAccept &2»'
       lore:
-      - '&a» &7Price: &a$%cost%'
-      - '&a» &7Balance: &a$%balance%'
-      - '&a» &7Success Chance: &a%chance%%'
-      - '&7'
-      - '&7In case of failure your item will be &cdestroyed&7.'
+        - '&a» &7Price: &a$%cost%'
+        - '&a» &7Balance: &a$%balance%'
+        - '&a» &7Success Chance: &a%chance%%'
+        - '&7'
+        - '&7In case of failure your item will be &cdestroyed&7.'
       slots: 26
       type: ACCEPT
     exit:
@@ -107,6 +107,6 @@ gui:
       skull-hash: ''
       enchanted: false
       name: '&4« &cCancel &4»'
-      lore: []
+      lore: [ ]
       slots: 18
       type: EXIT

@@ -26,8 +26,8 @@ gui:
       enchanted: false
       name: '&2« &aSell &2»'
       lore:
-      - '&eTotal cost:             &6$%cost%'
-      - '&8&m                                      '
-      - '&7Sell all items in GUI.'
+        - '&eTotal cost:             &6$%cost%'
+        - '&8&m                                      '
+        - '&7Sell all items in GUI.'
       slots: '49'
       type: ACCEPT

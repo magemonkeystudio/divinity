@@ -1,11 +1,11 @@
 material: ARROW
 name: 'Flame Arrow'
 lore:
-- '&f⚔ &7Fire Damage: &a+10%'
-- '&f⚔ &7Fire Defense: &c-3%'
-- ''
-- '&7This arrow will &fignite&7 the enemy'
-- '&7for &f5 seconds&7 on hit.'
+  - '&f⚔ &7Fire Damage: &a+10%'
+  - '&f⚔ &7Fire Defense: &c-3%'
+  - ''
+  - '&7This arrow will &fignite&7 the enemy'
+  - '&7for &f5 seconds&7 on hit.'
 tier: common
 level:
   min: 1
@@ -24,22 +24,22 @@ on-fly-actions:
   default:
     target-selectors:
       self:
-      - '[SELF]'
+        - '[SELF]'
     conditions:
-      list: []
+      list: [ ]
       actions-on-fail: 'null'
     action-executors:
-    - '[PARTICLE_SIMPLE] ~name: FLAME; ~amount: 1; ~offset:0,0,0; ~speed: 0; ~target:
+      - '[PARTICLE_SIMPLE] ~name: FLAME; ~amount: 1; ~offset:0,0,0; ~speed: 0; ~target:
       self;'
 on-hit-actions:
   default:
     target-selectors:
       sight:
-      - '[FROM_SIGHT] ~distance: 3; ~party-member: false; ~attackable: true; ~allow-self: false;'
+        - '[FROM_SIGHT] ~distance: 3; ~party-member: false; ~attackable: true; ~allow-self: false;'
     conditions:
-      list: []
+      list: [ ]
       actions-on-fail: 'null'
     action-executors:
-    - '[PARTICLE_SIMPLE] ~name: LAVA; ~offset:0.3,0.3,0.3; ~speed: 0.2; ~amount: 20; ~target: sight;'
+      - '[PARTICLE_SIMPLE] ~name: LAVA; ~offset:0.3,0.3,0.3; ~speed: 0.2; ~amount: 20; ~target: sight;'
 
-target-requirements: {}
+target-requirements: { }

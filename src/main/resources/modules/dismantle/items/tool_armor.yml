@@ -1,9 +1,9 @@
 material: SHEARS
 name: Armor Dismantle Tool
-lore: []
+lore: [ ]
 tier: common
 item-flags:
-- '*'
+  - '*'
 uses-by-level:
   '1': 1
   '2': 2
@@ -13,8 +13,8 @@ level:
   max: 3
 target-requirements:
   type:
-  - ARMOR
+    - ARMOR
   level:
     '1': 1
   module:
-  - '*'
+    - '*'

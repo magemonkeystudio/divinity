@@ -5,16 +5,16 @@ glow:
   ignored-items:
     vanilla: false
     by-material:
-    - BEDROCK
-    - BARRIER
+      - BEDROCK
+      - BARRIER
     by-name:
-    - 'some word'
-    - '***{'
-    - 'QS_SHOWCASE'
+      - 'some word'
+      - '***{'
+      - 'QS_SHOWCASE'
     by-lore:
-    - 'some lore word'
+      - 'some lore word'
     by-module:
-    - 'module name'
+      - 'module name'
 
 hint:
   enabled: true
@@ -24,13 +24,13 @@ hint:
   ignored-items:
     vanilla: false
     by-material:
-    - BEDROCK
-    - BARRIER
+      - BEDROCK
+      - BARRIER
     by-name:
-    - 'some word'
-    - '***{'
-    - 'QS_SHOWCASE'
+      - 'some word'
+      - '***{'
+      - 'QS_SHOWCASE'
     by-lore:
-    - 'some lore word'
+      - 'some lore word'
     by-module:
-    - 'module name'
+      - 'module name'

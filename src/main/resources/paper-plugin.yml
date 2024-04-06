@@ -1,7 +1,8 @@
-main: su.nightexpress.quantumrpg.QuantumRPG
+main: studio.magemonkey.divinity.Divinity
 version: ${project.version}
 name: ${project.name}
 provides:
+  - ProRPGItems
   - QuantumRPG
 api-version: '1.19'
 authors:
@@ -11,13 +12,10 @@ description: The most advanced, customizable and configurable RPG-Core plugin!
 has-open-classloader: true
 
 dependencies:
-  - name: ProMCCore
+  - name: Codex
     required: true
     bootstrap: true
-  - name: ProSkillAPI
-    required: false
-    bootstrap: true
-  - name: SkillAPI
+  - name: Fabled
     required: false
     bootstrap: true
   - name: SkillPro
@@ -56,7 +54,7 @@ dependencies:
   - name: RacesOfThana
     required: false
     bootstrap: true
-  - name : Vault
+  - name: Vault
     required: false
     bootstrap: true
   - name: WorldGuard
@@ -66,81 +64,79 @@ dependencies:
     required: false
     bootstrap: true
 load-after:
-  - name: ProMCCore
+  - name: Codex
     boostrap: false
-  - name: ProSkillAPI
+  - name: Fabled
     boostrap: falsed
-  - name: SkillAPI
-    boostrap: false
   - name: Magic
     boostrap: false
 
 permissions:
-  quantumrpg.admin:
+  divinity.admin:
     description: Full access
     default: op
     children:
-      quantumrpg.user: true
-      quantumrpg.bypass: true
-      quantumrpg.classes: true
-      quantumrpg.dismantle: true
-      quantumrpg.extractor: true
-      quantumrpg.combatlog: true
-      quantumrpg.identify: true
-      quantumrpg.fortify: true
-      quantumrpg.magicdust: true
-      quantumrpg.party: true
-      quantumrpg.refine: true
-      quantumrpg.repair: true
-      quantumrpg.sell: true
-      quantumrpg.soulbound: true
+      divinity.user: true
+      divinity.bypass: true
+      divinity.classes: true
+      divinity.dismantle: true
+      divinity.extractor: true
+      divinity.combatlog: true
+      divinity.identify: true
+      divinity.fortify: true
+      divinity.magicdust: true
+      divinity.party: true
+      divinity.refine: true
+      divinity.repair: true
+      divinity.sell: true
+      divinity.soulbound: true
 
-  quantumrpg.user:
+  divinity.user:
     description: User access
     default: true
 
-  quantumrpg.bypass:
+  divinity.bypass:
     description: Bypass all the plugin restrictions and requirements.
     default: op
     children:
-      quantumrpg.bypass.requirement: true
-  quantumrpg.bypass.requirement:
+      divinity.bypass.requirement: true
+  divinity.bypass.requirement:
     description: Bypass all item player requirements.
     default: op
     children:
-      quantumrpg.bypass.class: true
-      quantumrpg.bypass.level: true
-      quantumrpg.bypass.soulbound: true
-      quantumrpg.bypass.untradeable: true
-  quantumrpg.bypass.requirement.level:
+      divinity.bypass.class: true
+      divinity.bypass.level: true
+      divinity.bypass.soulbound: true
+      divinity.bypass.untradeable: true
+  divinity.bypass.requirement.level:
     description: Bypass item player level requirement.
     default: op
-  quantumrpg.bypass.requirement.class:
+  divinity.bypass.requirement.class:
     description: Bypass item player class requirement.
     default: op
-  quantumrpg.bypass.requirement.soulbound:
+  divinity.bypass.requirement.soulbound:
     description: Bypass item player soulbound requirement.
     default: op
-  quantumrpg.bypass.requirement.untradeable:
+  divinity.bypass.requirement.untradeable:
     description: Bypass item untradeable requirement.
     default: op
 
   # Classes ----------------------------------------------------
-  quantumrpg.classes:
+  divinity.classes:
     description: Full access to Classes module.
     default: op
     children:
-      quantumrpg.classes.cmd: true
-      quantumrpg.classes.class.*: true
-  quantumrpg.classes.cmd:
+      divinity.classes.cmd: true
+      divinity.classes.class.*: true
+  divinity.classes.cmd:
     description: Full access to Classes commands.
     default: op
     children:
-      quantumrpg.classes.cmd.cast: true
-      quantumrpg.classes.cmd.select: true
-      quantumrpg.classes.cmd.skills: true
-      quantumrpg.classes.cmd.stats: true
-      quantumrpg.classes.cmd.aspects: true
+      divinity.classes.cmd.cast: true
+      divinity.classes.cmd.select: true
+      divinity.classes.cmd.skills: true
+      divinity.classes.cmd.stats: true
+      divinity.classes.cmd.aspects: true
       quantumrpg.classes.cmd.addexp: true
       quantumrpg.classes.cmd.addlevel: true
       quantumrpg.classes.cmd.addskill: true

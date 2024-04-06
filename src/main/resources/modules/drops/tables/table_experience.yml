@@ -9,7 +9,7 @@ world-whitelist:
   - world_the_end
 biome-whitelist:
   - '*'
-region-blacklist: []
+region-blacklist: [ ]
 non-items:
   experience:
     chance: 100.0

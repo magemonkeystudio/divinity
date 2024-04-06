@@ -1,39 +1,39 @@
 name: '&aArcher'
 permission-required: false
 description:
-- '&7Archer''s power is in &frange combat&7.'
-- '&7Stay away from the enemies and'
-- '&7kill them with your bow!'
-- '&7'
-- '&a&lClass Stats:'
-- '&a▸ &7%att_name_ARMOR%: &a%att_start_ARMOR% &7(&f+%att_lvl_ARMOR%&7)'
-- '&a▸ &7%att_name_ARMOR_TOUGHNESS%: &a%att_start_ARMOR_TOUGHNESS% &7(&f+%att_lvl_ARMOR_TOUGHNESS%&7)'
-- '&a▸ &7%att_name_ATTACK_DAMAGE%: &a%att_start_ATTACK_DAMAGE% &7(&f+%att_lvl_ATTACK_DAMAGE%&7)'
-- '&a▸ &7%att_name_ATTACK_SPEED%: &a%att_start_ATTACK_SPEED% &7(&f+%att_lvl_ATTACK_SPEED%&7)'
-- '&a▸ &7%att_name_FLYING_SPEED%: &a%att_start_FLYING_SPEED% &7(&f+%att_lvl_FLYING_SPEED%&7)'
-- '&a▸ &7%att_name_KNOCKBACK_RESISTANCE%: &a%att_start_KNOCKBACK_RESISTANCE% &7(&f+%att_lvl_KNOCKBACK_RESISTANCE%&7)'
-- '&a▸ &7%att_name_LUCK%: &a%att_start_LUCK% &7(&f+%att_lvl_LUCK%&7)'
-- '&a▸ &7%att_name_MAX_HEALTH%: &a%att_start_MAX_HEALTH% &7(&f+%att_lvl_MAX_HEALTH%&7)'
-- '&a▸ &7%att_name_MOVEMENT_SPEED%: &a%att_start_MOVEMENT_SPEED% &7(&f+%att_lvl_MOVEMENT_SPEED%&7)'
-- '&7'
-- '&e&lSub Classes:'
-- '&b▸ &bIce Archer: &7Punish enemies with the power of ice!'
-- '&c▸ &cFire Archer: &7Burn enemies in the hell flames!'
+  - '&7Archer''s power is in &frange combat&7.'
+  - '&7Stay away from the enemies and'
+  - '&7kill them with your bow!'
+  - '&7'
+  - '&a&lClass Stats:'
+  - '&a▸ &7%att_name_ARMOR%: &a%att_start_ARMOR% &7(&f+%att_lvl_ARMOR%&7)'
+  - '&a▸ &7%att_name_ARMOR_TOUGHNESS%: &a%att_start_ARMOR_TOUGHNESS% &7(&f+%att_lvl_ARMOR_TOUGHNESS%&7)'
+  - '&a▸ &7%att_name_ATTACK_DAMAGE%: &a%att_start_ATTACK_DAMAGE% &7(&f+%att_lvl_ATTACK_DAMAGE%&7)'
+  - '&a▸ &7%att_name_ATTACK_SPEED%: &a%att_start_ATTACK_SPEED% &7(&f+%att_lvl_ATTACK_SPEED%&7)'
+  - '&a▸ &7%att_name_FLYING_SPEED%: &a%att_start_FLYING_SPEED% &7(&f+%att_lvl_FLYING_SPEED%&7)'
+  - '&a▸ &7%att_name_KNOCKBACK_RESISTANCE%: &a%att_start_KNOCKBACK_RESISTANCE% &7(&f+%att_lvl_KNOCKBACK_RESISTANCE%&7)'
+  - '&a▸ &7%att_name_LUCK%: &a%att_start_LUCK% &7(&f+%att_lvl_LUCK%&7)'
+  - '&a▸ &7%att_name_MAX_HEALTH%: &a%att_start_MAX_HEALTH% &7(&f+%att_lvl_MAX_HEALTH%&7)'
+  - '&a▸ &7%att_name_MOVEMENT_SPEED%: &a%att_start_MOVEMENT_SPEED% &7(&f+%att_lvl_MOVEMENT_SPEED%&7)'
+  - '&7'
+  - '&e&lSub Classes:'
+  - '&b▸ &bIce Archer: &7Punish enemies with the power of ice!'
+  - '&c▸ &cFire Archer: &7Burn enemies in the hell flames!'
 icon:
   material: BOW
   name: '%name%'
   lore:
-  - '%description%'
+    - '%description%'
 actions-on-select:
   default:
     target-selectors:
       self:
-      - '[SELF]'
+        - '[SELF]'
     conditions:
-      list: []
+      list: [ ]
       on-fail: 'null'
     action-executors:
-    - '[COMMAND_PLAYER] ~message: me &eI''m &aArcher&e now!; ~target: self;'
+      - '[COMMAND_PLAYER] ~message: me &eI''m &aArcher&e now!; ~target: self;'
 leveling:
   start-level: 1
   max-level: 10
@@ -46,16 +46,16 @@ leveling:
       default:
         target-selectors:
           self:
-          - '[SELF]'
+            - '[SELF]'
         conditions:
-          list: []
+          list: [ ]
           on-fail: 'null'
         action-executors:
-        - '[COMMAND_PLAYER] ~message: me Leveled up!; ~target: self;'
+          - '[COMMAND_PLAYER] ~message: me Leveled up!; ~target: self;'
 sub-class:
   sub-classes:
-  - archer_fire
-  - archer_ice
+    - archer_fire
+    - archer_ice
   level-to-change: 10
 mana:
   symbol: ⚡
@@ -116,7 +116,7 @@ aspects:
     per-point-values:
       attributes:
         ARMOR: 0.05
-      stats: {}
+      stats: { }
       defense-types:
         physical: 0.17%
   DEXTERITY:
@@ -132,7 +132,7 @@ aspects:
     start-value: 0
     max-value: 10
     per-point-values:
-      attributes: {}
+      attributes: { }
       stats:
         COOLDOWN_REDUCE: 0.3
         MAX_MANA: 0.35
