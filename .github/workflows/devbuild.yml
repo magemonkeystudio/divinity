@@ -11,6 +11,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        name: Checkout repo
+        with:
+          token: ${{ secrets.ACTIONS_PAT }}
       - name: Configure git
         run: |
           git config user.name "Build Monkey"
@@ -38,8 +41,6 @@ jobs:
           exit $result_code
       - name: Tag release version
         run: |
-          git add .
-          git commit -m "[ci skip] Deploy dev version $version"
           version=$(mvn org.apache.maven.plugins:maven-help-plugin:3.1.0:evaluate -Dexpression=project.version -q -DforceStdout)
           git tag -a $version -m "Dev $version"
       - name: Update version
@@ -47,8 +48,8 @@ jobs:
       - name: Push to git
         run: |
           git add .
-          git reset settings.xml log.txt
-          git commit -m "Update dev version"
+          git reset settings.xml log.txt toolchains.xml
+          git commit -m "[ci skip] Update dev version"
           git push
           git push --tags
       - name: Notify Discord
