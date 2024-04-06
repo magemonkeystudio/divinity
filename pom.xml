@@ -37,8 +37,8 @@
         </repository>
         <!-- McMMO -->
         <repository>
-            <id>mcmmo-repo</id>
-            <url>https://nexus.neetgames.com/repository/maven-snapshots/</url>
+            <id>neetgames</id>
+            <url>https://nexus.neetgames.com/repository/maven-releases/</url>
         </repository>
     </repositories>
 
@@ -120,7 +120,7 @@
         <dependency>
             <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
-            <version>2.1.227</version>
+            <version>2.2.004</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
