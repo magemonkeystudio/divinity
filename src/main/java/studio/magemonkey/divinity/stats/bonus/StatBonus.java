@@ -1,11 +1,5 @@
 package studio.magemonkey.divinity.stats.bonus;
 
-import studio.magemonkey.codex.util.DataUT;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.stats.items.requirements.ItemRequirements;
-import studio.magemonkey.divinity.stats.items.requirements.api.DynamicUserRequirement;
-import studio.magemonkey.divinity.stats.items.requirements.api.UserRequirement;
-import studio.magemonkey.divinity.stats.items.requirements.user.ClassRequirement;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +8,12 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.util.DataUT;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.stats.items.requirements.ItemRequirements;
+import studio.magemonkey.divinity.stats.items.requirements.api.DynamicUserRequirement;
+import studio.magemonkey.divinity.stats.items.requirements.api.UserRequirement;
+import studio.magemonkey.divinity.stats.items.requirements.user.ClassRequirement;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -74,7 +74,8 @@ public class StatBonus {
             Condition<?> condition = null;
             for (UserRequirement<?> requirement : ItemRequirements.getUserRequirements()) {
                 if (!(requirement instanceof DynamicUserRequirement)) continue;
-                if (primitive.has(requirement.getKey())) {
+                if (primitive.getKeys().contains(requirement.getKey())) {
+                    // Sentropic, what are we putting here?
                 }
             }
 
