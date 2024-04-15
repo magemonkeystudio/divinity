@@ -1,10 +1,10 @@
 package studio.magemonkey.divinity.stats.items.attributes;
 
-import studio.magemonkey.codex.util.NumberUT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.codex.util.NumberUT;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.api.ItemLoreStat;
@@ -23,6 +23,7 @@ public class FabledAttribute extends ItemLoreStat<Integer> {
                 PersistentDataType.INTEGER);
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_skillapi_attr_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_skillapi_attr_" + this.getId()));
     }
 

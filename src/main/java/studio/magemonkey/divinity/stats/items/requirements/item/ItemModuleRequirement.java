@@ -1,5 +1,9 @@
 package studio.magemonkey.divinity.stats.items.requirements.item;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.config.api.ILangMsg;
 import studio.magemonkey.codex.modules.IModule;
 import studio.magemonkey.codex.util.DataUT;
@@ -11,10 +15,6 @@ import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.requirements.api.ItemRequirement;
 import studio.magemonkey.divinity.utils.LoreUT;
-import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +30,12 @@ public class ItemModuleRequirement extends ItemRequirement<String[]> {
                 name,
                 format,
                 ItemTags.PLACEHOLDER_REQ_ITEM_MODULE,
-                ItemTags.TAG_REQ_ITEM_LEVEL,
+                ItemTags.TAG_REQ_ITEM_MODULE,
                 DataUT.STRING_ARRAY);
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("divinity:req_item_levelmodule"));
+        this.keys.add(NamespacedKey.fromString("prorpgitems:req_item_levelmodule"));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_req_item_levelmodule"));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_req_item_levelmodule"));
     }

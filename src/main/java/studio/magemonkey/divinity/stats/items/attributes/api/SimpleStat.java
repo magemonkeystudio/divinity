@@ -1,5 +1,13 @@
 package studio.magemonkey.divinity.stats.items.attributes.api;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.util.ItemUT;
 import studio.magemonkey.codex.util.NumberUT;
 import studio.magemonkey.codex.util.StringUT;
@@ -15,14 +23,6 @@ import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.api.DuplicableItemLoreStat;
 import studio.magemonkey.divinity.stats.items.api.DynamicStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +54,7 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         ItemStats.registerDynamicStat(this);
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_stat_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_stat_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_stat_" + this.getId()));
     }

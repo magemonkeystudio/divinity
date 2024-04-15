@@ -1,5 +1,16 @@
 package studio.magemonkey.divinity.stats.items;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.attribute.AttributeModifier.Operation;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.api.meta.NBTAttribute;
 import studio.magemonkey.codex.modules.IModule;
 import studio.magemonkey.codex.util.DataUT;
@@ -14,17 +25,6 @@ import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
-import org.bukkit.NamespacedKey;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.attribute.AttributeModifier.Operation;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -42,21 +42,25 @@ public class ItemStats {
     private static final Divinity                                plugin           = Divinity.getInstance();
     private static final List<NamespacedKey>                     KEY_ID           = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID),
-            new NamespacedKey(plugin, "qrpg_" + ItemTags.TAG_ITEM_ID),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:" + ItemTags.TAG_ITEM_ID)),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_" + ItemTags.TAG_ITEM_ID)),
             Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_ID.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_MODULE       = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_MODULE),
-            new NamespacedKey(plugin, "qrpg_" + ItemTags.TAG_ITEM_MODULE),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_MODULE)),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_MODULE)),
             Objects.requireNonNull(NamespacedKey.fromString(
                     "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_MODULE.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_LEVEL        = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_LEVEL),
-            new NamespacedKey(plugin, "qrpg_" + ItemTags.TAG_ITEM_LEVEL),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_LEVEL)),
+                    Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_LEVEL)),
             Objects.requireNonNull(NamespacedKey.fromString(
                     "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_SOCKET       = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_SOCKET_RATE),
-            new NamespacedKey(plugin, "qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_SOCKET_RATE)),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE)),
             Objects.requireNonNull(NamespacedKey.fromString(
                     "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())));
     private static       DamageAttribute                         DAMAGE_DEFAULT;

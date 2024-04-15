@@ -28,6 +28,7 @@ public class AmmoAttribute extends ItemLoreStat<String> {
         this.type = type;
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_ammo_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:item_ammo" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_ammo" + this.getId()));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_ammo" + this.getId()));

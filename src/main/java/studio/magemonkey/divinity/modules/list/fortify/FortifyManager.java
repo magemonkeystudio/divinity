@@ -1,5 +1,12 @@
 package studio.magemonkey.divinity.modules.list.fortify;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.modules.IModule;
 import studio.magemonkey.codex.util.DataUT;
@@ -16,13 +23,6 @@ import studio.magemonkey.divinity.modules.list.fortify.command.FortifyCmd;
 import studio.magemonkey.divinity.modules.list.fortify.command.UnfortifyCmd;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.utils.LoreUT;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -31,7 +31,8 @@ public class FortifyManager extends QModuleDrop<FortifyItem> {
     private static final List<String>        LORE_KEY_FORTIFY = List.of("fortify", "qrpg_fortify");
     private static final List<NamespacedKey> META_KEY_FORTIFY = List.of(
             new NamespacedKey(Divinity.getInstance(), "FORTIFY_PROTECTION"),
-            new NamespacedKey(Divinity.getInstance(), "QRPG_FORTIFY_PROTECTION"),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:FORTIFY_PROTECTION")),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:QRPG_FORTIFY_PROTECTION")),
             Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_fortify_protection")));
     private              boolean             formatNameAsPrefix;
     private              String              formatNameText;

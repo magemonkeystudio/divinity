@@ -1,11 +1,11 @@
 package studio.magemonkey.divinity.stats.items.requirements.user;
 
-import studio.magemonkey.codex.util.DataUT;
-import studio.magemonkey.divinity.stats.items.ItemTags;
-import studio.magemonkey.divinity.stats.items.requirements.api.DynamicUserRequirement;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.codex.util.DataUT;
+import studio.magemonkey.divinity.stats.items.ItemTags;
+import studio.magemonkey.divinity.stats.items.requirements.api.DynamicUserRequirement;
 
 import java.util.UUID;
 
@@ -29,6 +29,7 @@ public abstract class AbstractOwnerRequirement extends DynamicUserRequirement<UU
         );
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_user_uuid_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:item_user_uuid" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_user_uuid" + this.getId()));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_user_uuid" + this.getId()));

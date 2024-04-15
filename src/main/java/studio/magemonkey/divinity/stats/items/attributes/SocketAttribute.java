@@ -1,11 +1,11 @@
 package studio.magemonkey.divinity.stats.items.attributes;
 
-import studio.magemonkey.codex.util.DataUT;
-import studio.magemonkey.codex.util.StringUT;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.util.DataUT;
+import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.modules.SocketItem;
 import studio.magemonkey.divinity.modules.api.socketing.ModuleSocket;
@@ -55,6 +55,7 @@ public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements
                 this.getTier().format(StringUT.color(formatValueFilled).replace("%name%", this.getName()));
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_socket_" + type.name().toLowerCase() + "_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:item_socket_" + type.name().toLowerCase() + this.getId()));
         this.keys.add(NamespacedKey.fromString(
                 "prorpgitems:qrpg_item_socket_" + type.name().toLowerCase() + this.getId()));

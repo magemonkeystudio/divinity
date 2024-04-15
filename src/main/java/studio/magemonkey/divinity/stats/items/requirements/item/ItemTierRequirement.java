@@ -1,5 +1,9 @@
 package studio.magemonkey.divinity.stats.items.requirements.item;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.config.api.ILangMsg;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.config.Config;
@@ -10,10 +14,6 @@ import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.requirements.api.ItemRequirement;
 import studio.magemonkey.divinity.stats.tiers.Tier;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
 public class ItemTierRequirement extends ItemRequirement<String> {
 
@@ -25,6 +25,7 @@ public class ItemTierRequirement extends ItemRequirement<String> {
                 PersistentDataType.STRING);
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:req_item_tier"));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_req_item_tiertier"));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_req_item_tiertier"));
     }

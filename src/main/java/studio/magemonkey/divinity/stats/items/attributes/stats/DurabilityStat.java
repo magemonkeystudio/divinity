@@ -1,14 +1,5 @@
 package studio.magemonkey.divinity.stats.items.attributes.stats;
 
-import studio.magemonkey.codex.util.DataUT;
-import studio.magemonkey.codex.util.random.Rnd;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.api.event.DivinityItemDamageEvent;
-import studio.magemonkey.divinity.config.EngineCfg;
-import studio.magemonkey.divinity.stats.items.ItemTags;
-import studio.magemonkey.divinity.stats.items.api.ItemLoreStat;
-import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
-import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -18,6 +9,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.util.DataUT;
+import studio.magemonkey.codex.util.random.Rnd;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.api.event.DivinityItemDamageEvent;
+import studio.magemonkey.divinity.config.EngineCfg;
+import studio.magemonkey.divinity.stats.items.ItemTags;
+import studio.magemonkey.divinity.stats.items.api.ItemLoreStat;
+import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
+import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 
 public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat {
     private double cap;
@@ -36,6 +36,7 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
         this.cap = cap;
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_stat_durability"));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_stat_durability"));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_stat_durability"));
     }

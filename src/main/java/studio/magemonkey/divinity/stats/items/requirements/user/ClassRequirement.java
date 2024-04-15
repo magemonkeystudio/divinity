@@ -1,5 +1,10 @@
 package studio.magemonkey.divinity.stats.items.requirements.user;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.config.api.ILangMsg;
 import studio.magemonkey.codex.util.DataUT;
 import studio.magemonkey.divinity.Divinity;
@@ -9,11 +14,6 @@ import studio.magemonkey.divinity.hooks.HookClass;
 import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.requirements.api.DynamicUserRequirement;
 import studio.magemonkey.divinity.utils.LoreUT;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ClassRequirement extends DynamicUserRequirement<String[]> {
 
@@ -30,6 +30,7 @@ public class ClassRequirement extends DynamicUserRequirement<String[]> {
                 DataUT.STRING_ARRAY);
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_user_class"));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_user_classclass"));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_user_classclass"));
     }

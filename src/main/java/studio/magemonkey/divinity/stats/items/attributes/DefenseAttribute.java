@@ -1,10 +1,5 @@
 package studio.magemonkey.divinity.stats.items.attributes;
 
-import studio.magemonkey.codex.util.ItemUT;
-import studio.magemonkey.codex.util.NumberUT;
-import studio.magemonkey.codex.util.StringUT;
-import studio.magemonkey.codex.util.constants.JStrings;
-import studio.magemonkey.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,6 +8,11 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.codex.util.NumberUT;
+import studio.magemonkey.codex.util.StringUT;
+import studio.magemonkey.codex.util.constants.JStrings;
+import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.modules.list.gems.GemManager;
 import studio.magemonkey.divinity.modules.list.gems.GemManager.Gem;
@@ -53,6 +53,7 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
         ItemStats.registerDynamicStat(this);
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_defense_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_defense_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_defense_" + this.getId()));
     }

@@ -25,6 +25,7 @@ public class HandAttribute extends ItemLoreStat<String> {
         this.type = type;
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_hand_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:item_hand" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_hand" + this.getId()));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_hand" + this.getId()));

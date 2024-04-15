@@ -1,16 +1,16 @@
 package studio.magemonkey.divinity.stats.items.requirements.user;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.config.api.ILangMsg;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.Perms;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.requirements.api.DynamicUserRequirement;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
 
 public class LevelRequirement extends DynamicUserRequirement<int[]> {
 
@@ -27,6 +27,7 @@ public class LevelRequirement extends DynamicUserRequirement<int[]> {
                 PersistentDataType.INTEGER_ARRAY);
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_user_level"));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_user_levellevel"));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_user_levellevel"));
     }

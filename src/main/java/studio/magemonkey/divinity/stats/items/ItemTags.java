@@ -24,6 +24,7 @@ public class ItemTags {
 
     public static final String TAG_REQ_ITEM_TYPE   = "REQ_ITEM_TYPE";
     public static final String TAG_REQ_ITEM_LEVEL  = "REQ_ITEM_LEVEL";
+    public static final String TAG_REQ_ITEM_MODULE = "REQ_ITEM_MODULE";
     public static final String TAG_REQ_ITEM_SOCKET = "REQ_ITEM_SOCKET";
     public static final String TAG_REQ_ITEM_TIER   = "REQ_ITEM_TIER";
 

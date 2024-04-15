@@ -1,12 +1,5 @@
 package studio.magemonkey.divinity.stats.items.attributes;
 
-import studio.magemonkey.codex.util.DataUT;
-import studio.magemonkey.codex.util.ItemUT;
-import studio.magemonkey.codex.util.NumberUT;
-import studio.magemonkey.codex.util.StringUT;
-import studio.magemonkey.codex.util.actions.ActionManipulator;
-import studio.magemonkey.codex.util.constants.JStrings;
-import studio.magemonkey.divinity.Divinity;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Entity;
@@ -17,6 +10,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.util.DataUT;
+import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.codex.util.NumberUT;
+import studio.magemonkey.codex.util.StringUT;
+import studio.magemonkey.codex.util.actions.ActionManipulator;
+import studio.magemonkey.codex.util.constants.JStrings;
+import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.modules.list.gems.GemManager;
 import studio.magemonkey.divinity.modules.list.gems.GemManager.Gem;
@@ -70,6 +70,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
         ItemStats.registerDynamicStat(this);
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_damage_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_damage_" + this.getId()));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_damage_" + this.getId()));
     }

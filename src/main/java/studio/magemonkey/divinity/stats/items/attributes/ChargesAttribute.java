@@ -22,6 +22,7 @@ public class ChargesAttribute extends ItemLoreStat<int[]> {
                 PersistentDataType.INTEGER_ARRAY);
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:item_charges"));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_item_chargesitem_charges"));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_item_chargesitem_charges"));
     }

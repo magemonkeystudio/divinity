@@ -1,5 +1,9 @@
 package studio.magemonkey.divinity.stats.items.requirements.item;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.config.api.ILangMsg;
 import studio.magemonkey.codex.util.DataUT;
 import studio.magemonkey.divinity.Divinity;
@@ -7,10 +11,6 @@ import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.attributes.SocketAttribute;
 import studio.magemonkey.divinity.stats.items.requirements.api.ItemRequirement;
-import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 public class ItemSocketRequirement extends ItemRequirement<String[]> {
 
@@ -27,6 +27,7 @@ public class ItemSocketRequirement extends ItemRequirement<String[]> {
                 DataUT.STRING_ARRAY);
 
         // Legacy keys
+        this.keys.add(NamespacedKey.fromString("prorpgitems:req_item_socket"));
         this.keys.add(NamespacedKey.fromString("prorpgitems:qrpg_req_item_socketsocket"));
         this.keys.add(NamespacedKey.fromString("quantumrpg:qrpg_req_item_socketsocket"));
     }
