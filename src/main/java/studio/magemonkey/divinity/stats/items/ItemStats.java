@@ -42,25 +42,25 @@ public class ItemStats {
     private static final Divinity                                plugin           = Divinity.getInstance();
     private static final List<NamespacedKey>                     KEY_ID           = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID),
-            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:" + ItemTags.TAG_ITEM_ID)),
-            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_" + ItemTags.TAG_ITEM_ID)),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:" + ItemTags.TAG_ITEM_ID.toLowerCase())),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_" + ItemTags.TAG_ITEM_ID.toLowerCase())),
             Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_ID.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_MODULE       = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_MODULE),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_MODULE)),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_MODULE)),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:" + ItemTags.TAG_ITEM_MODULE.toLowerCase())),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_" + ItemTags.TAG_ITEM_MODULE.toLowerCase())),
             Objects.requireNonNull(NamespacedKey.fromString(
                     "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_MODULE.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_LEVEL        = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_LEVEL),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_LEVEL)),
-                    Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_LEVEL)),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())),
             Objects.requireNonNull(NamespacedKey.fromString(
                     "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_SOCKET       = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_SOCKET_RATE),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:" + ItemTags.TAG_ITEM_SOCKET_RATE)),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE)),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())),
             Objects.requireNonNull(NamespacedKey.fromString(
                     "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())));
     private static       DamageAttribute                         DAMAGE_DEFAULT;

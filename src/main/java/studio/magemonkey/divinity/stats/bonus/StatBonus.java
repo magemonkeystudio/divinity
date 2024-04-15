@@ -16,12 +16,22 @@ import studio.magemonkey.divinity.stats.items.requirements.api.UserRequirement;
 import studio.magemonkey.divinity.stats.items.requirements.user.ClassRequirement;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class StatBonus {
-    private static final NamespacedKey VALUE           = new NamespacedKey(Divinity.getInstance(), "value");
-    private static final NamespacedKey PERCENT         = new NamespacedKey(Divinity.getInstance(), "percent");
-    private static final NamespacedKey CLASS_CONDITION = new NamespacedKey(Divinity.getInstance(), "class");
+    private static final List<NamespacedKey> VALUE = List.of(
+            new NamespacedKey(Divinity.getInstance(), "value"),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:value"))
+    );
+    private static final List<NamespacedKey> PERCENT = List.of(
+            new NamespacedKey(Divinity.getInstance(), "percent"),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:percent"))
+    );
+    private static final List<NamespacedKey> CLASS_CONDITION = List.of(
+            new NamespacedKey(Divinity.getInstance(), "class"),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:class"))
+    );
 
     public static PersistentDataType<PersistentDataContainer, StatBonus> DATA_TYPE = new PersistentDataType<>() {
         @NotNull
@@ -42,11 +52,11 @@ public class StatBonus {
                                                    @NotNull PersistentDataAdapterContext context) {
             PersistentDataContainer container = DataUT.itemPersistentDataContainer();
             if (complex.value.length == 1) {
-                container.set(VALUE, PersistentDataType.DOUBLE, complex.value[0]);
+                container.set(VALUE.get(0), PersistentDataType.DOUBLE, complex.value[0]);
             } else if (complex.value.length == 2) {
-                container.set(VALUE, DataUT.DOUBLE_ARRAY, complex.value);
+                container.set(VALUE.get(0), DataUT.DOUBLE_ARRAY, complex.value);
             }
-            if (complex.percent) container.set(PERCENT, DataUT.BOOLEAN, true);
+            if (complex.percent) container.set(PERCENT.get(0), DataUT.BOOLEAN, true);
             if (complex.condition != null) {
                 if (complex.condition.requirement instanceof ClassRequirement) {
                     container.set(complex.condition.requirement.getKey(),
@@ -62,34 +72,49 @@ public class StatBonus {
         public StatBonus fromPrimitive(@NotNull PersistentDataContainer primitive,
                                        @NotNull PersistentDataAdapterContext context) {
             double[] array = null;
-            if (primitive.has(VALUE, DataUT.DOUBLE_ARRAY)) {
-                array = primitive.get(VALUE, DataUT.DOUBLE_ARRAY);
+            for (NamespacedKey key : VALUE) {
+                if (primitive.has(key, DataUT.DOUBLE_ARRAY)) {
+                    array = primitive.get(key, DataUT.DOUBLE_ARRAY);
+                    break;
+                }
             }
-            if (array == null && primitive.has(VALUE, PersistentDataType.DOUBLE)) {
-                Double simple = primitive.get(VALUE, PersistentDataType.DOUBLE);
-                array = simple == null ? new double[]{0} : new double[]{simple};
+            if (array == null) {
+                for (NamespacedKey key : VALUE) {
+                    if (primitive.has(key, PersistentDataType.DOUBLE)) {
+                        Double simple = primitive.get(key, PersistentDataType.DOUBLE);
+                        if (simple != null) {
+                            array = new double[]{simple};
+                            break;
+                        }
+                    }
+                }
             }
             if (array == null) array = new double[]{0, 0};
 
             Condition<?> condition = null;
-            for (UserRequirement<?> requirement : ItemRequirements.getUserRequirements()) {
-                if (!(requirement instanceof DynamicUserRequirement)) continue;
-                if (primitive.getKeys().contains(requirement.getKey())) {
-                    // Sentropic, what are we putting here?
+            for (NamespacedKey key : CLASS_CONDITION) {
+                if (primitive.has(key, DataUT.STRING_ARRAY)) {
+                    String[] classCondition = primitive.get(key, DataUT.STRING_ARRAY);
+                    if (classCondition != null) {
+                        condition = new Condition<>(ItemRequirements.getUserRequirement(ClassRequirement.class),
+                                classCondition);
+                        break;
+                    }
                 }
             }
-
-
-            if (primitive.has(CLASS_CONDITION, DataUT.STRING_ARRAY)) {
-                String[] classCondition = primitive.get(CLASS_CONDITION, DataUT.STRING_ARRAY);
-                if (classCondition != null) {
-                    condition = new Condition<>(ItemRequirements.getUserRequirement(ClassRequirement.class),
-                            classCondition);
+            boolean percent = false;
+            if (array.length == 1) {
+                for (NamespacedKey key : PERCENT) {
+                    if (primitive.has(key, DataUT.BOOLEAN)) {
+                        Boolean value = primitive.get(key, DataUT.BOOLEAN);
+                        if (value != null) {
+                            percent = value;
+                            break;
+                        }
+                    }
                 }
             }
-            return new StatBonus(array,
-                    array.length == 1 ? primitive.getOrDefault(PERCENT, DataUT.BOOLEAN, false) : false,
-                    condition);
+            return new StatBonus(array, percent, condition);
         }
     };
 

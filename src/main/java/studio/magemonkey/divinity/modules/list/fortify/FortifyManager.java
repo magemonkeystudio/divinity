@@ -30,9 +30,9 @@ public class FortifyManager extends QModuleDrop<FortifyItem> {
 
     private static final List<String>        LORE_KEY_FORTIFY = List.of("fortify", "qrpg_fortify");
     private static final List<NamespacedKey> META_KEY_FORTIFY = List.of(
-            new NamespacedKey(Divinity.getInstance(), "FORTIFY_PROTECTION"),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:FORTIFY_PROTECTION")),
-            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:QRPG_FORTIFY_PROTECTION")),
+            new NamespacedKey(Divinity.getInstance(), "fortify_protection"),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:fortify_protection")),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_fortify_protection")),
             Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_fortify_protection")));
     private              boolean             formatNameAsPrefix;
     private              String              formatNameText;
