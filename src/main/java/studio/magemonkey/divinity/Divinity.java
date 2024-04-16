@@ -50,7 +50,7 @@ import java.io.File;
 import java.sql.SQLException;
 
 /**
- * @author © 2024 Mage Monkey Studios
+ * @author © 2024 MageMonkeyStudios
  */
 public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
 
