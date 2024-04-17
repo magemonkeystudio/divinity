@@ -49,7 +49,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- MageMonkeyStudios -->
+        <!-- MageMonkeyStudio -->
         <dependency>
             <groupId>studio.magemonkey</groupId>
             <artifactId>codex</artifactId>
@@ -213,8 +213,8 @@
 
     <developers>
         <developer>
-            <name>MageMonkeyStudios</name>
-            <organization>MageMonkeyStudios</organization>
+            <name>MageMonkeyStudio</name>
+            <organization>MageMonkeyStudio</organization>
             <organizationUrl>https://magemonkey.studio</organizationUrl>
         </developer>
     </developers>

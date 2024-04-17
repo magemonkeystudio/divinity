@@ -1,5 +1,5 @@
 /**
- * Copyright 2024 MageMonkeyStudios
+ * Copyright 2024 MageMonkeyStudio
  */
 package studio.magemonkey.divinity.modules.list.customitems;
 
