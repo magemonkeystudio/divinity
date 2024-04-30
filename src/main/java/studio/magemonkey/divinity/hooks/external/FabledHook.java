@@ -1,5 +1,16 @@
 package studio.magemonkey.divinity.hooks.external;
 
+import org.bukkit.Material;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.hooks.HookState;
 import studio.magemonkey.codex.hooks.NHook;
 import studio.magemonkey.codex.util.DataUT;
@@ -24,17 +35,6 @@ import studio.magemonkey.fabled.api.player.PlayerData;
 import studio.magemonkey.fabled.api.player.PlayerSkill;
 import studio.magemonkey.fabled.api.skills.Skill;
 import studio.magemonkey.fabled.manager.ProAttribute;
-import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -249,7 +249,11 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
                 Map<String, Integer> skills    = new HashMap<>();
                 PlayerInventory      inventory = player.getInventory();
                 for (int i : new int[]{inventory.getHeldItemSlot(), 36, 37, 38, 39, 40}) {
-                    for (Map.Entry<String, Integer> entry : getAbilities(inventory.getItem(i)).entrySet()) {
+                    ItemStack item = inventory.getItem(i);
+                    if (item == null) continue;
+
+                    AbilityGenerator.updateNamespace(item);
+                    for (Map.Entry<String, Integer> entry : getAbilities(item).entrySet()) {
                         String id    = entry.getKey();
                         int    level = entry.getValue();
                         if (!skills.containsKey(id) || level > skills.get(id)) {

@@ -1,5 +1,9 @@
 package studio.magemonkey.divinity.modules.list.itemgenerator.generators;
 
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.manager.types.ClickType;
 import studio.magemonkey.codex.util.DataUT;
@@ -9,10 +13,6 @@ import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import studio.magemonkey.divinity.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import studio.magemonkey.divinity.utils.LoreUT;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public class AbilityGenerator extends AbstractAttributeGenerator {
-
+    public static NamespacedKey                         LEGACY_KEY;
     public static NamespacedKey                         ABILITY_KEY;
     private final Map<AbilityGenerator.Ability, Double> abilities;
 
@@ -28,6 +28,7 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
                             @NotNull GeneratorItem generatorItem,
                             @NotNull String placeholder) {
         super(plugin, generatorItem, placeholder);
+        AbilityGenerator.LEGACY_KEY = NamespacedKey.fromString("prorpgitems:skills");
         AbilityGenerator.ABILITY_KEY = NamespacedKey.fromString("skills", plugin);
 
         JYML   cfg  = this.generatorItem.getConfig();
@@ -51,6 +52,17 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
                     cfg.getStringList(path2 + "lore-format"));
             this.abilities.put(ability, chance);
         }
+    }
+
+    public static void updateNamespace(@NotNull ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+
+        String[] abilityArray = DataUT.getStringArrayData(item, LEGACY_KEY);
+        if (abilityArray == null) return;
+
+        // Replace the legacy keyed ability with the new one
+        DataUT.setData(item, ABILITY_KEY, abilityArray);
     }
 
     @Override
