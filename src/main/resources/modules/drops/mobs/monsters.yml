@@ -4,6 +4,6 @@ vanilla-mobs:
   - MONSTER
 mythic-mobs:
   - '*'
-prevent-from: [ ]
+prevent-from: []
 drop-tables:
   - table_multi

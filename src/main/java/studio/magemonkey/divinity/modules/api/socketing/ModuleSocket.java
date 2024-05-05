@@ -81,7 +81,6 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
                     CollectionsUT.getEnum(cfg.getString(path2 + "color-failure", "RED"), ChatColor.class);
             long fillInterval = cfg.getLong(path2 + "fill-interval", 1L);
             int  fillAmount   = cfg.getInt(path2 + "fill-amount", 1);
-            int  minSuccess   = cfg.getInt(path2 + "min-success", 50);
 
             this.animation = new AnimatedSuccessBar.Builder(plugin, barTitle, barChar)
                     .setBarFormat(barFormat)
@@ -89,7 +88,7 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
                     .setColorSuccess(barColorGood == null ? ChatColor.GREEN : barColorGood)
                     .setColorBad(barColorBad == null ? ChatColor.RED : barColorBad)
                     .setBarSize(barSize).setFillInterval(fillInterval)
-                    .setFillAmount(fillAmount).setMinSuccess(minSuccess);
+                    .setFillAmount(fillAmount);
         }
 
         this.actionsComplete = new ActionManipulator(plugin, cfg, path + "actions-complete");
