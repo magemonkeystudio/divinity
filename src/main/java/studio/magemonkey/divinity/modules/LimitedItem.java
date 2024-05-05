@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class LimitedItem extends LeveledItem {
-
     protected TreeMap<Integer, Integer> chargesByLvl;
 
     // Creating new config

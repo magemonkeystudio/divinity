@@ -146,7 +146,7 @@ public abstract class ISocketGUI extends NGUI<Divinity> {
             // Send message before the item modifications to display items properly.
             this.getResultMessage(target, gem, false, fSave).send(p);
 
-            // Check if we should return target item to a plyer
+            // Check if we should return target item to a player
             // when socketing is failed.
             if (fSave || !this.module.isDestroyTargetOnFail()) {
                 // Check if we should wipe all item filled sockets

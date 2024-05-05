@@ -1,7 +1,6 @@
 package studio.magemonkey.divinity.modules;
 
 public class EModule {
-
     public static final String ARROWS         = "arrows";
     public static final String DISMANTLE      = "dismantle";
     public static final String DROPS          = "drops";
@@ -25,6 +24,4 @@ public class EModule {
     public static final String CUSTOM_ITEMS   = "custom_items";
     public static final String GEMS           = "gems";
     public static final String SELL           = "sell";
-
-
 }

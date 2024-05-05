@@ -37,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public abstract class ModuleItem extends LoadableItem {
-
     protected final QModuleDrop<?> module;
     protected       Divinity       plugin;
     protected       String                    name;

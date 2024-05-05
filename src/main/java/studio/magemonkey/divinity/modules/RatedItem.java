@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public abstract class RatedItem extends LimitedItem {
-
     protected TreeMap<Integer, String[]> successRateExpr;
 
     // Creating new config

@@ -249,7 +249,6 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
         }
     }
 
-    @Nullable
     public final void takeItemCharge(@NotNull ItemStack item) {
         if (this.chargesAtt == null) return;
 

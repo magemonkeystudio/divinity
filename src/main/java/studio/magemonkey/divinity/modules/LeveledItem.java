@@ -28,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public abstract class LeveledItem extends ModuleItem {
-
     protected Tier                       tier;
     protected int                        levelMin;
     protected int                        levelMax;

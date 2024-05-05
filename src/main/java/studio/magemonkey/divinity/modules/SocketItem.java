@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.divinity.modules.list.gems.GemManager;
 
 public abstract class SocketItem extends RatedItem {
-
     protected String socketDisplay;
     protected String targetItemSocketId;
 

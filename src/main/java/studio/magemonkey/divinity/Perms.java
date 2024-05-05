@@ -80,22 +80,22 @@ public class Perms {
     public static final String SOULBOUND_CMD_UNTRADE = PREFIX + "soulbound.cmd.untradeable";
 
     @NotNull
-    public static final String getSocketCmdMerchant(@NotNull ModuleSocket<?> module) {
+    public static String getSocketCmdMerchant(@NotNull ModuleSocket<?> module) {
         return SOCKET_CMD_MERCHANT.replace("%module%", module.getId());
     }
 
     @NotNull
-    public static final String getSocketCmdMerchantOthers(@NotNull ModuleSocket<?> module) {
+    public static String getSocketCmdMerchantOthers(@NotNull ModuleSocket<?> module) {
         return SOCKET_CMD_MERCHANT_OTHERS.replace("%module%", module.getId());
     }
 
     @NotNull
-    public static final String getSocketGuiUser(@NotNull ModuleSocket<?> module) {
+    public static String getSocketGuiUser(@NotNull ModuleSocket<?> module) {
         return SOCKET_GUI_USER.replace("%module%", module.getId());
     }
 
     @NotNull
-    public static final String getSocketGuiMerchant(@NotNull ModuleSocket<?> module) {
+    public static String getSocketGuiMerchant(@NotNull ModuleSocket<?> module) {
         return SOCKET_GUI_MERCHANT.replace("%module%", module.getId());
     }
 }

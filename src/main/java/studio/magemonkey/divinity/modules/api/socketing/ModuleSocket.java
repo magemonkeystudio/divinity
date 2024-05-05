@@ -26,7 +26,6 @@ import java.util.*;
 import java.util.Map.Entry;
 
 public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> {
-
     protected SocketAttribute.Type socketType;
 
     protected boolean                    allowDuplicatedSockets;
