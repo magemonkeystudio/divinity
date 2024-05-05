@@ -87,7 +87,7 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
                     .setBarFormat(barFormat)
                     .setColorNeutral(barColorNeutral == null ? ChatColor.DARK_GRAY : barColorNeutral)
                     .setColorSuccess(barColorGood == null ? ChatColor.GREEN : barColorGood)
-                    .setColorUnsuccess(barColorBad == null ? ChatColor.RED : barColorBad)
+                    .setColorBad(barColorBad == null ? ChatColor.RED : barColorBad)
                     .setBarSize(barSize).setFillInterval(fillInterval)
                     .setFillAmount(fillAmount).setMinSuccess(minSuccess);
         }

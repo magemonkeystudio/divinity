@@ -9,10 +9,11 @@ import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.Divinity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class AnimatedSuccessBar extends ICustomInteraction {
-
     private final String    title;
     private final String    barChar;
     private final String    barFormat;
@@ -25,7 +26,6 @@ public class AnimatedSuccessBar extends ICustomInteraction {
     private final int  fillAmount;
 
     private final double                  chance;
-    private final int                     minSuccess;
     private final Function<Boolean, Void> result;
     private       int                     succ, unsucc;
 
@@ -37,12 +37,11 @@ public class AnimatedSuccessBar extends ICustomInteraction {
         this.barFormat = builder.barFormat;
         this.barColorNeutral = builder.colorNeutral;
         this.barColorGood = builder.colorSuccess;
-        this.barColorBad = builder.colorUnsuccess;
+        this.barColorBad = builder.colorBad;
         this.barSize = builder.barSize;
         this.fillInterval = builder.fillInterval;
         this.fillAmount = builder.fillAmount;
         this.chance = builder.chance;
-        this.minSuccess = builder.minSuccess;
         this.result = builder.result;
 
         this.succ = 0;
@@ -81,8 +80,7 @@ public class AnimatedSuccessBar extends ICustomInteraction {
 
     @Data
     @Accessors(chain = true)
-    public static class Builder {
-
+    public static class Builder implements Cloneable {
         private final Divinity plugin;
 
         private final String    barTitle;
@@ -91,13 +89,12 @@ public class AnimatedSuccessBar extends ICustomInteraction {
         private       int       barSize;
         private       ChatColor colorNeutral;
         private       ChatColor colorSuccess;
-        private       ChatColor colorUnsuccess;
+        private       ChatColor colorBad;
 
         private long fillInterval;
         private int  fillAmount;
 
         private double chance;
-        private int    minSuccess;
 
         private Function<Boolean, Void> result;
 
@@ -108,12 +105,11 @@ public class AnimatedSuccessBar extends ICustomInteraction {
             this.setBarFormat("%bar%");
             this.setColorNeutral(ChatColor.DARK_GRAY);
             this.setColorSuccess(ChatColor.GREEN);
-            this.setColorUnsuccess(ChatColor.RED);
+            this.setColorBad(ChatColor.RED);
             this.setBarSize(20);
             this.setFillInterval(1);
             this.setFillAmount(1);
             this.setChance(50);
-            this.setMinSuccess(50);
             this.setResult(b -> null);
         }
 
@@ -125,17 +121,17 @@ public class AnimatedSuccessBar extends ICustomInteraction {
 
         @NotNull
         @Override
+        @SuppressWarnings("MethodDoesntCallSuperMethod")
         public Builder clone() {
-            Builder clone = new Builder(plugin, barTitle, barChar);
+            Builder clone   = new Builder(plugin, barTitle, barChar);
             clone.barFormat = barFormat;
             clone.colorNeutral = colorNeutral;
             clone.colorSuccess = colorSuccess;
-            clone.colorUnsuccess = colorUnsuccess;
+            clone.colorBad = colorBad;
             clone.barSize = barSize;
             clone.fillInterval = fillInterval;
             clone.fillAmount = fillAmount;
             clone.chance = chance;
-            clone.minSuccess = minSuccess;
             clone.result = result;
             return clone;
         }
@@ -147,11 +143,16 @@ public class AnimatedSuccessBar extends ICustomInteraction {
     }
 
     class Task extends ITask<Divinity> {
-        private final int calculatedResult;
+        private final List<Boolean> mappedResult = new ArrayList<>();
 
         Task() {
             super(AnimatedSuccessBar.this.plugin, AnimatedSuccessBar.this.fillInterval, true);
-            this.calculatedResult = Rnd.get((int) chance, 100);
+            int calculatedResult = Math.round(Rnd.get(true));
+            int iterations = (int) Math.ceil(100D / fillAmount);
+            // Map the iteration to the relative success for the result
+            for (int i = 0; i < iterations; i++) {
+                mappedResult.add(i * fillAmount < calculatedResult);
+            }
         }
 
         @Override
@@ -165,13 +166,18 @@ public class AnimatedSuccessBar extends ICustomInteraction {
 
             if (succ + unsucc >= 100) {
                 plugin.getServer().getScheduler()
-                        .runTask(plugin, () -> result.apply(succ >= minSuccess));
+                        .runTask(plugin, () -> result.apply(succ >= 100 - chance));
                 endAction();
                 this.stop();
                 return;
             }
 
-            if (Rnd.get(true) < calculatedResult) succ += fillAmount;
+            // Get random item from the mapped results
+            int     index  = Rnd.get(0, mappedResult.size() - 1);
+            boolean result = mappedResult.get(index);
+            mappedResult.remove(index);
+
+            if (result) succ += fillAmount;
             else unsucc += fillAmount;
         }
     }

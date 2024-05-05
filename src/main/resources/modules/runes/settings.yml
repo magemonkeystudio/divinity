@@ -14,7 +14,6 @@ socketing:
     color-failure: 'RED'
     fill-interval: 1
     fill-amount: 1
-    min-success: 50
   merchant:
     enabled: true
   actions-complete:
