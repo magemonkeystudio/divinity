@@ -151,7 +151,7 @@ public class AnimatedSuccessBar extends ICustomInteraction {
 
         Task() {
             super(AnimatedSuccessBar.this.plugin, AnimatedSuccessBar.this.fillInterval, true);
-            this.calculatedResult = (int) Rnd.get(true);
+            this.calculatedResult = Rnd.get((int) chance, 100);
         }
 
         @Override
