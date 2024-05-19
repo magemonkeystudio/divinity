@@ -1,26 +1,5 @@
 package studio.magemonkey.divinity.manager.damage;
 
-import studio.magemonkey.codex.hooks.Hooks;
-import studio.magemonkey.codex.items.CodexItemManager;
-import studio.magemonkey.codex.manager.IListener;
-import studio.magemonkey.codex.registry.damage.DamageTypeProvider;
-import studio.magemonkey.codex.util.LocUT;
-import studio.magemonkey.codex.util.random.Rnd;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.api.PartyAPI;
-import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
-import studio.magemonkey.divinity.config.EngineCfg;
-import studio.magemonkey.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
-import studio.magemonkey.divinity.manager.effects.main.AdjustStatEffect;
-import studio.magemonkey.divinity.manager.effects.main.DisarmEffect;
-import studio.magemonkey.divinity.modules.list.party.PartyManager.Party;
-import studio.magemonkey.divinity.stats.EntityStats;
-import studio.magemonkey.divinity.stats.items.ItemStats;
-import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
-import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
-import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
-import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
-import studio.magemonkey.divinity.stats.items.attributes.stats.BleedStat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,6 +22,27 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.hooks.Hooks;
+import studio.magemonkey.codex.items.CodexItemManager;
+import studio.magemonkey.codex.manager.IListener;
+import studio.magemonkey.codex.registry.damage.DamageTypeProvider;
+import studio.magemonkey.codex.util.LocUT;
+import studio.magemonkey.codex.util.random.Rnd;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.api.PartyAPI;
+import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
+import studio.magemonkey.divinity.config.EngineCfg;
+import studio.magemonkey.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
+import studio.magemonkey.divinity.manager.effects.main.AdjustStatEffect;
+import studio.magemonkey.divinity.manager.effects.main.DisarmEffect;
+import studio.magemonkey.divinity.modules.list.party.PartyManager.Party;
+import studio.magemonkey.divinity.stats.EntityStats;
+import studio.magemonkey.divinity.stats.items.ItemStats;
+import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
+import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
+import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
+import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.BleedStat;
 
 import java.util.*;
 import java.util.function.DoubleUnaryOperator;
@@ -361,21 +361,21 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                 blockRate += EngineCfg.COMBAT_SHIELD_BLOCK_BONUS_RATE;
                 blockModifier += EngineCfg.COMBAT_SHIELD_BLOCK_BONUS_DAMAGE_MOD;
             }
-        }
 
-        if (blockRate > 0D) {
-            double vanillaBlockModifier = 1D;
-            if (Rnd.get(true) < blockRate) {
-                vanillaBlockModifier = 0D;
-                meta.setBlockModifier(1D - blockModifier / 100D);
+            if (blockRate > 0D) {
+                double vanillaBlockModifier = 1D;
+                if (Rnd.get(true) < blockRate) {
+                    vanillaBlockModifier = 0D;
+                    meta.setBlockModifier(1D - blockModifier / 100D);
 
-                if (isVanillaBlocked && player != null) {
-                    applyShieldDamage(player);
+                    if (isVanillaBlocked && player != null) {
+                        applyShieldDamage(player);
+                    }
                 }
-            }
-            // Fix/Disable vanilla shield block
-            if (e.isApplicable(DamageModifier.BLOCKING)) {
-                e.setDamage(DamageModifier.BLOCKING, vanillaBlockModifier);
+                // Fix/Disable vanilla shield block
+                if (e.isApplicable(DamageModifier.BLOCKING)) {
+                    e.setDamage(DamageModifier.BLOCKING, vanillaBlockModifier);
+                }
             }
         }
 
