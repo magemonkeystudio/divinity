@@ -126,6 +126,10 @@
                     <groupId>com.sk89q.worldedit</groupId>
                     <artifactId>*</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.comphenix.protocol</groupId>
+                    <artifactId>ProtocolLib</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
