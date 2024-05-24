@@ -58,20 +58,20 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
 
     @Override
     public int getLevel(@NotNull Player player) {
-        PlayerData playerData = Fabled.getPlayerData(player);
+        PlayerData playerData = Fabled.getData(player);
         return playerData.hasClass() ? playerData.getMainClass().getLevel() : 0;
     }
 
     @Override
     public void giveExp(@NotNull Player player, int amount) {
-        PlayerData playerData = Fabled.getPlayerData(player);
+        PlayerData playerData = Fabled.getData(player);
         playerData.giveExp(amount, ExpSource.SPECIAL);
     }
 
     @Override
     @NotNull
     public String getClass(@NotNull Player player) {
-        PlayerData data = Fabled.getPlayerData(player);
+        PlayerData data = Fabled.getData(player);
         if (data.hasClass()) {
             return StringUT.colorOff(data.getMainClass().getData().getName());
         } else {
@@ -86,7 +86,7 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         LivingEntity caster = e.getCaster();
         if (!(caster instanceof Player)) return;
         Player     p          = (Player) caster;
-        PlayerData playerData = Fabled.getPlayerData(p);
+        PlayerData playerData = Fabled.getData(p);
         if (playerData == null) return;
 
         String      skillKey    = e.getSkill().getKey();
@@ -117,7 +117,7 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
 
     @Override
     public void takeMana(@NotNull Player player, double amount, boolean ofMax) {
-        PlayerData data = Fabled.getPlayerData(player);
+        PlayerData data = Fabled.getData(player);
         if (data == null) return;
 
         double cur = data.getMana();
@@ -153,7 +153,7 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
     }
 
     public void addSkill(Player player, String skillId, int level) {
-        PlayerData playerData = Fabled.getPlayerData(player);
+        PlayerData playerData = Fabled.getData(player);
         Skill      skill      = Fabled.getSkill(skillId);
         if (skill == null) {
             plugin.warn("Could not find skill \"" + skillId + "\" to add to the item");
@@ -163,7 +163,7 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
     }
 
     public void removeSkill(Player player, String skillId) {
-        PlayerData playerData = Fabled.getPlayerData(player);
+        PlayerData playerData = Fabled.getData(player);
         Skill      skill      = Fabled.getSkill(skillId);
         if (skill == null) {
             return;
@@ -262,7 +262,7 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
                     }
                 }
                 Set<PlayerData.ExternallyAddedSkill> prevSkills =
-                        new HashSet<>(Fabled.getPlayerData(player).getExternallyAddedSkills());
+                        new HashSet<>(Fabled.getData(player).getExternallyAddedSkills());
                 for (PlayerData.ExternallyAddedSkill prevSkill : prevSkills) {
                     if (!prevSkill.getKey().equals(AbilityGenerator.ABILITY_KEY)) {
                         continue;
