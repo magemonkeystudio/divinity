@@ -1,5 +1,6 @@
 package studio.magemonkey.divinity.modules.list.itemgenerator;
 
+import lombok.Getter;
 import studio.magemonkey.codex.CodexEngine;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.core.Version;
@@ -171,7 +172,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
     public class GeneratorItem extends LimitedItem {
 
+        @Getter
         private double prefixChance;
+        @Getter
         private double suffixChance;
 
         private boolean       materialsWhitelist;
@@ -189,9 +192,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
         private       int                        enchantsMinAmount;
         private       int                        enchantsMaxAmount;
-        private       boolean                    enchantsSafeOnly;
-        private       boolean                    enchantsSafeLevels;
-        private       Map<Enchantment, String[]> enchantsList;
+        private boolean                    enchantsSafeOnly;
+        @Getter
+        private boolean                    enchantsSafeLevels;
+        private Map<Enchantment, String[]> enchantsList;
         private final TreeMap<Double, String>    armorTrims = new TreeMap<>();
 
         private Set<IAttributeGenerator> attributeGenerators;
@@ -526,14 +530,6 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             return e.getValue();
         }
 
-        public double getPrefixChance() {
-            return this.prefixChance;
-        }
-
-        public double getSuffixChance() {
-            return this.suffixChance;
-        }
-
         public boolean isMaterialReversed() {
             return this.materialsWhitelist;
         }
@@ -553,10 +549,6 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
         public boolean isSafeEnchant() {
             return enchantsSafeOnly;
-        }
-
-        public boolean isEnchantsSafeLevels() {
-            return enchantsSafeLevels;
         }
 
         @NotNull

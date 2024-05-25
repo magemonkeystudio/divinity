@@ -201,7 +201,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <CODEX_VERSION>${codex.version}</CODEX_VERSION>
-                        <ITEMS_VERSION>${project.version}</ITEMS_VERSION>
+                        <DIVINITY_VERSION>${project.version}</DIVINITY_VERSION>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

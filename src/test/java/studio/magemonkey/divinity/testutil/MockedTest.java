@@ -47,7 +47,7 @@ public abstract class MockedTest {
     public void setupServer() {
         server = spy(MockBukkit.mock());
         String coreVersion  = System.getProperty("CODEX_VERSION");
-        String itemsVersion = System.getProperty("ITEMS_VERSION");
+        String itemsVersion = System.getProperty("DIVINITY_VERSION");
 
         try {
             File itemsJar =
