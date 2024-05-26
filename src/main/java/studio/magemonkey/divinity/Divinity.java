@@ -1,5 +1,10 @@
 package studio.magemonkey.divinity;
 
+import lombok.Getter;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.java.JavaPluginLoader;
+import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.CodexDataPlugin;
 import studio.magemonkey.codex.CodexEngine;
 import studio.magemonkey.codex.commands.api.IGeneralCommand;
@@ -40,11 +45,6 @@ import studio.magemonkey.divinity.utils.actions.executors.ActionParticlePulse;
 import studio.magemonkey.divinity.utils.actions.executors.ActionTakeMana;
 import studio.magemonkey.divinity.utils.actions.params.AttackableParam;
 import studio.magemonkey.divinity.utils.actions.params.PartyMemberParam;
-import lombok.Getter;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.java.JavaPluginLoader;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -125,7 +125,7 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
         this.interactionManager = new InteractionManager(this);
         this.interactionManager.setup();
 
-        this.dmgManager = new DamageManager();
+        this.dmgManager = new DamageManager(this);
         this.dmgManager.setup();
 
         this.entityManager = new EntityManager(this);
@@ -177,6 +177,8 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
 
         ItemStats.clear();
         ItemRequirements.clear();
+
+        DivinityUserData.destroy();
 
         CodexEngine.get().getItemManager().unregisterProvider(DivinityProvider.class);
     }

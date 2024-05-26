@@ -1,8 +1,6 @@
 package studio.magemonkey.divinity.manager.listener.object;
 
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
-import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
-import studio.magemonkey.divinity.testutil.MockedTest;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Trident;
@@ -10,8 +8,10 @@ import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
+import studio.magemonkey.divinity.testutil.MockedTest;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Disabled("Waiting for MockBukkit PRs")
 public class VanillaWrapperListenerTest extends MockedTest {
@@ -35,8 +35,8 @@ public class VanillaWrapperListenerTest extends MockedTest {
                 damage += value;
             }
 
-            assertEquals("Event victim is not the target", target, event.getVictim());
-            assertEquals("Event damager is not the damager", damager, event.getDamager());
+            assertEquals(target, event.getVictim(), "Event victim is not the target");
+            assertEquals(damager, event.getDamager(), "Event damager is not the damager");
             assertEquals(expectedDamage, damage, 0.001);
 
             return true;
@@ -57,8 +57,8 @@ public class VanillaWrapperListenerTest extends MockedTest {
                 damage += value;
             }
 
-            assertEquals("Event victim is not the target", target, event.getVictim());
-            assertEquals("Event damager is not the damager", damager, event.getDamager());
+            assertEquals(target, event.getVictim(), "Event victim is not the target");
+            assertEquals(damager, event.getDamager(), "Event damager is not the damager");
             assertEquals(expectedDamage, damage, 0.001);
 
             return true;

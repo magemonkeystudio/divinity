@@ -2,6 +2,7 @@ package studio.magemonkey.divinity.data;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.data.DataTypes;
 import studio.magemonkey.codex.data.IDataHandler;
 import studio.magemonkey.divinity.Divinity;
@@ -10,7 +11,6 @@ import studio.magemonkey.divinity.data.api.UserProfile;
 import studio.magemonkey.divinity.data.api.serialize.SkillDataSerializer;
 import studio.magemonkey.divinity.data.api.serialize.UserProfileSerializer;
 import studio.magemonkey.divinity.modules.list.classes.api.UserSkillData;
-import org.jetbrains.annotations.NotNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,6 +50,10 @@ public class DivinityUserData extends IDataHandler<Divinity, DivinityUser> {
             instance = new DivinityUserData(plugin);
         }
         return instance;
+    }
+
+    public static void destroy() {
+        instance = null;
     }
 
     @Override

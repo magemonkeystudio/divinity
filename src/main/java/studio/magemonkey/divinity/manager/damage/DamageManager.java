@@ -49,17 +49,11 @@ import java.util.function.DoubleUnaryOperator;
 
 @SuppressWarnings("deprecation")
 public class DamageManager extends IListener<Divinity> implements DamageTypeProvider {
-
-    private static final Divinity plugin;
-
-    static {
-        plugin = Divinity.getInstance();
-    }
     //private CrackShotHK csHook;
 
     private AbstractMythicMobsHK mmHook;
 
-    public DamageManager() {
+    public DamageManager(Divinity plugin) {
         super(plugin);
     }
 

@@ -3,15 +3,6 @@ package studio.magemonkey.divinity.testutil;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
-import studio.magemonkey.codex.CodexEngine;
-import studio.magemonkey.codex.mccore.commands.CommandManager;
-import studio.magemonkey.codex.nms.NMS;
-import studio.magemonkey.codex.nms.TEST;
-import studio.magemonkey.codex.util.ItemUT;
-import studio.magemonkey.codex.util.reflection.ReflectionManager;
-import studio.magemonkey.codex.util.reflection.ReflectionUtil;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.fabled.api.player.PlayerData;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -22,6 +13,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.MockedStatic;
+import studio.magemonkey.codex.CodexEngine;
+import studio.magemonkey.codex.mccore.commands.CommandManager;
+import studio.magemonkey.codex.nms.NMS;
+import studio.magemonkey.codex.nms.TEST;
+import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.codex.util.reflection.ReflectionManager;
+import studio.magemonkey.codex.util.reflection.ReflectionUtil;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.fabled.api.player.PlayerData;
 
 import java.io.*;
 import java.util.*;
@@ -101,6 +101,8 @@ public abstract class MockedTest {
     public void destroy() {
         CommandManager.unregisterAll();
         MockBukkit.unmock();
+        reflectionManager.close();
+        if (codexEngine != null) codexEngine.close();
     }
 
     @AfterEach
