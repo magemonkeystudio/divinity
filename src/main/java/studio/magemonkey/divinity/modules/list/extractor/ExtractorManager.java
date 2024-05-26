@@ -1,5 +1,15 @@
 package studio.magemonkey.divinity.modules.list.extractor;
 
+import net.citizensnpcs.api.trait.TraitInfo;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.hooks.external.VaultHK;
 import studio.magemonkey.codex.hooks.external.citizens.CitizensHK;
@@ -16,16 +26,6 @@ import studio.magemonkey.divinity.modules.list.extractor.command.ExtractorOpenCm
 import studio.magemonkey.divinity.modules.list.extractor.event.PlayerExtractSocketEvent;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.attributes.SocketAttribute;
-import net.citizensnpcs.api.trait.TraitInfo;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -182,12 +182,11 @@ public class ExtractorManager extends QModuleDrop<ExtractorTool> {
             @NotNull ItemStack target,
             @NotNull ExtractorTool mItem,
             @NotNull InventoryClickEvent e) {
-        ItemStack cursor = e.getView().getCursor();
         e.getView().setCursor(null);
         boolean open = this.openExtraction(player, target, src, null, true);
-        if (!open) e.getView().setCursor(cursor);
+        if (open) src.setAmount(0);
 
-        Bukkit.getScheduler().runTaskLater(Divinity.getInstance(), () -> player.updateInventory(), 1L);
+        Bukkit.getScheduler().runTaskLater(Divinity.getInstance(), player::updateInventory, 1L);
         return open;
     }
 

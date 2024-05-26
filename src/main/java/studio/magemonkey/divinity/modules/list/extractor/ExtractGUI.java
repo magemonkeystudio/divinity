@@ -1,17 +1,5 @@
 package studio.magemonkey.divinity.modules.list.extractor;
 
-import studio.magemonkey.codex.config.api.JYML;
-import studio.magemonkey.codex.hooks.external.VaultHK;
-import studio.magemonkey.codex.util.DataUT;
-import studio.magemonkey.codex.util.ItemUT;
-import studio.magemonkey.codex.util.NumberUT;
-import studio.magemonkey.codex.util.StringUT;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.api.DivinityAPI;
-import studio.magemonkey.divinity.modules.api.socketing.ModuleSocket;
-import studio.magemonkey.divinity.modules.list.extractor.event.PlayerExtractSocketEvent;
-import studio.magemonkey.divinity.stats.items.ItemStats;
-import studio.magemonkey.divinity.stats.items.attributes.SocketAttribute;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -24,7 +12,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.config.api.JYML;
+import studio.magemonkey.codex.hooks.external.VaultHK;
 import studio.magemonkey.codex.manager.api.gui.*;
+import studio.magemonkey.codex.util.DataUT;
+import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.codex.util.NumberUT;
+import studio.magemonkey.codex.util.StringUT;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.api.DivinityAPI;
+import studio.magemonkey.divinity.modules.api.socketing.ModuleSocket;
+import studio.magemonkey.divinity.modules.list.extractor.event.PlayerExtractSocketEvent;
+import studio.magemonkey.divinity.stats.items.ItemStats;
+import studio.magemonkey.divinity.stats.items.attributes.SocketAttribute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,24 +81,20 @@ class ExtractGUI extends NGUI<Divinity> {
             this.addButton(guiItem);
         }
 
-        GuiClick clickSocket = new GuiClick() {
-            @Override
-            public void click(
-                    @NotNull Player p, @Nullable Enum<?> type, @NotNull InventoryClickEvent e) {
+        GuiClick clickSocket = (p, type, e) -> {
 
-                if (type == null || !type.getClass().equals(SocketAttribute.Type.class)) return;
-                SocketAttribute.Type socketType = (SocketAttribute.Type) type;
+            if (type == null || !type.getClass().equals(SocketAttribute.Type.class)) return;
+            SocketAttribute.Type socketType = (SocketAttribute.Type) type;
 
-                Inventory inv    = e.getInventory();
-                ItemStack target = inv.getItem(itemSlot);
-                ItemStack src    = inv.getItem(srcSlot);
+            Inventory inv    = e.getInventory();
+            ItemStack target = inv.getItem(itemSlot);
+            ItemStack src    = inv.getItem(srcSlot);
 
-                // Prevent duplication for onClose event
-                inv.setItem(itemSlot, null);
-                inv.setItem(srcSlot, null);
+            // Prevent duplication for onClose event
+            inv.setItem(itemSlot, null);
+            inv.setItem(srcSlot, null);
 
-                open(p, target, src, socketType);
-            }
+            open(p, target, src, socketType);
         };
 
         for (String itemId : cfg.getSection(path + "socket-types")) {
@@ -162,78 +158,73 @@ class ExtractGUI extends NGUI<Divinity> {
 
                     final int indexSocket = en.getKey();
                     ItemStack src         = source;
-                    GuiClick itemClick = new GuiClick() {
-                        @Override
-                        public void click(
-                                @NotNull Player p, @Nullable Enum<?> type2, @NotNull InventoryClickEvent e) {
+                    GuiClick itemClick = (p, type2, e) -> {
+                        Inventory inv = e.getInventory();
 
-                            Inventory inv = e.getInventory();
+                        // Remove glow from other socket items
+                        for (int socketSlot : socketSlots) {
+                            ItemStack socketItem = inv.getItem(socketSlot);
+                            if (socketItem != null) {
+                                socketItem.removeEnchantment(Enchantment.ARROW_DAMAGE);
+                            }
+                        }
 
-                            // Remove glow from other socket items
-                            for (int socketSlot : socketSlots) {
-                                ItemStack socketItem = inv.getItem(socketSlot);
-                                if (socketItem != null) {
-                                    socketItem.removeEnchantment(Enchantment.ARROW_DAMAGE);
+                        // Add glow to selected socket item
+                        ItemStack item1 = e.getCurrentItem();
+                        if (item1 != null) {
+                            item1.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 1);
+                        }
+
+                        ItemStack target1 = getItem(inv, itemSlot);
+                        List<ItemStack> resultItems =
+                                mod.extractSocket(new ItemStack(target1), socketCategory, indexSocket);
+                        ItemStack result = resultItems.get(0);
+                        resultItems.remove(result);
+
+                        if (e.isLeftClick()) inv.setItem(resultSlot, result);
+                        else if (e.isRightClick()) {
+                            PlayerExtractSocketEvent eve = new PlayerExtractSocketEvent(
+                                    p,
+                                    target1,
+                                    result,
+                                    resultItems,
+                                    type
+                            );
+
+                            VaultHK vh = plugin.getVault();
+                            if (extractPrice > 0 && vh != null) {
+                                double userBalance = vh.getBalance(p);
+                                if (userBalance < extractPrice) {
+                                    plugin.lang().Extractor_Extract_Error_TooExpensive
+                                            .replace("%cost%", NumberUT.format(extractPrice))
+                                            .replace("%balance%", NumberUT.format(userBalance))
+                                            .send(p);
+                                    eve.setFailed(true);
+                                } else vh.take(p, extractPrice);
+                            }
+
+                            plugin.getPluginManager().callEvent(eve);
+                            if (eve.isCancelled() || eve.isFailed()) return;
+
+                            // Prevent to dupe after close
+                            inv.setItem(srcSlot, null);
+                            inv.setItem(itemSlot, result);
+                            p.getInventory().addItem(resultItems.toArray(new ItemStack[0]))
+                                    .values().forEach(itm ->
+                                            p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.5, 0), itm)
+                                    );
+
+                            if (extractorManager.isItemOfThisModule(src)) {
+                                extractorManager.takeItemCharge(src);
+                                if (extractorManager.getItemCharges(src) == 0) {
+                                    p.closeInventory();
+                                    return;
                                 }
                             }
 
-                            // Add glow to selected socket item
-                            ItemStack item = e.getCurrentItem();
-                            if (item != null) {
-                                item.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 1);
-                            }
-
-                            ItemStack target = getItem(inv, itemSlot);
-                            List<ItemStack> resultItems =
-                                    mod.extractSocket(new ItemStack(target), socketCategory, indexSocket);
-                            ItemStack result = resultItems.get(0);
-                            resultItems.remove(result);
-
-                            if (e.isLeftClick()) inv.setItem(resultSlot, result);
-                            else if (e.isRightClick()) {
-                                PlayerExtractSocketEvent eve = new PlayerExtractSocketEvent(
-                                        p,
-                                        target,
-                                        result,
-                                        resultItems,
-                                        type
-                                );
-
-                                VaultHK vh = plugin.getVault();
-                                if (extractPrice > 0 && vh != null) {
-                                    double userBalance = vh.getBalance(p);
-                                    if (userBalance < extractPrice) {
-                                        plugin.lang().Extractor_Extract_Error_TooExpensive
-                                                .replace("%cost%", NumberUT.format(extractPrice))
-                                                .replace("%balance%", NumberUT.format(userBalance))
-                                                .send(p);
-                                        eve.setFailed(true);
-                                    } else vh.take(p, extractPrice);
-                                }
-
-                                plugin.getPluginManager().callEvent(eve);
-                                if (eve.isCancelled() || eve.isFailed()) return;
-
-                                // Prevent to dupe after close
-                                inv.setItem(srcSlot, null);
-                                inv.setItem(itemSlot, result);
-                                p.getInventory().addItem(resultItems.toArray(new ItemStack[0]))
-                                        .values().forEach(itm ->
-                                                p.getWorld().dropItemNaturally(p.getLocation().add(0, 0.5, 0), itm)
-                                        );
-
-                                if (extractorManager.isItemOfThisModule(src)) {
-                                    extractorManager.takeItemCharge(src);
-                                    if (extractorManager.getItemCharges(src) == 0) {
-                                        p.closeInventory();
-                                        return;
-                                    }
-                                }
-
-                                // Do not return item if we will continue extracting
-                                inv.setItem(itemSlot, null);
-                                open(p, result, src, type);
-                            }
+                            // Do not return item if we will continue extracting
+                            inv.setItem(itemSlot, null);
+                            open(p, result, src, type);
                         }
                     };
 
