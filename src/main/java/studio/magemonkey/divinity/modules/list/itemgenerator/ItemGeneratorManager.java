@@ -1,6 +1,24 @@
 package studio.magemonkey.divinity.modules.list.itemgenerator;
 
 import lombok.Getter;
+import org.bukkit.DyeColor;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
+import org.bukkit.block.Banner;
+import org.bukkit.block.banner.Pattern;
+import org.bukkit.block.banner.PatternType;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ArmorMeta;
+import org.bukkit.inventory.meta.BlockStateMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.trim.ArmorTrim;
+import org.bukkit.inventory.meta.trim.TrimMaterial;
+import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.CodexEngine;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.core.Version;
@@ -49,24 +67,6 @@ import studio.magemonkey.divinity.stats.items.requirements.user.SoulboundRequire
 import studio.magemonkey.divinity.utils.DivinityProvider;
 import studio.magemonkey.divinity.utils.ItemUtils;
 import studio.magemonkey.divinity.utils.LoreUT;
-import org.bukkit.DyeColor;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
-import org.bukkit.block.Banner;
-import org.bukkit.block.banner.Pattern;
-import org.bukkit.block.banner.PatternType;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ArmorMeta;
-import org.bukkit.inventory.meta.BlockStateMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.trim.ArmorTrim;
-import org.bukkit.inventory.meta.trim.TrimMaterial;
-import org.bukkit.inventory.meta.trim.TrimPattern;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -192,10 +192,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
         private       int                        enchantsMinAmount;
         private       int                        enchantsMaxAmount;
-        private boolean                    enchantsSafeOnly;
+        private       boolean                    enchantsSafeOnly;
         @Getter
-        private boolean                    enchantsSafeLevels;
-        private Map<Enchantment, String[]> enchantsList;
+        private       boolean                    enchantsSafeLevels;
+        private       Map<Enchantment, String[]> enchantsList;
         private final TreeMap<Double, String>    armorTrims = new TreeMap<>();
 
         private Set<IAttributeGenerator> attributeGenerators;
@@ -596,7 +596,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         }
 
         public double getScaleOfLevel(double scale, int itemLevel) {
-            return scale == 1D ? (scale) : ((scale * 100D - 100D) * (double) itemLevel / 100D + 1D);
+            return scale == 1D ? (scale) : ((scale * 100D - 100D) * (double) (itemLevel - 1) / 100D + 1D);
         }
 
         @Override

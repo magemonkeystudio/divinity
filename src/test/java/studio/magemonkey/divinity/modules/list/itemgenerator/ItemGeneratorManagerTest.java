@@ -10,7 +10,7 @@ import studio.magemonkey.divinity.testutil.MockedTest;
 import java.io.*;
 import java.util.Objects;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ItemGeneratorManagerTest extends MockedTest {
 
@@ -61,14 +61,21 @@ class ItemGeneratorManagerTest extends MockedTest {
         void getScaleOfLevel_scalesProperlyUp() {
             ItemGeneratorManager.GeneratorItem item  = generator.getItemById("common");
             double                             scale = item.getScaleOfLevel(1.05, 5);
-            assertEquals(1.25, scale, 0.001);
+            assertEquals(1.2, scale, 0.001);
         }
 
         @Test
         void getScaleOfLevel_scalesProperlyDown() {
             ItemGeneratorManager.GeneratorItem item  = generator.getItemById("common");
             double                             scale = item.getScaleOfLevel(0.95, 5);
-            assertEquals(0.75, scale, 0.001);
+            assertEquals(0.8, scale, 0.001);
+        }
+
+        @Test
+        void getScaleOfLevel_doesNotScaleLevel1() {
+            ItemGeneratorManager.GeneratorItem item  = generator.getItemById("common");
+            double                             scale = item.getScaleOfLevel(1.05, 1);
+            assertEquals(1, scale, 0.001);
         }
     }
 
