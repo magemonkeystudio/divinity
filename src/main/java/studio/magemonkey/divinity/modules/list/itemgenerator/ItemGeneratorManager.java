@@ -747,8 +747,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                         }
                         int index = Rnd.get(size);
                         int i     = 0;
-                        for (Iterator<TrimPattern> iterator = Registry.TRIM_PATTERN.iterator(); iterator.hasNext(); ) {
-                            TrimPattern next = iterator.next();
+                        for (TrimPattern next : Registry.TRIM_PATTERN) {
                             if (index == i) {
                                 trimPattern = next;
                                 break;

@@ -1,6 +1,17 @@
 package studio.magemonkey.divinity.modules.list.refine;
 
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.config.api.JYML;
+import studio.magemonkey.codex.manager.api.gui.*;
 import studio.magemonkey.codex.util.*;
 import studio.magemonkey.codex.util.actions.ActionManipulator;
 import studio.magemonkey.codex.util.random.Rnd;
@@ -21,17 +32,6 @@ import studio.magemonkey.divinity.stats.items.api.ItemLoreStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
 import studio.magemonkey.divinity.utils.LoreUT;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import studio.magemonkey.codex.manager.api.gui.*;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -254,7 +254,6 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         this.addFines(item, stone, lvl + 1);
     }
 
-    @NotNull
     public void downgradeItem(@NotNull ItemStack item, boolean force) {
         String stoneId = this.getRefineStoneId(item);
         if (stoneId == null) return;
@@ -294,9 +293,9 @@ public class RefineManager extends QModuleDrop<RefineItem> {
 
         String format = entry.getValue().replace("%level%", String.valueOf(lvl));
         if (this.formatNameAsPrefix) {
-            return StringUT.colorFix(new StringBuilder(format).append(name).toString());
+            return StringUT.colorFix(format + name);
         } else {
-            return StringUT.colorFix(new StringBuilder(name).append(format).toString());
+            return StringUT.colorFix(name + format);
         }
     }
 
@@ -304,9 +303,7 @@ public class RefineManager extends QModuleDrop<RefineItem> {
      * @param item      An refined ItemStack
      * @param stone     EnchantmentStone (if level is greater than 0)
      * @param refineLvl Enchantment Stone level
-     * @return
      */
-    @NotNull
     private void setRefineLevel(
             @NotNull ItemStack item,
             @Nullable RefineItem stone,

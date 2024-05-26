@@ -1,12 +1,5 @@
 package studio.magemonkey.divinity.stats.items.api;
 
-import studio.magemonkey.codex.util.ItemUT;
-import studio.magemonkey.codex.util.StringUT;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.config.EngineCfg;
-import studio.magemonkey.divinity.stats.items.ItemStats;
-import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
-import studio.magemonkey.divinity.utils.LoreUT;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -15,6 +8,13 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.codex.util.StringUT;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.config.EngineCfg;
+import studio.magemonkey.divinity.stats.items.ItemStats;
+import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
+import studio.magemonkey.divinity.utils.LoreUT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,7 +193,6 @@ public abstract class ItemLoreStat<Z> {
         return !isEmpty;
     }
 
-    @NotNull
     public final void remove(@NotNull ItemStack item) {
         this.validateMethod();
 
@@ -278,9 +277,9 @@ public abstract class ItemLoreStat<Z> {
     }
 
     /**
-     * @param item
+     * @param item Item to check.
      * @return true if stat is present in item lore (position >= 0).
-     * Does not checks for item meta.
+     * Does not check for item meta.
      */
     public final boolean isApplied(@NotNull ItemStack item) {
         return this.getLoreIndex(item) >= 0;
@@ -295,7 +294,6 @@ public abstract class ItemLoreStat<Z> {
         return lore.contains(this.getPlaceholder());
     }
 
-    @NotNull
     protected final void preparePlaceholder(@NotNull ItemStack item, int line) {
         this.validateMethod();
 
@@ -319,7 +317,7 @@ public abstract class ItemLoreStat<Z> {
     @NotNull
     public abstract String formatValue(@NotNull ItemStack item, @NotNull Z value);
 
-    private final void validateMethod() {
+    private void validateMethod() {
         if (this instanceof DuplicableItemLoreStat) {
             throw new UnsupportedOperationException(
                     "Attempt to manage duplicable stat at NULL index. Index must be provided.");

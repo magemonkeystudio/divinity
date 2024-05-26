@@ -279,7 +279,7 @@ public class EngineCfg {
         if (EngineCfg.LORE_STYLE_REQ_USER_DYN_UPDATE = cfg.getBoolean(path + "enabled")) {
             EngineCfg.LORE_STYLE_REQ_USER_DYN_STATE = new HashMap<>();
             for (boolean b : new boolean[]{true, false}) {
-                String reqState = cfg.getString(path + "format." + String.valueOf(b));
+                String reqState = cfg.getString(path + "format." + b);
                 if (reqState == null) {
                     if (b) reqState = "&a&l✓ &r&a";
                     else reqState = "&c&l✗ &r&c";
