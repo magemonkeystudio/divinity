@@ -99,6 +99,7 @@ public abstract class MockedTest {
 
     @AfterAll
     public void destroy() {
+        plugin.disable();
         CommandManager.unregisterAll();
         MockBukkit.unmock();
         reflectionManager.close();
