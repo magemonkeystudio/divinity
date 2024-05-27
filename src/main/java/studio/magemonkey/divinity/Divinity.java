@@ -75,6 +75,7 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
     private PMSManager pms;
 
     public Divinity() {
+        super();
         instance = this;
         MigrationUtil.renameDirectory("plugins/ProRPGItems", "plugins/Divinity");
     }
