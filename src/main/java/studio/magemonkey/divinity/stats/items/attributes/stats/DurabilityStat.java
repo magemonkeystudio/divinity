@@ -123,8 +123,8 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
         ItemMeta meta = item.getItemMeta();
 
         // Vanilla unbreaking formula
-        if (meta != null && meta.hasEnchant(Enchantment.getByName("unbreaking"))) { // DURABILITY/UNBREAKING
-            double lvl    = meta.getEnchantLevel(Enchantment.getByName("unbreaking"));
+        if (meta != null && meta.hasEnchant(Enchantment.getByKey(NamespacedKey.minecraft("unbreaking")))) { // DURABILITY/UNBREAKING
+            double lvl    = meta.getEnchantLevel(Enchantment.getByKey(NamespacedKey.minecraft("unbreaking")));
             double chance = (100D / (lvl + 1D));
             if (Rnd.get(true) < chance) {
                 return false;

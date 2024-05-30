@@ -1,9 +1,5 @@
 package studio.magemonkey.divinity.modules.list.repair;
 
-import studio.magemonkey.codex.config.api.JYML;
-import studio.magemonkey.codex.util.DataUT;
-import studio.magemonkey.codex.util.ItemUT;
-import studio.magemonkey.divinity.Divinity;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -16,7 +12,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.manager.api.gui.*;
+import studio.magemonkey.codex.util.DataUT;
+import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.divinity.Divinity;
 
 import java.util.HashSet;
 import java.util.List;
@@ -146,7 +146,8 @@ public class AnvilGUI extends NGUI<Divinity> {
             ItemStack                itemGlow   = guiItem.getItem();
             this.replaceCostHave(player, target, itemGlow, repairType);
             if (type2 == type) {
-                itemGlow.addUnsafeEnchantment(Enchantment.getByName("punch"), 1); // ARROW_DAMAGE/PUNCH
+                itemGlow.addUnsafeEnchantment(Enchantment.getByKey(NamespacedKey.minecraft("punch")),
+                        1); // ARROW_DAMAGE/PUNCH
                 DataUT.setData(itemGlow, META_KEY_REPAIR_SELECT, "true");
             }
 

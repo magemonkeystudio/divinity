@@ -1,12 +1,13 @@
 package studio.magemonkey.divinity.manager.effects.main;
 
-import studio.magemonkey.divinity.manager.effects.IEffectType;
-import studio.magemonkey.divinity.manager.effects.IPeriodicEffect;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.divinity.manager.effects.IEffectType;
+import studio.magemonkey.divinity.manager.effects.IPeriodicEffect;
 
 public class RootEffect extends IPeriodicEffect {
 
@@ -57,7 +58,9 @@ public class RootEffect extends IPeriodicEffect {
 
         public Builder(double lifeTime) {
             super(lifeTime, 1D / 20D);
-            this.addPotionEffects(new PotionEffect(PotionEffectType.getByName("slowness"), (int) (lifeTime * 20), 127)); // SLOWNESS/SLOW
+            this.addPotionEffects(new PotionEffect(PotionEffectType.getByKey(NamespacedKey.minecraft("slowness")),
+                    (int) (lifeTime * 20),
+                    127)); // SLOWNESS/SLOW
         }
 
         @Override

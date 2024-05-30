@@ -1,5 +1,20 @@
 package studio.magemonkey.divinity.modules.list.arrows;
 
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.manager.api.task.ITask;
 import studio.magemonkey.codex.util.ItemUT;
@@ -14,20 +29,6 @@ import studio.magemonkey.divinity.modules.list.arrows.ArrowManager.QArrow;
 import studio.magemonkey.divinity.stats.bonus.BonusMap;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -142,7 +143,7 @@ public class ArrowManager extends QModuleDrop<QArrow> {
 
         ItemStack bow = e.getWeapon();
         if (e.isBowEvent() && !this.generalAllowInfinity && bow != null) {
-            if (bow.containsEnchantment(Enchantment.getByName("infinity"))) { // ARROW_INFINITE/INFINITY
+            if (bow.containsEnchantment(Enchantment.getByKey(NamespacedKey.minecraft("infinity")))) { // ARROW_INFINITE/INFINITY
                 arrow.setAmount(arrow.getAmount() - 1);
             }
         }

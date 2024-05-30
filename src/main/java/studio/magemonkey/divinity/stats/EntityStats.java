@@ -1,5 +1,25 @@
 package studio.magemonkey.divinity.stats;
 
+import lombok.Getter;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.attribute.AttributeModifier.Operation;
+import org.bukkit.block.Biome;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.api.meta.NBTAttribute;
 import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.util.EntityUT;
@@ -34,25 +54,6 @@ import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
-import lombok.Getter;
-import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.attribute.AttributeModifier.Operation;
-import org.bukkit.block.Biome;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.projectiles.ProjectileSource;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -744,11 +745,11 @@ public class EntityStats {
 
     public double getEnchantProtectFactor(@NotNull Enchantment en) {
         int epfPer = 1; // EPF Per each enchantment level
-        if (en == Enchantment.getByName("fire_protection")
-                || en == Enchantment.getByName("blast_protection")
-                || en == Enchantment.getByName("projectile_protection")) {
+        if (en == Enchantment.getByKey(NamespacedKey.minecraft("fire_protection"))
+                || en == Enchantment.getByKey(NamespacedKey.minecraft("blast_protection"))
+                || en == Enchantment.getByKey(NamespacedKey.minecraft("projectile_protection"))) {
             epfPer = 2;
-        } else if (en == Enchantment.getByName("feather_falling")) {
+        } else if (en == Enchantment.getByKey(NamespacedKey.minecraft("feather_falling"))) {
             epfPer = 3;
         }
 
