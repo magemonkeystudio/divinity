@@ -57,7 +57,7 @@ public class RootEffect extends IPeriodicEffect {
 
         public Builder(double lifeTime) {
             super(lifeTime, 1D / 20D);
-            this.addPotionEffects(new PotionEffect(PotionEffectType.SLOW, (int) (lifeTime * 20), 127));
+            this.addPotionEffects(new PotionEffect(PotionEffectType.getByName("slowness"), (int) (lifeTime * 20), 127)); // SLOWNESS/SLOW
         }
 
         @Override

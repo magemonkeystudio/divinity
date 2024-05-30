@@ -142,7 +142,7 @@ public class ArrowManager extends QModuleDrop<QArrow> {
 
         ItemStack bow = e.getWeapon();
         if (e.isBowEvent() && !this.generalAllowInfinity && bow != null) {
-            if (bow.containsEnchantment(Enchantment.ARROW_INFINITE)) {
+            if (bow.containsEnchantment(Enchantment.getByName("infinity"))) { // ARROW_INFINITE/INFINITY
                 arrow.setAmount(arrow.getAmount() - 1);
             }
         }

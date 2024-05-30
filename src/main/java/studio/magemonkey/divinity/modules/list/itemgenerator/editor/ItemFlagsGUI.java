@@ -61,10 +61,6 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
                     material = Material.OAK_PLANKS;
                     break;
                 }
-                case HIDE_POTION_EFFECTS: {
-                    material = Material.POTION;
-                    break;
-                }
                 case HIDE_DYE: {
                     material = Material.MAGENTA_DYE;
                     break;
@@ -74,6 +70,11 @@ public class ItemFlagsGUI extends AbstractEditorGUI {
                     break;
                 }
             }
+
+            if(flag.name().equals("HIDE_POTION_EFFECTS") || flag.name().equals("HIDE_ADDITIONAL_TOOLTIP")) {
+                material = Material.POTION;
+            }
+
             String name = flag.name().toLowerCase();
             this.setSlot(i, new Slot(createItem(material,
                     "&e" + name,

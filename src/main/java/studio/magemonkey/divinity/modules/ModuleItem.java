@@ -234,7 +234,7 @@ public abstract class ModuleItem extends LoadableItem {
         meta.addItemFlags(this.flags.toArray(new ItemFlag[this.flags.size()]));
         meta.setUnbreakable(this.isUnbreakable);
         if (this.enchanted) {
-            meta.addEnchant(Enchantment.ARROW_DAMAGE, 1, true);
+            meta.addEnchant(Enchantment.getByName("punch"), 1, true); // ARROW_DAMAGE/PUNCH
         }
 
         item.setItemMeta(meta);

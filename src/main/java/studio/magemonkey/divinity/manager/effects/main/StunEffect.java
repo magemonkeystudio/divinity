@@ -55,8 +55,8 @@ public class StunEffect extends IPeriodicEffect {
         public Builder(double lifeTime) {
             super(lifeTime, 1D / 20D);
 
-            this.addPotionEffects(new PotionEffect(PotionEffectType.SLOW, (int) (lifeTime * 20), 127));
-            this.addPotionEffects(new PotionEffect(PotionEffectType.SLOW_DIGGING, (int) (lifeTime * 20), 127));
+            this.addPotionEffects(new PotionEffect(PotionEffectType.getByName("slowness"), (int) (lifeTime * 20), 127)); // SLOW/SLOWNESS
+            this.addPotionEffects(new PotionEffect(PotionEffectType.getByName("mining_fatigue"), (int) (lifeTime * 20), 127)); // SLOW_DIGGING/MINING_FATIGUE
             this.addPotionEffects(new PotionEffect(PotionEffectType.BLINDNESS, (int) lifeTime * 20, 127));
         }
 

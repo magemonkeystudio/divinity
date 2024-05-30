@@ -165,14 +165,14 @@ class ExtractGUI extends NGUI<Divinity> {
                         for (int socketSlot : socketSlots) {
                             ItemStack socketItem = inv.getItem(socketSlot);
                             if (socketItem != null) {
-                                socketItem.removeEnchantment(Enchantment.ARROW_DAMAGE);
+                                socketItem.removeEnchantment(Enchantment.getByName("punch")); // ARROW_DAMAGE/PUNCH
                             }
                         }
 
                         // Add glow to selected socket item
                         ItemStack item1 = e.getCurrentItem();
                         if (item1 != null) {
-                            item1.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 1);
+                            item1.addUnsafeEnchantment(Enchantment.getByName("punch"), 1); // ARROW_DAMAGE/PUNCH
                         }
 
                         ItemStack target1 = getItem(inv, itemSlot);
@@ -242,7 +242,7 @@ class ExtractGUI extends NGUI<Divinity> {
             Enum<?> type2 = guiItem.getType();
             if (type2 != null && type2 == type) {
                 ItemStack itemGlow = guiItem.getItem();
-                itemGlow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 1);
+                itemGlow.addUnsafeEnchantment(Enchantment.getByName("punch"), 1); // ARROW_DAMAGE/PUNCH
                 DataUT.setData(itemGlow, META_KEY_SOCKET_SELECT, "true");
                 JIcon active = new JIcon(itemGlow);
                 active.setClick(guiItem.getClick());

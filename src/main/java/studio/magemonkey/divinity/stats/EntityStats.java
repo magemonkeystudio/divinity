@@ -744,10 +744,11 @@ public class EntityStats {
 
     public double getEnchantProtectFactor(@NotNull Enchantment en) {
         int epfPer = 1; // EPF Per each enchantment level
-        if (en == Enchantment.PROTECTION_FIRE || en == Enchantment.PROTECTION_EXPLOSIONS
-                || en == Enchantment.PROTECTION_PROJECTILE) {
+        if (en == Enchantment.getByName("fire_protection")
+                || en == Enchantment.getByName("blast_protection")
+                || en == Enchantment.getByName("projectile_protection")) {
             epfPer = 2;
-        } else if (en == Enchantment.PROTECTION_FALL) {
+        } else if (en == Enchantment.getByName("feather_falling")) {
             epfPer = 3;
         }
 

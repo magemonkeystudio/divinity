@@ -1,12 +1,12 @@
 package studio.magemonkey.divinity.manager.effects.main;
 
-import studio.magemonkey.codex.util.EffectUT;
-import studio.magemonkey.divinity.manager.effects.IEffectType;
-import studio.magemonkey.divinity.manager.effects.IPeriodicEffect;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.codex.util.EffectUT;
+import studio.magemonkey.divinity.manager.effects.IEffectType;
+import studio.magemonkey.divinity.manager.effects.IPeriodicEffect;
 
 import java.util.function.Function;
 
@@ -59,7 +59,13 @@ public class BleedEffect extends IPeriodicEffect {
         public Builder(double lifeTime, double interval, @NotNull Function<LivingEntity, Double> damageFunction) {
             super(lifeTime, interval);
             this.withFunction(damageFunction);
-            this.withBlood(Particle.BLOCK_CRACK);
+            Particle particle;
+            try {
+                particle = Particle.BLOCK;
+            } catch (Exception e) {
+                particle = Particle.valueOf("BLOCK_CRACK");
+            }
+            this.withBlood(particle);
             this.withColor(Material.REDSTONE_BLOCK.name());
         }
 

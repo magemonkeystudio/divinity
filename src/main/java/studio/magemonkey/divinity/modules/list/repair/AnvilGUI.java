@@ -146,7 +146,7 @@ public class AnvilGUI extends NGUI<Divinity> {
             ItemStack                itemGlow   = guiItem.getItem();
             this.replaceCostHave(player, target, itemGlow, repairType);
             if (type2 == type) {
-                itemGlow.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 1);
+                itemGlow.addUnsafeEnchantment(Enchantment.getByName("punch"), 1); // ARROW_DAMAGE/PUNCH
                 DataUT.setData(itemGlow, META_KEY_REPAIR_SELECT, "true");
             }
 

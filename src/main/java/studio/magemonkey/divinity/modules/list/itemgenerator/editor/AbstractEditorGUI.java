@@ -1,11 +1,5 @@
 package studio.magemonkey.divinity.modules.list.itemgenerator.editor;
 
-import studio.magemonkey.codex.config.api.JYML;
-import studio.magemonkey.codex.core.Version;
-import studio.magemonkey.codex.manager.api.menu.Menu;
-import studio.magemonkey.codex.util.StringUT;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -18,6 +12,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.config.api.JYML;
+import studio.magemonkey.codex.core.Version;
+import studio.magemonkey.codex.manager.api.menu.Menu;
+import studio.magemonkey.codex.util.StringUT;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,8 +68,15 @@ public abstract class AbstractEditorGUI extends Menu {
     protected static ItemStack createItem(ItemStack itemStack, String name, List<String> lore) {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta != null) {
+            ItemFlag hidePotionsFlag;
+            try {
+                hidePotionsFlag = ItemFlag.HIDE_ADDITIONAL_TOOLTIP;
+            } catch (IllegalArgumentException ignored) {
+                hidePotionsFlag = ItemFlag.valueOf("HIDE_POTION_EFFECTS");
+            }
+
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            meta.addItemFlags(hidePotionsFlag);
             if (Version.CURRENT.isHigher(Version.V1_19_R3)) {
                 meta.addItemFlags(ItemFlag.HIDE_ARMOR_TRIM);
             }
