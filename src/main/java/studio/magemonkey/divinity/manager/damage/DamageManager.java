@@ -17,11 +17,13 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.core.Version;
 import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.items.CodexItemManager;
 import studio.magemonkey.codex.manager.IListener;
@@ -360,7 +362,11 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                 double vanillaBlockModifier = 1D;
                 if (Rnd.get(true) < blockRate) {
                     vanillaBlockModifier = 0D;
-                    meta.setBlockModifier(1D - blockModifier / 100D);
+                    if (Version.CURRENT == Version.V1_16_R3) {
+                        meta.setBlockModifier(1D + blockModifier / 100D);
+                    } else {
+                        meta.setBlockModifier(1D - blockModifier / 100D);
+                    }
 
                     if (isVanillaBlocked && player != null) {
                         applyShieldDamage(player);
@@ -386,11 +392,15 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                 : mainHand.getType() == Material.SHIELD ? mainHand : null;
         if (shield == null) return;
 
-        Damageable shieldMeta = (Damageable) shield.getItemMeta();
-        int        level      = shieldMeta.getEnchantLevel(Enchantment.getByName("unbreaking")); // DURABILITY/UNBREAKING
+        ItemMeta shieldMeta = shield.getItemMeta();
+        int      level      = shieldMeta.getEnchantLevel(Enchantment.getByName("unbreaking")); // DURABILITY/UNBREAKING
         if (Rnd.get(true) <= (100d / (level + 1))) {
-            shieldMeta.setDamage(shieldMeta.getDamage() + 1);
-            shield.setItemMeta(shieldMeta);
+            if (shieldMeta instanceof Damageable) {
+                ((Damageable) shieldMeta).setDamage(((Damageable) shieldMeta).getDamage() + 1);
+                shield.setItemMeta(shieldMeta);
+            } else {
+                shield.setDurability((short) (shield.getDurability() - 1));
+            }
         }
     }
 
@@ -464,19 +474,24 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
     private double getEnchantModifier(@NotNull LivingEntity zertva, @NotNull DamageCause cause) {
         EntityStats stats = EntityStats.get(zertva);
 
-        double epfAll  = stats.getEnchantProtectFactor(Enchantment.getByName("protection")); // PROTECTION_ENVIRONMENTAL/PROTECTION
+        double epfAll =
+                stats.getEnchantProtectFactor(Enchantment.getByName("protection")); // PROTECTION_ENVIRONMENTAL/PROTECTION
         double epfSpec = 0D;
         double epfMod  = 1D;
 
         if (cause == DamageCause.FIRE || cause == DamageCause.FIRE_TICK
                 || cause == DamageCause.LAVA) {
-            epfSpec = stats.getEnchantProtectFactor(Enchantment.getByName("fire_protection")); // PROTECTION_FIRE/FIRE_PROTECTION
+            epfSpec =
+                    stats.getEnchantProtectFactor(Enchantment.getByName("fire_protection")); // PROTECTION_FIRE/FIRE_PROTECTION
         } else if (cause == DamageCause.FALL) {
-            epfSpec = stats.getEnchantProtectFactor(Enchantment.getByName("feather_falling")); // PROTECTION_FALL/FEATHER_FALLING
+            epfSpec =
+                    stats.getEnchantProtectFactor(Enchantment.getByName("feather_falling")); // PROTECTION_FALL/FEATHER_FALLING
         } else if (cause == DamageCause.PROJECTILE) {
-            epfSpec = stats.getEnchantProtectFactor(Enchantment.getByName("projectile_protection")); // PROTECTION_PROJECTILE/PROJECTILE_PROTECTION
+            epfSpec =
+                    stats.getEnchantProtectFactor(Enchantment.getByName("projectile_protection")); // PROTECTION_PROJECTILE/PROJECTILE_PROTECTION
         } else if (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) {
-            epfSpec = stats.getEnchantProtectFactor(Enchantment.getByName("blast_protection")); // PROTECTION_EXPLOSION/BLAST_PROTECTION
+            epfSpec =
+                    stats.getEnchantProtectFactor(Enchantment.getByName("blast_protection")); // PROTECTION_EXPLOSION/BLAST_PROTECTION
         }
         epfMod = Math.min(20D, (epfSpec + epfAll));
 
