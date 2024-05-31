@@ -71,7 +71,7 @@ public abstract class AbstractEditorGUI extends Menu {
             ItemFlag hidePotionsFlag;
             try {
                 hidePotionsFlag = ItemFlag.HIDE_ADDITIONAL_TOOLTIP;
-            } catch (IllegalArgumentException ignored) {
+            } catch (NoSuchFieldError ignored) {
                 hidePotionsFlag = ItemFlag.valueOf("HIDE_POTION_EFFECTS");
             }
 
