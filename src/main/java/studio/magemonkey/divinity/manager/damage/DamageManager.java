@@ -24,7 +24,6 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import studio.magemonkey.codex.core.Version;
 import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.items.CodexItemManager;
 import studio.magemonkey.codex.manager.IListener;
@@ -363,11 +362,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                 double vanillaBlockModifier = 1D;
                 if (Rnd.get(true) < blockRate) {
                     vanillaBlockModifier = 0D;
-                    if (Version.CURRENT == Version.V1_16_R3) {
-                        meta.setBlockModifier(1D + blockModifier / 100D);
-                    } else {
-                        meta.setBlockModifier(1D - blockModifier / 100D);
-                    }
+                    meta.setBlockModifier(1D - blockModifier / 100D);
 
                     if (isVanillaBlocked && player != null) {
                         applyShieldDamage(player);
@@ -394,7 +389,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         if (shield == null) return;
 
         ItemMeta shieldMeta = shield.getItemMeta();
-        int      level      =
+        int level =
                 shieldMeta.getEnchantLevel(Enchantment.getByKey(NamespacedKey.minecraft("unbreaking"))); // DURABILITY/UNBREAKING
         if (Rnd.get(true) <= (100d / (level + 1))) {
             if (shieldMeta instanceof Damageable) {
