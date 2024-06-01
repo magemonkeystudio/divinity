@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.util.DataUT;
+import studio.magemonkey.codex.util.NamespaceResolver;
 import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.api.event.DivinityItemDamageEvent;
@@ -123,8 +124,10 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
         ItemMeta meta = item.getItemMeta();
 
         // Vanilla unbreaking formula
-        if (meta != null && meta.hasEnchant(Enchantment.getByKey(NamespacedKey.minecraft("unbreaking")))) { // DURABILITY/UNBREAKING
-            double lvl    = meta.getEnchantLevel(Enchantment.getByKey(NamespacedKey.minecraft("unbreaking")));
+        final Enchantment unbreaking =
+                NamespaceResolver.getEnchantment("UNBREAKING", "DURABILITY"); // UNBREAKING/DURABILITY
+        if (meta != null && meta.hasEnchant(unbreaking)) {
+            double lvl    = meta.getEnchantLevel(unbreaking);
             double chance = (100D / (lvl + 1D));
             if (Rnd.get(true) < chance) {
                 return false;

@@ -1,11 +1,11 @@
 package studio.magemonkey.divinity.manager.effects.main;
 
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.codex.util.NamespaceResolver;
 import studio.magemonkey.divinity.manager.effects.IEffectType;
 import studio.magemonkey.divinity.manager.effects.IPeriodicEffect;
 
@@ -56,10 +56,10 @@ public class StunEffect extends IPeriodicEffect {
         public Builder(double lifeTime) {
             super(lifeTime, 1D / 20D);
 
-            this.addPotionEffects(new PotionEffect(PotionEffectType.getByKey(NamespacedKey.minecraft("slowness")),
+            this.addPotionEffects(new PotionEffect(NamespaceResolver.getPotion("SLOWNESS", "SLOW"),
                     (int) (lifeTime * 20),
                     127)); // SLOW/SLOWNESS
-            this.addPotionEffects(new PotionEffect(PotionEffectType.getByKey(NamespacedKey.minecraft("mining_fatigue")),
+            this.addPotionEffects(new PotionEffect(NamespaceResolver.getPotion("SLOW_DIGGING", "MINING_FATIGUE"),
                     (int) (lifeTime * 20),
                     127)); // SLOW_DIGGING/MINING_FATIGUE
             this.addPotionEffects(new PotionEffect(PotionEffectType.BLINDNESS, (int) lifeTime * 20, 127));

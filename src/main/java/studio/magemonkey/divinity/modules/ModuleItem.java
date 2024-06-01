@@ -1,5 +1,17 @@
 package studio.magemonkey.divinity.modules;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.CodexEngine;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.items.ItemType;
@@ -8,6 +20,7 @@ import studio.magemonkey.codex.items.exception.MissingProviderException;
 import studio.magemonkey.codex.items.providers.VanillaProvider;
 import studio.magemonkey.codex.manager.LoadableItem;
 import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.codex.util.NamespaceResolver;
 import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.codex.util.constants.JStrings;
 import studio.magemonkey.codex.util.random.Rnd;
@@ -20,25 +33,12 @@ import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.requirements.ItemRequirements;
 import studio.magemonkey.divinity.stats.items.requirements.user.UntradeableRequirement;
 import studio.magemonkey.divinity.utils.LoreUT;
-import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public abstract class ModuleItem extends LoadableItem {
-    protected final QModuleDrop<?> module;
-    protected       Divinity       plugin;
+    protected final QModuleDrop<?>            module;
+    protected       Divinity                  plugin;
     protected       String                    name;
     protected       ItemType                  material;
     protected       List<String>              lore;
@@ -116,7 +116,7 @@ public abstract class ModuleItem extends LoadableItem {
 
         this.enchants = new HashMap<>();
         for (String sId : cfg.getSection("enchantments")) {
-            Enchantment en = Enchantment.getByKey(NamespacedKey.minecraft(sId.toLowerCase()));
+            Enchantment en = Enchantment.getByName(sId.toLowerCase());
             if (en == null) {
                 plugin.error("Invalid enchantment provided: " + sId + " (" + cfg.getFile().getName() + ")");
                 continue;
@@ -234,7 +234,7 @@ public abstract class ModuleItem extends LoadableItem {
         meta.addItemFlags(this.flags.toArray(new ItemFlag[this.flags.size()]));
         meta.setUnbreakable(this.isUnbreakable);
         if (this.enchanted) {
-            meta.addEnchant(Enchantment.getByKey(NamespacedKey.minecraft("punch")), 1, true); // ARROW_DAMAGE/PUNCH
+            meta.addEnchant(NamespaceResolver.getEnchantment("POWER", "ARROW_DAMAGE"), 1, true); // ARROW_DAMAGE/POWER
         }
 
         item.setItemMeta(meta);

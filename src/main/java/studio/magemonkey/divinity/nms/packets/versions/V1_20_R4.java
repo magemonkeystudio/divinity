@@ -18,6 +18,7 @@ import studio.magemonkey.divinity.data.api.DivinityUser;
 import studio.magemonkey.divinity.data.api.UserProfile;
 import studio.magemonkey.divinity.manager.EntityManager;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
@@ -148,8 +149,11 @@ public class V1_20_R4 extends V1_20_R3 {
 
     @Override
     protected void manageDamageParticle(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
-        Class packetParticlesClass = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutWorldParticles");
-        Class particleParamClass   = Reflex.getClass("net.minecraft.core.particles", "ParticleParam");
+        Class<?> packetParticlesClass = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutWorldParticles");
+        Class<?> particleParamClass   = Reflex.getClass("net.minecraft.core.particles", "ParticleParam");
+
+        Class<?> registries            = Reflex.getClass("net.minecraft.core.registries.BuiltInRegistries");
+        Object   particleRegistry      = Reflex.getFieldValue(registries, "j");
 
         Object p = packetParticlesClass.cast(packet);
 
@@ -158,9 +162,21 @@ public class V1_20_R4 extends V1_20_R3 {
 
         Method a = Reflex.getMethod(particleParamClass, "a"); //Get the namespace key of the particle being sent
 
-        String name = (String) Reflex.invokeMethod(a, particleParam);
-        if (name.contains("damage_indicator")) {
-            Reflex.setFieldValue(p, "i", 20);
+        try {
+            Object   particleType = Reflex.invokeMethod(a, particleParam);
+            String   mcKey        = "minecraft:damage_indicator";
+            Class<?> keyClass     = Reflex.getClass("net.minecraft.resources.MinecraftKey");
+            Object   key          = Reflex.getConstructor(keyClass, String.class).newInstance(mcKey);
+            Object damageIndicator = Reflex.invokeMethod(
+                    Reflex.getMethod(particleRegistry.getClass(), "a", keyClass),
+                    particleRegistry,
+                    key
+            );
+            if (particleType.equals(damageIndicator)) {
+                Reflex.setFieldValue(p, "i", 20); // This is the count
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

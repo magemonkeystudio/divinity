@@ -2,7 +2,6 @@ package studio.magemonkey.divinity.stats;
 
 import lombok.Getter;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
@@ -24,6 +23,7 @@ import studio.magemonkey.codex.api.meta.NBTAttribute;
 import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.util.EntityUT;
 import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.codex.util.NamespaceResolver;
 import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.api.event.EntityStatsBonusUpdateEvent;
@@ -745,11 +745,11 @@ public class EntityStats {
 
     public double getEnchantProtectFactor(@NotNull Enchantment en) {
         int epfPer = 1; // EPF Per each enchantment level
-        if (en == Enchantment.getByKey(NamespacedKey.minecraft("fire_protection"))
-                || en == Enchantment.getByKey(NamespacedKey.minecraft("blast_protection"))
-                || en == Enchantment.getByKey(NamespacedKey.minecraft("projectile_protection"))) {
+        if (en == NamespaceResolver.getEnchantment("FIRE_PROTECTION", "PROTECTION_FIRE")
+                || en == NamespaceResolver.getEnchantment("BLAST_PROTECTION", "PROTECTION_EXPLOSION")
+                || en == NamespaceResolver.getEnchantment("PROJECTILE_PROTECTION", "PROTECTION_PROJECTILE")) {
             epfPer = 2;
-        } else if (en == Enchantment.getByKey(NamespacedKey.minecraft("feather_falling"))) {
+        } else if (en == NamespaceResolver.getEnchantment("FEATHER_FALLING", "PROTECTION_FALL")) {
             epfPer = 3;
         }
 

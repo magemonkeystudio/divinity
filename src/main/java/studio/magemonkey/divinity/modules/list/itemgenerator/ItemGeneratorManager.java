@@ -402,7 +402,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             this.enchantsSafeLevels = cfg.getBoolean(path + "safe-levels");
             this.enchantsList = new HashMap<>();
             for (String sId : cfg.getSection(path + "list")) {
-                Enchantment en = Enchantment.getByKey(NamespacedKey.minecraft(sId.toLowerCase()));
+                Enchantment en = Enchantment.getByName(sId.toLowerCase());
                 if (en == null) {
                     error("Invalid enchantment provided: " + sId + " (" + cfg.getFile().getName() + ")");
                     continue;

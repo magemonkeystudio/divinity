@@ -2,7 +2,6 @@ package studio.magemonkey.divinity.modules.list.extractor;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -15,10 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.hooks.external.VaultHK;
 import studio.magemonkey.codex.manager.api.gui.*;
-import studio.magemonkey.codex.util.DataUT;
-import studio.magemonkey.codex.util.ItemUT;
-import studio.magemonkey.codex.util.NumberUT;
-import studio.magemonkey.codex.util.StringUT;
+import studio.magemonkey.codex.util.*;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.api.DivinityAPI;
 import studio.magemonkey.divinity.modules.api.socketing.ModuleSocket;
@@ -165,14 +161,16 @@ class ExtractGUI extends NGUI<Divinity> {
                         for (int socketSlot : socketSlots) {
                             ItemStack socketItem = inv.getItem(socketSlot);
                             if (socketItem != null) {
-                                socketItem.removeEnchantment(Enchantment.getByKey(NamespacedKey.minecraft("punch"))); // ARROW_DAMAGE/PUNCH
+                                socketItem.removeEnchantment(NamespaceResolver.getEnchantment("POWER",
+                                        "ARROW_DAMAGE")); // ARROW_DAMAGE/POWER
                             }
                         }
 
                         // Add glow to selected socket item
                         ItemStack item1 = e.getCurrentItem();
                         if (item1 != null) {
-                            item1.addUnsafeEnchantment(Enchantment.getByKey(NamespacedKey.minecraft("punch")), 1); // ARROW_DAMAGE/PUNCH
+                            item1.addUnsafeEnchantment(NamespaceResolver.getEnchantment("POWER", "ARROW_DAMAGE"),
+                                    1); // ARROW_DAMAGE/POWER
                         }
 
                         ItemStack target1 = getItem(inv, itemSlot);
@@ -242,7 +240,8 @@ class ExtractGUI extends NGUI<Divinity> {
             Enum<?> type2 = guiItem.getType();
             if (type2 != null && type2 == type) {
                 ItemStack itemGlow = guiItem.getItem();
-                itemGlow.addUnsafeEnchantment(Enchantment.getByKey(NamespacedKey.minecraft("punch")), 1); // ARROW_DAMAGE/PUNCH
+                itemGlow.addUnsafeEnchantment(NamespaceResolver.getEnchantment("POWER", "ARROW_DAMAGE"),
+                        1); // ARROW_DAMAGE/POWER
                 DataUT.setData(itemGlow, META_KEY_SOCKET_SELECT, "true");
                 JIcon active = new JIcon(itemGlow);
                 active.setClick(guiItem.getClick());

@@ -29,6 +29,7 @@ import studio.magemonkey.codex.items.CodexItemManager;
 import studio.magemonkey.codex.manager.IListener;
 import studio.magemonkey.codex.registry.damage.DamageTypeProvider;
 import studio.magemonkey.codex.util.LocUT;
+import studio.magemonkey.codex.util.NamespaceResolver;
 import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.api.PartyAPI;
@@ -390,7 +391,8 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
 
         ItemMeta shieldMeta = shield.getItemMeta();
         int level =
-                shieldMeta.getEnchantLevel(Enchantment.getByKey(NamespacedKey.minecraft("unbreaking"))); // DURABILITY/UNBREAKING
+                shieldMeta.getEnchantLevel(NamespaceResolver.getEnchantment("UNBREAKING",
+                        "DURABILITY")); // DURABILITY/UNBREAKING
         if (Rnd.get(true) <= (100d / (level + 1))) {
             if (shieldMeta instanceof Damageable) {
                 ((Damageable) shieldMeta).setDamage(((Damageable) shieldMeta).getDamage() + 1);
@@ -472,23 +474,28 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         EntityStats stats = EntityStats.get(zertva);
 
         double epfAll =
-                stats.getEnchantProtectFactor(Enchantment.getByKey(NamespacedKey.minecraft("protection"))); // PROTECTION_ENVIRONMENTAL/PROTECTION
+                stats.getEnchantProtectFactor(NamespaceResolver.getEnchantment("PROTECTION",
+                        "PROTECTION_ENVIRONMENTAL")); // PROTECTION_ENVIRONMENTAL/PROTECTION
         double epfSpec = 0D;
         double epfMod  = 1D;
 
         if (cause == DamageCause.FIRE || cause == DamageCause.FIRE_TICK
                 || cause == DamageCause.LAVA) {
             epfSpec =
-                    stats.getEnchantProtectFactor(Enchantment.getByKey(NamespacedKey.minecraft("fire_protection"))); // PROTECTION_FIRE/FIRE_PROTECTION
+                    stats.getEnchantProtectFactor(NamespaceResolver.getEnchantment("FIRE_PROTECTION",
+                            "PROTECTION_FIRE")); // PROTECTION_FIRE/FIRE_PROTECTION
         } else if (cause == DamageCause.FALL) {
             epfSpec =
-                    stats.getEnchantProtectFactor(Enchantment.getByKey(NamespacedKey.minecraft("feather_falling"))); // PROTECTION_FALL/FEATHER_FALLING
+                    stats.getEnchantProtectFactor(NamespaceResolver.getEnchantment("FEATHER_FALLING",
+                            "PROTECTION_FALL")); // PROTECTION_FALL/FEATHER_FALLING
         } else if (cause == DamageCause.PROJECTILE) {
             epfSpec =
-                    stats.getEnchantProtectFactor(Enchantment.getByKey(NamespacedKey.minecraft("projectile_protection"))); // PROTECTION_PROJECTILE/PROJECTILE_PROTECTION
+                    stats.getEnchantProtectFactor(NamespaceResolver.getEnchantment("PROJECTILE_PROTECTION",
+                            "PROTECTION_PROJECTILE")); // PROTECTION_PROJECTILE/PROJECTILE_PROTECTION
         } else if (cause == DamageCause.BLOCK_EXPLOSION || cause == DamageCause.ENTITY_EXPLOSION) {
             epfSpec =
-                    stats.getEnchantProtectFactor(Enchantment.getByKey(NamespacedKey.minecraft("blast_protection"))); // PROTECTION_EXPLOSION/BLAST_PROTECTION
+                    stats.getEnchantProtectFactor(NamespaceResolver.getEnchantment("BLAST_PROTECTION",
+                            "PROTECTION_EXPLOSION")); // PROTECTION_EXPLOSION/BLAST_PROTECTION
         }
         epfMod = Math.min(20D, (epfSpec + epfAll));
 

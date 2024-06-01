@@ -180,7 +180,7 @@ public class ModifyCommand extends ISubCommand<Divinity> {
             }
         } else if (args.length == 4 && args[1].equalsIgnoreCase(ARGS[4])) { // Enchant
             String      ench = args[2].toLowerCase();
-            Enchantment e    = Enchantment.getByKey(NamespacedKey.minecraft(ench));
+            Enchantment e    = Enchantment.getByName(ench);
             if (e == null) {
                 plugin.lang().Error_InvalidArgument.replace("%arg%", ench).send(p);
                 return;
