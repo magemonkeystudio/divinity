@@ -9,6 +9,7 @@ party:
 chat:
   enabled: true
   format: '&9[Group] &l{player}: &7{message}'
+  cancel-main-event: false
 size-permissions:
   vip: 8
   premium: 10

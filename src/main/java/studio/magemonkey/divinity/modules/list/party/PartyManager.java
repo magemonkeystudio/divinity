@@ -1,5 +1,19 @@
 package studio.magemonkey.divinity.modules.list.party;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.projectiles.ProjectileSource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.config.api.ILangMsg;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.hooks.Hooks;
@@ -16,27 +30,12 @@ import studio.magemonkey.divinity.hooks.internal.DivinityHook;
 import studio.magemonkey.divinity.modules.EModule;
 import studio.magemonkey.divinity.modules.api.QModule;
 import studio.magemonkey.divinity.modules.list.party.command.*;
-import studio.magemonkey.divinity.modules.list.party.command.*;
 import studio.magemonkey.divinity.modules.list.party.compat.level.IPEFabled;
 import studio.magemonkey.divinity.modules.list.party.compat.level.IPEInternal;
 import studio.magemonkey.divinity.modules.list.party.compat.level.IPartyLevelManager;
 import studio.magemonkey.divinity.modules.list.party.compat.quest.IPOMangoQuest;
 import studio.magemonkey.divinity.modules.list.party.compat.quest.IPartyObjective;
 import studio.magemonkey.divinity.modules.list.party.event.PlayerLeavePartyEvent;
-import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.projectiles.ProjectileSource;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -515,13 +514,6 @@ public class PartyManager extends QModule {
 
         e.getRecipients().clear();
 
-        for (PartyMember friend : member.getParty().getMembers()) {
-            Player pFriend = friend.getPlayer();
-            if (pFriend == null) continue;
-
-            e.getRecipients().add(pFriend);
-        }
-
         String format = settings.getChatFormat()
                 .replace("{player}", "%1$s")
                 .replace("{message}", "%2$s");
@@ -529,7 +521,26 @@ public class PartyManager extends QModule {
         if (Hooks.hasPlaceholderAPI()) {
             format = PlaceholderAPI.setPlaceholders(player, format);
         }
-        e.setFormat(format);
+        if (settings.cancelMainChatEvent()) {
+            format = format.replace("%1$s", player.getDisplayName())
+                    .replace("%2$s", e.getMessage());
+            e.setCancelled(true);
+            for (PartyMember mem : member.getParty().getMembers()) {
+                Player friend = mem.getPlayer();
+                if (friend == null) continue;
+
+                friend.sendMessage(format);
+            }
+        } else {
+            e.setFormat(format);
+
+            for (PartyMember friend : member.getParty().getMembers()) {
+                Player pFriend = friend.getPlayer();
+                if (pFriend == null) continue;
+
+                e.getRecipients().add(pFriend);
+            }
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -969,6 +980,7 @@ public class PartyManager extends QModule {
 
         private final boolean partyChatEnabled;
         private final String  partyChatFormat;
+        private final boolean partyChatCancel;
 
         private final Map<String, Integer> partySizeByRank;
 
@@ -994,6 +1006,7 @@ public class PartyManager extends QModule {
             path = "chat.";
             this.partyChatEnabled = cfg.getBoolean(path + "enabled");
             this.partyChatFormat = cfg.getString(path + "format");
+            this.partyChatCancel = cfg.getBoolean(path + "cancel-main-event", true);
 
             this.partySizeByRank = new LinkedHashMap<>();
             for (String rank : cfg.getSection("size-permissions")) {
@@ -1059,6 +1072,10 @@ public class PartyManager extends QModule {
 
         public String getChatFormat() {
             return this.partyChatFormat;
+        }
+
+        public boolean cancelMainChatEvent() {
+            return this.partyChatCancel;
         }
 
         //
