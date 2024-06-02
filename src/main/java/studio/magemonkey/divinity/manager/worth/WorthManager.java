@@ -182,7 +182,7 @@ public class WorthManager implements Loadable {
 
         for (String sId : cfg.getSection(path + "by-enchant-level")) {
             try {
-                Enchantment e = Enchantment.getByName(sId.toLowerCase());
+                Enchantment e = Enchantment.getByKey(NamespacedKey.minecraft(sId.toLowerCase()));
                 if (e == null) {
                     this.plugin.error("[Worth] Invalid Enchantment '" + sId + "' !");
                     continue;

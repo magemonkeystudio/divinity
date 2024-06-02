@@ -3,6 +3,7 @@ package studio.magemonkey.divinity.modules;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -116,7 +117,7 @@ public abstract class ModuleItem extends LoadableItem {
 
         this.enchants = new HashMap<>();
         for (String sId : cfg.getSection("enchantments")) {
-            Enchantment en = Enchantment.getByName(sId.toLowerCase());
+            Enchantment en = Enchantment.getByKey(NamespacedKey.minecraft(sId.toLowerCase()));
             if (en == null) {
                 plugin.error("Invalid enchantment provided: " + sId + " (" + cfg.getFile().getName() + ")");
                 continue;
