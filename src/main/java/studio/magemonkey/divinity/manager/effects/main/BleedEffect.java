@@ -62,7 +62,7 @@ public class BleedEffect extends IPeriodicEffect {
             Particle particle;
             try {
                 particle = Particle.BLOCK;
-            } catch (Exception e) {
+            } catch (NoSuchFieldError e) {
                 particle = Particle.valueOf("BLOCK_CRACK");
             }
             this.withBlood(particle);
