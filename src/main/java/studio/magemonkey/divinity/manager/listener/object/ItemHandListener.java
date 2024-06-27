@@ -1,12 +1,9 @@
 package studio.magemonkey.divinity.manager.listener.object;
 
-import studio.magemonkey.codex.manager.IListener;
-import studio.magemonkey.codex.util.ItemUT;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.stats.items.ItemStats;
-import studio.magemonkey.divinity.stats.items.attributes.HandAttribute;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,6 +15,11 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.codex.manager.IListener;
+import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.stats.items.ItemStats;
+import studio.magemonkey.divinity.stats.items.attributes.HandAttribute;
 
 import java.util.Set;
 
@@ -78,6 +80,13 @@ public class ItemHandListener extends IListener<Divinity> {
         if (slots.contains(45)) { // Offhand
             plugin.lang().Module_Item_Interact_Error_Hand.send(player);
             e.setCancelled(true);
+            e.setResult(Event.Result.DENY);
+           String server = Bukkit.getServer().getName();
+           if (server.contains("Mohist")) {
+               // Mohist is dumb... and doesn't properly reset slots
+               // after the event is cancelled
+               player.getInventory().setItemInOffHand(null);
+           }
         }
     }
 
@@ -97,6 +106,7 @@ public class ItemHandListener extends IListener<Divinity> {
 
             ItemUT.addItem(player, new ItemStack(off));
             player.getInventory().setItemInOffHand(null);
+            player.updateInventory();
             plugin.lang().Module_Item_Interact_Error_Hand.send(player);
         }
     }
@@ -115,13 +125,13 @@ public class ItemHandListener extends IListener<Divinity> {
             if (handAtt != null && handAtt.getType() == HandAttribute.Type.TWO) {
                 plugin.lang().Module_Item_Interact_Error_Hand.send(player);
                 e.setCancelled(true);
-                return;
             } else {
                 if (this.holdMainTwo(player)) {
                     plugin.lang().Module_Item_Interact_Error_Hand.send(player);
                     e.setCancelled(true);
                 }
             }
+            player.updateInventory();
         }
     }
 
