@@ -35,7 +35,7 @@ public class DivinityProvider implements ICodexItemProvider<DivinityProvider.Div
     public DivinityItemType getItem(String id) {
         if (id == null || id.isBlank()) return null;
 
-        id = CodexItemManager.stripPrefix(NAMESPACE, id).replaceAll("[ -]", "_");
+        id = CodexItemManager.stripPrefix(NAMESPACE, id);
 
         String[] split = id.split(":", 2);
         if (split.length == 2) { // Module name
