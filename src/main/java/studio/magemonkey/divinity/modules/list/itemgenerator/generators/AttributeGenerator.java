@@ -72,6 +72,11 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
 
             double            m1          = cfg.getDouble(path2 + "min", 0D);
             double            m2          = cfg.getDouble(path2 + "max", 0D);
+            if (m1 > m2) {
+                double temp = m1;
+                m1 = m2;
+                m2 = temp;
+            }
             double            scale       = cfg.getDouble(path2 + "scale-by-level", 1D);
             boolean           flatRange   = cfg.getBoolean(path2 + "flat-range", false);
             boolean           roundValues = cfg.getBoolean(path2 + "round", false);
@@ -242,15 +247,18 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
 
                         double vFinMin = Math.min(rndV1, rndV2);
                         double vFinMax = Math.max(rndV1, rndV2);
-                        dmgAtt.add(item, new StatBonus(new double[]{vFinMin, vFinMax}, false, null), -1);
+                        if (vFinMin != 0 || vFinMax != 0)
+                            dmgAtt.add(item, new StatBonus(new double[]{vFinMin, vFinMax}, false, null), -1);
                     } else {
                         double vFin = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                        if (stat instanceof DefenseAttribute) {
-                            DefenseAttribute defAtt = (DefenseAttribute) stat;
-                            defAtt.add(item, new StatBonus(new double[]{vFin}, false, null), -1);
-                        } else if (stat instanceof FabledAttribute) {
-                            FabledAttribute fabledAttribute = (FabledAttribute) stat;
-                            fabledAttribute.add(item, (int) Math.floor(vFin), -1);
+                        if (vFin != 0) {
+                            if (stat instanceof DefenseAttribute) {
+                                DefenseAttribute defAtt = (DefenseAttribute) stat;
+                                defAtt.add(item, new StatBonus(new double[]{vFin}, false, null), -1);
+                            } else if (stat instanceof FabledAttribute) {
+                                FabledAttribute fabledAttribute = (FabledAttribute) stat;
+                                fabledAttribute.add(item, (int) Math.floor(vFin), -1);
+                            }
                         }
                     }
 

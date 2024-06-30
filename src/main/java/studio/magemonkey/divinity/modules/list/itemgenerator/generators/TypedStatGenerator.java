@@ -71,6 +71,11 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
 
             double            m1          = cfg.getDouble(path2 + "min", 0D);
             double            m2          = cfg.getDouble(path2 + "max", 0D);
+            if (m1 > m2) {
+                double temp = m1;
+                m1 = m2;
+                m2 = temp;
+            }
             double            scale       = cfg.getDouble(path2 + "scale-by-level", 1D);
             boolean           flatRange   = cfg.getBoolean(path2 + "flat-range", false);
             boolean           roundValues = cfg.getBoolean(path2 + "round", false);
@@ -204,24 +209,26 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
 
 
                 double vFin = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                if (stat instanceof SimpleStat) {
-                    SimpleStat rStat = (SimpleStat) stat;
-                    rStat.add(item, new StatBonus(new double[]{vFin}, false, null), -1);
+                if (vFin != 0) {
+                    if (stat instanceof SimpleStat) {
+                        SimpleStat rStat = (SimpleStat) stat;
+                        rStat.add(item, new StatBonus(new double[]{vFin}, false, null), -1);
 
-                    // Add depending stats.
-                    SimpleStat.Type depend = rStat.getDependStat();
-                    if (depend != null && rStat.isMainItem(item)) {
-                        @SuppressWarnings("unchecked")
-                        TypedStat dStat = ItemStats.getStat(depend);
-                        if (dStat != null && !dStat.isApplied(item)) {
-                            mapChance.put(dStat, 100D);
-                            // Make depend stat to be 100% rolled.
-                            count--;
+                        // Add depending stats.
+                        SimpleStat.Type depend = rStat.getDependStat();
+                        if (depend != null && rStat.isMainItem(item)) {
+                            @SuppressWarnings("unchecked")
+                            TypedStat dStat = ItemStats.getStat(depend);
+                            if (dStat != null && !dStat.isApplied(item)) {
+                                mapChance.put(dStat, 100D);
+                                // Make depend stat to be 100% rolled.
+                                count--;
+                            }
                         }
+                    } else if (stat instanceof DurabilityStat) {
+                        DurabilityStat rStat = (DurabilityStat) stat;
+                        rStat.add(item, new double[]{vFin, vFin}, -1);
                     }
-                } else if (stat instanceof DurabilityStat) {
-                    DurabilityStat rStat = (DurabilityStat) stat;
-                    rStat.add(item, new double[]{vFin, vFin}, -1);
                 }
 
                 for (StatBonus statBonus : generatorItem.getClassBonuses((ItemLoreStat<?>) stat)) {
