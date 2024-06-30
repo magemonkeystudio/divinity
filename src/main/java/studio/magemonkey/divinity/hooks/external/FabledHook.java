@@ -34,7 +34,6 @@ import studio.magemonkey.fabled.api.event.SkillDamageEvent;
 import studio.magemonkey.fabled.api.player.PlayerData;
 import studio.magemonkey.fabled.api.player.PlayerSkill;
 import studio.magemonkey.fabled.api.skills.Skill;
-import studio.magemonkey.fabled.manager.ProAttribute;
 
 import java.util.*;
 
@@ -200,14 +199,14 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
                     .replace("%attrPost%", attrPost)
                     + "%value%";
         }
-        for (Map.Entry<String, ProAttribute> entry : Fabled.getAttributeManager().getAttributes().entrySet()) {
+        for (Map.Entry<String, studio.magemonkey.fabled.manager.FabledAttribute> entry : Fabled.getAttributeManager().getAttributes().entrySet()) {
             list.add(new FabledAttribute(entry.getKey(), entry.getValue().getName(), format));
         }
         return list;
     }
 
     public ItemStack getAttributeIndicator(String attributeId) {
-        ProAttribute proAttribute = Fabled.getAttributeManager().getAttribute(attributeId);
+        studio.magemonkey.fabled.manager.FabledAttribute proAttribute = Fabled.getAttributeManager().getAttribute(attributeId);
         if (proAttribute != null) return proAttribute.getToolIcon();
 
         ItemStack itemStack = new ItemStack(Material.DIRT);

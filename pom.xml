@@ -17,7 +17,7 @@
 
     <properties>
         <codex.version>1.0.0-R0.18-SNAPSHOT</codex.version>
-        <fabled.version>1.0.0-R0.21-SNAPSHOT</fabled.version>
+        <fabled.version>1.0.0-R0.42-SNAPSHOT</fabled.version>
     </properties>
 
     <repositories>

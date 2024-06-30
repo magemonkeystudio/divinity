@@ -15,7 +15,7 @@ import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.fabled.Fabled;
-import studio.magemonkey.fabled.manager.ProAttribute;
+import studio.magemonkey.fabled.manager.FabledAttribute;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -99,7 +99,7 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
                                     FabledHook fabledHook =
                                             (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
                                     if (fabledHook != null) {
-                                        ProAttribute proAttribute = Fabled.getAttributeManager().getAttribute(s);
+                                        FabledAttribute proAttribute = Fabled.getAttributeManager().getAttribute(s);
                                         if (proAttribute != null) return proAttribute.getName() + ": &6%value%";
                                     }
                                     return "&f" + s + ": &6%value%";
