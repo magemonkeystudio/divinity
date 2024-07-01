@@ -60,6 +60,7 @@ import studio.magemonkey.divinity.stats.items.attributes.SocketAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.stats.items.requirements.ItemRequirements;
+import studio.magemonkey.divinity.stats.items.requirements.api.DynamicUserRequirement;
 import studio.magemonkey.divinity.stats.items.requirements.user.BannedClassRequirement;
 import studio.magemonkey.divinity.stats.items.requirements.user.ClassRequirement;
 import studio.magemonkey.divinity.stats.items.requirements.user.LevelRequirement;
@@ -73,6 +74,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
@@ -364,7 +366,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     String reqRaw = cfg.getString(path + "level." + sLvl);
                     if (reqRaw == null || reqRaw.isEmpty()) continue;
 
-                    this.reqUserLvl.put(itemLvl, reqRaw.split(":"));
+                    this.reqUserLvl.put(itemLvl, Arrays.stream(reqRaw.split(",")).filter(s -> !s.isBlank()).collect(Collectors.toList()).toArray(new String[]{}));
                 }
             }
             if (ItemRequirements.isRegisteredUser(ClassRequirement.class)) {
@@ -373,10 +375,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     int itemLvl = StringUT.getInteger(sLvl, -1);
                     if (itemLvl <= 0) continue;
 
-                    String reqRaw = cfg.getString(path + "class." + sLvl);
-                    if (reqRaw == null || reqRaw.isEmpty()) continue;
+                    String reqRaw = cfg.getString(path + "class." + sLvl, "");
 
-                    this.reqUserClass.put(itemLvl, reqRaw.split(","));
+                    this.reqUserClass.put(itemLvl, Arrays.stream(reqRaw.split(",")).filter(s -> !s.isBlank()).collect(Collectors.toList()).toArray(new String[]{}));
                 }
             }
             if (ItemRequirements.isRegisteredUser(BannedClassRequirement.class)) {
@@ -385,8 +386,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     int itemLvl = StringUT.getInteger(sLvl, -1);
                     if (itemLvl <= 0) continue;
 
-                    String reqRaw = cfg.getString(path + "banned-class." + sLvl);
-                    if (reqRaw == null || reqRaw.isEmpty()) continue;
+                    String reqRaw = cfg.getString(path + "banned-class." + sLvl, "");
 
                     this.reqBannedUserClass.put(itemLvl, reqRaw.split(","));
                 }
@@ -521,7 +521,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         }
 
         @Nullable
-        protected final String[] getBannedUserClassRequirement(int itemLvl) {
+        protected final String[] getUserBannedClassRequirement(int itemLvl) {
             if (this.reqBannedUserClass == null) return null;
 
             Map.Entry<Integer, String[]> e = this.reqBannedUserClass.floorEntry(itemLvl);
@@ -808,21 +808,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             }
 
             String[] userClass = this.getUserClassRequirement(itemLvl);
-            if (userClass != null) {
-                ClassRequirement reqClass = ItemRequirements.getUserRequirement(ClassRequirement.class);
-                if (reqClass != null) {
-                    reqClass.add(item, userClass, -1);
+            DynamicUserRequirement<String[]> reqClass = null;
+            if (userClass == null || userClass.length == 0) {
+                userClass = this.getUserBannedClassRequirement(itemLvl);
+                if (userClass != null && userClass.length > 0) {
+                    reqClass = ItemRequirements.getUserRequirement(BannedClassRequirement.class);
                 }
+            } else {
+                reqClass = ItemRequirements.getUserRequirement(ClassRequirement.class);
+            }
+            if (reqClass != null) {
+                reqClass.add(item, userClass, -1);
             }
 
-            String[] bannedUserClass = this.getBannedUserClassRequirement(itemLvl);
-            if (bannedUserClass != null) {
-                BannedClassRequirement reqBannedClass =
-                        ItemRequirements.getUserRequirement(BannedClassRequirement.class);
-                if (reqBannedClass != null) {
-                    reqBannedClass.add(item, bannedUserClass, -1);
-                }
-            }
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_LEVEL, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_CLASS, null);
             LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_BANNED_CLASS, null);
