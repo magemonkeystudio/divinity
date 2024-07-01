@@ -185,8 +185,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private List<Integer>              modelDataList;
         private Map<String, List<Integer>> modelDataSpecial;
 
-        private Map<String, BonusMap>                     materialsModifiers;
-        private Map<String, Map<ItemLoreStat<?>, String>> classModifiers;
+        private Map<String, BonusMap>                     materialModifiers;
+        private Map<String, Map<ItemLoreStat<?>, String>> materialBonuses;
+        private Map<String, Map<ItemLoreStat<?>, String>> classBonuses;
 
         private TreeMap<Integer, String[]> reqUserLvl;
         private TreeMap<Integer, String[]> reqUserClass;
@@ -278,9 +279,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             }
 
             // Load Material bonuses
-            path = "generator.bonuses.material.";
-            this.materialsModifiers = new HashMap<>();
-            for (String group : cfg.getSection("generator.bonuses.material")) {
+            path = "generator.bonuses.material-modifiers.";
+            this.materialModifiers = new HashMap<>();
+            for (String group : cfg.getSection("generator.bonuses.material-modifiers")) {
                 if (!ItemUtils.parseItemGroup(group)) {
                     error("Invalid item group provided: '" + group + "' in '" + path + "'. File: " + cfg.getFile()
                             .getName());
@@ -296,12 +297,68 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 bMap.loadAmmo(cfg, path2 + "ammo");
                 bMap.loadHands(cfg, path2 + "hands");
 
-                this.materialsModifiers.put(group.toLowerCase(), bMap);
+                this.materialModifiers.put(group.toLowerCase(), bMap);
+            }
+
+            // Load Material bonuses
+            path = "generator.bonuses.material.";
+            this.materialBonuses = new HashMap<>();
+            for (String group : cfg.getSection("generator.bonuses.material")) {
+                Map<ItemLoreStat<?>, String> statMap = new HashMap<>();
+
+                String path2 = path + group + ".damage-types";
+                for (String id : cfg.getSection(path2)) {
+                    DamageAttribute dt = ItemStats.getDamageById(id);
+                    if (dt == null) continue;
+
+                    String sVal = cfg.getString(path2 + "." + id);
+                    if (sVal == null) continue;
+
+                    String[] split = sVal.split("%", 2);
+                    boolean  perc  = split.length == 2 && split[1].isEmpty();
+                    double   val   = StringUT.getDouble(split[0], 0, true);
+
+                    statMap.put(dt, val + (perc ? "%" : ""));
+                }
+
+                path2 = path + group + ".defense-types";
+                for (String id : cfg.getSection(path2)) {
+                    DefenseAttribute dt = ItemStats.getDefenseById(id);
+                    if (dt == null) continue;
+
+                    String sVal = cfg.getString(path2 + "." + id);
+                    if (sVal == null) continue;
+
+                    String[] split = sVal.split("%", 2);
+                    boolean  perc  = split.length == 2 && split[1].isEmpty();
+                    double   val   = StringUT.getDouble(split[0], 0, true);
+
+                    statMap.put(dt, val + (perc ? "%" : ""));
+                }
+
+                path2 = path + group + ".item-stats";
+                for (String id : cfg.getSection(path2)) {
+                    SimpleStat.Type dt = TypedStat.Type.getByName(id);
+                    if (dt == null) continue;
+
+                    ItemLoreStat<?> mainStat = (ItemLoreStat<?>) ItemStats.getStat(dt);
+
+                    String sVal = cfg.getString(path2 + "." + id);
+                    if (sVal == null) continue;
+
+                    String[] split = sVal.split("%", 2);
+                    boolean  perc  = split.length == 2 && split[1].isEmpty();
+                    double   val   = StringUT.getDouble(split[0], 0, true);
+
+                    statMap.put(mainStat, val + (perc ? "%" : ""));
+                }
+
+                this.materialBonuses.put(group, statMap);
             }
 
             // Load Class bonuses
             path = "generator.bonuses.class.";
-            this.classModifiers = new HashMap<>();
+            this.classBonuses = new HashMap<>();
             for (String group : cfg.getSection("generator.bonuses.class")) {
                 Map<ItemLoreStat<?>, String> statMap = new HashMap<>();
 
@@ -352,7 +409,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     statMap.put(mainStat, val + (perc ? "%" : ""));
                 }
 
-                this.classModifiers.put(group, statMap);
+                this.classBonuses.put(group, statMap);
             }
 
             // Load User Requirements.
@@ -552,9 +609,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         }
 
         @NotNull
-        public BiFunction<Boolean, Double, Double> getMaterialModifier(@NotNull ItemStack item,
-                                                                       @NotNull ItemLoreStat<?> stat) {
-            for (Map.Entry<String, BonusMap> e : this.materialsModifiers.entrySet()) {
+        public BiFunction<Boolean, Double, Double> getMaterialModifiers(@NotNull ItemStack item,
+                                                                        @NotNull ItemLoreStat<?> stat) {
+            for (Map.Entry<String, BonusMap> e : this.materialModifiers.entrySet()) {
                 if (ItemUtils.compareItemGroup(item, e.getKey())) {
                     BonusMap bMap = e.getValue();
                     return bMap.getBonus(stat);
@@ -563,9 +620,26 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             return (isBonus, result) -> result;
         }
 
+        public Collection<StatBonus> getMaterialBonuses(ItemLoreStat<?> stat) {
+            List<StatBonus> list = new ArrayList<>();
+            for (Map.Entry<String, Map<ItemLoreStat<?>, String>> entry : this.materialBonuses.entrySet()) {
+                for (Map.Entry<ItemLoreStat<?>, String> entry1 : entry.getValue().entrySet()) {
+                    if (entry1.getKey().equals(stat)) {
+                        String   sVal  = entry1.getValue();
+                        String[] split = sVal.split("%", 2);
+                        list.add(new StatBonus(
+                                new double[]{Double.parseDouble(split[0])},
+                                split.length == 2 && split[1].isEmpty(),
+                                new StatBonus.Condition<>()));
+                    }
+                }
+            }
+            return list;
+        }
+
         public Collection<StatBonus> getClassBonuses(ItemLoreStat<?> stat) {
             List<StatBonus> list = new ArrayList<>();
-            for (Map.Entry<String, Map<ItemLoreStat<?>, String>> entry : this.classModifiers.entrySet()) {
+            for (Map.Entry<String, Map<ItemLoreStat<?>, String>> entry : this.classBonuses.entrySet()) {
                 for (Map.Entry<ItemLoreStat<?>, String> entry1 : entry.getValue().entrySet()) {
                     if (entry1.getKey().equals(stat)) {
                         String   sVal  = entry1.getValue();

@@ -199,7 +199,7 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
 
             if (stat.hasPlaceholder(item)) {
                 BiFunction<Boolean, Double, Double> vMod =
-                        generatorItem.getMaterialModifier(item, (ItemLoreStat<?>) stat);
+                        generatorItem.getMaterialModifiers(item, (ItemLoreStat<?>) stat);
 
                 double vScale = generatorItem.getScaleOfLevel(values.getScaleByLevel(), itemLevel);
                 double vMin   = BonusCalculator.SIMPLE_FULL.apply(values.getMin(), Arrays.asList(vMod)) * vScale;

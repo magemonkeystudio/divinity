@@ -88,6 +88,7 @@ public class BonusCategoryGUI extends AbstractEditorGUI {
 
                 // Only permanent bonuses should handle these (i.e. class bonuses are applied dynamically)
                 switch (this.category) {
+                    case MATERIAL_MODIFIERS:
                     case MATERIAL: {
                         section =
                                 bonusesSection.getConfigurationSection(key + '.' + ItemType.FABLED_ATTRIBUTE.getPath());

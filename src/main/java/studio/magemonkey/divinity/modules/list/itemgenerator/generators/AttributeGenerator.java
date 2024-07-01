@@ -223,7 +223,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                 continue;
             } else {
                 if (stat.hasPlaceholder(item)) {
-                    BiFunction<Boolean, Double, Double> vMod = generatorItem.getMaterialModifier(item, stat);
+                    BiFunction<Boolean, Double, Double> vMod = generatorItem.getMaterialModifiers(item, stat);
 
                     double vScale = generatorItem.getScaleOfLevel(values.getScaleByLevel(), itemLevel);
                     double vMin   = BonusCalculator.SIMPLE_FULL.apply(values.getMin(), Arrays.asList(vMod)) * vScale;
@@ -263,6 +263,10 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                     }
 
                     for (StatBonus statBonus : generatorItem.getClassBonuses(stat)) {
+                        ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
+                    }
+
+                    for (StatBonus statBonus : generatorItem.getMaterialBonuses(stat)) {
                         ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
                     }
                 }

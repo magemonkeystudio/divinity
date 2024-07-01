@@ -57,6 +57,10 @@ generator:
           - 20
           - 22
   bonuses:
+    material-modifiers:
+      'diamond*':
+        damage-types:
+          physical: 1.15
     material:
       iron_sword:
         damage-types:

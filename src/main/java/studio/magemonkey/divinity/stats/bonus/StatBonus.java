@@ -169,22 +169,28 @@ public class StatBonus {
         private final DynamicUserRequirement<Z> requirement;
         private final Z                         value;
 
+        public Condition() {
+            this.requirement = null;
+            this.value = null;
+        }
+
         public Condition(DynamicUserRequirement<Z> requirement, Z value) {
             this.requirement = requirement;
             this.value = value;
         }
 
         public boolean meetsRequirement(@NotNull Player p) {
-            return this.requirement.canUse(p, this.value);
+            return this.requirement == null || this.requirement.canUse(p, this.value);
         }
 
         @NotNull
         public String getFormat(@Nullable Player p, @NotNull ItemStack item) {
-            return this.requirement.getFormat(p, item, this.value);
+            return this.requirement == null ? "" : this.requirement.getFormat(p, item, this.value);
         }
 
         @Override
         public boolean equals(Object o) {
+            if (this.requirement == null) return super.equals(o);
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             Condition<?> condition = (Condition<?>) o;
@@ -214,6 +220,7 @@ public class StatBonus {
 
         @Override
         public int hashCode() {
+            if (this.requirement == null) return super.hashCode();
             int result = 31;
             if (this.value instanceof long[]) {
                 result += Arrays.hashCode((long[]) this.value);
