@@ -620,9 +620,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             return (isBonus, result) -> result;
         }
 
-        public Collection<StatBonus> getMaterialBonuses(ItemLoreStat<?> stat) {
+        public Collection<StatBonus> getMaterialBonuses(ItemStack item, ItemLoreStat<?> stat) {
             List<StatBonus> list = new ArrayList<>();
             for (Map.Entry<String, Map<ItemLoreStat<?>, String>> entry : this.materialBonuses.entrySet()) {
+                if (!ItemUtils.compareItemGroup(item, entry.getKey())) continue;
                 for (Map.Entry<ItemLoreStat<?>, String> entry1 : entry.getValue().entrySet()) {
                     if (entry1.getKey().equals(stat)) {
                         String   sVal  = entry1.getValue();

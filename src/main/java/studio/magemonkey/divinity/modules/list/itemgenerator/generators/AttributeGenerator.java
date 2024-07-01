@@ -266,7 +266,7 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                         ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
                     }
 
-                    for (StatBonus statBonus : generatorItem.getMaterialBonuses(stat)) {
+                    for (StatBonus statBonus : generatorItem.getMaterialBonuses(item, stat)) {
                         ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
                     }
                 }
