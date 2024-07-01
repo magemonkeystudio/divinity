@@ -17,6 +17,7 @@ import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.utils.LoreUT;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class ItemLoreStat<Z> {
@@ -88,9 +89,9 @@ public abstract class ItemLoreStat<Z> {
     }
 
     @NotNull
-    protected final List<NamespacedKey> getKeys() {
+    public final List<NamespacedKey> getKeys() {
         this.validateMethod();
-        return this.keys;
+        return Collections.unmodifiableList(this.keys);
     }
 
     @NotNull

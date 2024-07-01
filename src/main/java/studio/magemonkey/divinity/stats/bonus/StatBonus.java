@@ -12,7 +12,6 @@ import studio.magemonkey.codex.util.DataUT;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.stats.items.requirements.ItemRequirements;
 import studio.magemonkey.divinity.stats.items.requirements.api.DynamicUserRequirement;
-import studio.magemonkey.divinity.stats.items.requirements.api.UserRequirement;
 import studio.magemonkey.divinity.stats.items.requirements.user.ClassRequirement;
 
 import java.util.Arrays;
@@ -30,7 +29,10 @@ public class StatBonus {
     );
     private static final List<NamespacedKey> CLASS_CONDITION = List.of(
             new NamespacedKey(Divinity.getInstance(), "class"),
-            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:class"))
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:class")),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:item_user_class")),
+            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_item_user_classclass")),
+            Objects.requireNonNull(NamespacedKey.fromString("quantumrpg:qrpg_item_user_classclass"))
     );
 
     public static PersistentDataType<PersistentDataContainer, StatBonus> DATA_TYPE = new PersistentDataType<>() {
@@ -58,11 +60,8 @@ public class StatBonus {
             }
             if (complex.percent) container.set(PERCENT.get(0), DataUT.BOOLEAN, true);
             if (complex.condition != null) {
-                if (complex.condition.requirement instanceof ClassRequirement) {
-                    container.set(complex.condition.requirement.getKey(),
-                            DataUT.STRING_ARRAY,
-                            (String[]) complex.condition.value);
-                }
+                if (complex.condition.requirement instanceof ClassRequirement)
+                    container.set(CLASS_CONDITION.get(0), DataUT.STRING_ARRAY, (String[]) complex.condition.value);
             }
             return container;
         }

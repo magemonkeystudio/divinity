@@ -352,7 +352,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     statMap.put(mainStat, val + (perc ? "%" : ""));
                 }
 
-                this.classModifiers.put(group.toLowerCase(), statMap);
+                this.classModifiers.put(group, statMap);
             }
 
             // Load User Requirements.
