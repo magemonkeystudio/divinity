@@ -234,6 +234,10 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
                 for (StatBonus statBonus : generatorItem.getClassBonuses((ItemLoreStat<?>) stat)) {
                     ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
                 }
+
+                for (StatBonus statBonus : generatorItem.getMaterialBonuses(item, (ItemLoreStat<?>) stat)) {
+                    ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
+                }
             }
             mapChance.remove(stat);
         }
