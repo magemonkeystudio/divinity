@@ -121,10 +121,15 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
             }
         }
 
-        // Support for Refined attributes.
-        RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
-        if (refine != null && has) {
-            bonuses.add(refine.getRefinedBonus(item, this));
+        {
+            StatBonus baseLine = this.getRaw(meta, 0);
+            if (baseLine != null && baseLine.getCondition() == null) { // Is there a base stat?
+                // Support for Refined attributes.
+                RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
+                if (refine != null && has) {
+                    bonuses.add(refine.getRefinedBonus(item, this));
+                }
+            }
         }
 
         return bonuses;

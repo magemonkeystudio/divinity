@@ -129,10 +129,15 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
             bonuses.add((isPercent, input) -> isPercent ? input + finalPercent : input);
         }
 
-        // Support for Refine Module
-        RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
-        if (refine != null && has) {
-            bonuses.add(refine.getRefinedBonus(item, this));
+        {
+            StatBonus baseLine = this.getRaw(meta, 0);
+            if (baseLine != null && baseLine.getCondition() == null) { // Is there a base stat?
+                // Support for Refine Module
+                RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
+                if (refine != null && has) {
+                    bonuses.add(refine.getRefinedBonus(item, this));
+                }
+            }
         }
 
         // Support for filled socket Gems.

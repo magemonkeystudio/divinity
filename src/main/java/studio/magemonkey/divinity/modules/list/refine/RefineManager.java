@@ -359,20 +359,12 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         }
 
         Map<ItemLoreStat<?>, Double> refineValues = new HashMap<>();
-        bMap.getStatBonuses().forEach((bStat, bFunc) -> {
-            refineValues.put(bStat,
-                    BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Arrays.asList(bFunc)));
-        });
-
-        bMap.getDamageBonuses().forEach((bStat, bFunc) -> {
-            refineValues.put(bStat,
-                    BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null)[1], Arrays.asList(bFunc)));
-        });
-
-        bMap.getDefenseBonuses().forEach((bStat, bFunc) -> {
-            refineValues.put(bStat,
-                    BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Arrays.asList(bFunc)));
-        });
+        bMap.getStatBonuses().forEach((bStat, bFunc) -> refineValues.put(bStat,
+                BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Collections.singletonList(bFunc))));
+        bMap.getDamageBonuses().forEach((bStat, bFunc) -> refineValues.put(bStat,
+                BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null)[1], Collections.singletonList(bFunc))));
+        bMap.getDefenseBonuses().forEach((bStat, bFunc) -> refineValues.put(bStat,
+                BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Collections.singletonList(bFunc))));
 
         Map<ItemLoreStat<?>, String> statTags = new HashMap<>();
 

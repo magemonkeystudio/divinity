@@ -148,6 +148,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
                 } else {
                     base[0] += value[0];
                     base[1] += value[0];
+                    has = true;
                 }
             } else {
                 base[0] += value[0];
@@ -175,17 +176,22 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
             bonuses.add((isPercent, input) -> isPercent ? new double[]{input[0] + finalPercent} : input);
         }
 
-        // Support for Refined attributes.
-        RefineManager refineManager = Divinity.getInstance().getModuleCache().getRefineManager();
-        if (refineManager != null && has) {
-            BiFunction<Boolean, Double, Double> refineManagerBonus = refineManager.getRefinedBonus(item, this);
-            bonuses.add((isPercent, input) ->
-                    input.length == 2
-                            ? new double[]{
-                            refineManagerBonus.apply(isPercent, input[0]),
-                            refineManagerBonus.apply(isPercent, input[1])}
-                            : new double[]{
-                                    refineManagerBonus.apply(isPercent, input[0])});
+        {
+            StatBonus baseLine = this.getRaw(meta, 0);
+            if (baseLine != null && baseLine.getCondition() == null) { // Is there a base stat?
+                // Support for Refined attributes.
+                RefineManager refineManager = Divinity.getInstance().getModuleCache().getRefineManager();
+                if (refineManager != null && has) {
+                    BiFunction<Boolean, Double, Double> refineManagerBonus = refineManager.getRefinedBonus(item, this);
+                    bonuses.add((isPercent, input) ->
+                            input.length == 2
+                                    ? new double[]{
+                                    refineManagerBonus.apply(isPercent, input[0]),
+                                    refineManagerBonus.apply(isPercent, input[1])}
+                                    : new double[]{
+                                            refineManagerBonus.apply(isPercent, input[0])});
+                }
+            }
         }
 
         // Support for filled socket Gems.
