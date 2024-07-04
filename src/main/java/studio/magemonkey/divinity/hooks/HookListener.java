@@ -6,6 +6,7 @@ import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.hooks.external.*;
 import studio.magemonkey.divinity.hooks.external.mythicmobs.MythicMobsHK;
 import studio.magemonkey.divinity.hooks.external.mythicmobs.MythicMobsHKv5;
+import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import studio.magemonkey.divinity.modules.list.party.PartyManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -73,6 +74,10 @@ public class HookListener extends IListener<Divinity> {
                         fabledHook.updateSkills(player);
                     }
                 }
+                ItemGeneratorManager itemgen = Divinity.getInstance()
+                        .getModuleManager()
+                        .getModule(ItemGeneratorManager.class);
+                if (itemgen != null) itemgen.reload(); // Load missed Fabled attributes
                 break;
             }
         }

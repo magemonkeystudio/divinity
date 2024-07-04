@@ -536,7 +536,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             this.addAttributeGenerator(new AttributeGenerator<>(this.plugin,
                     this,
                     "generator.fabled-attributes.",
-                    fabledHook == null ? List.of() : fabledHook.getAttributes(),
+                    fabledHook != null && fabledHook.isFabledLoaded() ? fabledHook.getAttributes() : List.of(),
                     ItemGeneratorManager.PLACE_GEN_FABLED_ATTR));
             if (fabledHook != null) {
                 cfg.addMissing("generator.fabled-attributes", commonItemGenerator.get("generator.fabled-attributes"));

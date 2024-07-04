@@ -1,7 +1,7 @@
 main: studio.magemonkey.divinity.Divinity
 version: ${project.version}
 name: ${project.name}
-authors: [ Travja, goflish ]
+authors: [ Travja, Sentropic, goflish ]
 description: The most advanced, customizable and configurable RPG-Core plugin!
 libraries: [ org.apache.commons:commons-lang3:${apache.version} ]
 depend: [ Codex ]

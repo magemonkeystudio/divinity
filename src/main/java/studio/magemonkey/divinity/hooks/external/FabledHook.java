@@ -43,6 +43,10 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         super(plugin);
     }
 
+    public boolean isFabledLoaded() {
+        return Fabled.isLoaded();
+    }
+
     @Override
     @NotNull
     public HookState setup() {
