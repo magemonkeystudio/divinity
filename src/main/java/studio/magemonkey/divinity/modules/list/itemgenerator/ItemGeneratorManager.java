@@ -423,7 +423,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     String reqRaw = cfg.getString(path + "level." + sLvl);
                     if (reqRaw == null || reqRaw.isEmpty()) continue;
 
-                    this.reqUserLvl.put(itemLvl, Arrays.stream(reqRaw.split(",")).filter(s -> !s.isBlank()).collect(Collectors.toList()).toArray(new String[]{}));
+                    this.reqUserLvl.put(itemLvl, Arrays.stream(reqRaw.split(":")).filter(s -> !s.isBlank()).collect(Collectors.toList()).toArray(new String[]{}));
                 }
             }
             if (ItemRequirements.isRegisteredUser(ClassRequirement.class)) {
