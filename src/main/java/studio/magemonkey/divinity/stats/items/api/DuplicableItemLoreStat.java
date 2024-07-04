@@ -88,7 +88,9 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         item = this.preparePlaceholder(item, index, line); // Replace current text with placeholder
         item = this.remove(item, index, true); // Remove meta tag. Does not remove lore as it replaced above.
 
-        String format = this.getFormat(item, value);
+        String format = this instanceof DynamicStat
+                ? ((DynamicStat<Z>) this).getFormat(null, item, value)
+                : this.getFormat(item, value);
 
         // Now replace the placeholder with requirement value
         // or delete it in case of requirement removal.
