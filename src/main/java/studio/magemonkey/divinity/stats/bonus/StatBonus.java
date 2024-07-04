@@ -27,6 +27,9 @@ public class StatBonus {
             new NamespacedKey(Divinity.getInstance(), "percent"),
             Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:percent"))
     );
+    private static final List<NamespacedKey> EMPTY = List.of(
+            new NamespacedKey(Divinity.getInstance(), "empty")
+    );
     private static final List<NamespacedKey> CLASS_CONDITION = List.of(
             new NamespacedKey(Divinity.getInstance(), "class"),
             Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:class")),
@@ -60,6 +63,9 @@ public class StatBonus {
             }
             if (complex.percent) container.set(PERCENT.get(0), DataUT.BOOLEAN, true);
             if (complex.condition != null) {
+                if (complex.condition.requirement == null) {
+                    container.set(EMPTY.get(0), BOOLEAN, true);
+                }
                 if (complex.condition.requirement instanceof ClassRequirement)
                     container.set(CLASS_CONDITION.get(0), DataUT.STRING_ARRAY, (String[]) complex.condition.value);
             }
@@ -91,6 +97,11 @@ public class StatBonus {
             if (array == null) array = new double[]{0, 0};
 
             Condition<?> condition = null;
+            for (NamespacedKey key : EMPTY) {
+                if (primitive.has(key, BOOLEAN)) {
+                    condition = new Condition<>();
+                }
+            }
             for (NamespacedKey key : CLASS_CONDITION) {
                 if (primitive.has(key, DataUT.STRING_ARRAY)) {
                     String[] classCondition = primitive.get(key, DataUT.STRING_ARRAY);
