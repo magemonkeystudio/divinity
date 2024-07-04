@@ -41,7 +41,7 @@ format:
       '1': '+%level% '
       '3': '&c&l+%level% '
   item-lore:
-    format: ' &8(&7+%amount%&8)'
+    format: ' &8(&7%+%%amount%&8)'
     text:
       - '%ITEM_LORE%'
       - '&7'

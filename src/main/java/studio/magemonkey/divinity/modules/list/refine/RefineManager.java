@@ -1,5 +1,6 @@
 package studio.magemonkey.divinity.modules.list.refine;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -16,6 +17,7 @@ import studio.magemonkey.codex.util.*;
 import studio.magemonkey.codex.util.actions.ActionManipulator;
 import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.modules.EModule;
 import studio.magemonkey.divinity.modules.RatedItem;
 import studio.magemonkey.divinity.modules.api.QModuleDrop;
@@ -118,7 +120,7 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         }
 
         path = "format.item-lore.";
-        this.formatLoreStat = StringUT.color(cfg.getString(path + "format", "&8(&7+%amount%&8)"));
+        this.formatLoreStat = StringUT.color(cfg.getString(path + "format", " &8(&7%+%%amount%&8)"));
         this.formatLoreText = StringUT.color(cfg.getStringList(path + "text"));
 
         this.cfg.saveChanges();
@@ -366,21 +368,6 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         bMap.getDefenseBonuses().forEach((bStat, bFunc) -> refineValues.put(bStat,
                 BonusCalculator.SIMPLE_BONUS.apply(bStat.getTotal(item, null), Collections.singletonList(bFunc))));
 
-        Map<ItemLoreStat<?>, String> statTags = new HashMap<>();
-
-        refineValues.forEach((stat, value) -> {
-            if (value == 0) return;
-            int pos = stat.getLoreIndex(item);
-            if (pos < 0) return;
-
-            String line = lore.get(pos);
-
-            String format   = this.formatLoreStat.replace("%amount%", NumberUT.format(value));
-            String lineStat = new StringBuilder(line).append(format).toString();
-            lore.set(pos, lineStat);
-            statTags.put(stat, lineStat);
-        });
-
         // Update item description with refine values
         meta.setDisplayName(name);
         meta.setLore(lore);
@@ -391,9 +378,6 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         ItemStats.updateVanillaAttributes(item, null);
         ItemUT.addNameTag(item, TAG_REFINE_NAME, preName);
         ItemUT.addLoreTag(item, TAG_REFINE_LORE, loreTag.toString());
-
-        // Replace old stat lore tags with refined ones.
-        statTags.forEach((stat, value) -> ItemUT.addLoreTag(item, stat.getMetaId(item), value));
 
         if (fortifyManager != null) {
             fortifyManager.formatItemName(item);
@@ -470,6 +454,19 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         ItemStats.updateVanillaAttributes(item, null);
         ItemUT.delLoreTag(item, TAG_REFINE_LORE);
         ItemUT.delNameTag(item, TAG_REFINE_NAME);
+    }
+
+    @NotNull
+    public String getFormatLoreStat(ItemStack item, ItemLoreStat<?> stat, double value) {
+        List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
+        bonuses.add((isPercent, input) -> isPercent ? input : input + value);
+        bonuses.add(this.getRefinedBonus(item, stat));
+        double diff = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses)-value;
+        if (diff == 0) return "";
+        return this.formatLoreStat.replace("%amount%", (diff < 0 ? EngineCfg.LORE_CHAR_NEGATIVE : "")
+                        + ChatColor.stripColor(EngineCfg.LORE_STYLE_DAMAGE_FORMAT_SINGLE
+                        .replace("%value%", String.valueOf(Math.round(diff*100)/100.0))))
+                .replace("%+%", diff > 0 ? EngineCfg.LORE_CHAR_POSITIVE : "");
     }
 
     @NotNull

@@ -170,7 +170,14 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
     @Override
     @NotNull
     public String formatValue(@NotNull ItemStack item, @NotNull StatBonus statBonus) {
-        return NumberUT.format(statBonus.getValue()[0]) + (statBonus.isPercent() ? "%" : "");
+        String sVal = NumberUT.format(statBonus.getValue()[0]);
+        if (statBonus.isPercent()) {
+            sVal += EngineCfg.LORE_CHAR_PERCENT;
+        } else if (statBonus.getCondition() == null) { // This is the base stat, apply refines
+            RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
+            if (refine != null) sVal += refine.getFormatLoreStat(item, this, statBonus.getValue()[0]);
+        }
+        return sVal;
     }
 
     @Override

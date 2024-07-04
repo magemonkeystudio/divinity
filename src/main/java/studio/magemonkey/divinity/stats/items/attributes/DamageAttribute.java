@@ -241,15 +241,31 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
     @NotNull
     public String formatValue(@NotNull ItemStack item, @NotNull StatBonus value) {
         double[] array = value.getValue();
+        String sVal;
         if (array.length == 1) {
-            return EngineCfg.LORE_STYLE_DAMAGE_FORMAT_SINGLE
-                    .replace("%value%", NumberUT.format(array[0]) + (value.isPercent() ? "%" : ""));
+            sVal = NumberUT.format(array[0]);
+            if (value.isPercent()) {
+                sVal += EngineCfg.LORE_CHAR_PERCENT;
+            } else if (value.getCondition() == null) { // This is the base stat, apply refines
+                RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
+                if (refine != null) sVal += refine.getFormatLoreStat(item, this, array[0]);
+            }
+            sVal = EngineCfg.LORE_STYLE_DAMAGE_FORMAT_SINGLE.replace("%value%", sVal);
         } else {
-            return EngineCfg.LORE_STYLE_DAMAGE_FORMAT_RANGE
-                    .replace("%min%", NumberUT.format(array[0]))
-                    .replace("%max%", NumberUT.format(array[1]));
-
+            String sMin = NumberUT.format(array[0]);
+            String sMax = NumberUT.format(array[1]);
+            if (value.getCondition() == null) { // This is the base stat, apply refines
+                RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
+                if (refine != null) {
+                    sMin += refine.getFormatLoreStat(item, this, array[0]);
+                    sMax += refine.getFormatLoreStat(item, this, array[1]);
+                }
+            }
+            sVal = EngineCfg.LORE_STYLE_DAMAGE_FORMAT_RANGE
+                    .replace("%min%", sMin)
+                    .replace("%max%", sMax);
         }
+        return sVal;
     }
 
     @Override

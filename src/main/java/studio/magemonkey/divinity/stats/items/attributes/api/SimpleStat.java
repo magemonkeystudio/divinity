@@ -206,9 +206,7 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
     @NotNull
     public String formatValue(@NotNull ItemStack item, StatBonus statBonus) {
         double val = this.fineValue(statBonus.getValue()[0]);
-        if (val == 0) {
-            return "";
-        }
+        if (val == 0) return "";
 
         boolean bonus = !this.isMainItem(item);
         String  sVal  = NumberUT.format(val);
@@ -216,13 +214,15 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         if (this.canBeNegative() || bonus) {
             sVal = (val > 0 ? EngineCfg.LORE_CHAR_POSITIVE : EngineCfg.LORE_CHAR_NEGATIVE) + sVal;
         }
-        if (this.isPercent() || bonus) {
+        if (this.isPercent() ) {
             sVal += EngineCfg.LORE_CHAR_PERCENT;
+        } else {
+            if (this.statType == Type.CRITICAL_DAMAGE) sVal += EngineCfg.LORE_CHAR_MULTIPLIER;
+            if (statBonus.getCondition() == null) { // This is the base stat, apply refines
+                RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
+                if (refine != null) sVal += refine.getFormatLoreStat(item, this, statBonus.getValue()[0]);
+            }
         }
-        if (this.statType == Type.CRITICAL_DAMAGE && !bonus) {
-            sVal += EngineCfg.LORE_CHAR_MULTIPLIER;
-        }
-
         return sVal;
     }
 
