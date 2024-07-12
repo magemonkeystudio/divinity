@@ -9,7 +9,6 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Disabled("Tests are broken due to MockBukkit classloading?")
 class ItemGeneratorManagerTest extends MockedTest {
 
     @BeforeAll

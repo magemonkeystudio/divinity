@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TEST implements NMS {
+public class TEST extends NMS {
     @Getter
     private final NMS testNms = mock(NMS.class);
 

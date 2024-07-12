@@ -13,8 +13,6 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 public class PacketManager {
-
-    public static final Map<Player, Set<ChatColor>> COLOR_CACHE = new WeakHashMap<>();
     private final       Divinity                    plugin;
     private             IPacketHandler              packetHandler;
 
