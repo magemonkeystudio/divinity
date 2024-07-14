@@ -48,19 +48,23 @@ public class ItemStats {
     private static final List<NamespacedKey>                     KEY_MODULE       = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_MODULE),
             Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:" + ItemTags.TAG_ITEM_MODULE.toLowerCase())),
-            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_" + ItemTags.TAG_ITEM_MODULE.toLowerCase())),
+            Objects.requireNonNull(NamespacedKey.fromString(
+                    "prorpgitems:qrpg_" + ItemTags.TAG_ITEM_MODULE.toLowerCase())),
             Objects.requireNonNull(NamespacedKey.fromString(
                     "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_MODULE.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_LEVEL        = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_LEVEL),
             Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())),
-            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())),
+            Objects.requireNonNull(NamespacedKey.fromString(
+                    "prorpgitems:qrpg_" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())),
             Objects.requireNonNull(NamespacedKey.fromString(
                     "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_LEVEL.toLowerCase())));
     private static final List<NamespacedKey>                     KEY_SOCKET       = List.of(
             new NamespacedKey(plugin, ItemTags.TAG_ITEM_SOCKET_RATE),
-            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())),
-            Objects.requireNonNull(NamespacedKey.fromString("prorpgitems:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())),
+            Objects.requireNonNull(NamespacedKey.fromString(
+                    "prorpgitems:" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())),
+            Objects.requireNonNull(NamespacedKey.fromString(
+                    "prorpgitems:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())),
             Objects.requireNonNull(NamespacedKey.fromString(
                     "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())));
     private static       DamageAttribute                         DAMAGE_DEFAULT;
@@ -241,15 +245,24 @@ public class ItemStats {
     }
 
     public static double getStat(@NotNull ItemStack item, @Nullable Player player, @NotNull SimpleStat.Type type) {
+        return getStat(item, player, type, 0D);
+    }
+
+    public static double getStat(@NotNull ItemStack item,
+                                 @Nullable Player player,
+                                 @NotNull SimpleStat.Type type,
+                                 double def) {
         TypedStat stat = getStat(type);
         if (stat instanceof SimpleStat) {
-            return ((SimpleStat) stat).getTotal(item, player);
+            return ((SimpleStat) stat).getTotal(item, player, def);
         }
+
         if (stat instanceof DurabilityStat) {
             double[] arr = ((DurabilityStat) stat).getRaw(item);
-            return arr == null ? 0 : arr[0];
+            return arr == null ? def : arr[0];
         }
-        return 0;
+
+        return def;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -322,7 +335,16 @@ public class ItemStats {
         // Do not add attribute with zero value
         // except the weapons, they will get vanilla speed.
         if (value == 0) {
-            if (!(att == NBTAttribute.ATTACK_SPEED && ItemUtils.isWeapon(item))) {
+            boolean isWeapon      = ItemUtils.isWeapon(item);
+            boolean isAttackSpeed = att == NBTAttribute.ATTACK_SPEED;
+
+            if (!isAttackSpeed && isWeapon) {
+                return;
+            }
+
+            double defaultAttackSpeed = SimpleStat.getDefaultAttackSpeed(item, DEFAULT_ATTACK_SPEED);
+            double baseAttackSpeed    = getStat(item, player, TypedStat.Type.BASE_ATTACK_SPEED, defaultAttackSpeed);
+            if (baseAttackSpeed == defaultAttackSpeed) {
                 return;
             }
         }
@@ -333,14 +355,24 @@ public class ItemStats {
         } else if (att == NBTAttribute.ATTACK_SPEED) {
             value /= 100D;
 
-            double baseSpeed      = getStat(item, player, TypedStat.Type.BASE_ATTACK_SPEED) + DEFAULT_ATTACK_SPEED;
-            double weaponModifier = SimpleStat.getDefaultAttackSpeed(item);
-            value = (baseSpeed + weaponModifier) * (1 + value) - DEFAULT_ATTACK_SPEED;
+            // Attack speed the number of full-strength attacks per second.
+            // A base value of 4.0 represents 4 attacks per second.
+
+            boolean isArmor = ItemUtils.isArmor(item);
+            double  weaponModifier = SimpleStat.getDefaultAttackSpeed(item, DEFAULT_ATTACK_SPEED) + DEFAULT_ATTACK_SPEED;
+            double baseSpeedModifier = getStat(item, player, TypedStat.Type.BASE_ATTACK_SPEED, weaponModifier);
+            double  baseSpeed      = baseSpeedModifier - DEFAULT_ATTACK_SPEED;
+            if (isArmor) {
+                baseSpeed = baseSpeedModifier;
+            }
+
+            value = baseSpeed * (1 + value);
         }
 
         for (EquipmentSlot slot : ItemUtils.getItemSlots(item)) {
             if (slot == EquipmentSlot.OFF_HAND
                     && (att == NBTAttribute.ATTACK_DAMAGE || att == NBTAttribute.ATTACK_SPEED)) continue;
+            if (slot != EquipmentSlot.HAND && !ItemUtils.isArmor(item) && att == NBTAttribute.ATTACK_SPEED) continue;
 
             AttributeModifier am = new AttributeModifier(
                     att.getUUID(slot),
