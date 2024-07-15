@@ -560,7 +560,19 @@ public class EntityStats {
         // Remove this bonus only if same UUID and different value
         // Do not modify if value is the same
         for (AttributeModifier attMod : new HashSet<>(attInst.getModifiers())) {
-            if (attMod.getUniqueId().equals(ATTRIBUTE_BONUS_UUID)) {
+            String attKey = attMod.getKey().toString();
+            UUID   uuid;
+            try {
+                uuid = attMod.getUniqueId();
+            } catch (Exception e) {
+                try {
+                    uuid = UUID.fromString(attKey.replace("minecraft:", ""));
+                } catch (Exception ignored) {
+                    continue;
+                }
+            }
+
+            if (uuid.equals(ATTRIBUTE_BONUS_UUID)) {
                 if (attMod.getAmount() == value) {
                     return;
                 }
@@ -571,8 +583,12 @@ public class EntityStats {
 
         if (value == 0D) return;
 
-        AttributeModifier am =
-                new AttributeModifier(ATTRIBUTE_BONUS_UUID, att.getNmsName(), value, Operation.ADD_NUMBER);
+        AttributeModifier am;
+        try {
+            am = new AttributeModifier(att.getAttribute().getKey(), value, Operation.ADD_NUMBER, null);
+        } catch (Exception | Error ignored) {
+            am = new AttributeModifier(ATTRIBUTE_BONUS_UUID, att.getNmsName(), value, Operation.ADD_NUMBER);
+        }
         attInst.addModifier(am);
     }
 

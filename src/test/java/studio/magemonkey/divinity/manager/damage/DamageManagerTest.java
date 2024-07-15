@@ -3,18 +3,18 @@ package studio.magemonkey.divinity.manager.damage;
 import be.seeseemelk.mockbukkit.entity.FishHookMock;
 import be.seeseemelk.mockbukkit.entity.PlayerMock;
 import be.seeseemelk.mockbukkit.entity.ZombieMock;
-import org.junit.jupiter.api.Disabled;
-import studio.magemonkey.divinity.config.EngineCfg;
-import studio.magemonkey.divinity.testutil.MockedTest;
 import org.bukkit.entity.FishHook;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import studio.magemonkey.divinity.config.EngineCfg;
+import studio.magemonkey.divinity.testutil.MockedTest;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Disabled("Tests are broken due to MockBukkit classloading?")
 class DamageManagerTest extends MockedTest {

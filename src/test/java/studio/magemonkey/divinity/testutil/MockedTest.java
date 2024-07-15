@@ -65,6 +65,8 @@ public abstract class MockedTest {
         reflectionManager = mockStatic(ReflectionManager.class);
         reflectionManager.when(ReflectionManager::getReflectionUtil)
                 .thenReturn(reflectionUtil);
+        when(reflectionUtil.fixColors(anyString()))
+                .thenAnswer(args -> args.getArgument(0));
         when(reflectionUtil.getDefaultDamage(any(ItemStack.class)))
                 .thenAnswer(args -> {
                     switch (((ItemStack) args.getArgument(0)).getType()) {
@@ -82,10 +84,6 @@ public abstract class MockedTest {
                 });
 
         engine = MockBukkit.load(CodexEngine.class);
-        nms = ((TEST) engine.getNMS()).getTestNms();
-        when(nms.fixColors(anyString()))
-                .thenAnswer(args -> args.getArgument(0));
-        when(nms.toBase64(any())).thenReturn("");
         codexEngine = mockStatic(CodexEngine.class);
         codexEngine.when(CodexEngine::get).thenReturn(engine);
 
