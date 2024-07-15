@@ -16,6 +16,7 @@ items:
   tier-random:
     chance: 1.0
     item-id: 'random'
+    tier-id: 'random'
     module-id: item_generator
     min-level: '%mob_lvl% + 1'
     max-level: '%mob_lvl% + 3'

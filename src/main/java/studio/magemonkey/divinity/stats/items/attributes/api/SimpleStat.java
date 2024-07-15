@@ -65,16 +65,24 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         return StatBonus.class;
     }
 
+    public double getTotal(@NotNull ItemStack item, @Nullable Player player, double def) {
+        List<BiFunction<Boolean, Double, Double>> bonuses = get(item, player);
+        double value =
+                bonuses.isEmpty() ? def : BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
+        return value;
+    }
+
     public double getTotal(@NotNull ItemStack item, @Nullable Player player) {
-        return BonusCalculator.SIMPLE_FULL.apply(0D, get(item, player));
+        return getTotal(item, player, 0);
     }
 
     @NotNull
     public List<BiFunction<Boolean, Double, Double>> get(@NotNull ItemStack item, @Nullable Player player) {
         List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
-        double                                    base    = 0;
-        double                                    percent = 0;
-        boolean                                   has     = false;
+
+        double  base    = 0;
+        double  percent = 0;
+        boolean has     = false;
 
         // Get from old format
         ItemMeta meta = item.getItemMeta();
@@ -103,7 +111,7 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
             }
         }
 
-        {
+        if (has) {
             double finalBase = base;
             bonuses.add((isPercent, input) -> isPercent ? input : input + finalBase);
             double finalPercent = percent;
@@ -133,6 +141,11 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         }
 
         return bonuses;
+    }
+
+    public static double getDefaultAttackSpeed(@NotNull ItemStack item, double def) {
+        double value = getDefaultAttackSpeed(item);
+        return value == 0 ? def : value;
     }
 
     public static double getDefaultAttackSpeed(@NotNull ItemStack item) {
@@ -205,16 +218,20 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
     @Override
     @NotNull
     public String formatValue(@NotNull ItemStack item, StatBonus statBonus) {
-        double val = this.fineValue(statBonus.getValue()[0]);
-        if (val == 0) return "";
+        boolean isBaseAttack = this.statType == Type.BASE_ATTACK_SPEED;
+        double  val          = this.fineValue(statBonus.getValue()[0]);
+        if (val == 0 && !isBaseAttack) return "";
 
         boolean bonus = !this.isMainItem(item);
         String  sVal  = NumberUT.format(val);
 
-        if (this.canBeNegative() || bonus) {
+        boolean baseBonus     = isBaseAttack && ItemUtils.isArmor(item);
+        boolean baseAttackAdd = isBaseAttack && baseBonus;
+
+        if (baseAttackAdd || !isBaseAttack && (this.canBeNegative() || bonus)) {
             sVal = (val > 0 ? EngineCfg.LORE_CHAR_POSITIVE : EngineCfg.LORE_CHAR_NEGATIVE) + sVal;
         }
-        if (this.isPercent() ) {
+        if (this.isPercent()) {
             sVal += EngineCfg.LORE_CHAR_PERCENT;
         } else {
             if (this.statType == Type.CRITICAL_DAMAGE) sVal += EngineCfg.LORE_CHAR_MULTIPLIER;

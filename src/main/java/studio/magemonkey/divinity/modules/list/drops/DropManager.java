@@ -34,7 +34,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import studio.magemonkey.divinity.modules.list.drops.object.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -244,11 +243,12 @@ public class DropManager extends QModule {
                 if (!ActionManipulator.processConditions(plugin, killer, dropConditions, mapTarget)) continue;
 
                 String itemId = dropConfig.getItemId();
+                String tierId = dropConfig.getTierId();
                 for (int i = 0; i < dropItem.getCount(); i++) {
                     int itemLvl = dropConfig.getLevel(killer, dead);
 
                     ItemStack dropStack =
-                            DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
+                            DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1, tierId);
                     if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
                     dropConfig.executeActions(killer, mapTarget);
@@ -284,12 +284,16 @@ public class DropManager extends QModule {
             if (!ActionManipulator.processConditions(plugin, target, dropConditions, mapTarget)) continue;
 
             String itemId = dropConfig.getItemId();
+            String tierId = dropConfig.getTierId();
 
-            ItemStack dropStack = DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
-            if (dropStack == null || dropStack.getType() == Material.AIR) continue;
+            for (int i = 0; i < dropItem.getCount(); i++) {
+                ItemStack dropStack =
+                        DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1, tierId);
+                if (dropStack == null || dropStack.getType() == Material.AIR) continue;
 
-            dropConfig.executeActions(target, mapTarget);
-            loot.add(dropStack);
+                dropConfig.executeActions(target, mapTarget);
+                loot.add(dropStack);
+            }
         }
 
         for (DropNonItem nonItemDrops : table.getNonItemDrops()) {
@@ -318,11 +322,16 @@ public class DropManager extends QModule {
 //            if (!ActionManipulator.processConditions(plugin, target, dropConditions, mapTarget)) continue;
 
             String    itemId    = dropConfig.getItemId();
-            ItemStack dropStack = DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1);
-            if (dropStack == null || dropStack.getType() == Material.AIR) continue;
+            String    tierId    = dropConfig.getTierId();
 
-//            dropConfig.executeActions(target, mapTarget);
-            loot.add(dropStack);
+            for (int i = 0; i < dropItem.getCount(); i++) {
+                ItemStack dropStack =
+                        DivinityAPI.getItemByModule(dropConfig.getModuleId(), itemId, itemLvl, -1, -1, tierId);
+                if (dropStack == null || dropStack.getType() == Material.AIR) continue;
+
+//              dropConfig.executeActions(target, mapTarget);
+                loot.add(dropStack);
+            }
         }
 
         dead.remove();

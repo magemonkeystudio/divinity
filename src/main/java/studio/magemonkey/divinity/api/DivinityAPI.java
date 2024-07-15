@@ -7,6 +7,7 @@ import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.divinity.stats.tiers.Tier;
 
 public class DivinityAPI {
 
@@ -17,18 +18,24 @@ public class DivinityAPI {
     }
 
     @Nullable
-    public static ModuleItem getModuleItem(@NotNull QModuleDrop<?> e, @NotNull String id) {
+    public static ModuleItem getModuleItem(@NotNull QModuleDrop<?> e, @NotNull String id, @Nullable String tier) {
         if (!e.isEnabled() || !e.isLoaded()) return null;
-        return e.getItemById(id);
+        return e.getItemById(id, tier);
+    }
+
+    @Nullable
+    public static ModuleItem getModuleItem(@NotNull QModuleDrop<?> e, @NotNull String id) {
+        return getModuleItem(e, id, null);
     }
 
     @Nullable
     public static ItemStack getItemByModule(
             @NotNull QModuleDrop<?> e,
             @NotNull String id,
-            int lvl, int uses, int suc) {
+            int lvl, int uses, int suc,
+            @Nullable String tier) {
 
-        ModuleItem mi = getModuleItem(e, id);
+        ModuleItem mi = getModuleItem(e, id, tier);
         if (mi == null) return null;
 
         if (mi instanceof RatedItem) {
@@ -42,5 +49,13 @@ public class DivinityAPI {
         } else {
             return mi.create();
         }
+    }
+
+    @Nullable
+    public static ItemStack getItemByModule(
+            @NotNull QModuleDrop<?> e,
+            @NotNull String id,
+            int lvl, int uses, int suc) {
+        return getItemByModule(e, id, lvl, uses, suc, null);
     }
 }

@@ -64,6 +64,7 @@ public class DropTable extends LoadableItem implements DropCalculator {
                 plugin.error("Invalid id for item " + id + " in drop table " + cfg.getFile().getName());
                 continue;
             }
+            String tier = cfg.getString(path + "tier-id", null);
 
             QModuleDrop<?> itemModule = (QModuleDrop<?>) mod;
             int            amountMin  = cfg.getInt(path + "min-amount", 1);
@@ -78,6 +79,7 @@ public class DropTable extends LoadableItem implements DropCalculator {
                     itemChance,
                     itemModule,
                     itemId,
+                    tier,
                     amountMin,
                     amountMax,
                     levelMin,

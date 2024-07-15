@@ -5,7 +5,9 @@ import studio.magemonkey.codex.util.ItemUT;
 import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.config.Config;
 import studio.magemonkey.divinity.config.EngineCfg;
+import studio.magemonkey.divinity.modules.LeveledItem;
 import studio.magemonkey.divinity.modules.ModuleItem;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.ItemTags;
@@ -22,10 +24,12 @@ import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.divinity.stats.tiers.Tier;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
 
@@ -103,13 +107,22 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
     }
 
     @Nullable
-    public I getItemById(@NotNull String id) {
+    public I getItemById(@NotNull String id, @Nullable String sTier) {
         if (this.items.isEmpty()) return null;
+        @Nullable Tier tier = sTier == null || sTier.isBlank() || sTier.equalsIgnoreCase(RANDOM_ID)
+                ? null : Config.getTier(sTier);
 
         if (id.equalsIgnoreCase(RANDOM_ID)) {
-            return Rnd.get(new ArrayList<>(this.getItems()));
+            return Rnd.get(this.getItems().stream()
+                    .filter(item -> tier == null || (item instanceof LeveledItem && ((LeveledItem) item).getTier() == tier))
+                    .collect(Collectors.toList()));
         }
         return items.get(id.toLowerCase());
+    }
+
+    @Nullable
+    public I getItemById(@NotNull String id) {
+        return this.getItemById(id, null);
     }
 
     @NotNull
