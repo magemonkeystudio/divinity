@@ -15,6 +15,7 @@ items:
     chance: 5.0
     module-id: 'gems'
     item-id: 'random'
+    tier-id: 'random'
     min-amount: 1
     max-amount: 1
     min-level: '%mob_lvl% + 1'

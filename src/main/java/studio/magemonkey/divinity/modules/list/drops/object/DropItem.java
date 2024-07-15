@@ -21,6 +21,7 @@ public class DropItem implements DropCalculator {
     private final float             chance;
     private final QModuleDrop<?>    module;
     private final String            itemId;
+    private final String            tierId;
     private final int               amountMin;
     private final int               amountMax;
     private final String            levelMin;
@@ -33,6 +34,7 @@ public class DropItem implements DropCalculator {
             float chance,
             @NotNull QModuleDrop<?> module,
             @NotNull String itemId,
+            @Nullable String tierId,
             int amountMin,
             int amountMax,
             @NotNull String levelMin,
@@ -43,6 +45,7 @@ public class DropItem implements DropCalculator {
         this.chance = chance;
         this.module = module;
         this.itemId = itemId.toLowerCase();
+        this.tierId = tierId;
         this.amountMin = amountMin;
         this.amountMax = amountMax;
         this.levelMin = levelMin;
@@ -60,6 +63,11 @@ public class DropItem implements DropCalculator {
     @NotNull
     public String getItemId() {
         return itemId;
+    }
+
+    @Nullable
+    public String getTierId() {
+        return this.tierId;
     }
 
     public int getMinAmount() {
