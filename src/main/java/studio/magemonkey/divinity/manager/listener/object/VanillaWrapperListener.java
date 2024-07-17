@@ -264,6 +264,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
             DamageAttribute dmgCause = ItemStats.getDamageByCause(cause);
             if (dmgCause == null) dmgCause = ItemStats.getDamageByDefault();
             damages.put(dmgCause, damageStart);
+            damageStart = 0;
         }
 
         if (statsDamager != null) {
@@ -297,8 +298,8 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
 //                Divinity.getInstance().getLogger().info("Default damage is " + defaultDamage);
                 damageStart = Math.max(0D, damageStart - defaultDamage);
-            } else {
-                damageStart = damageStart - 1D; // Reduce the damage by 1 for non-weapon item/hand.
+//            } else {
+//                damageStart = damageStart - 1D; // Reduce the damage by 1 for non-weapon item/hand.
             }
             // Probably can't be lower than 1, but anyway xD
             damageStart /= Math.max(1D, damages.size());
