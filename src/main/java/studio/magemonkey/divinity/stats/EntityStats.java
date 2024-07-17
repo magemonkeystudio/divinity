@@ -560,11 +560,17 @@ public class EntityStats {
         // Remove this bonus only if same UUID and different value
         // Do not modify if value is the same
         for (AttributeModifier attMod : new HashSet<>(attInst.getModifiers())) {
-            String attKey = attMod.getKey().toString();
-            UUID   uuid;
+            UUID uuid;
             try {
                 uuid = attMod.getUniqueId();
             } catch (Exception e) {
+                String attKey;
+                try {
+                    attKey = attMod.getKey().toString();
+                } catch (NoSuchMethodError ignored) {
+                    attKey = attMod.getName();
+                }
+
                 try {
                     uuid = UUID.fromString(attKey.replace("minecraft:", ""));
                 } catch (Exception ignored) {
