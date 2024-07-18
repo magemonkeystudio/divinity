@@ -1,15 +1,5 @@
 package studio.magemonkey.divinity.modules.list.itemgenerator;
 
-import studio.magemonkey.codex.api.armor.ArmorEquipEvent;
-import studio.magemonkey.codex.manager.IListener;
-import studio.magemonkey.codex.manager.api.Loadable;
-import studio.magemonkey.codex.util.ItemUT;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.hooks.EHook;
-import studio.magemonkey.divinity.hooks.external.FabledHook;
-import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
-import studio.magemonkey.divinity.stats.items.ItemStats;
-import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -19,15 +9,26 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.codex.api.armor.ArmorEquipEvent;
+import studio.magemonkey.codex.manager.IListener;
+import studio.magemonkey.codex.manager.api.Loadable;
+import studio.magemonkey.codex.util.InventoryUtil;
+import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.hooks.EHook;
+import studio.magemonkey.divinity.hooks.external.FabledHook;
+import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
+import studio.magemonkey.divinity.stats.items.ItemStats;
+import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,27 +108,18 @@ public class ItemAbilityHandler extends IListener<Divinity> implements Loadable 
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
-        InventoryView view = event.getView();
-        for (Inventory inventory : new Inventory[]{view.getTopInventory(), view.getBottomInventory()}) {
-            if (!(inventory instanceof PlayerInventory)) {
-                continue;
-            }
-            PlayerInventory playerInventory = (PlayerInventory) inventory;
-            HumanEntity     humanEntity     = playerInventory.getHolder();
-            if (!(humanEntity instanceof Player)) {
-                return;
-            }
-            FabledHook fabledHook = (FabledHook) this.plugin.getHook(EHook.SKILL_API);
-            if (fabledHook != null) {
-                fabledHook.updateSkills((Player) humanEntity);
-            }
-        }
+        updateSkills(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onInventoryDrag(InventoryDragEvent event) {
-        InventoryView view = event.getView();
-        for (Inventory inventory : new Inventory[]{view.getTopInventory(), view.getBottomInventory()}) {
+        updateSkills(event);
+    }
+
+    private void updateSkills(InventoryEvent event) {
+        Inventory top    = InventoryUtil.getTopInventory(event);
+        Inventory bottom = InventoryUtil.getBottomInventory(event);
+        for (Inventory inventory : new Inventory[]{top, bottom}) {
             if (!(inventory instanceof PlayerInventory)) {
                 continue;
             }

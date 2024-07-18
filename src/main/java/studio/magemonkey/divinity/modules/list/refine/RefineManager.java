@@ -530,7 +530,7 @@ public class RefineManager extends QModuleDrop<RefineItem> {
             return false;
         }
 
-        e.getView().setCursor(null);
+        InventoryUtil.setCursor(e, null);
         this.splitDragItem(player, src, target);
         this.gui.open(player, target, src);
         src.setAmount(0);

@@ -1,6 +1,18 @@
 package studio.magemonkey.divinity.modules.api;
 
+import org.bukkit.GameMode;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.InventoryType.SlotType;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.config.api.JYML;
+import studio.magemonkey.codex.util.InventoryUtil;
 import studio.magemonkey.codex.util.ItemUT;
 import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.codex.util.random.Rnd;
@@ -13,17 +25,6 @@ import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.attributes.ChargesAttribute;
 import studio.magemonkey.divinity.stats.items.requirements.ItemRequirements;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.InventoryType.SlotType;
-import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.divinity.stats.tiers.Tier;
 
 import java.lang.reflect.Constructor;
@@ -114,7 +115,8 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
 
         if (id.equalsIgnoreCase(RANDOM_ID)) {
             return Rnd.get(this.getItems().stream()
-                    .filter(item -> tier == null || (item instanceof LeveledItem && ((LeveledItem) item).getTier() == tier))
+                    .filter(item -> tier == null || (item instanceof LeveledItem
+                            && ((LeveledItem) item).getTier() == tier))
                     .collect(Collectors.toList()));
         }
         return items.get(id.toLowerCase());
@@ -198,8 +200,8 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
         ItemStack current = src.clone();
         if (this.onDragDrop(p, current, target.clone(), mItem, e)) {
             e.setCancelled(true);
-            if (current.getAmount() > 0) e.getView().setCursor(current);
-            else if (current.getType() == Material.AIR) e.getView().setCursor(null);
+            if (current.getAmount() > 0) InventoryUtil.setCursor(e, current);
+            else if (current.getType() == Material.AIR) InventoryUtil.setCursor(e, null);
         }
     }
 
@@ -251,13 +253,13 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
             this.takeItemCharge(toModify);
 
         if (!ItemUT.isAir(toModify)) {
-            e.getView().setCursor(toModify);
+            InventoryUtil.setCursor(e, toModify);
             if (toSave != null) {
                 ItemUT.addItem(p, toSave);
             }
         } else {
             if (toSave != null) {
-                e.getView().setCursor(toSave);
+                InventoryUtil.setCursor(e, toSave);
             }
         }
     }

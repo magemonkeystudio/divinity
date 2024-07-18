@@ -8,6 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.util.CollectionsUT;
+import studio.magemonkey.codex.util.InventoryUtil;
 import studio.magemonkey.codex.util.ItemUT;
 import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.codex.util.actions.ActionManipulator;
@@ -177,7 +178,7 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
             return false;
         }
 
-        e.getView().setCursor(null);
+        InventoryUtil.setCursor(e, null);
         this.startSocketing(player, target, src);
         src.setAmount(0);
         return true;
