@@ -65,6 +65,8 @@ attributes:
   allow-hold-items-you-cant-use: false
 
 combat:
+  # Whether to use the old combat formula for calculating defenses
+  legacy-combat: false
   # Shield settings.
   shield:
     block:

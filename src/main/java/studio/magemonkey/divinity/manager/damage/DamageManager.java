@@ -3,8 +3,6 @@ package studio.magemonkey.divinity.manager.damage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -254,9 +252,14 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                 if (defAtt != null && defenses.containsKey(defAtt)) {
                     double def = Math.max(0, defenses.get(defAtt) * pveDefenseMod * penetrateMod);
 
-                    double defCalced = Math.max(0,
-                            dmgType * (1 - Math.max(def / 5, def - 4 * dmgType / Math.max(1, toughness + 8))
-                                    * defAtt.getProtectionFactor() * 0.05));
+                    double defCalced;
+                    if (EngineCfg.LEGACY_COMBAT) {
+                        defCalced = Math.max(0, dmgType * (1 - (def * defAtt.getProtectionFactor() * 0.01)));
+                    } else {
+                        defCalced = Math.max(0,
+                                dmgType * (1 - Math.max(def / 5, def - 4 * dmgType / Math.max(1, toughness + 8))
+                                        * defAtt.getProtectionFactor() * 0.05));
+                    }
                     meta.setDefendedDamage(defAtt, dmgType - defCalced);
                     dmgType = defCalced;
                 }
