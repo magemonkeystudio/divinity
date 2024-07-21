@@ -142,7 +142,7 @@ public abstract class DivinityDamageEvent extends ICancellableEvent {
         this.computeDefense(this.defenseMap.keySet(), operator);
     }
 
-    public void computeDefensee(@NotNull DefenseAttribute defense, @NotNull DoubleUnaryOperator operator) {
+    public void computeDefense(@NotNull DefenseAttribute defense, @NotNull DoubleUnaryOperator operator) {
         this.computeDefense(Sets.newHashSet(defense), operator);
     }
 

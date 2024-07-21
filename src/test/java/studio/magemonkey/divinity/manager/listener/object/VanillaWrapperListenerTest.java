@@ -13,7 +13,6 @@ import studio.magemonkey.divinity.testutil.MockedTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Disabled("Waiting for MockBukkit PRs")
 public class VanillaWrapperListenerTest extends MockedTest {
     private Player damager;
     private Player target;

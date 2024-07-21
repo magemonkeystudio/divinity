@@ -122,7 +122,7 @@ MAX_HEALTH:
   enabled: true
   name: Max Health
   format: '&c▸ %name%: &f%value% %condition%'
-  capacity: 20
+  capacity: -1
 
 SALE_PRICE:
   enabled: true
