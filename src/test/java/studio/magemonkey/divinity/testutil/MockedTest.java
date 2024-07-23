@@ -40,7 +40,6 @@ public abstract class MockedTest {
     protected MockedStatic<ReflectionManager> reflectionManager;
     protected ReflectionUtil                  reflectionUtil;
     protected MockedStatic<CodexEngine>       codexEngine;
-    protected NMS                             nms;
 
     @BeforeAll
     public void setupServer() {
