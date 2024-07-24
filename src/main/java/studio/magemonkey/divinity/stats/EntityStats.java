@@ -67,7 +67,6 @@ public class EntityStats {
     private static final SimpleStat.Type[]        ATTRIBUTE_BONUS_STATS;
     private static final NBTAttribute[]           ATTRIBUTE_BONUS_NBT;
     private static final double                   DEFAULT_ATTACK_POWER = 1D;
-    private static final Divinity                 plugin               = Divinity.getInstance();
 
     static {
         STATS = Collections.synchronizedMap(new HashMap<>());
@@ -85,6 +84,7 @@ public class EntityStats {
         };
     }
 
+    private final Divinity                                                        plugin;
     @Getter
     private final Player                                                          player;
     private final boolean                                                         isNPC;
@@ -102,7 +102,8 @@ public class EntityStats {
     private double  atkPower;
     private boolean aoeIgnore;
 
-    EntityStats(@NotNull LivingEntity entity) {
+    EntityStats(Divinity plugin, @NotNull LivingEntity entity) {
+        this.plugin = plugin;
         this.entity = entity;
         this.player = this.entity instanceof Player ? (Player) this.entity : null;
         this.isNPC = Hooks.isNPC(this.entity);
@@ -144,14 +145,14 @@ public class EntityStats {
     @NotNull
     public static EntityStats get(@NotNull LivingEntity entity) {
         String      uuid   = entity.getUniqueId().toString();
-        EntityStats eStats = STATS.computeIfAbsent(uuid, stats -> new EntityStats(entity));
+        EntityStats eStats = STATS.computeIfAbsent(uuid, stats -> new EntityStats(Divinity.getInstance(), entity));
         eStats.updateHolder(entity);
         return eStats;
     }
 
     @NotNull
     public static String getEntityName(@NotNull Entity entity) {
-        String name = plugin.lang().getEnum(entity.getType());
+        String name = Divinity.getInstance().lang().getEnum(entity.getType());
 
         if (entity instanceof Projectile) {
             Projectile       pp = (Projectile) entity;

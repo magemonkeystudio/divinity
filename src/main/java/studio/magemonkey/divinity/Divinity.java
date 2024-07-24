@@ -35,6 +35,7 @@ import studio.magemonkey.divinity.manager.worth.WorthManager;
 import studio.magemonkey.divinity.modules.ModuleCache;
 import studio.magemonkey.divinity.nms.engine.PMS;
 import studio.magemonkey.divinity.nms.engine.PMSManager;
+import studio.magemonkey.divinity.stats.EntityStats;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.requirements.ItemRequirements;
 import studio.magemonkey.divinity.utils.DivinityProvider;
@@ -48,6 +49,8 @@ import studio.magemonkey.divinity.utils.actions.params.PartyMemberParam;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Divinity
@@ -179,6 +182,8 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
 
         ItemStats.clear();
         ItemRequirements.clear();
+        List<EntityStats> toRemove = new ArrayList<>(EntityStats.getAll());
+        toRemove.forEach(EntityStats::purge);
 
         DivinityUserData.destroy();
 
