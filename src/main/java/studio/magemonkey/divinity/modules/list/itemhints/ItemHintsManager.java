@@ -172,7 +172,7 @@ public class ItemHintsManager extends QModule {
         if (!this.isGlow(item)) return;
 
         ChatColor cc     = getItemColor(item.getItemStack());
-        String    teamId = "GLOW_" + cc.name();
+        String    teamId = "GLOW_" + (cc != ChatColor.LIGHT_PURPLE ? cc.name() : "LP");
 
         // We'll add the item to every player's scoreboard
         Bukkit.getServer().getOnlinePlayers().forEach(player -> {
