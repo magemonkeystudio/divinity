@@ -5,7 +5,6 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.block.Biome;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -41,8 +40,6 @@ import studio.magemonkey.divinity.modules.list.arrows.ArrowManager.QArrow;
 import studio.magemonkey.divinity.modules.list.classes.ClassManager;
 import studio.magemonkey.divinity.modules.list.essences.EssencesManager;
 import studio.magemonkey.divinity.modules.list.essences.EssencesManager.Essence;
-import studio.magemonkey.divinity.modules.list.gems.GemManager;
-import studio.magemonkey.divinity.modules.list.gems.GemManager.Gem;
 import studio.magemonkey.divinity.modules.list.runes.RuneManager;
 import studio.magemonkey.divinity.modules.list.sets.SetManager;
 import studio.magemonkey.divinity.stats.bonus.BonusCalculator;
@@ -59,6 +56,9 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.DoubleUnaryOperator;
+import java.util.stream.Collectors;
+
+import static org.bukkit.attribute.AttributeModifier.Operation;
 
 public class EntityStats {
 
@@ -417,12 +417,9 @@ public class EntityStats {
         this.inventory.clear();
 
         ItemStack[] armor = this.equipment.getArmorContents();
-        for (int i = 0; i < armor.length; i++) {
-            ItemStack item = armor[i];
-            if (item != null && !ItemUT.isAir(item)) {
-                this.inventory.add(item);
-            }
-        }
+        Arrays.stream(armor)
+                .filter(item -> item != null && !ItemUT.isAir(item))
+                .forEach(this.inventory::add);
 
         ItemStack main = this.getItemInMainHand();
         ItemStack off  = this.getItemInOffHand();
@@ -451,12 +448,8 @@ public class EntityStats {
     }
 
     private void addBonus(@NotNull BonusMap bMap) {
-        bMap.getBonuses().entrySet().forEach(entry -> {
-            ItemLoreStat<?>                     stat = entry.getKey();
-            BiFunction<Boolean, Double, Double> func = entry.getValue();
-
-            this.bonuses.computeIfAbsent(stat, list -> new ArrayList<>()).add(func);
-        });
+        bMap.getBonuses()
+                .forEach((stat, func) -> this.bonuses.computeIfAbsent(stat, list -> new ArrayList<>()).add(func));
     }
 
     @NotNull
@@ -486,13 +479,13 @@ public class EntityStats {
         // Update sets bonuses
         SetManager set = plugin.getModuleCache().getSetManager();
         if (set != null) {
-            set.getActiveSetBonuses(this.entity).forEach(bMap -> this.addBonus(bMap));
+            set.getActiveSetBonuses(this.entity).forEach(this::addBonus);
         }
 
         // Update class Aspect bonuses (which are item-stats and damage and defense)
         ClassManager m = plugin.getModuleCache().getClassManager();
         if (m != null && this.isPlayer()) {
-            m.getClassEntityStatsBonuses(this.player).forEach(bMap -> this.addBonus(bMap));
+            m.getClassEntityStatsBonuses(this.player).forEach(this::addBonus);
         }
 
         // Apply AttributeModifiers for bonus stats
@@ -510,20 +503,61 @@ public class EntityStats {
         });
     }
 
-    private void updateBonusAttributes() {
-        GemManager     gems    = plugin.getModuleCache().getGemManager();
-        List<BonusMap> gemsMap = gems != null ? new ArrayList<>() : null;
-        if (gemsMap != null && gems != null) {
-            for (ItemStack item : this.getEquipment()) {
-                for (Entry<Gem, Integer> e : gems.getItemSockets(item)) {
-                    Gem      g    = e.getKey();
-                    BonusMap bMap = g.getBonusMap(e.getValue());
-                    if (bMap == null) continue;
+    /**
+     * If the player somehow gets into a glitched state, this method can help clean up their attribute bonuses
+     * without needing to delete their player data.
+     */
+    private void purgeAttributeBonuses() {
+        for (NBTAttribute nbt : ATTRIBUTE_BONUS_NBT) {
+            AttributeInstance attr = entity.getAttribute(nbt.getAttribute());
+            if (attr == null) continue;
 
-                    gemsMap.add(bMap);
-                }
-            }
+
+            attr.getModifiers()
+                    .stream()
+                    .filter(mod -> {
+                        UUID uuid;
+                        try {
+                            uuid = mod.getUniqueId();
+                        } catch (Exception e) {
+                            String attKey;
+                            try {
+                                attKey = mod.getKey().toString();
+                            } catch (NoSuchMethodError ignored) {
+                                attKey = mod.getName();
+                            }
+                            try {
+                                uuid = UUID.fromString(attKey.replace("minecraft:", ""));
+                            } catch (Exception ignored) {
+                                return false;
+                            }
+                        }
+
+                        return uuid.equals(ATTRIBUTE_BONUS_UUID);
+                    })
+                    .collect(Collectors.toList())
+                    .forEach(attr::removeModifier);
         }
+    }
+
+    private void updateBonusAttributes() {
+        // These stats were being copied from Gems onto the player, but they automatically get applied
+        // since they're set on the item as attributes. Thus... they were doubling their effects.
+        // I'm disabling these, so they don't double up, but not removing entirely because I'm not
+        // entirely sure at this point if these are used elsewhere that might cause issues.
+        //   GemManager     gems    = plugin.getModuleCache().getGemManager();
+        //   List<BonusMap> gemsMap = gems != null ? new ArrayList<>() : null;
+        //   if (gemsMap != null && gems != null) {
+        //       for (ItemStack item : this.getEquipment()) {
+        //           for (Entry<Gem, Integer> e : gems.getItemSockets(item)) {
+        //               Gem      g    = e.getKey();
+        //               BonusMap bMap = g.getBonusMap(e.getValue());
+        //               if (bMap == null) continue;
+        //
+        //               gemsMap.add(bMap);
+        //           }
+        //       }
+        //   }
 
         for (int i = 0; i < ATTRIBUTE_BONUS_STATS.length; i++) {
             SimpleStat.Type statType = ATTRIBUTE_BONUS_STATS[i];
@@ -536,9 +570,9 @@ public class EntityStats {
 
             List<BiFunction<Boolean, Double, Double>> bonuses = this.getBonuses(stat);
 
-            if (gemsMap != null) {
-                gemsMap.forEach(gemBonus -> bonuses.add(gemBonus.getBonus(stat)));
-            }
+//            if (gemsMap != null) {
+//                gemsMap.forEach(gemBonus -> bonuses.add(gemBonus.getBonus(stat)));
+//            }
 
             double attBase = EntityUT.getAttributeBase(entity, nbt.getAttribute());
             double value   = BonusCalculator.SIMPLE_BONUS.apply(attBase, bonuses);
