@@ -1,22 +1,5 @@
 package studio.magemonkey.divinity.modules.list.loot;
 
-import studio.magemonkey.codex.hooks.Hooks;
-import studio.magemonkey.codex.hooks.external.WorldGuardHK;
-import studio.magemonkey.codex.manager.api.task.ITask;
-import studio.magemonkey.codex.util.EffectUT;
-import studio.magemonkey.codex.util.LocUT;
-import studio.magemonkey.codex.util.StringUT;
-import studio.magemonkey.codex.util.constants.JStrings;
-import studio.magemonkey.codex.util.random.Rnd;
-import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.hooks.EHook;
-import studio.magemonkey.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
-import studio.magemonkey.divinity.modules.EModule;
-import studio.magemonkey.divinity.modules.api.QModule;
-import studio.magemonkey.divinity.modules.list.party.PartyManager;
-import studio.magemonkey.divinity.modules.list.party.PartyManager.Party;
-import studio.magemonkey.divinity.modules.list.party.PartyManager.PartyMember;
-import studio.magemonkey.divinity.modules.list.party.event.PlayerLeavePartyEvent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -40,12 +23,30 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.hooks.Hooks;
+import studio.magemonkey.codex.hooks.external.WorldGuardHK;
+import studio.magemonkey.codex.manager.api.task.ITask;
+import studio.magemonkey.codex.util.EffectUT;
+import studio.magemonkey.codex.util.LocUT;
+import studio.magemonkey.codex.util.StringUT;
+import studio.magemonkey.codex.util.constants.JStrings;
+import studio.magemonkey.codex.util.random.Rnd;
+import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.hooks.EHook;
+import studio.magemonkey.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
+import studio.magemonkey.divinity.modules.EModule;
+import studio.magemonkey.divinity.modules.api.QModule;
+import studio.magemonkey.divinity.modules.list.party.PartyManager;
+import studio.magemonkey.divinity.modules.list.party.PartyManager.Party;
+import studio.magemonkey.divinity.modules.list.party.PartyManager.PartyMember;
+import studio.magemonkey.divinity.modules.list.party.event.PlayerLeavePartyEvent;
 
 import java.util.*;
 
 public class LootManager extends QModule {
 
     private boolean     generalProtectDrop;
+    private boolean     airOnly;
     private int         generalTimeToLoot;
     private Set<String> generalEntityBlack;
     private Set<String> generalMythicBlack;
@@ -92,6 +93,7 @@ public class LootManager extends QModule {
 
         String path = "general.";
         this.generalProtectDrop = cfg.getBoolean(path + "protect-drop");
+        this.airOnly = cfg.getBoolean(path + "air-only");
         this.generalTimeToLoot = cfg.getInt(path + "time-to-loot");
         this.generalEntityBlack = cfg.getStringSet(path + "entity-blacklist");
         this.generalMythicBlack = cfg.getStringSet(path + "mythic-blacklist");
@@ -181,10 +183,11 @@ public class LootManager extends QModule {
         World world = from.getWorld();
         if (world == null) return null;
 
-        Location loc   = LocUT.getFirstGroundBlock(from.clone());
+        Location loc   = LocUT.getFirstGroundBlock(from.clone(), airOnly);
         Block    block = loc.getBlock();
 
-        while ((!block.isEmpty() && block.getType().isSolid()) || this.isLootBox(block.getLocation())) {
+        while ((!block.isEmpty() && ((airOnly && !block.getType().isAir()) || (!airOnly && block.getType().isSolid())))
+                || this.isLootBox(block.getLocation())) {
             loc = Rnd.nextBoolean() ? loc.add(1, 0, 0) : loc.add(0, 0, 1);
 
             block = loc.getBlock();
