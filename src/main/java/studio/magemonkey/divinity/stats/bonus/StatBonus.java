@@ -1,5 +1,6 @@
 package studio.magemonkey.divinity.stats.bonus;
 
+import lombok.Getter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -64,7 +65,7 @@ public class StatBonus {
             if (complex.percent) container.set(PERCENT.get(0), DataUT.BOOLEAN, true);
             if (complex.condition != null) {
                 if (complex.condition.requirement == null) {
-                    container.set(EMPTY.get(0), BOOLEAN, true);
+                    container.set(EMPTY.get(0), DataUT.BOOLEAN, true);
                 }
                 if (complex.condition.requirement instanceof ClassRequirement)
                     container.set(CLASS_CONDITION.get(0), DataUT.STRING_ARRAY, (String[]) complex.condition.value);
@@ -98,7 +99,7 @@ public class StatBonus {
 
             Condition<?> condition = null;
             for (NamespacedKey key : EMPTY) {
-                if (primitive.has(key, BOOLEAN)) {
+                if (primitive.has(key, DataUT.BOOLEAN)) {
                     condition = new Condition<>();
                 }
             }
@@ -128,7 +129,9 @@ public class StatBonus {
         }
     };
 
+    @Getter
     private final double[]     value;
+    @Getter
     private final boolean      percent;
     @Nullable
     private final Condition<?> condition;
@@ -146,10 +149,6 @@ public class StatBonus {
         this.percent = percent;
         this.condition = condition;
     }
-
-    public double[] getValue() {return value;}
-
-    public boolean isPercent() {return percent;}
 
     @Nullable
     public Condition<?> getCondition() {
