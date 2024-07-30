@@ -110,9 +110,8 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
     }
 
     public boolean isBroken(@NotNull ItemStack item) {
-        if (!EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS) return false;
         double[] durability = this.getRaw(item);
-        return durability != null && durability[0] == 0;
+        return durability != null && durability[0] == 0 && !EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS;
     }
 
     public boolean reduceDurability(
