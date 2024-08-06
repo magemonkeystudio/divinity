@@ -53,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Divinity
+ *  Divinity
  * @author © 2024 MageMonkeyStudio
  */
 public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
