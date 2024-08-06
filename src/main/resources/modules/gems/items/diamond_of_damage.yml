@@ -2,10 +2,10 @@ material: DIAMOND
 name: 'Diamond of Damage'
 socket-display: '&6Damage Diamond %ITEM_LEVEL_ROMAN% &7(&fAll Dmg. +%DAMAGE_PHYSICAL%%&7)'
 lore:
-- '&7All Damage: &f+%DAMAGE_PHYSICAL%%'
+  - '&7All Damage: &f+%DAMAGE_PHYSICAL%%'
 enchanted: false
 item-flags:
-- '*'
+  - '*'
 tier: eternal
 level:
   min: 1
@@ -18,7 +18,7 @@ success-rate-by-level:
   '3': '30:60'
 bonuses-by-level:
   '1':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 3.5%
       magical: 3.5%
@@ -26,9 +26,9 @@ bonuses-by-level:
       poison: 3.5%
       wind: 3.5%
       water: 3.5%
-    defense-types: {}
+    defense-types: { }
   '2':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 5%
       magical: 5%
@@ -36,9 +36,9 @@ bonuses-by-level:
       poison: 5%
       wind: 5%
       water: 5%
-    defense-types: {}
+    defense-types: { }
   '3':
-    item-stats: {}
+    item-stats: { }
     damage-types:
       physical: 7.5%
       magical: 7.5%
@@ -46,12 +46,12 @@ bonuses-by-level:
       poison: 7.5%
       wind: 7.5%
       water: 7.5%
-    defense-types: {}
+    defense-types: { }
 target-requirements:
   level:
     '1': '10'
   type:
-  - WEAPON
+    - WEAPON
   socket: common
   module:
-  - '*'
+    - '*'

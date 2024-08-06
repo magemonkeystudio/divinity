@@ -3,7 +3,7 @@
 material: GOLD_NUGGET
 name: 'Money'
 lore:
-- '&6Gives you money'
+  - '&6Gives you money'
 tier: common
 money:
   min: 1

@@ -1,6 +1,6 @@
 settings:
   allowed-items:
-  - 'WEAPON'
+    - 'WEAPON'
   combo:
     length: 3
     check-time: 5
@@ -42,48 +42,48 @@ gui:
       material: NETHER_STAR
       name: '&b&lLeft'
       lore:
-      - '&7Click to add.'
+        - '&7Click to add.'
       slots: 10
       type: COMBO_LEFT
     combo_right:
       material: NETHER_STAR
       name: '&b&lRight'
       lore:
-      - '&7Click to add.'
+        - '&7Click to add.'
       slots: 12
       type: COMBO_RIGHT
     combo_shift_left:
       material: NETHER_STAR
       name: '&b&lShift+Left'
       lore:
-      - '&7Click to add.'
+        - '&7Click to add.'
       slots: 14
       type: COMBO_SHIFT_LEFT
     combo_shift_right:
       material: NETHER_STAR
       name: '&b&lShift+Right'
       lore:
-      - '&7Click to add.'
+        - '&7Click to add.'
       slots: 16
       type: COMBO_SHIFT_RIGHT
     combo_save:
       material: EMERALD
       name: '&aSave'
       lore:
-      - '&7Click to save and return.'
+        - '&7Click to save and return.'
       slots: 49
       type: COMBO_SAVE
     combo_cancel:
       material: BARRIER
       name: '&cCancel'
       lore:
-      - '&7Click to cancel and return.'
+        - '&7Click to cancel and return.'
       slots: 47
       type: COMBO_CANCEL
     combo_clear:
       material: MILK_BUCKET
       name: '&a&fClear'
       lore:
-      - '&7Click to clear combo.'
+        - '&7Click to clear combo.'
       slots: 51
       type: COMBO_CLEAR

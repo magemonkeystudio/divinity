@@ -10,30 +10,30 @@ output-by-item-id-level:
             material: 'EMERALD'
             amount: 17
             name: '&aEmerald'
-            lore: []
-          commands: []
+            lore: [ ]
+          commands: [ ]
           preview:
             material: 'EMERALD'
             amount: 17
             name: '&aEmerald &7(100%)'
-            lore: []
+            lore: [ ]
             enchanted: false
         sulphur:
           chance: 100.0
           item:
             material: 'GUNPOWDER'
-          commands: []
+          commands: [ ]
           preview:
             material: 'GUNPOWDER'
             name: '&8Sulphur &7(25%)'
-            lore: []
+            lore: [ ]
             enchanted: false
         nugget:
           chance: 15.0
           commands:
-          - '[CONSOLE] eco give %player% 10'
+            - '[CONSOLE] eco give %player% 10'
           preview:
             material: 'GOLD_NUGGET'
             name: '&e10$ &7(15%)'
-            lore: []
+            lore: [ ]
             enchanted: false

@@ -1,0 +1,340 @@
+name: '%BASE_NAME% %prefix_tier% %prefix_material% %prefix_type% %item_type% %suffix_material% %suffix_type% %suffix_tier%'
+lore:
+  - '%BASE_LORE%'
+  - '&7Tier: %TIER_NAME%'
+  - '&7Level: &f%ITEM_LEVEL%'
+  - '%ITEM_AMMO%'
+  - '%ITEM_HAND%'
+  - '%ENCHANTS%'
+  - ''
+  - '%USER_CLASS%'
+  - '%USER_BANNED_CLASS%'
+  - '%USER_LEVEL%'
+  - ''
+  - '%ITEM_SET%'
+  - ''
+  - '%GENERATOR_SKILLS%'
+  - '%GENERATOR_DEFENSE%'
+  - '%GENERATOR_DAMAGE%'
+  - '%GENERATOR_STATS%'
+  - '%GENERATOR_FABLED_ATTR%'
+  - '%GENERATOR_SOCKETS_GEM%'
+  - '%GENERATOR_SOCKETS_ESSENCE%'
+  - '%GENERATOR_SOCKETS_RUNE%'
+color: -1,-1,-1
+unbreakable: true
+item-flags:
+  - '*'
+tier: common
+level:
+  min: 1
+  max: 50
+generator:
+  prefix-chance: 100.0
+  suffix-chance: 100.0
+  materials:
+    reverse: false
+    black-list:
+      - DIAMOND*
+      - IRON*
+      - CHAINMAIL*
+    model-data:
+      default:
+        - 1
+        - 2
+        - 3
+      special:
+        diamond_sword:
+          - 10
+          - 11
+        golden_sword:
+          - 12
+          - 13
+        axe:
+          - 30
+          - 40
+        armor:
+          - 20
+          - 22
+  bonuses:
+    material:
+      iron_sword:
+        damage-types:
+          physical: 1.15
+      iron_helmet:
+        defense-types:
+          physical: 1.25
+      axe:
+        item-stats:
+          CRITICAL_DAMAGE: 1.5
+  user-requirements-by-level:
+    level:
+      '1': '1:10'
+      '11': '11:20'
+      '21': '0 + %ITEM_LEVEL%'
+    class:
+      '1': Warrior,Cleric
+    banned-class:
+      '1': Gunner,Archer
+  enchantments:
+    minimum: 1
+    maximum: 2
+    safe-only: false
+    list:
+      sharpness: '1:2'
+      knockback: '1:2'
+      efficiency: '1:2'
+      silk_touch: 0:1
+      smite: '1:2'
+  ammo-types:
+    ARROW: 100.0
+  hand-types:
+    ONE: 70.0
+    TWO: 30.0
+  damage-types:
+    minimum: 1
+    maximum: 2
+    lore-format:
+      - '%DAMAGE_PHYSICAL%'
+      - '%DAMAGE_MAGICAL%'
+      - '%DAMAGE_POISON%'
+      - '%DAMAGE_FIRE%'
+      - '%DAMAGE_WATER%'
+      - '%DAMAGE_WIND%'
+      - ''
+    list:
+      physical:
+        chance: 100.0
+        scale-by-level: 1.025
+        min: 2.6
+        max: 5.8
+  defense-types:
+    minimum: 1
+    maximum: 2
+    lore-format:
+      - '%DEFENSE_PHYSICAL%'
+      - '%DEFENSE_MAGICAL%'
+      - '%DEFENSE_POISON%'
+      - '%DEFENSE_FIRE%'
+      - '%DEFENSE_WATER%'
+      - '%DEFENSE_WIND%'
+      - ''
+    list:
+      physical:
+        chance: 100.0
+        scale-by-level: 1.025
+        min: 3.25
+        max: 8.75
+  item-stats:
+    minimum: 1
+    maximum: 4
+    lore-format:
+      - '%ITEM_STAT_AOE_DAMAGE%'
+      - '%ITEM_STAT_CRITICAL_RATE%'
+      - '%ITEM_STAT_CRITICAL_DAMAGE%'
+      - '%ITEM_STAT_ACCURACY_RATE%'
+      - '%ITEM_STAT_DODGE_RATE%'
+      - '%ITEM_STAT_BLOCK_RATE%'
+      - '%ITEM_STAT_BLOCK_DAMAGE%'
+      - '%ITEM_STAT_LOOT_RATE%'
+      - '%ITEM_STAT_MOVEMENT_SPEED%'
+      - '%ITEM_STAT_BASE_ATTACK_SPEED%'
+      - '%ITEM_STAT_ATTACK_SPEED%'
+      - '%ITEM_STAT_MAX_HEALTH%'
+      - '%ITEM_STAT_PENETRATION%'
+      - '%ITEM_STAT_VAMPIRISM%'
+      - '%ITEM_STAT_BURN_RATE%'
+      - '%ITEM_STAT_PVP_DEFENSE%'
+      - '%ITEM_STAT_THORNMAIL%'
+      - '%ITEM_STAT_MANA_REGEN%'
+      - '%ITEM_STAT_BLEED_RATE%'
+      - '%ITEM_STAT_HEALTH_REGEN%'
+      - '%ITEM_STAT_SALE_PRICE%'
+      - '%ITEM_STAT_DISARM_RATE%'
+      - '%ITEM_STAT_PVE_DAMAGE%'
+      - '%ITEM_STAT_PVP_DAMAGE%'
+      - '%ITEM_STAT_PVE_DEFENSE%'
+      - '%ITEM_STAT_ARMOR_TOUGHNESS%'
+      - ''
+      - '%ITEM_STAT_DURABILITY%'
+      - ''
+    list:
+      critical_rate:
+        chance: 20.0
+        scale-by-level: 1.025
+        min: 3.0
+        max: 6.25
+        flat-range: false
+      critical_damage:
+        chance: 20.0
+        scale-by-level: 1.025
+        min: 1.1
+        max: 1.25
+        flat-range: false
+      dodge_rate:
+        chance: 10.0
+        scale-by-level: 1.025
+        min: 2.5
+        max: 4.0
+        flat-range: false
+      accuracy_rate:
+        chance: 10.0
+        scale-by-level: 1.025
+        min: 4.5
+        max: 7.5
+        flat-range: false
+      block_rate:
+        chance: 10.0
+        scale-by-level: 1.025
+        min: 1.5
+        max: 7.0
+        flat-range: false
+      block_damage:
+        chance: 10.0
+        scale-by-level: 1.025
+        min: 3.0
+        max: 10.0
+        flat-range: false
+      vampirism:
+        chance: 5.0
+        scale-by-level: 1.025
+        min: 1.5
+        max: 4.5
+        flat-range: false
+      burn_rate:
+        chance: 8.0
+        scale-by-level: 1.025
+        min: 4.5
+        max: 12.5
+        flat-range: false
+      durability:
+        chance: 100.0
+        scale-by-level: 1.025
+        min: 150
+        max: 700
+        flat-range: false
+      penetration:
+        chance: 6.0
+        scale-by-level: 1.025
+        min: 4.5
+        max: 10.0
+        flat-range: false
+      loot_rate:
+        chance: 7.5
+        scale-by-level: 1.025
+        min: 2.0
+        max: 10.0
+        flat-range: false
+      movement_speed:
+        chance: 3.5
+        scale-by-level: 1.025
+        min: 7.5
+        max: 15.0
+        flat-range: false
+      attack_speed:
+        chance: 4.75
+        scale-by-level: 1.025
+        min: 5.0
+        max: 10.0
+        flat-range: false
+      max_health:
+        chance: -1
+        scale-by-level: 1.025
+        min: 5.0
+        max: 10.0
+        flat-range: false
+      aoe_damage:
+        chance: 5
+        scale-by-level: 1.025
+        min: 5.0
+        max: 10.0
+        flat-range: false
+      range:
+        chance: 20.0
+        scale-by-level: 1.025
+        min: 5.0
+        max: 25.0
+        flat-range: false
+      armor_toughness:
+        chance: 0.0
+        scale-by-level: 1.0
+        min: 0
+        max: 0
+        flat-range: false
+  fabled-attributes:
+    minimum: 1
+    maximum: 4
+    lore-format:
+      - '%FABLED_ATTRIBUTE_VITALITY%'
+      - '%FABLED_ATTRIBUTE_SPIRIT%'
+      - '%FABLED_ATTRIBUTE_INTELLIGENCE%'
+      - '%FABLED_ATTRIBUTE_DEXTERITY%'
+      - '%FABLED_ATTRIBUTE_STRENGTH%'
+    list:
+      vitality:
+        chance: 20.0
+        scale-by-level: 1.025
+        min: 3.0
+        max: 6.25
+      spirit:
+        chance: 20.0
+        scale-by-level: 1.025
+        min: 1.1
+        max: 1.25
+      intelligence:
+        chance: 10.0
+        scale-by-level: 1.025
+        min: 2.5
+        max: 4.0
+      dexterity:
+        chance: 10.0
+        scale-by-level: 1.025
+        min: 4.5
+        max: 7.5
+      strength:
+        chance: 10.0
+        scale-by-level: 1.025
+        min: 1.5
+        max: 7.0
+  sockets:
+    GEM:
+      minimum: 0
+      maximum: 2
+      lore-format:
+        - '&8&m               &f  「 GEMS 」  &8&m               '
+        - '%SOCKET_GEM_COMMON%'
+        - '%SOCKET_GEM_RARE%'
+      list:
+        common:
+          chance: 35.0
+        rare:
+          chance: 15.0
+    ESSENCE:
+      minimum: 0
+      maximum: 2
+      lore-format:
+        - '&8&m               &f  「 ESSENCES 」  &8&m               '
+        - '%SOCKET_ESSENCE_DEFAULT%'
+      list:
+        default:
+          chance: 35.0
+    RUNE:
+      minimum: 0
+      maximum: 2
+      lore-format:
+        - '&8&m               &f  「 RUNES 」  &8&m               '
+        - '%SOCKET_RUNE_DEFAULT%'
+      list:
+        default:
+          chance: 35.0
+  skills:
+    minimum: 0
+    maximum: 0
+    list:
+      ability-1:
+        chance: 0.0
+        min-level: 1
+        max-level: 1
+        lore-format:
+          - '&bSample Ability: &7[&f%level%&7]'
+target-requirements: { }

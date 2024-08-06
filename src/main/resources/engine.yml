@@ -24,8 +24,8 @@ packets:
     reduce-damage-particles: true
 
 compatibility:
-  player-level-plugin: 'ProSkillAPI'
-  player-class-plugin: 'ProSkillAPI'
+  player-level-plugin: 'Fabled'
+  player-class-plugin: 'Fabled'
   mob-level-plugin: 'MythicMobs'
 
 # Performance settings.
@@ -51,7 +51,7 @@ attributes:
     effective-for:
       # When enabled, all mobs equipment will be affected to the durability stat.
       mobs: true
-      # When enabled, casting SkillAPI skills will reduce the durability of an item in hand.
+      # When enabled, casting Fabled skills will reduce the durability of an item in hand.
       skill-api-skills:
         cast: true
         left_click: true
@@ -65,6 +65,8 @@ attributes:
   allow-hold-items-you-cant-use: false
 
 combat:
+  # Whether to use the old combat formula for calculating defenses
+  legacy-combat: false
   # Shield settings.
   shield:
     block:
@@ -153,7 +155,7 @@ lore:
         break-items-on-zero:
           enabled: true
           excluded-modules:
-          - 'item_generator'
+            - 'item_generator'
       requirements:
         user:
           dynamic:
@@ -227,4 +229,4 @@ lore:
         format:
           main: '&c▸ %name% %value%'
           max-roman: 10
-      skillapi-attribute-format: '&7%attrPre%&3%name%&7%attrPost%'
+      fabled-attribute-format: '&7%attrPre%&3%name%&7%attrPost%'

@@ -41,14 +41,14 @@ body:
       description: |
         examples:
           - **Server Software**: Paper Spigot 1.17.1
-          - **ProRPGItems Version**: 1.0.3.4-ALPHA
-          - **ProMCCore Version**: 1.0.3.1-ALPHA
+          - **Divinity Version**: 1.0.3.4-ALPHA
+          - **Codex Version**: 1.0.3.1-ALPHA
         
         Then run `/plugins` on your server and paste that list for us.
       value: |
         - Server Software:
-        - ProRPGItems Version:
-        - ProMCCore Version:
+        - Divinity Version:
+        - Codex Version:
         - Plugins:
       render: markdown
     validations:

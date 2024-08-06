@@ -1,8 +1,8 @@
 material: MAP
 name: 'Scroll of Fire'
 lore:
-- '&7Ignites all enemies in a radius of &f%var_rad% &7blocks'
-- '&7for %var_dur% &7and applies &fBlind&7 effect to them.'
+  - '&7Ignites all enemies in a radius of &f%var_rad% &7blocks'
+  - '&7for %var_dur% &7and applies &fBlind&7 effect to them.'
 tier: common
 level:
   min: 1
@@ -36,16 +36,16 @@ usage:
       default:
         target-selectors:
           radius:
-          - '[RADIUS] ~distance: %var_rad%; ~allow-self: false; ~party-member: false; ~attackable: true;'
+            - '[RADIUS] ~distance: %var_rad%; ~allow-self: false; ~party-member: false; ~attackable: true;'
           self:
-          - '[SELF]'
+            - '[SELF]'
         conditions:
-          list: []
+          list: [ ]
           actions-on-fail: 'null'
         action-executors:
-        - '[PROGRESS_BAR] ~title: &e&lCasting...; ~subtitle: •; ~color-empty: &7; ~color-fill: &e; ~duration: 35; ~target: self;'
-        - '[PARTICLE_SIMPLE] ~offset: 0.2,0.3,0.2; ~speed: 0.1; ~name: FLAME; ~target: radius; ~amount: 30; ~delay: 23;'
-        - '[POTION] ~name: BLINDNESS; ~amount: 1; ~duration: %var_durTick%; ~target: radius; ~delay: 23;'
-        - '[BURN] ~duration: %var_durtick%; ~target: radius; ~delay: 23;'
-        - '[SOUND] ~name: BLOCK_FIRE_EXTINGUISH; ~target: self; ~delay: 23;'
-target-requirements: {}
+          - '[PROGRESS_BAR] ~title: &e&lCasting...; ~subtitle: •; ~color-empty: &7; ~color-fill: &e; ~duration: 35; ~target: self;'
+          - '[PARTICLE_SIMPLE] ~offset: 0.2,0.3,0.2; ~speed: 0.1; ~name: FLAME; ~target: radius; ~amount: 30; ~delay: 23;'
+          - '[POTION] ~name: BLINDNESS; ~amount: 1; ~duration: %var_durTick%; ~target: radius; ~delay: 23;'
+          - '[BURN] ~duration: %var_durtick%; ~target: radius; ~delay: 23;'
+          - '[SOUND] ~name: BLOCK_FIRE_EXTINGUISH; ~target: self; ~delay: 23;'
+target-requirements: { }

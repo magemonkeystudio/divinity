@@ -1,30 +1,30 @@
 name: '%BASE_NAME% %prefix_tier% %prefix_material% %prefix_type% %item_type% %suffix_material% %suffix_type% %suffix_tier%'
 lore:
-- '%BASE_LORE%'
-- '&7Tier: %TIER_NAME%'
-- '&7Level: &f%ITEM_LEVEL%'
-- '%ITEM_AMMO%'
-- '%ITEM_HAND%'
-- '%ENCHANTS%'
-- ''
-- '%USER_CLASS%'
-- '%USER_BANNED_CLASS%'
-- '%USER_LEVEL%'
-- ''
-- '%ITEM_SET%'
-- ''
-- '%GENERATOR_SKILLS%'
-- '%GENERATOR_DEFENSE%'
-- '%GENERATOR_DAMAGE%'
-- '%GENERATOR_STATS%'
-- '%GENERATOR_SKILLAPI_ATTR%'
-- '%GENERATOR_SOCKETS_GEM%'
-- '%GENERATOR_SOCKETS_ESSENCE%'
-- '%GENERATOR_SOCKETS_RUNE%'
+  - '%BASE_LORE%'
+  - '&7Tier: %TIER_NAME%'
+  - '&7Level: &f%ITEM_LEVEL%'
+  - '%ITEM_AMMO%'
+  - '%ITEM_HAND%'
+  - '%ENCHANTS%'
+  - ''
+  - '%USER_CLASS%'
+  - '%USER_BANNED_CLASS%'
+  - '%USER_LEVEL%'
+  - ''
+  - '%ITEM_SET%'
+  - ''
+  - '%GENERATOR_SKILLS%'
+  - '%GENERATOR_DEFENSE%'
+  - '%GENERATOR_DAMAGE%'
+  - '%GENERATOR_STATS%'
+  - '%GENERATOR_FABLED_ATTR%'
+  - '%GENERATOR_SOCKETS_GEM%'
+  - '%GENERATOR_SOCKETS_ESSENCE%'
+  - '%GENERATOR_SOCKETS_RUNE%'
 color: -1,-1,-1
 unbreakable: true
 item-flags:
-- '*'
+  - '*'
 tier: common
 level:
   min: 1
@@ -35,28 +35,32 @@ generator:
   materials:
     reverse: false
     black-list:
-    - DIAMOND*
-    - IRON*
-    - CHAINMAIL*
+      - DIAMOND*
+      - IRON*
+      - CHAINMAIL*
     model-data:
       default:
-      - 1
-      - 2
-      - 3
+        - 1
+        - 2
+        - 3
       special:
         diamond_sword:
-        - 10
-        - 11
+          - 10
+          - 11
         golden_sword:
-        - 12
-        - 13
+          - 12
+          - 13
         axe:
-        - 30
-        - 40
+          - 30
+          - 40
         armor:
-        - 20
-        - 22
+          - 20
+          - 22
   bonuses:
+    material-modifiers:
+      'diamond*':
+        damage-types:
+          physical: 1.15
     material:
       iron_sword:
         damage-types:
@@ -95,13 +99,13 @@ generator:
     minimum: 1
     maximum: 2
     lore-format:
-    - '%DAMAGE_PHYSICAL%'
-    - '%DAMAGE_MAGICAL%'
-    - '%DAMAGE_POISON%'
-    - '%DAMAGE_FIRE%'
-    - '%DAMAGE_WATER%'
-    - '%DAMAGE_WIND%'
-    - ''
+      - '%DAMAGE_PHYSICAL%'
+      - '%DAMAGE_MAGICAL%'
+      - '%DAMAGE_POISON%'
+      - '%DAMAGE_FIRE%'
+      - '%DAMAGE_WATER%'
+      - '%DAMAGE_WIND%'
+      - ''
     list:
       physical:
         chance: 100.0
@@ -112,13 +116,13 @@ generator:
     minimum: 1
     maximum: 2
     lore-format:
-    - '%DEFENSE_PHYSICAL%'
-    - '%DEFENSE_MAGICAL%'
-    - '%DEFENSE_POISON%'
-    - '%DEFENSE_FIRE%'
-    - '%DEFENSE_WATER%'
-    - '%DEFENSE_WIND%'
-    - ''
+      - '%DEFENSE_PHYSICAL%'
+      - '%DEFENSE_MAGICAL%'
+      - '%DEFENSE_POISON%'
+      - '%DEFENSE_FIRE%'
+      - '%DEFENSE_WATER%'
+      - '%DEFENSE_WIND%'
+      - ''
     list:
       physical:
         chance: 100.0
@@ -129,35 +133,35 @@ generator:
     minimum: 1
     maximum: 4
     lore-format:
-    - '%ITEM_STAT_AOE_DAMAGE%'
-    - '%ITEM_STAT_CRITICAL_RATE%'
-    - '%ITEM_STAT_CRITICAL_DAMAGE%'
-    - '%ITEM_STAT_ACCURACY_RATE%'
-    - '%ITEM_STAT_DODGE_RATE%'
-    - '%ITEM_STAT_BLOCK_RATE%'
-    - '%ITEM_STAT_BLOCK_DAMAGE%'
-    - '%ITEM_STAT_LOOT_RATE%'
-    - '%ITEM_STAT_MOVEMENT_SPEED%'
-    - '%ITEM_STAT_BASE_ATTACK_SPEED%'
-    - '%ITEM_STAT_ATTACK_SPEED%'
-    - '%ITEM_STAT_MAX_HEALTH%'
-    - '%ITEM_STAT_PENETRATION%'
-    - '%ITEM_STAT_VAMPIRISM%'
-    - '%ITEM_STAT_BURN_RATE%'
-    - '%ITEM_STAT_PVP_DEFENSE%'
-    - '%ITEM_STAT_THORNMAIL%'
-    - '%ITEM_STAT_MANA_REGEN%'
-    - '%ITEM_STAT_BLEED_RATE%'
-    - '%ITEM_STAT_HEALTH_REGEN%'
-    - '%ITEM_STAT_SALE_PRICE%'
-    - '%ITEM_STAT_DISARM_RATE%'
-    - '%ITEM_STAT_PVE_DAMAGE%'
-    - '%ITEM_STAT_PVP_DAMAGE%'
-    - '%ITEM_STAT_PVE_DEFENSE%'
-    - '%ITEM_STAT_ARMOR_TOUGHNESS%'
-    - ''
-    - '%ITEM_STAT_DURABILITY%'
-    - ''
+      - '%ITEM_STAT_AOE_DAMAGE%'
+      - '%ITEM_STAT_CRITICAL_RATE%'
+      - '%ITEM_STAT_CRITICAL_DAMAGE%'
+      - '%ITEM_STAT_ACCURACY_RATE%'
+      - '%ITEM_STAT_DODGE_RATE%'
+      - '%ITEM_STAT_BLOCK_RATE%'
+      - '%ITEM_STAT_BLOCK_DAMAGE%'
+      - '%ITEM_STAT_LOOT_RATE%'
+      - '%ITEM_STAT_MOVEMENT_SPEED%'
+      - '%ITEM_STAT_BASE_ATTACK_SPEED%'
+      - '%ITEM_STAT_ATTACK_SPEED%'
+      - '%ITEM_STAT_MAX_HEALTH%'
+      - '%ITEM_STAT_PENETRATION%'
+      - '%ITEM_STAT_VAMPIRISM%'
+      - '%ITEM_STAT_BURN_RATE%'
+      - '%ITEM_STAT_PVP_DEFENSE%'
+      - '%ITEM_STAT_THORNMAIL%'
+      - '%ITEM_STAT_MANA_REGEN%'
+      - '%ITEM_STAT_BLEED_RATE%'
+      - '%ITEM_STAT_HEALTH_REGEN%'
+      - '%ITEM_STAT_SALE_PRICE%'
+      - '%ITEM_STAT_DISARM_RATE%'
+      - '%ITEM_STAT_PVE_DAMAGE%'
+      - '%ITEM_STAT_PVP_DAMAGE%'
+      - '%ITEM_STAT_PVE_DEFENSE%'
+      - '%ITEM_STAT_ARMOR_TOUGHNESS%'
+      - ''
+      - '%ITEM_STAT_DURABILITY%'
+      - ''
     list:
       critical_rate:
         chance: 20.0
@@ -261,15 +265,15 @@ generator:
         min: 0
         max: 0
         flat-range: false
-  skillapi-attributes:
+  fabled-attributes:
     minimum: 1
     maximum: 4
     lore-format:
-      - '%SKILLAPI_ATTRIBUTE_VITALITY%'
-      - '%SKILLAPI_ATTRIBUTE_SPIRIT%'
-      - '%SKILLAPI_ATTRIBUTE_INTELLIGENCE%'
-      - '%SKILLAPI_ATTRIBUTE_DEXTERITY%'
-      - '%SKILLAPI_ATTRIBUTE_STRENGTH%'
+      - '%FABLED_ATTRIBUTE_VITALITY%'
+      - '%FABLED_ATTRIBUTE_SPIRIT%'
+      - '%FABLED_ATTRIBUTE_INTELLIGENCE%'
+      - '%FABLED_ATTRIBUTE_DEXTERITY%'
+      - '%FABLED_ATTRIBUTE_STRENGTH%'
     list:
       vitality:
         chance: 20.0
@@ -301,9 +305,9 @@ generator:
       minimum: 0
       maximum: 2
       lore-format:
-      - '&8&m               &f  「 GEMS 」  &8&m               '
-      - '%SOCKET_GEM_COMMON%'
-      - '%SOCKET_GEM_RARE%'
+        - '&8&m               &f  「 GEMS 」  &8&m               '
+        - '%SOCKET_GEM_COMMON%'
+        - '%SOCKET_GEM_RARE%'
       list:
         common:
           chance: 35.0
@@ -313,8 +317,8 @@ generator:
       minimum: 0
       maximum: 2
       lore-format:
-      - '&8&m               &f  「 ESSENCES 」  &8&m               '
-      - '%SOCKET_ESSENCE_DEFAULT%'
+        - '&8&m               &f  「 ESSENCES 」  &8&m               '
+        - '%SOCKET_ESSENCE_DEFAULT%'
       list:
         default:
           chance: 35.0
@@ -322,8 +326,8 @@ generator:
       minimum: 0
       maximum: 2
       lore-format:
-      - '&8&m               &f  「 RUNES 」  &8&m               '
-      - '%SOCKET_RUNE_DEFAULT%'
+        - '&8&m               &f  「 RUNES 」  &8&m               '
+        - '%SOCKET_RUNE_DEFAULT%'
       list:
         default:
           chance: 35.0
@@ -336,5 +340,5 @@ generator:
         min-level: 1
         max-level: 1
         lore-format:
-        - '&bSample Ability: &7[&f%level%&7]'
-target-requirements: {}
+          - '&bSample Ability: &7[&f%level%&7]'
+target-requirements: { }

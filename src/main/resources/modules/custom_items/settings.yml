@@ -2,4 +2,4 @@ command-aliases: customitems
 item-format:
   name: '%ITEM_NAME%'
   lore:
-  - '%ITEM_LORE%'
+    - '%ITEM_LORE%'

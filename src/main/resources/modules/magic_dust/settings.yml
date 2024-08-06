@@ -4,38 +4,38 @@ general:
     default:
       target-selectors:
         self:
-        - '[SELF]'
+          - '[SELF]'
       conditions:
-        list: []
+        list: [ ]
         actions-on-fail: 'null'
       action-executors:
-      - '[PARTICLE_SIMPLE] ~name: SPELL_WITCH; ~offset: 0.25,0.4,0.25; ~speed: 0.2; ~amount: 50; ~target: self;'
-      - '[SOUND] ~name: BLOCK_NOTE_BLOCK_BELL; ~target: self;'
+        - '[PARTICLE_SIMPLE] ~name: SPELL_WITCH; ~offset: 0.25,0.4,0.25; ~speed: 0.2; ~amount: 50; ~target: self;'
+        - '[SOUND] ~name: BLOCK_NOTE_BLOCK_BELL; ~target: self;'
   actions-error:
     default:
       target-selectors:
         self:
-        - '[SELF]'
+          - '[SELF]'
       conditions:
-        list: []
+        list: [ ]
         actions-on-fail: 'null'
       action-executors:
-      - '[SOUND] ~name: ENTITY_VILLAGER_NO; ~target: self;'
+        - '[SOUND] ~name: ENTITY_VILLAGER_NO; ~target: self;'
 item-format:
   name: '%TIER_COLOR%%ITEM_NAME% %ITEM_LEVEL_ROMAN%'
   lore:
-  - '&8&m               &f  「 INFO 」  &8&m               '
-  - '&7Increases the item success rate.'
-  - '&7Amount: &a+%rate-amount%% &7| Capacity: &c%rate-max%%'
-  - '%ITEM_CHARGES%'
-  - '%ITEM_LORE%'
-  - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
-  - '%TARGET_TYPE%'
-  - '%TARGET_LEVEL%'
-  - '%TARGET_MODULE%'
-  - '%TARGET_TIER%'
-  - '&8&m              &f  「 USAGE 」  &8&m              '
-  - '&7Drag & drop onto item to apply.'
+    - '&8&m               &f  「 INFO 」  &8&m               '
+    - '&7Increases the item success rate.'
+    - '&7Amount: &a+%rate-amount%% &7| Capacity: &c%rate-max%%'
+    - '%ITEM_CHARGES%'
+    - '%ITEM_LORE%'
+    - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+    - '%TARGET_TYPE%'
+    - '%TARGET_LEVEL%'
+    - '%TARGET_MODULE%'
+    - '%TARGET_TIER%'
+    - '&8&m              &f  「 USAGE 」  &8&m              '
+    - '&7Drag & drop onto item to apply.'
 gui:
   paid:
     title: Enchant Rate Improvement
@@ -47,11 +47,11 @@ gui:
         amount: 1
         name: '&e&lAdd 1%'
         lore:
-        - '&cCapacity: &4%rate-max%%'
-        - '&7'
-        - '&6Result: &e%rate-old%% &6-> &a%rate-new%%'
-        - '&6Cost: &e$%cost%'
-        - '&6You have: &e$%balance%'
+          - '&cCapacity: &4%rate-max%%'
+          - '&7'
+          - '&6Result: &e%rate-old%% &6-> &a%rate-new%%'
+          - '&6Cost: &e$%cost%'
+          - '&6You have: &e$%balance%'
         rate-amount: 1
         rate-cost: 150
         rate-max: 80
@@ -62,11 +62,11 @@ gui:
         amount: 2
         name: '&e&lAdd 2%'
         lore:
-        - '&cCapacity: &4%rate-max%%'
-        - '&7'
-        - '&6Result: &e%rate-old%% &6-> &a%rate-new%%'
-        - '&6Cost: &e$%cost%'
-        - '&6You have: &e$%balance%'
+          - '&cCapacity: &4%rate-max%%'
+          - '&7'
+          - '&6Result: &e%rate-old%% &6-> &a%rate-new%%'
+          - '&6Cost: &e$%cost%'
+          - '&6You have: &e$%balance%'
         rate-amount: 2
         rate-cost: 300
         rate-max: 80
@@ -77,11 +77,11 @@ gui:
         amount: 5
         name: '&e&lAdd 5%'
         lore:
-        - '&cCapacity: &4%rate-max%%'
-        - '&7'
-        - '&6Result: &e%rate-old%% &6-> &a%rate-new%%'
-        - '&6Cost: &e$%cost%'
-        - '&6You have: &e$%balance%'
+          - '&cCapacity: &4%rate-max%%'
+          - '&7'
+          - '&6Result: &e%rate-old%% &6-> &a%rate-new%%'
+          - '&6Cost: &e$%cost%'
+          - '&6You have: &e$%balance%'
         rate-amount: 5
         rate-cost: 750
         rate-max: 80
@@ -92,11 +92,11 @@ gui:
         amount: 10
         name: '&e&lAdd 10%'
         lore:
-        - '&cCapacity: &4%rate-max%%'
-        - '&7'
-        - '&6Result: &e%rate-old%% &6-> &a%rate-new%%'
-        - '&6Cost: &e$%cost%'
-        - '&6You have: &e$%balance%'
+          - '&cCapacity: &4%rate-max%%'
+          - '&7'
+          - '&6Result: &e%rate-old%% &6-> &a%rate-new%%'
+          - '&6Cost: &e$%cost%'
+          - '&6You have: &e$%balance%'
         rate-amount: 10
         rate-cost: 1500
         rate-max: 80

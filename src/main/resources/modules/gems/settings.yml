@@ -13,32 +13,31 @@ socketing:
     color-failure: 'RED'
     fill-interval: 1
     fill-amount: 1
-    min-success: 50
   merchant:
     enabled: true
   actions-complete:
     default:
       target-selectors:
         self:
-        - '[SELF]'
+          - '[SELF]'
       conditions:
-        list: []
+        list: [ ]
         actions-on-fail: 'null'
       action-executors:
-      - '[PARTICLE_SIMPLE] ~name: SPELL_WITCH; ~offset: 0.25,0.4,0.25; ~speed: 0.2; ~amount: 50; ~target: self;'
-      - '[SOUND] ~name: BLOCK_NOTE_BLOCK_BELL; ~target: self;'
-      - '[TITLES] ~title: &a&lSocketing; ~subtitle: &7You successfully socketed item!; ~fadeIn: 10; ~stay: 40; ~fadeOut: 10; ~target: self;'
+        - '[PARTICLE_SIMPLE] ~name: SPELL_WITCH; ~offset: 0.25,0.4,0.25; ~speed: 0.2; ~amount: 50; ~target: self;'
+        - '[SOUND] ~name: BLOCK_NOTE_BLOCK_BELL; ~target: self;'
+        - '[TITLES] ~title: &a&lSocketing; ~subtitle: &7You successfully socketed item!; ~fadeIn: 10; ~stay: 40; ~fadeOut: 10; ~target: self;'
   actions-error:
     default:
       target-selectors:
         self:
-        - '[SELF]'
+          - '[SELF]'
       conditions:
-        list: []
+        list: [ ]
         actions-on-fail: 'null'
       action-executors:
-      - '[SOUND] ~name: ENTITY_VILLAGER_NO; ~target: self;'
-      - '[TITLES] ~title: &c&lSocketing; ~subtitle: &7You could not socket item!; ~fadeIn: 10; ~stay: 40; ~fadeOut: 10; ~target: self;'
+        - '[SOUND] ~name: ENTITY_VILLAGER_NO; ~target: self;'
+        - '[TITLES] ~title: &c&lSocketing; ~subtitle: &7You could not socket item!; ~fadeIn: 10; ~stay: 40; ~fadeOut: 10; ~target: self;'
   failure:
     destroy-target: true
     destroy-source: false
@@ -54,19 +53,19 @@ socketing:
 item-format:
   name: '%TIER_COLOR%%ITEM_NAME% %ITEM_LEVEL_ROMAN%'
   lore:
-  - '&8&m               &f  「 INFO 」  &8&m               '
-  - '&7Tier: %TIER_NAME%'
-  - '&7Enchant Chance: &a&l%ITEM_SUCCESS_RATE%%'
-  - '%ITEM_CHARGES%'
-  - '%ITEM_LORE%'
-  - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
-  - '%TARGET_LEVEL%'
-  - '%TARGET_TYPE%'
-  - '%TARGET_MODULE%'
-  - '%TARGET_SOCKET%'
-  - '%TARGET_TIER%'
-  - '&8&m               &f 「 USAGE 」 &8&m               '
-  - '&7Drag & Drop onto item to start socketing.'
+    - '&8&m               &f  「 INFO 」  &8&m               '
+    - '&7Tier: %TIER_NAME%'
+    - '&7Enchant Chance: &a&l%ITEM_SUCCESS_RATE%%'
+    - '%ITEM_CHARGES%'
+    - '%ITEM_LORE%'
+    - '&8&m         &f  「 REQUIREMENTS 」  &8&m        '
+    - '%TARGET_LEVEL%'
+    - '%TARGET_TYPE%'
+    - '%TARGET_MODULE%'
+    - '%TARGET_SOCKET%'
+    - '%TARGET_TIER%'
+    - '&8&m               &f 「 USAGE 」 &8&m               '
+    - '&7Drag & Drop onto item to start socketing.'
 gui:
   title: '&0« Socketing »'
   size: 9
@@ -79,7 +78,7 @@ gui:
       skull-hash: ''
       enchanted: false
       name: ''
-      lore: []
+      lore: [ ]
       slots: 1,2,6,7
       type: NONE
     accept:
@@ -88,10 +87,10 @@ gui:
       enchanted: false
       name: '&2« &aAccept &2»'
       lore:
-      - '&7Attempt to socket gem into the item.'
-      - '&7In case of failure your item will be &cdestroyed&7.'
-      - ''
-      - '&f[Click to Confirm]'
+        - '&7Attempt to socket gem into the item.'
+        - '&7In case of failure your item will be &cdestroyed&7.'
+        - ''
+        - '&f[Click to Confirm]'
       slots: '8'
       type: ACCEPT
     exit:
@@ -99,6 +98,6 @@ gui:
       skull-hash: ''
       enchanted: false
       name: '&4« &cCancel &4»'
-      lore: []
+      lore: [ ]
       slots: '0'
       type: EXIT

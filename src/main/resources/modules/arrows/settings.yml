@@ -6,4 +6,4 @@ settings:
 item-format:
   name: '%TIER_COLOR%%ITEM_NAME% %ITEM_LEVEL_ROMAN%'
   lore:
-  - '%ITEM_LORE%'
+    - '%ITEM_LORE%'

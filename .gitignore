@@ -3,6 +3,7 @@ target/
 *.iml
 log.txt
 settings.xml
+logs/
 
 # Compiled class file
 *.class
