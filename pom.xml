@@ -7,7 +7,7 @@
     <parent>
         <groupId>studio.magemonkey</groupId>
         <artifactId>magemonkey-parent</artifactId>
-        <version>1.21-SNAPSHOT</version>
+        <version>1.21.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>divinity</artifactId>
@@ -16,8 +16,8 @@
     <description>Custom items, combat, and more!</description>
 
     <properties>
-        <codex.version>1.0.0-R0.31-SNAPSHOT</codex.version>
-        <fabled.version>1.0.0-R0.42-SNAPSHOT</fabled.version>
+        <codex.version>1.0.1-R0.1-SNAPSHOT</codex.version>
+        <fabled.version>1.0.1-R0.3-SNAPSHOT</fabled.version>
     </properties>
 
     <repositories>
@@ -38,6 +38,10 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.mojang</groupId>
             <artifactId>authlib</artifactId>
