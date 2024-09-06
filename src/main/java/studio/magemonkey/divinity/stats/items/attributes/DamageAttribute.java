@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.util.DataUT;
@@ -278,11 +279,27 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
     @Override
     @NotNull
     public ItemStack updateItem(@Nullable Player p, @NotNull ItemStack item) {
-        int amount = this.getAmount(item);
-        if (amount == 0) return item;
-
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // Replace legacy format
+        for (NamespacedKey key : this.keys) {
+            if (container.has(key, PersistentDataType.DOUBLE)) {
+                Double value = Objects.requireNonNull(container.get(key, PersistentDataType.DOUBLE));
+                add(item, new StatBonus(new double[]{value}, false, null),-1, -1);
+                meta = item.getItemMeta();
+                break;
+            } else if (container.has(key, DataUT.DOUBLE_ARRAY)) {
+                double[] value = Objects.requireNonNull(container.get(key, DataUT.DOUBLE_ARRAY));
+                add(item, new StatBonus(value, false, null),-1, -1);
+                meta = item.getItemMeta();
+                break;
+            }
+        }
+
+        int amount = this.getAmount(item);
+        if (amount == 0) return item;
         List<String> lore = meta.getLore();
         if (lore == null) return item;
 

@@ -27,6 +27,7 @@ import studio.magemonkey.divinity.utils.ItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiFunction;
 
 public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements TypedStat, DynamicStat<StatBonus> {
@@ -246,11 +247,22 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
     @Override
     @NotNull
     public ItemStack updateItem(@Nullable Player p, @NotNull ItemStack item) {
-        int amount = this.getAmount(item);
-        if (amount == 0) return item;
-
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+
+        // Replace legacy format
+        for (NamespacedKey key : this.keys) {
+            if (container.has(key, PersistentDataType.DOUBLE)) {
+                Double value = Objects.requireNonNull(container.get(key, PersistentDataType.DOUBLE));
+                add(item, new StatBonus(new double[]{value}, false, null),-1, -1);
+                meta = item.getItemMeta();
+                break;
+            }
+        }
+
+        int amount = this.getAmount(item);
+        if (amount == 0) return item;
         List<String> lore = meta.getLore();
         if (lore == null) return item;
 
