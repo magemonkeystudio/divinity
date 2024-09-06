@@ -54,8 +54,7 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         if (index < 0 && value instanceof StatBonus) {
             StatBonus statBonus = ((StatBonus) value);
 
-            // Look for legacy format
-            if (statBonus.getCondition() == null && !statBonus.isPercent()) {
+            if (statBonus.isBaseStat()) { // Look for legacy format
                 ItemMeta meta = item.getItemMeta();
                 if (meta != null) {
                     PersistentDataContainer container = meta.getPersistentDataContainer();

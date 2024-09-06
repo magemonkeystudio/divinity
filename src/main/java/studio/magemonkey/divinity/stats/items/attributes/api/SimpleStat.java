@@ -131,7 +131,7 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
 
         {
             StatBonus baseLine = this.getRaw(meta, 0);
-            if (baseLine != null && baseLine.getCondition() == null) { // Is there a base stat?
+            if (baseLine != null && baseLine.isBaseStat()) { // Is there a base stat?
                 // Support for Refined attributes.
                 RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
                 if (refine != null && has) {
@@ -235,7 +235,7 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
             sVal += EngineCfg.LORE_CHAR_PERCENT;
         } else {
             if (this.statType == Type.CRITICAL_DAMAGE) sVal += EngineCfg.LORE_CHAR_MULTIPLIER;
-            if (statBonus.getCondition() == null) { // This is the base stat, apply refines
+            if (statBonus.isBaseStat()) { // Apply refines
                 RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
                 if (refine != null) sVal += refine.getFormatLoreStat(item, this, statBonus.getValue()[0]);
             }

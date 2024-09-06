@@ -30,11 +30,8 @@ import studio.magemonkey.divinity.stats.items.api.DuplicableItemLoreStat;
 import studio.magemonkey.divinity.stats.items.api.DynamicStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.BiFunction;
 
 public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implements DynamicStat<StatBonus> {
@@ -178,7 +175,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
 
         {
             StatBonus baseLine = this.getRaw(meta, 0);
-            if (baseLine != null && baseLine.getCondition() == null) { // Is there a base stat?
+            if (baseLine != null && baseLine.isBaseStat()) { // Is there a base stat?
                 // Support for Refined attributes.
                 RefineManager refineManager = Divinity.getInstance().getModuleCache().getRefineManager();
                 if (refineManager != null && has) {
@@ -246,7 +243,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
             sVal = NumberUT.format(array[0]);
             if (value.isPercent()) {
                 sVal += EngineCfg.LORE_CHAR_PERCENT;
-            } else if (value.getCondition() == null) { // This is the base stat, apply refines
+            } else if (value.isBaseStat()) {
                 RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
                 if (refine != null) sVal += refine.getFormatLoreStat(item, this, array[0]);
             }
@@ -254,7 +251,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
         } else {
             String sMin = NumberUT.format(array[0]);
             String sMax = NumberUT.format(array[1]);
-            if (value.getCondition() == null) { // This is the base stat, apply refines
+            if (value.isBaseStat()) { // Apply refines
                 RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
                 if (refine != null) {
                     sMin += refine.getFormatLoreStat(item, this, array[0]);

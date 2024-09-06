@@ -131,7 +131,7 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
 
         {
             StatBonus baseLine = this.getRaw(meta, 0);
-            if (baseLine != null && baseLine.getCondition() == null) { // Is there a base stat?
+            if (baseLine != null && baseLine.isBaseStat()) { // Is there a base stat?
                 // Support for Refine Module
                 RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
                 if (refine != null && has) {
@@ -173,7 +173,7 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
         String sVal = NumberUT.format(statBonus.getValue()[0]);
         if (statBonus.isPercent()) {
             sVal += EngineCfg.LORE_CHAR_PERCENT;
-        } else if (statBonus.getCondition() == null) { // This is the base stat, apply refines
+        } else if (statBonus.isBaseStat()) {
             RefineManager refine = Divinity.getInstance().getModuleCache().getRefineManager();
             if (refine != null) sVal += refine.getFormatLoreStat(item, this, statBonus.getValue()[0]);
         }

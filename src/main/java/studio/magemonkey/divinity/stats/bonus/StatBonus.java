@@ -155,6 +155,10 @@ public class StatBonus {
         return this.condition;
     }
 
+    public boolean isBaseStat() {
+        return this.condition == null && !this.percent;
+    }
+
     public boolean meetsRequirement(@Nullable Player player) {
         return this.condition == null || (player != null && this.condition.meetsRequirement(player));
     }
