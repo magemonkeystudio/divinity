@@ -40,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @SuppressWarnings("deprecation")
 public class VanillaWrapperListener extends IListener<Divinity> {
@@ -133,7 +134,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         if (isEde && plugin.getPluginManager().isPluginEnabled("Fabled")) {
             EntityDamageByEntityEvent ede        = (EntityDamageByEntityEvent) e;
             FabledHook                fabledHook = (FabledHook) this.plugin.getHook(EHook.SKILL_API);
-            if (fabledHook.isFakeDamage(ede)) return;
+            if (Objects.requireNonNull(fabledHook).isFakeDamage(ede)) return;
         }
 //        long l1 = System.currentTimeMillis();
 
