@@ -226,9 +226,9 @@ public class AttributeGenerator<A extends ItemLoreStat<?>> extends AbstractAttri
                     BiFunction<Boolean, Double, Double> vMod = generatorItem.getMaterialModifiers(item, stat);
 
                     double vScale = generatorItem.getScaleOfLevel(values.getScaleByLevel(), itemLevel);
-                    double vMin   = BonusCalculator.SIMPLE_FULL.apply(values.getMin(), Arrays.asList(vMod)) * vScale;
+                    double vMin   = BonusCalculator.SIMPLE_FULL.apply(values.getMin(), List.of(vMod)) * vScale;
                     //(values[1]) * vScale * (1D + vMod[1] / 100D);
-                    double vMax = BonusCalculator.SIMPLE_FULL.apply(values.getMax(), Arrays.asList(vMod)) * vScale;
+                    double vMax = BonusCalculator.SIMPLE_FULL.apply(values.getMax(), List.of(vMod)) * vScale;
                     // (values[2]) * vScale * (1D + vMod[1] / 100D);
 
                     if (stat instanceof DamageAttribute) {

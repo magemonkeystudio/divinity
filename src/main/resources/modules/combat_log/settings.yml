@@ -56,7 +56,7 @@ messages:
       enabled: true
       messages:
         damager: '&6*** &7%entity% &6has dodged your attack! ***'
-        victim: '&6*** You has dodged &7%entity% &6attack! ***'
+        victim: '&6*** You have dodged &7%entity% &6attack! ***'
         indicator: '&8[&b&lDodge!&8]'
       sound: BLOCK_SNOW_FALL
     BLOCK:

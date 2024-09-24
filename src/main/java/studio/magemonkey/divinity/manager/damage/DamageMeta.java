@@ -220,7 +220,7 @@ public class DamageMeta {
     }
 
     public boolean isBlocked() {
-        return this.getBlockModifier() >= 0D && this.getBlockModifier() != 1D;
+        return this.getBlockModifier() != 1D;
     }
 
     public double getTotalDamage() {

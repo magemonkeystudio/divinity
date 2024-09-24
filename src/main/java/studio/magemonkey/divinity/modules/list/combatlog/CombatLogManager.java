@@ -395,7 +395,7 @@ public class CombatLogManager extends QModule {
         this.indicatorExpansion.create(loc, list);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onDamageIndicator(EntityDamageEvent e) {
         if (e instanceof EntityDamageByEntityEvent && plugin.getPluginManager().isPluginEnabled("Fabled")) {
             EntityDamageByEntityEvent ede        = (EntityDamageByEntityEvent) e;
