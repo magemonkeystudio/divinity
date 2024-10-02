@@ -1,0 +1,443 @@
+Command:
+  Modify:
+    List:
+      - '{message： ~prefix: false;}&8&m-----------&8&l[ &aRPG &7- &a帮助页面 &8&l]&8&m-----------'
+      - '&2> &a/qrpg modify name <Name> &7- 更改项目的显示名称。'
+      - '&2> &a/qrpg modify lore add [text] [line] &7- 添加传说行'
+      - '&2> &a/qrpg modify lore del [line] &7- 删除传说行。'
+      - '&2> &a/qrpg modify lore clear &7- 清除物品传说。'
+      - '&2> &a/qrpg modify flag add <flag> &7- 为物品添加标志。'
+      - '&2> &a/qrpg modify flag del <flag> &7- 从物品中移除一个标志。'
+      - '&2> &a/qrpg modify enchant <enchantment> <level> &7- 为物品附魔/附魔物品'
+      - '&2> &a/qrpg modify potion <effect> <level> <duration> [ambient(true/false)] [环境（真/假）] [粒子（真/假）] [环境（真/假）]
+          [粒子（真/假）） [图标（真/假）] &7- 修改药水效果'
+      - '&2> &a/qrpg modify color <r,g,b> &7- 更改皮甲或药水的颜色'
+    Desc: '修改一件物品'
+    Done: '完成!'
+  Set:
+    List:
+      - '{message： ~prefix: false;}&8&m-----------&8&l[ &aRPG &7- &a帮助页面 &8&l]&8&m-----------'
+      - '&2> &a/qrpg set stat <type> <value> [position] &7- 将属性设置为 item'
+      - '&2> &a/qrpg set level <number> [position] &7- 为物品添加等级要求'
+      - '&2> &a/qrpg set class <class1,class2,etc> [position] &7- 为物品添加等级要求。
+      添加等级要求'
+      - '&2> &a/qrpg set damage <type> <min> <max> [position] &7- 为物品添加伤害类型到物品中'
+      - '&2> &a/qrpg set defense <type> <value> [position] &7- 为物品添加防御类型,
+      添加防御类型'
+      - '&2> &a/qrpg set ammo <type> [position] &7- 为弓箭设置弹药类型'
+      - '&2> &a/qrpg set hand <type> [position] &7- 将手的类型设置为物品'
+      - '&2> &a/qrpg set socket <type> [position] &7- 为物品添加一个空槽'
+  Buff:
+    Desc: 临时增加指定属性.
+    Usage:  <玩家> <类型> <id> <数量> <持续时间>
+    Done:  为 &a%player%&7 添加了 &a%amount% %stat%&7 buff，持续时间为 &a%time%&7！
+    Get: 您刚刚为 &a%time%&7 获得了 &a%amount% %stat%&7 buff！
+Module:
+  Cmd:
+    List:
+      Usage: '[页面]'
+      Desc: 模块项目列表.
+      Format:
+        List:
+          - '{message: ~prefix: false;}'
+          - '&8&m-------- &e 列表 of %module% &8&m--------'
+          - '&6%pos%. &e%item% %button_get%'
+          - '&8&m-------- &e 当前 &7%page% &e of &7 %pages% &8&m--------'
+      Button:
+        Get:
+          Name: '&a&l[获取物品]'
+          Hint: '&7物品已到您的背包.'
+    Get:
+      Done: 您获得了 &ax%amount% &7 of &a%item%&7！
+      Usage: <id> [level] [amount]
+      Desc: 获得一个模块物品.
+    Give:
+      Done: '你把 &ax%amount% &7 of &a%item%&7 给了 &a%player%&7！'
+      Usage: <玩家> <id> [等级] [数量］
+      Desc: '向玩家赠送一个模块物品.'
+    Drop:
+      Usage: <world> <x> <y> <z> <id> [level] [amount]
+      Desc: '在世界中丢放指定物品.'
+      Done: '您在 &a%w%&7, %x%&7, &a%y%&7, &a%z%&7 掉落了 &ax%amount% &7 of &a%item%&7 物品！'
+    Help:
+      Format: '&2> &a/%cmd% %label% %usage% &7- %desc%'
+    Usage: '&c用法: &f/%cmd% %label% %usage%'
+    Reload: '模块 &a%module% &7已加载!'
+  Socketing:
+    Cmd:
+      Merchant:
+        Desc: '打开商家套接字图形用户界面.'
+        Usage: '[玩家] [强制（真/假）]'
+  Item:
+    Usage:
+      Cooldown: '&c您必须等待&e%time%&c才能再次使用&f%item%!'
+      Broken: '您的物品已损坏！您不能使用它!'
+      NoCharges: '&e%item% &c耐久已经用完，修复后再使用吧!'
+    Apply:
+      Error:
+        Level: '&e%source% &c只能应用于等级为(s) &e%value%&c!'
+        Type: '&e%source% &c只能应用于指定项目: &e%value%&c!'
+        Module: '&e%source% &c只能应用于指定项目: &e%value%&c!'
+        Socket: '&e%target% &c不免费 &e%socket%&c!'
+        Tier: '&e%source% &c只能适用于 &e%tier% &c物品!'
+    Interact:
+      Error:
+        Level: '&c错误提示，玩家等级不适合使用 %item%&c.'
+        Class: '&c错误提示，玩家职业不适合使用 %item%&c.'
+        Soulbound: '&c您必须将%item%设置为灵魂绑定！右键单击&e%item%'
+        Owner: '&e%item% &c属于 &e%owner%&c. 你不能使用他.'
+        Hand: '&c您的武器是双手武器！您不能用另一只手拿取物品!'
+        Creative: '&c请退出 “创造 ”模式.'
+    Socketing:
+      Merchant:
+        Error:
+          TooExpensive: '&c你支付不起这个费用!'
+        Notify:
+          Pay: '您支付了&e$%amount%&7的镶嵌费用'
+      Error:
+        InAction: '&c在活动操作过程中不能插入符文.'
+        AlreadyHave: '&e%item% &c上已有镶嵌符文.'
+      Result:
+        Total:
+          - '{message: ~prefix: false;}&6&m                   &e&l[&e 镶嵌结果
+          &6&l]&6&m                   &r'
+          - '&7'
+          - '&6物品使用:'
+          - '&e▸ %state-target% %item-target%'
+          - '&e▸ %state-source% %item-source%'
+          - '&7'
+        State:
+          Success: '&a(成功) &f'
+          Destroyed: '&c(摧毁了) &f'
+          Wiped: '&d(损坏) &f'
+          Consumed: '&9(消耗) &f'
+          Saved: '&d(保存) &f'
+CombatLog:
+  Cmd:
+    Log:
+      Desc: '查看最新战斗日志'
+Consumables:
+  Consume:
+    Error:
+      FoodLevel: '&c您不能食用&e%item%%，因为您的饱食度已满.'
+      HealthLevel: '&c您不能食用&e%item%%，因为您的生命值已满.'
+Dismantle:
+  Cmd:
+    Open:
+      Desc: '打开拆除 GUI'
+      Usage: '[player] [force<true/false>]'
+      Done:
+        Others: '已为&a%player%&7打开拆除 GUI'
+  Dismantle:
+    Error:
+      TooExpensive: '&c您无法进行此操作！您需要: &e$%cost%, &c你有: &e$%balance%'
+    Single:
+      Free: '&a%item%&7 已拆卸!'
+      Paid: '&a%item%&7 拆卸 &a$%cost%!'
+    Many:
+      Free: '拆除的物品！'
+      Paid: '为以下目的拆卸的物品&a$%cost%&7！'
+Extractor:
+  Cmd:
+    Open:
+      Desc: '打开提取器图形用户界面'
+      Usage: '[player] [force(true/false)]'
+      Done:
+        Others: '为&a%player%&7 打开了提取器。'
+  Extract:
+    Complete: '[TITLES] &a&l提取完成!'
+    Error:
+      TooExpensive: '&c您无法进行此操作！您需要&e$%cost% &c你有:&e$%balance%&c.'
+  Open:
+    Error:
+      NoSockets: '&e%item% &c无物可提取!'
+Fortify:
+  Cmd:
+    Fortify:
+      Usage: <item> <level>
+      Desc: '使用指定的石头强化物品'
+      Error:
+        Stone: '无效的加固石！'
+    Unfortify:
+      Desc: '解除物品的强化状态'
+  Fortify:
+    Done: '强化物品！'
+    Error:
+      Already: '物品已经强化！'
+  Enchanting:
+    Failure: '坚固的石头无法起到保护作用&c%item%&7'
+    Success: '坚固的石头可以起到保护作用&c%item%&7'
+Identify:
+  Cmd:
+    Identify:
+      Desc: '强制识别您手中的物品'
+      Error:
+        Item: '您必须持有一件不明物品&7'
+  Identify:
+    Success: '项目已确定: &a%item%&7!'
+    Error:
+      Tome: '&cl哎呀！无法识别此物品.'
+  Usage:
+    Error:
+      Unidentified: '无法装备/使用未识别物品！'
+ItemGenerator:
+  Cmd:
+    Create:
+      Desc: '创建新物品生成器.'
+      Done: '&a创建%id%.yml项目生成器!'
+      Error:
+        ExistingId: '&c已存在具有该 ID 的项目生成器.'
+        ExistingFile: '&c已存在该名称的文件.'
+    Editor:
+      Desc: '打开游戏中的物品生成器编辑器.'
+      Error:
+        InvalidItem: '&c无此类项目生成器!'
+        AlreadyOpen: '&c该物品生成器的编辑器已由%player%打开 '
+        InvalidInput: '%input% &c不是有效的 %value%'
+
+Loot:
+  Box:
+    Error:
+      NotOwner: '你无法获得这些战利品'
+      Locked: '已经有人在洗劫这个...'
+    Owner:
+      None: Free
+  Party:
+    Roll:
+      Notify:
+        List:
+          - '{message: ~prefix: false;}&8&m-----------&8&l[ &e&l骰子 &8&l]&8&m-----------'
+          - '              &7物品: &a%item%&7!'
+          - '                      %roll%'
+          - '&8&m-----------&8&l[ &8&m-------------&8&l ]&8&m-----------'
+        Roll:
+          Name: '&a&l[滚动!]'
+          Hint: '&a点击我掷骰子!'
+      MemberRoll: '%player% 掷骰子点数为: &e%value%&7.'
+      AlreadyRoll: '您已经掷了骰子,价值为: &e%value%&7.'
+      RollIn: '掷骰子时间: &e%time% seconds&7.'
+      NoRoll: '没有人掷骰子'
+      Winner: '%player%获得了%item%的所有权'
+      NotOwner: '您无法获得此物品'
+      AlreadyStarted: '你的团队已经在轧制该物品了'
+MagicDust:
+  Cmd:
+    Open:
+      Desc: '打开魔尘界面'
+      Usage: '[player] [force(true/false)]'
+      Done:
+        Others: '为&a%player%&7打开魔尘界面.'
+  Apply:
+    Done: '&a成功！&7成功率：&a%rate-new%%&7!'
+    Error:
+      MaxRate: '&e%source% 无法添加超过%max-rate%的数据!'
+  GUI:
+    Error:
+      TooExpensive: '&c您无法支付此操作的费用！需要：&e$%cost%&c、
+        您有： &e$%balance%&c.'
+      InvalidItem: '&e%item% 不是该项目有效的项目!'
+Party:
+  Cmd:
+    Chat:
+      Desc: Toggles party chat mode.
+    Create:
+      Desc: Create a party.
+      Usage: '[名字]'
+    Disband:
+      Desc: Disband the party.
+    Drop:
+      Desc: Toggle drop mode.
+    Exp:
+      Desc: Toggle exp mode.
+    Invite:
+      Desc: Invite player to the party.
+      Usage: <player>
+    Join:
+      Desc: '加入派对'
+      Usage: <party>
+    Kick:
+      Desc: Kick player from the party.
+      Usage: <player>
+    Leave:
+      Desc: Leave the party.
+    Menu:
+      Desc: '打开派对菜单'
+    Teleport:
+      Desc: Teleport to a party member.
+      Usage: <player>
+    Roll:
+      Desc: '掷骰子'
+      Error:
+        Nothing: '没东西可滚'
+  Create:
+    Done: '创建新派对&a%party%&7。邀请玩家：&a/party invite <玩家>&7.'
+    Error:
+      Exist: '已创建了具有此名称的缔约方'
+  Join:
+    Done: '&7您已加入&a%party%&7党派.'
+    New: '&a%player% &7加入了派对.'
+  Leader:
+    Transfer: '&7你现在是派对的新领袖了'
+  Invite:
+    Already: '该玩家已受邀参加您的派对'
+    Send: '已向&e%player%&7发送邀请。'
+    Get: '&e%leader% 邀请您参加 &e%party% &7party. 键入 &e/party join 加入 %party%&7.'
+    Another: '你没有被邀请参加这个派对'
+  Leave:
+    Done: '&7你离开了&c%party% &7派对.'
+    Member: '&c%player% &7left the party.'
+    QuitGame: '&c%player% &7left the game.'
+    ComeBack: '&a%player% &7joined the game.'
+  Disband:
+    Done: 'Party disbanded: &c%party%&7.'
+    Leader: '&c%leader% &7disbands the party.'
+  Kick:
+    You: '&c%leader% &7kicked you from the party.'
+    Other: '&c%leader% &7kicked &c%player% &7from the party.'
+    Error:
+      Self: '无法踢自己'
+  Error:
+    MaxPlayers: '队伍中最多有两名玩家'
+    Player:
+      AlreadyIn: '&c%player% &7已参加聚会.'
+      NotIn: '玩家不在派对中'
+    AlreadyIn: '您已入派对！离开它：&e/party leave&7'
+    NotInParty: '你没参加派对'
+    LeaderOnly: '只有派对队长人才能这样做'
+    Invalid: '没有这样的派对'
+  Teleport:
+    Error:
+      Cooldown: '工具冷却中: &c%time%'
+      Self: '工具使用无效'
+    Done:
+      To: '&8*** &7传送到 &a%player%&7. &8***'
+      From: '&8*** &a%player% &7传送到你身边. &8***'
+  Chat:
+    Toggle: '队伍聊天模式: &e%state%'
+  Drop:
+    Toggle: '&8*** &7掉落模式: &e%mode% &8***'
+  Exp:
+    Toggle: '&8*** &7经验模式: &e%mode% &8***'
+Profiles:
+  Command:
+    Profiles:
+      Desc: '打开配置文件界面'
+  Create:
+    Error:
+      Regex: '&c配置文件名称中包含不可接受的符号!'
+      Exists: '&c已存在具有此名称的配置文件!'
+      Maximum: '&cYou have reached maximum &e(%amount%) &camount of profiles!'
+      Unexpected: '&c创建个人资料时出现意外错误！请联系管理员.'
+    Tip:
+      Name:
+        - '{message: ~type: TITLES; ~fadeIn: 20; ~stay: -1; ~fadeOut: 20;}&b&l新概况'
+        - '&7输入配置文件名称...'
+      Error:
+        - '{message: ~type: TITLES; ~fadeIn: 20; ~stay: 60; ~fadeOut: 20;}&c&l错误!'
+        - '&7请在聊天中查看详情.'
+      Done: '{message: ~type: TITLES; ~fadeIn: 20; ~stay: 60; ~fadeOut: 20;}&a&l概况
+        已创建!'
+  Switch:
+    Done: '轮廓切换: &a%profile%'
+Refine:
+  Cmd:
+    Refine:
+      Desc: Force refines item in your hand.
+      Usage: '[ench. stone]'
+      Done: Item refined!
+      Error:
+        Stone: Invalid enchantment stone id.
+    Downgrade:
+      Desc: '强制降低手中精炼物品的等级'
+      Done: '物品降级'
+  Enchanting:
+    Error:
+      MaxLevel: '&c无法提炼&e%item%&c: 最大等级!'
+      WrongStone: '&cCould not refine &e%item%&c: Wrong Enchantment Stone. You should
+        use: &e%stone%&c.'
+    Result:
+      Total:
+        - '{message: ~prefix: false;}&6&m                   &e&l[&e 完善结果 &6&l]&6&m                   &r'
+        - '&7'
+        - '&e▸ %state-target% %item-target%'
+        - '&e▸ %state-source% %item-source%'
+        - '&7'
+      State:
+        Success: '&a(成功) &f'
+        Destroyed: '&c(已销毁) &f'
+        Downgraded: '&d(已降级) &f'
+        Consumed: '&9(已消耗) &f'
+        Saved: '&d(保存) &f'
+Repair:
+  Cmd:
+    Open:
+      Desc: '打开修理界面'
+      Usage: '[player] [force(true/false)]'
+      Done:
+        Others: '为&a%player%&7打开修理界面'
+  Error:
+    TypeNotSelected: '&c请选择修理类型!'
+    NoDurability: '&c%item% &7无法维修.'
+    NotDamaged: '&c%item% &7没有损坏.'
+    TooExpensive: '&c您负担不起维修费用!'
+  Done: '&a%item% &7已成功修复.'
+Sell:
+  Cmd:
+    Open:
+      Desc: '打开卖物品界面'
+      Usage: '[player] [force<true/false>]'
+      Done:
+        Others: '为&a%player%&7打开卖物品界面'
+  Sell:
+    Complete: '售价:&a$%cost%&7!'
+Soulbound:
+  Cmd:
+    Soul:
+      Desc: '管理物品灵魂绑定要求'
+      Usage: <add|remove> [position]
+      Done: '物品灵魂绑定要求: &e%state%'
+    Untradeable:
+      Desc: '管理物品交易状态'
+      Usage: <add|remove> [position]
+      Done: '不可交易的物品: &e%state%'
+  Item:
+    Soulbound:
+      Apply: '&c灵魂羁绊适用于&c%item%&e!'
+    Interact:
+      Error:
+        Pickup: '&c您不能拾取不属于您的物品.'
+        Command: '&c在持有不可交易物品时不能使用该命令!'
+Error:
+  InvalidItem: '此行动不适用于本物品'
+  InvalidArgument: '无效数值: &c%arg%&7!'
+  Internal: '&c内部错误！联系行管理员.'
+Other:
+  Get: '您已收到: &7<%item%&7>'
+PartyDropMode:
+  FREE: Free
+  LEADER: Leader
+  AUTO: 自动
+  ROLL: Roll
+PartyExpMode:
+  PRIVATE: Private
+  SHARED: Shared
+ClickType:
+  LEFT: 左
+  RIGHT: 右
+  MIDDLE: 中键
+  SHIFT_LEFT: Shift 左
+  SHIFT_RIGHT: Shift 右
+ClassAttributeType:
+  ARMOR: Armor
+  ARMOR_TOUGHNESS: 装甲韧性
+  ATTACK_DAMAGE: 攻击伤害
+  ATTACK_SPEED: 攻击速度
+  FLYING_SPEED: 飞行速度
+  KNOCKBACK_RESISTANCE: 击退抗性
+  LUCK: 幸运
+  MAX_HEALTH: 最大生命值
+  MOVEMENT_SPEED: 移动速度
+UserEntityNamesMode:
+  DEFAULT: 默认
+  ALWAYS_VISIBLE: 始终可见
+  ALWAYS_HIDDEN: 始终隐藏
