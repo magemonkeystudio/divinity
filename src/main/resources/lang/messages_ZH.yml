@@ -2,31 +2,31 @@ Command:
   Modify:
     List:
       - '{message： ~prefix: false;}&8&m-----------&8&l[ &aRPG &7- &a帮助页面 &8&l]&8&m-----------'
-      - '&2> &a/qrpg modify name <Name> &7- 更改项目的显示名称。'
-      - '&2> &a/qrpg modify lore add [text] [line] &7- 添加传说行'
-      - '&2> &a/qrpg modify lore del [line] &7- 删除传说行。'
-      - '&2> &a/qrpg modify lore clear &7- 清除物品传说。'
-      - '&2> &a/qrpg modify flag add <flag> &7- 为物品添加标志。'
-      - '&2> &a/qrpg modify flag del <flag> &7- 从物品中移除一个标志。'
-      - '&2> &a/qrpg modify enchant <enchantment> <level> &7- 为物品附魔/附魔物品'
-      - '&2> &a/qrpg modify potion <effect> <level> <duration> [ambient(true/false)] [环境（真/假）] [粒子（真/假）] [环境（真/假）]
+      - '&2> &a/divinity modify name <Name> &7- 更改项目的显示名称。'
+      - '&2> &a/divinity modify lore add [text] [line] &7- 添加传说行'
+      - '&2> &a/divinity modify lore del [line] &7- 删除传说行。'
+      - '&2> &a/divinity modify lore clear &7- 清除物品传说。'
+      - '&2> &a/divinity modify flag add <flag> &7- 为物品添加标志。'
+      - '&2> &a/divinity modify flag del <flag> &7- 从物品中移除一个标志。'
+      - '&2> &a/divinity modify enchant <enchantment> <level> &7- 为物品附魔/附魔物品'
+      - '&2> &a/divinity modify potion <effect> <level> <duration> [ambient(true/false)] [环境（真/假）] [粒子（真/假）] [环境（真/假）]
           [粒子（真/假）） [图标（真/假）] &7- 修改药水效果'
-      - '&2> &a/qrpg modify color <r,g,b> &7- 更改皮甲或药水的颜色'
+      - '&2> &a/divinity modify color <r,g,b> &7- 更改皮甲或药水的颜色'
     Desc: '修改一件物品'
     Done: '完成!'
   Set:
     List:
       - '{message： ~prefix: false;}&8&m-----------&8&l[ &aRPG &7- &a帮助页面 &8&l]&8&m-----------'
-      - '&2> &a/qrpg set stat <type> <value> [position] &7- 将属性设置为 item'
-      - '&2> &a/qrpg set level <number> [position] &7- 为物品添加等级要求'
-      - '&2> &a/qrpg set class <class1,class2,etc> [position] &7- 为物品添加等级要求。
+      - '&2> &a/divinity set stat <type> <value> [position] &7- 将属性设置为 item'
+      - '&2> &a/divinity set level <number> [position] &7- 为物品添加等级要求'
+      - '&2> &a/divinity set class <class1,class2,etc> [position] &7- 为物品添加等级要求。
       添加等级要求'
-      - '&2> &a/qrpg set damage <type> <min> <max> [position] &7- 为物品添加伤害类型到物品中'
-      - '&2> &a/qrpg set defense <type> <value> [position] &7- 为物品添加防御类型,
+      - '&2> &a/divinity set damage <type> <min> <max> [position] &7- 为物品添加伤害类型到物品中'
+      - '&2> &a/divinity set defense <type> <value> [position] &7- 为物品添加防御类型,
       添加防御类型'
-      - '&2> &a/qrpg set ammo <type> [position] &7- 为弓箭设置弹药类型'
-      - '&2> &a/qrpg set hand <type> [position] &7- 将手的类型设置为物品'
-      - '&2> &a/qrpg set socket <type> [position] &7- 为物品添加一个空槽'
+      - '&2> &a/divinity set ammo <type> [position] &7- 为弓箭设置弹药类型'
+      - '&2> &a/divinity set hand <type> [position] &7- 将手的类型设置为物品'
+      - '&2> &a/divinity set socket <type> [position] &7- 为物品添加一个空槽'
   Buff:
     Desc: 临时增加指定属性.
     Usage:  <玩家> <类型> <id> <数量> <持续时间>
