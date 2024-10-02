@@ -341,11 +341,11 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         double directPercent = /*event.getDamagerItemStat(AbstractStat.Type.DIRECT_DAMAGE)*/0D / 100D;
         double penetration   = 1D - event.getDamagerItemStat(TypedStat.Type.PENETRATION) / 100D;
 
-        double pvpeDefense = 1D + statsVictim.getItemStat(pvpDefenseType, false) / 100D;
-        double pvpeDamage  = 1D + event.getDamagerItemStat(pvpDamageType) / 100D;
+        double pvpDefense = 1D + statsVictim.getItemStat(pvpDefenseType, false) / 100D;
+        double pvpDamage  = 1D + event.getDamagerItemStat(pvpDamageType) / 100D;
 
-        meta.setPvEDamageModifier(pvpeDamage);
-        meta.setPvEDefenseModifier(pvpeDefense);
+        meta.setPvEDamageModifier(pvpDamage);
+        meta.setPvEDefenseModifier(pvpDefense);
         meta.setDirectModifier(directPercent);
         meta.setPenetrateModifier(penetration);
 
