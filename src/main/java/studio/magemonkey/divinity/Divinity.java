@@ -54,7 +54,7 @@ import java.util.List;
 
 /**
  * Divinity
- * @author © 2024 MageMonkeyStudio
+ * @author ©2024 MageMonkeyStudio
  */
 public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
 
