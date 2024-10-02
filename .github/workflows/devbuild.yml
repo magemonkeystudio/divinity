@@ -55,5 +55,5 @@ jobs:
       - name: Notify Discord
         run: |
           python -m venv .venv
-          .venv/pip install simplejson
-          .venv/python ./.github/notify_published.py ${{ secrets.WEBHOOK_URL }} true
+          .venv/bin/pip install simplejson
+          .venv/bin/python ./.github/notify_published.py ${{ secrets.WEBHOOK_URL }} true
