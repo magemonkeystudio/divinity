@@ -1,5 +1,6 @@
 package studio.magemonkey.divinity.stats.bonus;
 
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.util.NumberUT;
 import studio.magemonkey.codex.util.StringUT;
@@ -94,8 +95,9 @@ public class BonusMap {
                 .collect(Collectors.toMap(key -> (HandAttribute) key.getKey(), Map.Entry::getValue, (has, add) -> has));
     }
 
+    @Nullable
     public BiFunction<Boolean, Double, Double> getBonus(@NotNull ItemLoreStat<?> stat) {
-        return this.bonus.getOrDefault(stat, (b, v) -> v);
+        return this.bonus.getOrDefault(stat, null);
     }
 
     public void loadStats(@NotNull JYML cfg, @NotNull String path) {

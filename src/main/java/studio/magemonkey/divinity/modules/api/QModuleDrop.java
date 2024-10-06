@@ -109,7 +109,7 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
 
     @Nullable
     public I getItemById(@NotNull String id, @Nullable String sTier) {
-        if (this.items.isEmpty()) return null;
+        if (this.items == null || this.items.isEmpty()) return null;
         @Nullable Tier tier = sTier == null || sTier.isBlank() || sTier.equalsIgnoreCase(RANDOM_ID)
                 ? null : Config.getTier(sTier);
 

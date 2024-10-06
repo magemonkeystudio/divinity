@@ -302,11 +302,9 @@ public class ItemStats {
         addAttribute(item, player, NBTAttribute.MOVEMENT_SPEED, getStat(item, player, TypedStat.Type.MOVEMENT_SPEED));
         addAttribute(item, player, NBTAttribute.ATTACK_SPEED, getStat(item, player, TypedStat.Type.ATTACK_SPEED));
 
-//        if (ItemUtils.isWeapon(item)) {
         double vanilla = DamageAttribute.getVanillaDamage(item);
         if (vanilla > 1)
-            addAttribute(item, player, NBTAttribute.ATTACK_DAMAGE, vanilla - 1); // -1 because it adds instead of set
-//        }
+            addAttribute(item, player, NBTAttribute.ATTACK_DAMAGE, vanilla);
         if (ItemUtils.isArmor(item)) {
             addAttribute(item, player, NBTAttribute.ARMOR, DefenseAttribute.getVanillaArmor(item));
             double toughness = getStat(item, player, TypedStat.Type.ARMOR_TOUGHNESS);
@@ -343,7 +341,7 @@ public class ItemStats {
             }
 
             double defaultAttackSpeed = SimpleStat.getDefaultAttackSpeed(item, DEFAULT_ATTACK_SPEED);
-            double baseAttackSpeed    = getStat(item, player, TypedStat.Type.BASE_ATTACK_SPEED, defaultAttackSpeed);
+            double baseAttackSpeed    = getStat(item, player, TypedStat.Type.BASE_ATTACK_SPEED, 4);
             if (baseAttackSpeed == defaultAttackSpeed) {
                 return;
             }
@@ -358,10 +356,11 @@ public class ItemStats {
             // Attack speed the number of full-strength attacks per second.
             // A base value of 4.0 represents 4 attacks per second.
 
-            boolean isArmor = ItemUtils.isArmor(item);
-            double  weaponModifier = SimpleStat.getDefaultAttackSpeed(item, DEFAULT_ATTACK_SPEED) + DEFAULT_ATTACK_SPEED;
-            double baseSpeedModifier = getStat(item, player, TypedStat.Type.BASE_ATTACK_SPEED, weaponModifier);
-            double  baseSpeed      = baseSpeedModifier - DEFAULT_ATTACK_SPEED;
+            boolean isArmor           = ItemUtils.isArmor(item);
+            double  weaponModifier    =
+                    SimpleStat.getDefaultAttackSpeed(item, DEFAULT_ATTACK_SPEED) + DEFAULT_ATTACK_SPEED;
+            double  baseSpeedModifier = getStat(item, player, TypedStat.Type.BASE_ATTACK_SPEED, weaponModifier);
+            double  baseSpeed         = baseSpeedModifier - DEFAULT_ATTACK_SPEED;
             if (isArmor) {
                 baseSpeed = baseSpeedModifier;
             }

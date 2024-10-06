@@ -199,6 +199,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
                 BonusMap bMap = e.getKey().getBonusMap(e.getValue());
                 if (bMap == null) continue;
                 BiFunction<Boolean, Double, Double> gemBonus = bMap.getBonus(this);
+                if (gemBonus == null) continue;
                 bonuses.add((isPercent, input) ->
                         input.length == 2
                                 ? new double[]{
@@ -239,7 +240,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
     @NotNull
     public String formatValue(@NotNull ItemStack item, @NotNull StatBonus value) {
         double[] array = value.getValue();
-        String sVal;
+        String   sVal;
         if (array.length == 1) {
             sVal = NumberUT.format(array[0]);
             if (value.isPercent()) {
@@ -287,12 +288,12 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
         for (NamespacedKey key : this.keys) {
             if (container.has(key, PersistentDataType.DOUBLE)) {
                 Double value = Objects.requireNonNull(container.get(key, PersistentDataType.DOUBLE));
-                add(item, new StatBonus(new double[]{value}, false, null),-1, -1);
+                add(item, new StatBonus(new double[]{value}, false, null), -1, -1);
                 meta = item.getItemMeta();
                 break;
             } else if (container.has(key, DataUT.DOUBLE_ARRAY)) {
                 double[] value = Objects.requireNonNull(container.get(key, DataUT.DOUBLE_ARRAY));
-                add(item, new StatBonus(value, false, null),-1, -1);
+                add(item, new StatBonus(value, false, null), -1, -1);
                 meta = item.getItemMeta();
                 break;
             }

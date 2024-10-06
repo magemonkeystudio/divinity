@@ -124,7 +124,7 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         if (gems != null) {
             for (Map.Entry<GemManager.Gem, Integer> e : gems.getItemSockets(item)) {
                 BonusMap bMap = e.getKey().getBonusMap(e.getValue());
-                if (bMap == null) continue;
+                if (bMap == null || bMap.getBonus(this) == null) continue;
 
                 bonuses.add(bMap.getBonus(this));
             }
@@ -255,7 +255,7 @@ public class SimpleStat extends DuplicableItemLoreStat<StatBonus> implements Typ
         for (NamespacedKey key : this.keys) {
             if (container.has(key, PersistentDataType.DOUBLE)) {
                 Double value = Objects.requireNonNull(container.get(key, PersistentDataType.DOUBLE));
-                add(item, new StatBonus(new double[]{value}, false, null),-1, -1);
+                add(item, new StatBonus(new double[]{value}, false, null), -1, -1);
                 meta = item.getItemMeta();
                 break;
             }
