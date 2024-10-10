@@ -1,5 +1,21 @@
 package studio.magemonkey.divinity.manager.listener.object;
 
+import org.bukkit.Material;
+import org.bukkit.entity.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.manager.IListener;
 import studio.magemonkey.codex.registry.attribute.AttributeRegistry;
@@ -21,22 +37,6 @@ import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
-import org.bukkit.Material;
-import org.bukkit.entity.*;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.projectiles.ProjectileSource;
-import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -245,7 +245,8 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         }
         meta.setWeapon(weapon);
 
-        boolean exempt = skillApi != null && damager != null && skillApi.isExempt(damager);
+        boolean exempt            = skillApi != null && damager != null && skillApi.isExempt(damager);
+        boolean skillShouldIgnore = skillApi != null && damager != null && skillApi.ignoreDivinity(damager);
 
         // +----------------------------------------------------+
         // | Get all DamageAttribute values of the damager.     |
@@ -258,7 +259,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         final Map<DefenseAttribute, Double> defenses = new HashMap<>();
 
         // Pre-cache damager damage types.
-        if (isFullDamage && !exempt) {
+        if (statsDamager != null && !skillShouldIgnore && isFullDamage && !exempt) {
             damages.putAll(statsDamager.getDamageTypes(false));
         }
         if (damages.isEmpty()) {
@@ -279,7 +280,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         // | that is added to the default hand/weapon damage by |
         // | AttributeModifiers and such other things.          |
         // +----------------------------------------------------+
-        if (statsDamager != null && !exempt) {
+        if (statsDamager != null && !skillShouldIgnore && !exempt) {
             // Deduct vanilla weapon or hand damage value.
             if (weapon != null && !ItemUT.isAir(weapon)) {
                 double defaultDamage = DamageAttribute.getVanillaDamage(weapon);

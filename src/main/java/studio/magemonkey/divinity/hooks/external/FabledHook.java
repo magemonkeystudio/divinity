@@ -133,7 +133,8 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         data.setMana(Math.max(0, cur - amount));
     }
 
-    private final List<UUID> exempt = new ArrayList<>();
+    private final List<UUID> exempt          = new ArrayList<>();
+    private final List<UUID> divinityIgnored = new ArrayList<>();
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void skillDamage(SkillDamageEvent event) {
@@ -141,18 +142,33 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
 
         if (event.isKnockback())
             exempt.add(player.getUniqueId());
+        if(event.isIgnoreDivinity())
+            divinityIgnored.add(player.getUniqueId());
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void damage(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof LivingEntity) || !exempt.contains(event.getDamager().getUniqueId()))
+        if (!(event.getDamager() instanceof LivingEntity))
             return;
 
         exempt.remove(event.getDamager().getUniqueId());
+        divinityIgnored.remove(event.getDamager().getUniqueId());
     }
 
     public boolean isExempt(LivingEntity player) {
         return exempt.contains(player.getUniqueId());
+    }
+
+    public void ignoreDivinity(LivingEntity player, boolean ignore) {
+        if (ignore) {
+            divinityIgnored.add(player.getUniqueId());
+        } else {
+            divinityIgnored.remove(player.getUniqueId());
+        }
+    }
+
+    public boolean ignoreDivinity(LivingEntity player) {
+        return divinityIgnored.contains(player.getUniqueId());
     }
 
     public void addSkill(Player player, String skillId, int level) {
@@ -203,14 +219,17 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
                     .replace("%attrPost%", attrPost)
                     + "%value%";
         }
-        for (Map.Entry<String, studio.magemonkey.fabled.manager.FabledAttribute> entry : Fabled.getAttributeManager().getAttributes().entrySet()) {
+        for (Map.Entry<String, studio.magemonkey.fabled.manager.FabledAttribute> entry : Fabled.getAttributeManager()
+                .getAttributes()
+                .entrySet()) {
             list.add(new FabledAttribute(entry.getKey(), entry.getValue().getName(), format));
         }
         return list;
     }
 
     public ItemStack getAttributeIndicator(String attributeId) {
-        studio.magemonkey.fabled.manager.FabledAttribute proAttribute = Fabled.getAttributeManager().getAttribute(attributeId);
+        studio.magemonkey.fabled.manager.FabledAttribute proAttribute =
+                Fabled.getAttributeManager().getAttribute(attributeId);
         if (proAttribute != null) return proAttribute.getToolIcon();
 
         ItemStack itemStack = new ItemStack(Material.DIRT);
