@@ -28,6 +28,7 @@ import studio.magemonkey.codex.items.exception.MissingProviderException;
 import studio.magemonkey.codex.items.providers.ICodexItemProvider;
 import studio.magemonkey.codex.items.providers.VanillaProvider;
 import studio.magemonkey.codex.util.ItemUT;
+import studio.magemonkey.codex.util.Reflex;
 import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.codex.util.constants.JStrings;
 import studio.magemonkey.codex.util.random.Rnd;
@@ -72,6 +73,7 @@ import studio.magemonkey.divinity.utils.LoreUT;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -423,7 +425,11 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     String reqRaw = cfg.getString(path + "level." + sLvl);
                     if (reqRaw == null || reqRaw.isEmpty()) continue;
 
-                    this.reqUserLvl.put(itemLvl, Arrays.stream(reqRaw.split(":")).filter(s -> !s.isBlank()).collect(Collectors.toList()).toArray(new String[]{}));
+                    this.reqUserLvl.put(itemLvl,
+                            Arrays.stream(reqRaw.split(":"))
+                                    .filter(s -> !s.isBlank())
+                                    .collect(Collectors.toList())
+                                    .toArray(new String[]{}));
                 }
             }
             if (ItemRequirements.isRegisteredUser(ClassRequirement.class)) {
@@ -434,7 +440,11 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
                     String reqRaw = cfg.getString(path + "class." + sLvl, "");
 
-                    this.reqUserClass.put(itemLvl, Arrays.stream(reqRaw.split(",")).filter(s -> !s.isBlank()).collect(Collectors.toList()).toArray(new String[]{}));
+                    this.reqUserClass.put(itemLvl,
+                            Arrays.stream(reqRaw.split(","))
+                                    .filter(s -> !s.isBlank())
+                                    .collect(Collectors.toList())
+                                    .toArray(new String[]{}));
                 }
             }
             if (ItemRequirements.isRegisteredUser(BannedClassRequirement.class)) {
@@ -777,12 +787,27 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 BlockStateMeta bmeta  = (BlockStateMeta) meta;
                 Banner         banner = (Banner) bmeta.getBlockState();
 
-                DyeColor    bBaseColor    = Rnd.get(DyeColor.values());
-                PatternType bPattern      = Rnd.get(PatternType.values());
-                DyeColor    bPatternColor = Rnd.get(DyeColor.values());
-
+                DyeColor bBaseColor    = Rnd.get(DyeColor.values());
+                DyeColor bPatternColor = Rnd.get(DyeColor.values());
                 banner.setBaseColor(bBaseColor);
-                banner.addPattern(new Pattern(bPatternColor, bPattern));
+
+                try {
+                    PatternType bPattern = Rnd.get(PatternType.values());
+                    banner.addPattern(new Pattern(bPatternColor, bPattern));
+                } catch (IncompatibleClassChangeError ignored) {
+                    try {
+                        Class<?> pattern  = Reflex.getClass("org.bukkit.block.banner.PatternType");
+                        Object[] patterns = pattern.getEnumConstants();
+                        Object   bPattern = Rnd.get(patterns);
+                        banner.addPattern(Pattern.class.getConstructor(DyeColor.class, pattern.getClass())
+                                .newInstance(bPatternColor, bPattern));
+                    } catch (InvocationTargetException | InstantiationException | NoSuchMethodException |
+                             IllegalAccessException e) {
+                        plugin.getLogger().warning("Failed to create banner pattern: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+
                 banner.update();
                 bmeta.setBlockState(banner);
             }
@@ -882,8 +907,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 reqLevel.add(item, this.getUserLevelRequirement(itemLvl), -1);
             }
 
-            String[] userClass = this.getUserClassRequirement(itemLvl);
-            DynamicUserRequirement<String[]> reqClass = null;
+            String[]                         userClass = this.getUserClassRequirement(itemLvl);
+            DynamicUserRequirement<String[]> reqClass  = null;
             if (userClass == null || userClass.length == 0) {
                 userClass = this.getUserBannedClassRequirement(itemLvl);
                 if (userClass != null && userClass.length > 0) {
