@@ -8,7 +8,6 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import studio.magemonkey.codex.util.DataUT;
 import studio.magemonkey.codex.util.ItemUT;
 import studio.magemonkey.codex.util.NumberUT;
 import studio.magemonkey.codex.util.StringUT;
@@ -149,7 +148,8 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
                 BonusMap bMap = e.getKey().getBonusMap(e.getValue());
                 if (bMap == null) continue;
 
-                bonuses.add(bMap.getBonus(this));
+                BiFunction<Boolean, Double, Double> bonus = bMap.getBonus(this);
+                if (bonus != null) bonuses.add(bonus);
             }
         }
 
@@ -203,7 +203,7 @@ public class DefenseAttribute extends DuplicableItemLoreStat<StatBonus> implemen
         for (NamespacedKey key : this.keys) {
             if (container.has(key, PersistentDataType.DOUBLE)) {
                 Double value = Objects.requireNonNull(container.get(key, PersistentDataType.DOUBLE));
-                add(item, new StatBonus(new double[]{value}, false, null),-1, -1);
+                add(item, new StatBonus(new double[]{value}, false, null), -1, -1);
                 meta = item.getItemMeta();
                 break;
             }
