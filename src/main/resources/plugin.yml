@@ -4,7 +4,7 @@ name: ${project.name}
 authors: [ Travja, Sentropic, goflish ]
 description: The most advanced, customizable and configurable RPG-Core plugin!
 libraries: [ org.apache.commons:commons-lang3:${apache.version} ]
-depend: [ Codex ]
+depend: [ CodexCore ]
 loadafter: [ Magic, Fabled ]
 provides: [ ProRPGItems, QuantumRPG ]
 softdepend:

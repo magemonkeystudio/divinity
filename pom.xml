@@ -16,7 +16,7 @@
     <description>Custom items, combat, and more!</description>
 
     <properties>
-        <codex.version>1.0.1-R0.1-SNAPSHOT</codex.version>
+        <codex.version>1.0.1-R0.8-SNAPSHOT</codex.version>
         <fabled.version>1.0.1-R0.7-SNAPSHOT</fabled.version>
     </properties>
 
