@@ -51,7 +51,7 @@ public class SingleAttributeGenerator<A extends ItemLoreStat<String>> extends Ab
         List<String> lore = meta.getLore();
         if (lore == null) return;
 
-        if (!ItemUtils.isWeapon(item) || this.attributes.isEmpty()) {
+        if (this.attributes.isEmpty()) {
             LoreUT.replacePlaceholder(item, this.placeholder, null);
             return;
         }

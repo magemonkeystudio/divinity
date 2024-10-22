@@ -37,10 +37,9 @@ public class HandAttribute extends ItemLoreStat<String> {
         return String.class;
     }
 
-    public static enum Type {
+    public enum Type {
         ONE,
         TWO,
-        ;
     }
 
     @Override
