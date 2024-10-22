@@ -978,30 +978,56 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             return item;
         }
     }
+    public static List<String> getMatchingTierPrefixes(Tier tier) {
+        return new ArrayList<>(resourceManager.getPrefix(ResourceCategory.TIER, tier.getId()));
+    }
 
-    public static Map<ResourceCategory, List<String>> getMatchingPrefixes(Tier tier, Material material) {
+    public static List<String> getMatchingTierSuffixes(Tier tier) {
+        return new ArrayList<>(resourceManager.getSuffix(ResourceCategory.TIER, tier.getId()));
+    }
+
+    public static List<String> getMatchingMaterialPrefixes(Material material) {
+        return new ArrayList<>(resourceManager.getPrefix(ResourceCategory.MATERIAL, material.name()));
+    }
+
+    public static List<String> getMatchingMaterialSuffixes(Material material) {
+        return new ArrayList<>(resourceManager.getSuffix(ResourceCategory.MATERIAL, material.name()));
+    }
+
+    public static List<String> getMatchingTypePrefixes(ItemStack item) {
+        return new ArrayList<>(resourceManager.getPrefix(ResourceCategory.SUBTYPE, ItemUtils.getItemGroupIdFor(item)));
+    }
+
+    public static List<String> getMatchingTypeSuffixes(ItemStack item) {
+        return new ArrayList<>(resourceManager.getSuffix(ResourceCategory.SUBTYPE, ItemUtils.getItemGroupIdFor(item)));
+    }
+
+
+    public static Map<ResourceCategory, List<String>> getMatchingPrefixes(Material material, Collection<Tier> tiers) {
         Map<ResourceCategory, List<String>> entries = new HashMap<>();
-        entries.put(ResourceCategory.TIER, resourceManager.getPrefix(ResourceCategory.TIER, tier.getId()));
+        entries.put(ResourceCategory.TIER, new ArrayList<>());
+        tiers.forEach(tier -> entries.get(ResourceCategory.TIER).addAll(getMatchingTierPrefixes(tier)));
         entries.put(ResourceCategory.MATERIAL, resourceManager.getPrefix(ResourceCategory.MATERIAL, material.name()));
         entries.put(ResourceCategory.SUBTYPE, resourceManager.getPrefix(ResourceCategory.SUBTYPE, ItemUtils.getItemGroupIdFor(new ItemStack(material))));
         return entries;
     }
 
-    public static Map<ResourceCategory, List<String>> getMatchingSuffixes(Tier tier, Material material) {
+    public static Map<ResourceCategory, List<String>> getMatchingSuffixes(Material material, Collection<Tier> tiers) {
         Map<ResourceCategory, List<String>> entries = new HashMap<>();
-        entries.put(ResourceCategory.TIER, resourceManager.getSuffix(ResourceCategory.TIER, tier.getId()));
+        entries.put(ResourceCategory.TIER, new ArrayList<>());
+        tiers.forEach(tier -> entries.get(ResourceCategory.TIER).addAll(getMatchingTierSuffixes(tier)));
         entries.put(ResourceCategory.MATERIAL, resourceManager.getSuffix(ResourceCategory.MATERIAL, material.name()));
         entries.put(ResourceCategory.SUBTYPE, resourceManager.getSuffix(ResourceCategory.SUBTYPE, ItemUtils.getItemGroupIdFor(new ItemStack(material))));
         return entries;
     }
 
     /* Kind of a method to play around for all combinations since those might be required on third party plugins (Also on Fusion) */
-    public static List<String> getAllCombinations(GeneratorItem item, Tier tier, Material material) {
+    public static List<String> getAllCombinations(GeneratorItem item, Material material) {
         String name = item.getName();
         String itemGroupName = ItemUtils.getItemGroupNameFor(new ItemStack(material));
         List<String> names = new ArrayList<>();
-        Map<ResourceCategory, List<String>> prefixes = getMatchingPrefixes(tier, material);
-        Map<ResourceCategory, List<String>> suffixes = getMatchingSuffixes(tier, material);
+        Map<ResourceCategory, List<String>> prefixes = getMatchingPrefixes(material, Config.getTiers());
+        Map<ResourceCategory, List<String>> suffixes = getMatchingSuffixes(material, Config.getTiers());
 
         names.add(name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", "").replace("%prefix_type%", "").replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", ""));
 
