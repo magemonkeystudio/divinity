@@ -2,6 +2,7 @@ package studio.magemonkey.divinity.modules.list.itemgenerator;
 
 import lombok.Getter;
 import org.bukkit.DyeColor;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.Banner;
@@ -66,6 +67,7 @@ import studio.magemonkey.divinity.stats.items.requirements.user.BannedClassRequi
 import studio.magemonkey.divinity.stats.items.requirements.user.ClassRequirement;
 import studio.magemonkey.divinity.stats.items.requirements.user.LevelRequirement;
 import studio.magemonkey.divinity.stats.items.requirements.user.SoulboundRequirement;
+import studio.magemonkey.divinity.stats.tiers.Tier;
 import studio.magemonkey.divinity.utils.DivinityProvider;
 import studio.magemonkey.divinity.utils.ItemUtils;
 import studio.magemonkey.divinity.utils.LoreUT;
@@ -81,15 +83,15 @@ import java.util.stream.Collectors;
 public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
     public static YamlConfiguration commonItemGenerator;
-
-    private ResourceManager    resourceManager;
+    @Getter
+    private static ResourceManager resourceManager;
     private ItemAbilityHandler abilityHandler;
 
-    public static final String PLACE_GEN_DAMAGE      = "%GENERATOR_DAMAGE%";
-    public static final String PLACE_GEN_DEFENSE     = "%GENERATOR_DEFENSE%";
-    public static final String PLACE_GEN_STATS       = "%GENERATOR_STATS%";
-    public static final String PLACE_GEN_SOCKETS     = "%GENERATOR_SOCKETS_%TYPE%%";
-    public static final String PLACE_GEN_ABILITY     = "%GENERATOR_SKILLS%";
+    public static final String PLACE_GEN_DAMAGE = "%GENERATOR_DAMAGE%";
+    public static final String PLACE_GEN_DEFENSE = "%GENERATOR_DEFENSE%";
+    public static final String PLACE_GEN_STATS = "%GENERATOR_STATS%";
+    public static final String PLACE_GEN_SOCKETS = "%GENERATOR_SOCKETS_%TYPE%%";
+    public static final String PLACE_GEN_ABILITY = "%GENERATOR_SKILLS%";
     public static final String PLACE_GEN_FABLED_ATTR = "%GENERATOR_FABLED_ATTR%";
 
     public ItemGeneratorManager(@NotNull Divinity plugin) {
@@ -181,13 +183,13 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         @Getter
         private double suffixChance;
 
-        private boolean       materialsWhitelist;
+        private boolean materialsWhitelist;
         private Set<ItemType> materialsList;
 
-        private List<Integer>              modelDataList;
+        private List<Integer> modelDataList;
         private Map<String, List<Integer>> modelDataSpecial;
 
-        private Map<String, BonusMap>                     materialModifiers;
+        private Map<String, BonusMap> materialModifiers;
         private Map<String, Map<ItemLoreStat<?>, String>> materialBonuses;
         private Map<String, Map<ItemLoreStat<?>, String>> classBonuses;
 
@@ -195,16 +197,16 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private TreeMap<Integer, String[]> reqUserClass;
         private TreeMap<Integer, String[]> reqBannedUserClass;
 
-        private       int                        enchantsMinAmount;
-        private       int                        enchantsMaxAmount;
-        private       boolean                    enchantsSafeOnly;
+        private int enchantsMinAmount;
+        private int enchantsMaxAmount;
+        private boolean enchantsSafeOnly;
         @Getter
-        private       boolean                    enchantsSafeLevels;
-        private       Map<Enchantment, String[]> enchantsList;
-        private final TreeMap<Double, String>    armorTrims = new TreeMap<>();
+        private boolean enchantsSafeLevels;
+        private Map<Enchantment, String[]> enchantsList;
+        private final TreeMap<Double, String> armorTrims = new TreeMap<>();
 
         private Set<IAttributeGenerator> attributeGenerators;
-        private AbilityGenerator         abilityGenerator;
+        private AbilityGenerator abilityGenerator;
 
         public GeneratorItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, ItemGeneratorManager.this);
@@ -218,7 +220,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             if (this.materialsWhitelist) {
                 this.materialsList = new HashSet<>();
                 Set<String> startWildcards = new HashSet<>();
-                Set<String> endWildcards   = new HashSet<>();
+                Set<String> endWildcards = new HashSet<>();
 
                 for (String mat : cfg.getStringList(path + "materials.black-list")) {
                     String[] split = mat.split('\\' + JStrings.MASK_ANY, 2);
@@ -247,7 +249,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 this.materialsList = new HashSet<>(Config.getAllRegisteredMaterials());
                 Set<String> materials = new HashSet<>(cfg.getStringList(path + "materials.black-list"));
                 this.materialsList.removeIf(matAll -> {
-                    String namespacedID          = matAll.getNamespacedID();
+                    String namespacedID = matAll.getNamespacedID();
                     String upperCaseNamespacedID = namespacedID.toUpperCase();
                     for (String mat : materials) {
                         String[] split = mat.split('\\' + JStrings.MASK_ANY, 2);
@@ -290,8 +292,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     continue;
                 }
 
-                BonusMap bMap  = new BonusMap();
-                String   path2 = path + group + ".";
+                BonusMap bMap = new BonusMap();
+                String path2 = path + group + ".";
                 bMap.loadDamages(cfg, path2 + "damage-types");
                 bMap.loadDefenses(cfg, path2 + "defense-types");
                 bMap.loadStats(cfg, path2 + "item-stats");
@@ -317,8 +319,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (sVal == null) continue;
 
                     String[] split = sVal.split("%", 2);
-                    boolean  perc  = split.length == 2 && split[1].isEmpty();
-                    double   val   = StringUT.getDouble(split[0], 0, true);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double val = StringUT.getDouble(split[0], 0, true);
 
                     statMap.put(dt, val + (perc ? "%" : ""));
                 }
@@ -332,8 +334,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (sVal == null) continue;
 
                     String[] split = sVal.split("%", 2);
-                    boolean  perc  = split.length == 2 && split[1].isEmpty();
-                    double   val   = StringUT.getDouble(split[0], 0, true);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double val = StringUT.getDouble(split[0], 0, true);
 
                     statMap.put(dt, val + (perc ? "%" : ""));
                 }
@@ -349,8 +351,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (sVal == null) continue;
 
                     String[] split = sVal.split("%", 2);
-                    boolean  perc  = split.length == 2 && split[1].isEmpty();
-                    double   val   = StringUT.getDouble(split[0], 0, true);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double val = StringUT.getDouble(split[0], 0, true);
 
                     statMap.put(mainStat, val + (perc ? "%" : ""));
                 }
@@ -373,8 +375,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (sVal == null) continue;
 
                     String[] split = sVal.split("%", 2);
-                    boolean  perc  = split.length == 2 && split[1].isEmpty();
-                    double   val   = StringUT.getDouble(split[0], 0, true);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double val = StringUT.getDouble(split[0], 0, true);
 
                     statMap.put(dt, val + (perc ? "%" : ""));
                 }
@@ -388,8 +390,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (sVal == null) continue;
 
                     String[] split = sVal.split("%", 2);
-                    boolean  perc  = split.length == 2 && split[1].isEmpty();
-                    double   val   = StringUT.getDouble(split[0], 0, true);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double val = StringUT.getDouble(split[0], 0, true);
 
                     statMap.put(dt, val + (perc ? "%" : ""));
                 }
@@ -405,8 +407,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     if (sVal == null) continue;
 
                     String[] split = sVal.split("%", 2);
-                    boolean  perc  = split.length == 2 && split[1].isEmpty();
-                    double   val   = StringUT.getDouble(split[0], 0, true);
+                    boolean perc = split.length == 2 && split[1].isEmpty();
+                    double val = StringUT.getDouble(split[0], 0, true);
 
                     statMap.put(mainStat, val + (perc ? "%" : ""));
                 }
@@ -636,7 +638,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 if (!ItemUtils.compareItemGroup(item, entry.getKey())) continue;
                 for (Map.Entry<ItemLoreStat<?>, String> entry1 : entry.getValue().entrySet()) {
                     if (entry1.getKey().equals(stat)) {
-                        String   sVal  = entry1.getValue();
+                        String sVal = entry1.getValue();
                         String[] split = sVal.split("%", 2);
                         list.add(new StatBonus(
                                 new double[]{Double.parseDouble(split[0])},
@@ -653,7 +655,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             for (Map.Entry<String, Map<ItemLoreStat<?>, String>> entry : this.classBonuses.entrySet()) {
                 for (Map.Entry<ItemLoreStat<?>, String> entry1 : entry.getValue().entrySet()) {
                     if (entry1.getKey().equals(stat)) {
-                        String   sVal  = entry1.getValue();
+                        String sVal = entry1.getValue();
                         String[] split = sVal.split("%", 2);
                         list.add(new StatBonus(
                                 new double[]{Double.parseDouble(split[0])},
@@ -737,7 +739,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             String prefixItemType = "";
             String suffixItemType = "";
 
-            String itemGroupId   = ItemUtils.getItemGroupIdFor(item);
+            String itemGroupId = ItemUtils.getItemGroupIdFor(item);
             String itemGroupName = ItemUtils.getItemGroupNameFor(item);
 
             String itemMaterial = CodexEngine.get().getItemManager().getItemTypes(item).stream()
@@ -784,10 +786,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             // +-------------------------+
             // TODO More options, mb generator?
             if (meta instanceof BlockStateMeta) {
-                BlockStateMeta bmeta  = (BlockStateMeta) meta;
-                Banner         banner = (Banner) bmeta.getBlockState();
+                BlockStateMeta bmeta = (BlockStateMeta) meta;
+                Banner banner = (Banner) bmeta.getBlockState();
 
-                DyeColor bBaseColor    = Rnd.get(DyeColor.values());
+                DyeColor bBaseColor = Rnd.get(DyeColor.values());
                 DyeColor bPatternColor = Rnd.get(DyeColor.values());
                 banner.setBaseColor(bBaseColor);
 
@@ -796,9 +798,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     banner.addPattern(new Pattern(bPatternColor, bPattern));
                 } catch (IncompatibleClassChangeError ignored) {
                     try {
-                        Class<?> pattern  = Reflex.getClass("org.bukkit.block.banner.PatternType");
+                        Class<?> pattern = Reflex.getClass("org.bukkit.block.banner.PatternType");
                         Object[] patterns = pattern.getEnumConstants();
-                        Object   bPattern = Rnd.get(patterns);
+                        Object bPattern = Rnd.get(patterns);
                         banner.addPattern(Pattern.class.getConstructor(DyeColor.class, pattern.getClass())
                                 .newInstance(bPatternColor, bPattern));
                     } catch (InvocationTargetException | InstantiationException | NoSuchMethodException |
@@ -813,12 +815,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             }
 
             if (!armorTrims.isEmpty() && meta instanceof ArmorMeta) {
-                String    trimString = armorTrims.ceilingEntry(Rnd.nextDouble() * armorTrims.lastKey()).getValue();
+                String trimString = armorTrims.ceilingEntry(Rnd.nextDouble() * armorTrims.lastKey()).getValue();
                 ArmorTrim armorTrim;
                 if (trimString == null) {
                     armorTrim = null;
                 } else {
-                    String[]     split        = trimString.split(":");
+                    String[] split = trimString.split(":");
                     TrimMaterial trimMaterial = null;
                     if (split[0].equals("*")) {
                         int size = 0;
@@ -826,7 +828,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                             size++;
                         }
                         int index = Rnd.get(size);
-                        int i     = 0;
+                        int i = 0;
                         for (Iterator<TrimMaterial> iterator = Registry.TRIM_MATERIAL.iterator();
                              iterator.hasNext(); ) {
                             TrimMaterial next = iterator.next();
@@ -846,7 +848,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                             size++;
                         }
                         int index = Rnd.get(size);
-                        int i     = 0;
+                        int i = 0;
                         for (TrimPattern next : Registry.TRIM_PATTERN) {
                             if (index == i) {
                                 trimPattern = next;
@@ -868,17 +870,17 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             // Add enchants
             int enchRoll =
                     Rnd.get(this.getMinEnchantments(), this.getMaxEnchantments());
-            int                                    enchCount = 0;
-            List<Map.Entry<Enchantment, String[]>> enchants  = new ArrayList<>(this.enchantsList.entrySet());
+            int enchCount = 0;
+            List<Map.Entry<Enchantment, String[]>> enchants = new ArrayList<>(this.enchantsList.entrySet());
             Collections.shuffle(enchants);
 
             for (Map.Entry<Enchantment, String[]> e : enchants) {
                 if (enchCount >= enchRoll) {
                     break;
                 }
-                Enchantment enchant    = e.getKey();
-                int[]       enchLevels = this.doMathExpression(itemLvl, e.getValue());
-                int         enchLevel  = Rnd.get(enchLevels[0], enchLevels[1]);
+                Enchantment enchant = e.getKey();
+                int[] enchLevels = this.doMathExpression(itemLvl, e.getValue());
+                int enchLevel = Rnd.get(enchLevels[0], enchLevels[1]);
                 if (enchLevel < 1) continue;
 
                 if (this.isSafeEnchant()) {
@@ -907,8 +909,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 reqLevel.add(item, this.getUserLevelRequirement(itemLvl), -1);
             }
 
-            String[]                         userClass = this.getUserClassRequirement(itemLvl);
-            DynamicUserRequirement<String[]> reqClass  = null;
+            String[] userClass = this.getUserClassRequirement(itemLvl);
+            DynamicUserRequirement<String[]> reqClass = null;
             if (userClass == null || userClass.length == 0) {
                 userClass = this.getUserBannedClassRequirement(itemLvl);
                 if (userClass != null && userClass.length > 0) {
@@ -975,5 +977,213 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             return item;
         }
+    }
+
+    public static Map<ResourceCategory, List<String>> getMatchingPrefixes(Tier tier, Material material) {
+        Map<ResourceCategory, List<String>> entries = new HashMap<>();
+        entries.put(ResourceCategory.TIER, resourceManager.getPrefix(ResourceCategory.TIER, tier.getId()));
+        entries.put(ResourceCategory.MATERIAL, resourceManager.getPrefix(ResourceCategory.MATERIAL, material.name()));
+        entries.put(ResourceCategory.SUBTYPE, resourceManager.getPrefix(ResourceCategory.SUBTYPE, ItemUtils.getItemGroupIdFor(new ItemStack(material))));
+        return entries;
+    }
+
+    public static Map<ResourceCategory, List<String>> getMatchingSuffixes(Tier tier, Material material) {
+        Map<ResourceCategory, List<String>> entries = new HashMap<>();
+        entries.put(ResourceCategory.TIER, resourceManager.getSuffix(ResourceCategory.TIER, tier.getId()));
+        entries.put(ResourceCategory.MATERIAL, resourceManager.getSuffix(ResourceCategory.MATERIAL, material.name()));
+        entries.put(ResourceCategory.SUBTYPE, resourceManager.getSuffix(ResourceCategory.SUBTYPE, ItemUtils.getItemGroupIdFor(new ItemStack(material))));
+        return entries;
+    }
+
+    /* Kind of a method to play around for all combinations since those might be required on third party plugins (Also on Fusion) */
+    public static List<String> getAllCombinations(GeneratorItem item, Tier tier, Material material) {
+        String name = item.getName();
+        String itemGroupName = ItemUtils.getItemGroupNameFor(new ItemStack(material));
+        List<String> names = new ArrayList<>();
+        Map<ResourceCategory, List<String>> prefixes = getMatchingPrefixes(tier, material);
+        Map<ResourceCategory, List<String>> suffixes = getMatchingSuffixes(tier, material);
+
+        names.add(name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", "").replace("%prefix_type%", "").replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", ""));
+
+        /* All prefix combination */
+        // Only tier
+        if (name.contains("%prefix_tier%") && !name.contains("%prefix_material%") && !name.contains("%prefix_type%")) {
+            for (String _prefixTier : prefixes.get(ResourceCategory.TIER)) {
+                String modifiedName = name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", _prefixTier).replace("%prefix_material%", "").replace("%prefix_type%", "");
+                names.add(modifiedName.replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", ""));
+                names.addAll(interpolatePrefixWithAllSuffixes(modifiedName, suffixes));
+            }
+        }
+        // Only material
+        if (!name.contains("%prefix_tier%") && !name.contains("%prefix_material%") && name.contains("%prefix_type%")) {
+            for (String _prefixMaterial : prefixes.get(ResourceCategory.MATERIAL)) {
+                String modifiedName = name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", _prefixMaterial).replace("%prefix_type%", "");
+                names.add(modifiedName.replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", ""));
+                names.addAll(interpolatePrefixWithAllSuffixes(modifiedName, suffixes));
+            }
+        }
+        // Only type
+        if (!name.contains("%prefix_tier%") && name.contains("%prefix_material%") && !name.contains("%prefix_type%")) {
+            for (String _prefixItemType : prefixes.get(ResourceCategory.SUBTYPE)) {
+                String modifiedName = name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", "").replace("%prefix_type%", _prefixItemType);
+                names.add(modifiedName.replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", ""));
+                names.addAll(interpolatePrefixWithAllSuffixes(modifiedName, suffixes));
+            }
+        }
+        // Tier and Material
+        if (name.contains("%prefix_tier%") && name.contains("%prefix_material%") && !name.contains("%prefix_type%")) {
+            for (String _prefixTier : prefixes.get(ResourceCategory.TIER)) {
+                for (String _prefixMaterial : prefixes.get(ResourceCategory.MATERIAL)) {
+                    String modifiedName = name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", _prefixTier).replace("%prefix_material%", _prefixMaterial).replace("%prefix_type%", "");
+                    names.add(modifiedName.replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", ""));
+                    names.addAll(interpolatePrefixWithAllSuffixes(modifiedName, suffixes));
+                }
+            }
+        }
+        // Tier and Type
+        if (name.contains("%prefix_tier%") && !name.contains("%prefix_material%") && name.contains("%prefix_type%")) {
+            for (String _prefixTier : prefixes.get(ResourceCategory.TIER)) {
+                for (String _prefixItemType : prefixes.get(ResourceCategory.SUBTYPE)) {
+                    String modifiedName = name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", _prefixTier).replace("%prefix_material%", "").replace("%prefix_type%", _prefixItemType);
+                    names.add(modifiedName.replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", ""));
+                    names.addAll(interpolatePrefixWithAllSuffixes(modifiedName, suffixes));
+                }
+            }
+        }
+        // Material and Type
+        if (!name.contains("%prefix_tier%") && name.contains("%prefix_material%") && name.contains("%prefix_type%")) {
+            for (String _prefixMaterial : prefixes.get(ResourceCategory.MATERIAL)) {
+                for (String _prefixItemType : prefixes.get(ResourceCategory.SUBTYPE)) {
+                    String modifiedName = name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", _prefixMaterial).replace("%prefix_type%", _prefixItemType);
+                    names.add(modifiedName.replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", ""));
+                    names.addAll(interpolatePrefixWithAllSuffixes(modifiedName, suffixes));
+                }
+            }
+        }
+        // All prefix combination
+        if (name.contains("%prefix_tier%") && name.contains("%prefix_material%") && name.contains("%prefix_type%")) {
+            for (String _prefixTier : prefixes.get(ResourceCategory.TIER)) {
+                for (String _prefixMaterial : prefixes.get(ResourceCategory.MATERIAL)) {
+                    for (String _prefixItemType : prefixes.get(ResourceCategory.SUBTYPE)) {
+                        String modifiedName = name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", _prefixTier).replace("%prefix_material%", _prefixMaterial).replace("%prefix_type%", _prefixItemType);
+                        names.add(modifiedName.replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", ""));
+                        names.addAll(interpolatePrefixWithAllSuffixes(modifiedName, suffixes));
+                    }
+                }
+            }
+        }
+
+
+        // All suffix single
+        // Only tier
+        if (name.contains("%suffix_tier%") && !name.contains("%suffix_material%") && !name.contains("%suffix_type%")) {
+            for (String _suffixTier : suffixes.get(ResourceCategory.TIER)) {
+                names.add(name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", "").replace("%prefix_type%", "").replace("%suffix_tier%", _suffixTier).replace("%suffix_material%", "").replace("%suffix_type%", ""));
+            }
+        }
+        // Only material
+        if (!name.contains("%suffix_tier%") && !name.contains("%suffix_material%") && name.contains("%suffix_type%")) {
+            for (String _suffixMaterial : suffixes.get(ResourceCategory.MATERIAL)) {
+                names.add(name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", "").replace("%prefix_type%", "").replace("%suffix_tier%", "").replace("%suffix_material%", _suffixMaterial).replace("%suffix_type%", ""));
+            }
+        }
+        // Only type
+        if (!name.contains("%suffix_tier%") && name.contains("%suffix_material%") && !name.contains("%suffix_type%")) {
+            for (String _suffixItemType : suffixes.get(ResourceCategory.SUBTYPE)) {
+                names.add(name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", "").replace("%prefix_type%", "").replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", _suffixItemType));
+            }
+        }
+        // Tier and Material
+        if (name.contains("%suffix_tier%") && name.contains("%suffix_material%") && !name.contains("%suffix_type%")) {
+            for (String _suffixTier : suffixes.get(ResourceCategory.TIER)) {
+                for (String _suffixMaterial : suffixes.get(ResourceCategory.MATERIAL)) {
+                    names.add(name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", "").replace("%prefix_type%", "").replace("%suffix_tier%", _suffixTier).replace("%suffix_material%", _suffixMaterial).replace("%suffix_type%", ""));
+                }
+            }
+        }
+        // Tier and Type
+        if (name.contains("%suffix_tier%") && !name.contains("%suffix_material%") && name.contains("%suffix_type%")) {
+            for (String _suffixTier : suffixes.get(ResourceCategory.TIER)) {
+                for (String _suffixItemType : suffixes.get(ResourceCategory.SUBTYPE)) {
+                    names.add(name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", "").replace("%prefix_type%", "").replace("%suffix_tier%", _suffixTier).replace("%suffix_material%", "").replace("%suffix_type%", _suffixItemType));
+                }
+            }
+        }
+        // Material and Type
+        if (!name.contains("%suffix_tier%") && name.contains("%suffix_material%") && name.contains("%suffix_type%")) {
+            for (String _suffixMaterial : suffixes.get(ResourceCategory.MATERIAL)) {
+                for (String _suffixItemType : suffixes.get(ResourceCategory.SUBTYPE)) {
+                    names.add(name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", "").replace("%prefix_type%", "").replace("%suffix_tier%", "").replace("%suffix_material%", _suffixMaterial).replace("%suffix_type%", _suffixItemType));
+                }
+            }
+        }
+        // All suffix combination
+        if (name.contains("%suffix_tier%") && name.contains("%suffix_material%") && name.contains("%suffix_type%")) {
+            for (String _suffixTier : suffixes.get(ResourceCategory.MATERIAL)) {
+                for (String _suffixMaterial : suffixes.get(ResourceCategory.MATERIAL)) {
+                    for (String _suffixItemType : suffixes.get(ResourceCategory.SUBTYPE)) {
+                        names.add(name.replace("%item_type%", itemGroupName).replace("%prefix_tier%", "").replace("%prefix_material%", "").replace("%prefix_type%", "").replace("%suffix_tier%", _suffixTier).replace("%suffix_material%", _suffixMaterial).replace("%suffix_type%", _suffixItemType));
+                    }
+                }
+            }
+        }
+
+        return names;
+    }
+
+    private static List<String> interpolatePrefixWithAllSuffixes(String modifiedName, Map<ResourceCategory, List<String>> suffixes) {
+        List<String> names = new ArrayList<>();
+        // Only tier
+        if (modifiedName.contains("%suffix_tier%") && !modifiedName.contains("%suffix_material%") && !modifiedName.contains("%suffix_type%")) {
+            for (String _suffixTier : suffixes.get(ResourceCategory.TIER)) {
+                names.add(modifiedName.replace("%suffix_tier%", _suffixTier).replace("%suffix_material%", "").replace("%suffix_type%", ""));
+            }
+        }
+        // Only material
+        if (!modifiedName.contains("%suffix_tier%") && !modifiedName.contains("%suffix_material%") && modifiedName.contains("%suffix_type%")) {
+            for (String _suffixMaterial : suffixes.get(ResourceCategory.MATERIAL)) {
+                names.add(modifiedName.replace("%suffix_tier%", "").replace("%suffix_material%", _suffixMaterial).replace("%suffix_type%", ""));
+            }
+        }
+        // Only type
+        if (!modifiedName.contains("%suffix_tier%") && modifiedName.contains("%suffix_material%") && !modifiedName.contains("%suffix_type%")) {
+            for (String _suffixItemType : suffixes.get(ResourceCategory.SUBTYPE)) {
+                names.add(modifiedName.replace("%suffix_tier%", "").replace("%suffix_material%", "").replace("%suffix_type%", _suffixItemType));
+            }
+        }
+        // Tier and Material
+        if (modifiedName.contains("%suffix_tier%") && modifiedName.contains("%suffix_material%") && !modifiedName.contains("%suffix_type%")) {
+            for (String _suffixTier : suffixes.get(ResourceCategory.TIER)) {
+                for (String _suffixMaterial : suffixes.get(ResourceCategory.MATERIAL)) {
+                    names.add(modifiedName.replace("%suffix_tier%", _suffixTier).replace("%suffix_material%", _suffixMaterial).replace("%suffix_type%", ""));
+                }
+            }
+        }
+        // Tier and Type
+        if (modifiedName.contains("%suffix_tier%") && !modifiedName.contains("%suffix_material%") && modifiedName.contains("%suffix_type%")) {
+            for (String _suffixTier : suffixes.get(ResourceCategory.TIER)) {
+                for (String _suffixItemType : suffixes.get(ResourceCategory.SUBTYPE)) {
+                    names.add(modifiedName.replace("%suffix_tier%", _suffixTier).replace("%suffix_material%", "").replace("%suffix_type%", _suffixItemType));
+                }
+            }
+        }
+        // Material and Type
+        if (!modifiedName.contains("%suffix_tier%") && modifiedName.contains("%suffix_material%") && modifiedName.contains("%suffix_type%")) {
+            for (String _suffixMaterial : suffixes.get(ResourceCategory.MATERIAL)) {
+                for (String _suffixItemType : suffixes.get(ResourceCategory.SUBTYPE)) {
+                    names.add(modifiedName.replace("%suffix_tier%", "").replace("%suffix_material%", _suffixMaterial).replace("%suffix_type%", _suffixItemType));
+                }
+            }
+        }
+        // All suffix combination
+        for (String _suffixTier : suffixes.get(ResourceCategory.MATERIAL)) {
+            for (String _suffixMaterial : suffixes.get(ResourceCategory.MATERIAL)) {
+                for (String _suffixItemType : suffixes.get(ResourceCategory.SUBTYPE)) {
+                    names.add(modifiedName.replace("%suffix_tier%", _suffixTier).replace("%suffix_material%", _suffixMaterial).replace("%suffix_type%", _suffixItemType));
+                }
+            }
+        }
+
+        return names;
     }
 }
