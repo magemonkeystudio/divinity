@@ -283,6 +283,10 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         }
 
         defenses.putAll(statsVictim.getDefenseTypes(false));
+        damages.keySet().stream()
+                .map(DamageAttribute::getAttachedDefense)
+                .filter(Objects::nonNull)
+                .forEach((def) -> defenses.putIfAbsent(def, 0D));
 
         // +----------------------------------------------------+
         // | Make 'damageStart' to be only additional damage,   |
@@ -451,6 +455,9 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                     damage = AttributeRegistry.scaleAttribute(AttributeRegistry.MELEE_DAMAGE, damager, damage);
                 }
 
+                // Allow Fabled's ShieldMechanic to reduce damage done directly without applying it to defenses
+                damage = BuffRegistry.scaleDamageForDefense(id.replace("rpgdamage", "rpgdefense"), victim, damage);
+
                 damages.put(dmgAtt, damage);
             });
         }
@@ -466,7 +473,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
                 double defense = value;
 
-                defense = BuffRegistry.scaleValue(id, damager, defense);
+                defense = BuffRegistry.scaleValue(id, victim, defense);
 
                 defense = AttributeRegistry.scaleAttribute("DIVINITY_defense_" + id.replace("rpgdefense-", ""),
                         victim,

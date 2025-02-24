@@ -281,7 +281,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
             }
         }
 
-        double modifiedDamage = meta.getTotalDamage();
+        double modifiedDamage   = meta.getTotalDamage();
         double invulnerableProt = 0;
         try {
             invulnerableProt = e.getOriginalEvent()
@@ -555,6 +555,9 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                 Map<DamageAttribute, Double> damageMap = event.getDamageMap();
                 damageMap.clear();
                 damageMap.put(damageAttribute, amount);
+
+                event.getDefenseMap().putIfAbsent(damageAttribute.getAttachedDefense(), 0D);
+
                 success[0] = true;
             }
         };
