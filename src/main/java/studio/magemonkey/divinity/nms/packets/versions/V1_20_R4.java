@@ -16,6 +16,7 @@ import studio.magemonkey.codex.util.Reflex;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.api.event.EntityEquipmentChangeEvent;
 import studio.magemonkey.divinity.data.api.DivinityUser;
+import studio.magemonkey.divinity.data.api.UserEntityNamesMode;
 import studio.magemonkey.divinity.data.api.UserProfile;
 import studio.magemonkey.divinity.manager.EntityManager;
 
@@ -177,6 +178,37 @@ public class V1_20_R4 extends V1_20_R3 {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void manageEntityNames(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(e.getReciever());
+        if (user == null) return;
+
+        UserProfile         profile   = user.getActiveProfile();
+        UserEntityNamesMode namesMode = profile.getNamesMode();
+        if (namesMode == UserEntityNamesMode.DEFAULT) return;
+
+        Class pClass = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutEntityMetadata");
+
+        Object p = pClass.cast(packet);
+        @SuppressWarnings("unchecked")
+        List<Object> list = (List<Object>) Reflex.getFieldValue(p, "d");
+        if (list == null) return;
+
+        // Hide or show custom entity names
+        if (list.size() > 13) {
+            Object index3 = list.get(13);
+
+            Method bMethod = Reflex.getMethod(index3.getClass(), "c");
+
+            Object b = Reflex.invokeMethod(bMethod, index3);
+            if (b == null || !b.getClass().equals(Boolean.class)) return;
+            //Object nameVisible = Reflex.getFieldValue(index3, "b");
+
+            boolean visibility = namesMode == UserEntityNamesMode.ALWAYS_VISIBLE;
+            Reflex.setFieldValue(index3, "c", visibility);
         }
     }
 }
