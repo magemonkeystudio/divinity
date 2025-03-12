@@ -19,10 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class AbilityGenerator extends AbstractAttributeGenerator {
     public static NamespacedKey                         LEGACY_KEY;
     public static NamespacedKey                         ABILITY_KEY;
+    public static NamespacedKey                         SKILL_LORE_KEY;
     private final Map<AbilityGenerator.Ability, Double> abilities;
 
     public AbilityGenerator(@NotNull Divinity plugin,
@@ -31,6 +33,7 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         super(plugin, generatorItem, placeholder);
         AbilityGenerator.LEGACY_KEY = NamespacedKey.fromString("prorpgitems:skills");
         AbilityGenerator.ABILITY_KEY = NamespacedKey.fromString("skills", plugin);
+        AbilityGenerator.SKILL_LORE_KEY = NamespacedKey.fromString("skill-lore", plugin);
 
         JYML   cfg  = this.generatorItem.getConfig();
         String path = "generator.skills.";
@@ -72,16 +75,11 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         if (meta == null) {
             return;
         }
-        List<String> lore = meta.getLore();
-        if (lore == null) {
-            return;
-        }
 
-        int pos = lore.indexOf(this.placeholder);
         int min = this.getMinAmount();
         int max = this.getMaxAmount();
 
-        if (pos < 0 || max == 0 || this.abilities.isEmpty()) {
+        if (max == 0 || this.abilities.isEmpty()) {
             LoreUT.replacePlaceholder(item, placeholder, null);
             return;
         }
@@ -135,18 +133,12 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
                 }
             }
 
-            // Add ability lore with variables.
+            // Add ability lore to the item
             int level = ability.getRndLevel();
-            for (String format : ability.getLoreFormat()) {
-                pos = LoreUT.addToLore(lore, pos, format.replace("%level%", String.valueOf(level)));
-            }
-            lore.remove(this.placeholder);
-
             abilityAdd.put(ability, level);
             abilityMap.remove(ability);
         }
 
-        meta.setLore(lore);
         item.setItemMeta(meta);
 
         int      i            = 0;
@@ -156,6 +148,8 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
             i++;
         }
         DataUT.setData(item, ABILITY_KEY, abilityArray);
+
+        updateLore(item);
     }
 
     public static Map<String, Integer> getAbilities(ItemStack item) {
@@ -178,6 +172,69 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
             map.put(stringAbility.substring(0, i), level);
         }
         return map;
+    }
+
+    public void updateLore(ItemStack item) {
+        Map<String, Integer> abilities = getAbilities(item);
+        if (abilities.isEmpty()) return;
+
+        List<Ability> abilityList = this.abilities.keySet().stream()
+                .filter(ability -> abilities.containsKey(ability.getId()))
+                .collect(Collectors.toList());
+        if (abilityList.isEmpty()) return;
+
+        // At this point, we have a list of Abilities, so we just need to get their lore formats and update the item's lore for them
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+
+        List<String> lore = meta.getLore();
+        if (lore == null) return;
+
+        StringBuilder loreTag     = new StringBuilder();
+        String        storedTag   = ItemUT.getLoreTag(item, SKILL_LORE_KEY.getKey());
+        String[]      storedLines = storedTag != null ? storedTag.split(LoreUT.TAG_SPLITTER) : new String[]{};
+        int           pos         = lore.indexOf(this.placeholder);
+
+        // If we don't have a placeholder (meaning this is an existing item)
+        if (pos < 0) {
+            // Delete the old lines, but first we have to find the first stored one
+            if (storedLines.length > 0) {
+                int firstIndex = -1;
+                for (String storedLine : storedLines) {
+                    firstIndex++;
+                    if (!StringUT.colorOff(storedLine).isEmpty()) break;
+                }
+
+                int index = lore.indexOf(storedLines[firstIndex]) - firstIndex;
+                if (index >= 0) {
+                    pos = index;
+                    for (int count = 0; count < storedLines.length; count++) {
+                        lore.remove(index);
+                    }
+                }
+            }
+            if (pos < 0) return; // Still -1, so we can't add new lines
+        } else lore.remove(pos); // Otherwise, we'll remove it so we can add new lines at the position
+
+        for (Ability ability : abilityList) {
+            int level = abilities.get(ability.getId());
+            for (String format : ability.getLoreFormat()) {
+                String loreLine = format.replace("%level%", String.valueOf(level));
+                pos = LoreUT.addToLore(lore, pos, loreLine);
+
+                loreTag.append(loreLine).append(LoreUT.TAG_SPLITTER);
+            }
+        }
+
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        if (loreTag.length() > 0) {
+            // Remove the last splitter
+            loreTag.setLength(loreTag.length() - LoreUT.TAG_SPLITTER.length());
+            ItemUT.addLoreTag(item, SKILL_LORE_KEY.getKey(), loreTag.toString());
+        }
     }
 
     public static class Ability {
