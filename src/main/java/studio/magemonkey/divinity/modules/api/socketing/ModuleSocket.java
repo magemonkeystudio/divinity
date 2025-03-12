@@ -376,7 +376,7 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
     // ---------------------------------------------------------- //
 
     @NotNull
-    public final ItemStack insertSocket(@NotNull ItemStack item, @NotNull ItemStack src) {
+    public ItemStack insertSocket(@NotNull ItemStack item, @NotNull ItemStack src) {
         ItemSocketRequirement socketReq = ItemRequirements.getItemRequirement(ItemSocketRequirement.class);
         if (socketReq == null) return item;
 

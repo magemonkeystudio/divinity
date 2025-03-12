@@ -27,6 +27,11 @@ bonuses-by-level:
       wind: 3.5%
       water: 3.5%
     defense-types: { }
+    skills:
+      ability-1:
+        level: 1
+        lore-format:
+          - '&bSample Ability: &7[&f%level%&7]'
   '2':
     item-stats: { }
     damage-types:
