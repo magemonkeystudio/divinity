@@ -4,6 +4,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.manager.api.ClickType;
 import studio.magemonkey.codex.util.DataUT;
@@ -11,6 +12,7 @@ import studio.magemonkey.codex.util.ItemUT;
 import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import studio.magemonkey.divinity.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import studio.magemonkey.divinity.utils.LoreUT;
@@ -67,6 +69,15 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
 
         // Replace the legacy keyed ability with the new one
         DataUT.setData(item, ABILITY_KEY, abilityArray);
+    }
+
+    @Nullable
+    public Ability getAbility(String id) {
+        return this.abilities.keySet()
+                .stream()
+                .filter(ability -> ability.getId().equalsIgnoreCase(id))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -181,6 +192,11 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         List<Ability> abilityList = this.abilities.keySet().stream()
                 .filter(ability -> abilities.containsKey(ability.getId()))
                 .collect(Collectors.toList());
+
+        updateLore(item, abilities, abilityList);
+    }
+
+    public static void updateLore(ItemStack item, Map<String, Integer> abilities, List<Ability> abilityList) {
         if (abilityList.isEmpty()) return;
 
         // At this point, we have a list of Abilities, so we just need to get their lore formats and update the item's lore for them
@@ -194,7 +210,7 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         StringBuilder loreTag     = new StringBuilder();
         String        storedTag   = ItemUT.getLoreTag(item, SKILL_LORE_KEY.getKey());
         String[]      storedLines = storedTag != null ? storedTag.split(LoreUT.TAG_SPLITTER) : new String[]{};
-        int           pos         = lore.indexOf(this.placeholder);
+        int           pos         = lore.indexOf(ItemGeneratorManager.PLACE_GEN_ABILITY);
 
         // If we don't have a placeholder (meaning this is an existing item)
         if (pos < 0) {
