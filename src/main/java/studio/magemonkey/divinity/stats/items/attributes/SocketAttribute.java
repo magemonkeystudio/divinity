@@ -20,12 +20,12 @@ import studio.magemonkey.divinity.stats.tiers.Tiered;
 
 public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements Tiered, Emptible<String[]> {
 
-    private Type            type;
+    private final Type            type;
     private ModuleSocket<?> module;
-    private Tier            tier;
+    private final Tier            tier;
 
-    private String formatValueEmpty;
-    private String formatValueFilled;
+    private final String formatValueEmpty;
+    private final String formatValueFilled;
 
     public SocketAttribute(
             @NotNull Type type,
@@ -198,6 +198,7 @@ public class SocketAttribute extends DuplicableItemLoreStat<String[]> implements
     }
 
     @Override
+    @NotNull
     public String[] getDefaultValue() {
         return new String[]{"", ""};
     }

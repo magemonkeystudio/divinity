@@ -188,9 +188,8 @@ public class SetManager extends QModule {
                 }
 
                 int index = lore.indexOf(storedLines[firstText]) - firstText;
-
                 if (index >= 0) {
-                    if (pos < 0) pos = index;
+                    pos = index;
                     for (int count = 0; count < storedLines.length; count++) {
                         lore.remove(index);
                     }

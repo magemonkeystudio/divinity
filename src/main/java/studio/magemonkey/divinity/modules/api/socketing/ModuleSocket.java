@@ -270,7 +270,6 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
 
     public final boolean hasSocketItem(@NotNull ItemStack item, @NotNull String itemId) {
         ItemMeta     meta = item.getItemMeta();
-        List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : null;
         for (SocketAttribute socket : ItemStats.getSockets(this.getSocketType())) {
             for (String[] values : this.getFilledSocketKeys(meta, socket.getId()).values()) {
                 String id = values[0];
@@ -370,7 +369,6 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
 
     public final void startSocketing(
             @NotNull Player p, @NotNull ItemStack target, @NotNull ItemStack src) {
-
         this.splitDragItem(p, src, target);
         this.guiUser.open(p, target, src);
     }
@@ -390,6 +388,7 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
         if (socket == null) return item;
 
         int      index       = socket.getFirstEmptyIndex(item);
+        // socketValue is just a list {itemId, level} -- This gets set in the item's NBT data
         String[] socketValue = new String[]{this.getItemId(src), String.valueOf(ItemStats.getLevel(src))};
 
         socket.add(item, socketValue, index, -1);

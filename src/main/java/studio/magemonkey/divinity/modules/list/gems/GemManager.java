@@ -111,9 +111,7 @@ public class GemManager extends ModuleSocket<Gem> {
 
             List<String> lore = meta.getLore();
             if (lore != null) {
-                for (int i = 0; i < lore.size(); i++) {
-                    lore.set(i, bMap.replacePlaceholders(lore.get(i)));
-                }
+                lore.replaceAll(bMap::replacePlaceholders);
                 meta.setLore(lore);
             }
             item.setItemMeta(meta);
