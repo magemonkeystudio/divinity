@@ -253,9 +253,9 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
                     if (item == null) continue;
 
                     AbilityGenerator.updateNamespace(item);
-                    for (Map.Entry<String, Integer> entry : AbilityGenerator.getAbilities(item).entrySet()) {
+                    for (Map.Entry<String, AbilityGenerator.AbilityInfo> entry : AbilityGenerator.getAbilities(item).entrySet()) {
                         String id    = entry.getKey();
-                        int    level = entry.getValue();
+                        int    level = entry.getValue().getLevel();
                         if (!skills.containsKey(id) || level > skills.get(id)) {
                             skills.put(id, level);
                         }

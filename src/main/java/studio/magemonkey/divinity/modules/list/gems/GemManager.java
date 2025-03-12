@@ -79,6 +79,21 @@ public class GemManager extends ModuleSocket<Gem> {
         return item;
     }
 
+    @Override
+    @NotNull
+    public List<ItemStack> extractSocket(@NotNull ItemStack target, @NotNull String socketId, int index) {
+        List<ItemStack> items = super.extractSocket(target, socketId, index);
+        Gem             gem   = this.getModuleItem(target);
+
+        if (gem == null) return items;
+
+        ItemStack result   = items.get(0);
+        int       gemLevel = ItemStats.getLevel(target);
+        gem.removeAbilities(result, gemLevel);
+
+        return items;
+    }
+
     // -------------------------------------------------------------------- //
     // CLASSES
 
@@ -128,21 +143,22 @@ public class GemManager extends ModuleSocket<Gem> {
             }
         }
 
-        public void applyAbilities(ItemStack item, int level) {
+        private void applyAbilities(ItemStack item, int level) {
             List<AbilityGenerator.Ability> abilities =
                     this.abilitiesByLevel.computeIfAbsent(level, k -> new ArrayList<>());
             if (abilities.isEmpty()) return;
 
             // Start off with our old abilities and then apply the new ones on top
-            Map<String, Integer>           itemAbilities = AbilityGenerator.getAbilities(item);
-            List<AbilityGenerator.Ability> abilitiesList = new ArrayList<>();
+            Map<String, AbilityGenerator.AbilityInfo> itemAbilities = AbilityGenerator.getAbilities(item);
+            List<AbilityGenerator.Ability>            abilitiesList = new ArrayList<>();
             // Only add any abilities that aren't already on the item
             for (AbilityGenerator.Ability ability : abilities) {
                 if (ability == null) continue;
 
                 String abilityId = ability.getId();
                 if (!itemAbilities.containsKey(abilityId)) {
-                    itemAbilities.put(ability.getId(), ability.getRndLevel());
+                    itemAbilities.put(ability.getId(),
+                            new AbilityGenerator.AbilityInfo(ability.getId(), ability.getRndLevel(), "gem"));
                     abilitiesList.add(ability);
                 }
             }
@@ -150,8 +166,42 @@ public class GemManager extends ModuleSocket<Gem> {
             // Apply the new abilities to the item
             int      i            = 0;
             String[] abilityArray = new String[itemAbilities.size()];
-            for (Map.Entry<String, Integer> entry : itemAbilities.entrySet()) {
-                abilityArray[i] = entry.getKey() + ":" + entry.getValue();
+            for (Map.Entry<String, AbilityGenerator.AbilityInfo> entry : itemAbilities.entrySet()) {
+                abilityArray[i] = entry.getKey() + ":" + entry.getValue() + ":" + entry.getValue().getSource();
+                i++;
+            }
+            DataUT.setData(item, AbilityGenerator.ABILITY_KEY, abilityArray);
+            updateItemLore(item, itemAbilities, abilitiesList);
+        }
+
+        /**
+         * Removes the abilities from the item that are associated with the gem at the given level.
+         *
+         * @param item  The item to remove the abilities from.
+         * @param level The level of the gem.
+         */
+        private void removeAbilities(ItemStack item, int level) {
+            List<AbilityGenerator.Ability> abilities = this.abilitiesByLevel.get(level);
+            if (abilities == null) return;
+
+            Map<String, AbilityGenerator.AbilityInfo> itemAbilities = AbilityGenerator.getAbilities(item);
+            if (itemAbilities.isEmpty()) return;
+
+            List<AbilityGenerator.Ability> abilitiesList = new ArrayList<>();
+            for (AbilityGenerator.Ability ability : abilities) {
+                if (ability == null) continue;
+
+                String abilityId = ability.getId();
+                if (itemAbilities.containsKey(abilityId) && itemAbilities.get(abilityId).getSource().equals("gem")) {
+                    itemAbilities.remove(abilityId);
+                }
+            }
+
+            int      i            = 0;
+            String[] abilityArray = new String[itemAbilities.size()];
+            for (Map.Entry<String, AbilityGenerator.AbilityInfo> entry : itemAbilities.entrySet()) {
+                abilityArray[i] =
+                        entry.getKey() + ":" + entry.getValue().getLevel() + ":" + entry.getValue().getSource();
                 i++;
             }
             DataUT.setData(item, AbilityGenerator.ABILITY_KEY, abilityArray);
@@ -159,7 +209,7 @@ public class GemManager extends ModuleSocket<Gem> {
         }
 
         private void updateItemLore(ItemStack item,
-                                    Map<String, Integer> itemAbilities,
+                                    Map<String, AbilityGenerator.AbilityInfo> itemAbilities,
                                     List<AbilityGenerator.Ability> abilitiesList) {
             ItemGeneratorManager.GeneratorItem genItem = Divinity.getInstance().getModuleCache().getTierManager()
                     .getModuleItem(item);

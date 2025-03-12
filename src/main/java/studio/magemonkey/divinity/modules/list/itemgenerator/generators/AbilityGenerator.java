@@ -1,5 +1,8 @@
 package studio.magemonkey.divinity.modules.list.itemgenerator.generators;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -155,7 +158,7 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         int      i            = 0;
         String[] abilityArray = new String[abilityAdd.size()];
         for (Map.Entry<AbilityGenerator.Ability, Integer> entry : abilityAdd.entrySet()) {
-            abilityArray[i] = entry.getKey().getId() + ':' + entry.getValue();
+            abilityArray[i] = entry.getKey().getId() + ':' + entry.getValue() + ":item";
             i++;
         }
         DataUT.setData(item, ABILITY_KEY, abilityArray);
@@ -163,8 +166,8 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         updateLore(item);
     }
 
-    public static Map<String, Integer> getAbilities(ItemStack item) {
-        Map<String, Integer> map = new HashMap<>();
+    public static Map<String, AbilityInfo> getAbilities(ItemStack item) {
+        Map<String, AbilityInfo> map = new HashMap<>();
         if (item == null) {
             return map;
         }
@@ -173,20 +176,31 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
             return map;
         }
         for (String stringAbility : stringAbilities) {
-            int i = stringAbility.lastIndexOf(':');
-            int level;
+            AbilityInfo info  = new AbilityInfo();
+            String[]    split = stringAbility.split(":");
+            if (split.length < 2) {
+                continue;
+            }
+
+            info.setId(split[0]);
+
             try {
-                level = Integer.parseInt(stringAbility.substring(i + 1));
+                info.setLevel(Integer.parseInt(split[1]));
             } catch (NumberFormatException e) {
                 continue;
             }
-            map.put(stringAbility.substring(0, i), level);
+
+            if (split.length > 2) {
+                info.setSource(split[2]);
+            }
+
+            map.put(info.getId(), info);
         }
         return map;
     }
 
     public void updateLore(ItemStack item) {
-        Map<String, Integer> abilities = getAbilities(item);
+        Map<String, AbilityInfo> abilities = getAbilities(item);
         if (abilities.isEmpty()) return;
 
         List<Ability> abilityList = this.abilities.keySet().stream()
@@ -196,7 +210,7 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         updateLore(item, abilities, abilityList);
     }
 
-    public static void updateLore(ItemStack item, Map<String, Integer> abilities, List<Ability> abilityList) {
+    public static void updateLore(ItemStack item, Map<String, AbilityInfo> abilities, List<Ability> abilityList) {
         if (abilityList.isEmpty()) return;
 
         // At this point, we have a list of Abilities, so we just need to get their lore formats and update the item's lore for them
@@ -234,7 +248,7 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         } else lore.remove(pos); // Otherwise, we'll remove it so we can add new lines at the position
 
         for (Ability ability : abilityList) {
-            int level = abilities.get(ability.getId());
+            int level = abilities.get(ability.getId()).getLevel();
             for (String format : ability.getLoreFormat()) {
                 String loreLine = format.replace("%level%", String.valueOf(level));
                 pos = LoreUT.addToLore(lore, pos, loreLine);
@@ -297,5 +311,18 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
 
         @Override
         public int hashCode() {return Objects.hash(id);}
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AbilityInfo {
+        private String id;
+        private int    level;
+        private String source;
+
+        public String getSource() {
+            return Objects.requireNonNullElse(this.source, "item");
+        }
     }
 }
