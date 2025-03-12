@@ -99,7 +99,7 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
 
         ItemStack item = p.getInventory().getItemInMainHand();
 
-        if (getAbilities(item).keySet().stream().anyMatch(s -> s.equalsIgnoreCase(skillKey))) {
+        if (AbilityGenerator.getAbilities(item).keySet().stream().anyMatch(s -> s.equalsIgnoreCase(skillKey))) {
             DurabilityStat duraStat = ItemStats.getStat(DurabilityStat.class);
             if (duraStat != null) {
                 duraStat.reduceDurability(p, item, 1);
@@ -242,28 +242,6 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         return itemStack;
     }
 
-    private Map<String, Integer> getAbilities(ItemStack item) {
-        Map<String, Integer> map = new HashMap<>();
-        if (item == null) {
-            return map;
-        }
-        String[] stringAbilities = DataUT.getStringArrayData(item, AbilityGenerator.ABILITY_KEY);
-        if (stringAbilities == null) {
-            return map;
-        }
-        for (String stringAbility : stringAbilities) {
-            int i = stringAbility.lastIndexOf(':');
-            int level;
-            try {
-                level = Integer.parseInt(stringAbility.substring(i + 1));
-            } catch (NumberFormatException e) {
-                continue;
-            }
-            map.put(stringAbility.substring(0, i), level);
-        }
-        return map;
-    }
-
     public void updateSkills(Player player) {
         new BukkitRunnable() {
             @Override
@@ -275,7 +253,7 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
                     if (item == null) continue;
 
                     AbilityGenerator.updateNamespace(item);
-                    for (Map.Entry<String, Integer> entry : getAbilities(item).entrySet()) {
+                    for (Map.Entry<String, Integer> entry : AbilityGenerator.getAbilities(item).entrySet()) {
                         String id    = entry.getKey();
                         int    level = entry.getValue();
                         if (!skills.containsKey(id) || level > skills.get(id)) {

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.manager.api.ClickType;
 import studio.magemonkey.codex.util.DataUT;
+import studio.magemonkey.codex.util.ItemUT;
 import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.Divinity;
@@ -157,8 +158,29 @@ public class AbilityGenerator extends AbstractAttributeGenerator {
         DataUT.setData(item, ABILITY_KEY, abilityArray);
     }
 
-    public static class Ability {
+    public static Map<String, Integer> getAbilities(ItemStack item) {
+        Map<String, Integer> map = new HashMap<>();
+        if (item == null) {
+            return map;
+        }
+        String[] stringAbilities = DataUT.getStringArrayData(item, AbilityGenerator.ABILITY_KEY);
+        if (stringAbilities == null) {
+            return map;
+        }
+        for (String stringAbility : stringAbilities) {
+            int i = stringAbility.lastIndexOf(':');
+            int level;
+            try {
+                level = Integer.parseInt(stringAbility.substring(i + 1));
+            } catch (NumberFormatException e) {
+                continue;
+            }
+            map.put(stringAbility.substring(0, i), level);
+        }
+        return map;
+    }
 
+    public static class Ability {
         private final String       id;
         private final int          minLevel;
         private final int          maxLevel;
