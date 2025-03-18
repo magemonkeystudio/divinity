@@ -83,12 +83,15 @@ public class GemManager extends ModuleSocket<Gem> {
     @NotNull
     public List<ItemStack> extractSocket(@NotNull ItemStack target, @NotNull String socketId, int index) {
         List<ItemStack> items = super.extractSocket(target, socketId, index);
-        Gem             gem   = this.getModuleItem(target);
+        if (items.size() < 2) return items;
+
+        ItemStack gemItem = items.get(1);
+        Gem       gem     = this.getModuleItem(gemItem);
 
         if (gem == null) return items;
 
         ItemStack result   = items.get(0);
-        int       gemLevel = ItemStats.getLevel(target);
+        int       gemLevel = ItemStats.getLevel(gemItem);
         gem.removeAbilities(result, gemLevel);
 
         return items;
@@ -167,7 +170,8 @@ public class GemManager extends ModuleSocket<Gem> {
             int      i            = 0;
             String[] abilityArray = new String[itemAbilities.size()];
             for (Map.Entry<String, AbilityGenerator.AbilityInfo> entry : itemAbilities.entrySet()) {
-                abilityArray[i] = entry.getKey() + ":" + entry.getValue() + ":" + entry.getValue().getSource();
+                abilityArray[i] =
+                        entry.getKey() + ":" + entry.getValue().getLevel() + ":" + entry.getValue().getSource();
                 i++;
             }
             DataUT.setData(item, AbilityGenerator.ABILITY_KEY, abilityArray);
