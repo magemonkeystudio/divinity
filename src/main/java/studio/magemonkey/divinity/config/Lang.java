@@ -241,7 +241,7 @@ public class Lang extends CoreLang {
     public ILangMsg Classes_Error_NoClass                             =
             new ILangMsg(this, "&cYou must have class to do that!");
     public ILangMsg Classes_Aspect_Inc_Error_NoPoints                 =
-            new ILangMsg(this, "You don't have enought aspect points!");
+            new ILangMsg(this, "You don't have enough aspect points!");
     public ILangMsg Classes_Aspect_Inc_Done                           =
             new ILangMsg(this, "Your &a%aspect% &7has been increased to &a%value%&7!");
     public ILangMsg Classes_Skill_Cast_Error_Skill_Level              =
@@ -264,7 +264,7 @@ public class Lang extends CoreLang {
     public ILangMsg Classes_Skill_Learn_Error_Has                     =
             new ILangMsg(this, "You're already know this skill!");
     public ILangMsg Classes_Skill_Learn_Error_TooExpensive            =
-            new ILangMsg(this, "You don't have enought skill points to upgrade this skill!");
+            new ILangMsg(this, "You don't have enough skill points to upgrade this skill!");
     public ILangMsg Classes_Leveling_Points_Aspect_Get                = new ILangMsg(this,
             "{message: ~prefix: false;}&2*** &aYou received &f%amount% Aspect Points&a! Spend them in &f/class aspects &2***");
     public ILangMsg Classes_Leveling_Points_Skill_Get                 = new ILangMsg(this,
