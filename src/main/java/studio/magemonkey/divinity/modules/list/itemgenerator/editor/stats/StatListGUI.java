@@ -31,8 +31,16 @@ public class StatListGUI extends AbstractEditorGUI {
         if (section != null) {
             list.addAll(section.getKeys(false));
         }
+
+        this.slots.clear();
+
+        // Get from and to based on the page. I always can have 45 entries per page
+        int from = this.getPage() * 45;
+        int to = Math.min(from + 45, list.size());
+
         int i = 0;
-        for (String entry : list) {
+        for(int j = from; j < to; j++) {
+            String entry = list.get(j);
             i++;
             if (i % this.inventory.getSize() == 53) {
                 this.setSlot(i, getNextButton());
