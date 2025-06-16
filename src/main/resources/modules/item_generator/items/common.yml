@@ -275,31 +275,16 @@ generator:
       - '%FABLED_ATTRIBUTE_DEXTERITY%'
       - '%FABLED_ATTRIBUTE_STRENGTH%'
     list:
-      vitality:
-        chance: 20.0
-        scale-by-level: 1.025
-        min: 3.0
-        max: 6.25
-      spirit:
-        chance: 20.0
-        scale-by-level: 1.025
-        min: 1.1
-        max: 1.25
-      intelligence:
-        chance: 10.0
-        scale-by-level: 1.025
-        min: 2.5
-        max: 4.0
-      dexterity:
-        chance: 10.0
-        scale-by-level: 1.025
-        min: 4.5
-        max: 7.5
-      strength:
-        chance: 10.0
-        scale-by-level: 1.025
-        min: 1.5
-        max: 7.0
+      #vitality:
+      #  chance: 20.0
+      #  scale-by-level: 1.025
+      #  min: 3.0
+      #  max: 6.25
+      #spirit:
+      #  chance: 20.0
+      #  scale-by-level: 1.025
+      #  min: 1.1
+      #  max: 1.25
   sockets:
     GEM:
       minimum: 0
