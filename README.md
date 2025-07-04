@@ -10,7 +10,7 @@ or snapshots through Sonatype.
 ```xml
 <repository>
     <id>sonatype</id>
-    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
 </repository>
 ...
 <dependency>
