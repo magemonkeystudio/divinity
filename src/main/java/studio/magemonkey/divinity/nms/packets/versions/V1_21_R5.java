@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.CodexEngine;
 import studio.magemonkey.codex.api.events.EnginePlayerPacketEvent;
 import studio.magemonkey.codex.compat.VersionManager;
-import studio.magemonkey.codex.core.Version;
 import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.util.Reflex;
 import studio.magemonkey.divinity.Divinity;
@@ -24,15 +23,10 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
-public class V1_21_R3 extends V1_21_R1 {
-    protected final Class<?> playoutUpdateAttributes = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutUpdateAttributes");
-    protected final Class<?> craftServerClass        = Reflex.getCraftClass("CraftServer");
-    protected final Class<?> nmsEntityClass          = Reflex.getClass("net.minecraft.world.entity", "Entity");
-    protected final Class<?> worldServerClass        = Reflex.getClass("net.minecraft.server.level", "WorldServer");
-    protected final Method   getEntity               = Reflex.getMethod(worldServerClass, "a", int.class);
-    protected final Method   getServer               = Reflex.getMethod(craftServerClass, "getServer");
-
-    public V1_21_R3(@NotNull Divinity plugin) {super(plugin);}
+public class V1_21_R5 extends V1_21_R3 {
+    public V1_21_R5(@NotNull Divinity plugin) {
+        super(plugin);
+    }
 
     @Override
     public void manageEquipmentChanges(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
@@ -64,7 +58,7 @@ public class V1_21_R3 extends V1_21_R1 {
 
             if (nmsEntity == null) return;
 
-            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cG");
+            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cK");
             Entity bukkitEntity =
                     CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 
@@ -101,9 +95,6 @@ public class V1_21_R3 extends V1_21_R1 {
 
             Integer entityId = (Integer) Reflex.getFieldValue(p, "c");
             if (entityId == null) return;
-            Class craftServerClass = Reflex.getCraftClass("CraftServer");
-            Class nmsEntityClass   = Reflex.getClass("net.minecraft.world.entity", "Entity");
-            Class worldServerClass = Reflex.getClass("net.minecraft.server.level", "WorldServer");
 
             Object server    = craftServerClass.cast(Bukkit.getServer());
             Object nmsEntity = null;
@@ -128,7 +119,7 @@ public class V1_21_R3 extends V1_21_R1 {
             if (nmsEntity == null) return;
 
 
-            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cG");
+            Method getUniqueId = Reflex.getMethod(nmsEntityClass, "cK");
             Entity bukkitEntity =
                     CodexEngine.get().getServer().getEntity((UUID) Reflex.invokeMethod(getUniqueId, nmsEntity));
 
@@ -145,42 +136,5 @@ public class V1_21_R3 extends V1_21_R1 {
                 slots.add(new Pair<>(helmet.getFirst(), VersionManager.getNms().getNMSCopy(air)));
             }
         });
-    }
-
-    @Override
-    protected void manageDamageParticle(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
-        Class<?> packetParticlesClass = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutWorldParticles");
-        Class<?> particleParamClass   = Reflex.getClass("net.minecraft.core.particles", "ParticleParam");
-
-        Class<?> registries       = Reflex.getClass("net.minecraft.core.registries.BuiltInRegistries");
-        Object   particleRegistry = Reflex.getFieldValue(registries, "i");
-
-        Object p = packetParticlesClass.cast(packet);
-
-        Object particleParam = Reflex.getFieldValue(p, "l");
-        if (particleParam == null) return;
-
-        Method a = Reflex.getMethod(particleParamClass, "a"); //Get the namespace key of the particle being sent
-
-        try {
-            Object   particleType = Reflex.invokeMethod(a, particleParam);
-            String   mcKey        = "minecraft:damage_indicator";
-            Class<?> keyClass     = Reflex.getClass("net.minecraft.resources.MinecraftKey");
-            Object key = Version.CURRENT.isAtLeast(Version.V1_21_R2) ? Reflex.getConstructor(keyClass,
-                            String.class,
-                            String.class)
-                    .newInstance("minecraft", "damage_indicator")
-                    : Reflex.getConstructor(keyClass, String.class).newInstance(mcKey);
-            Object damageIndicator = Reflex.invokeMethod(
-                    Reflex.getMethod(particleRegistry.getClass(), "a", keyClass),
-                    particleRegistry,
-                    key
-            );
-            if (particleType.equals(damageIndicator)) {
-                Reflex.setFieldValue(p, "i", 20); // This is the count
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 }
