@@ -47,6 +47,16 @@ public interface TypedStat {
     enum Type {
 
         //        DIRECT_DAMAGE(ItemType.WEAPON, true, false, true),
+        // Generic vanilla types
+        ARMOR(SimpleStat.ItemType.ARMOR, false, true, true),
+        ARMOR_TOUGHNESS(SimpleStat.ItemType.ARMOR, false, true, true),
+        ATTACK_SPEED(SimpleStat.ItemType.BOTH, true, true, true),
+        BASE_ATTACK_SPEED(SimpleStat.ItemType.BOTH, false, true, true),
+        KNOCKBACK_RESISTANCE(SimpleStat.ItemType.BOTH, false, true, true),
+        MAX_HEALTH(SimpleStat.ItemType.BOTH, false, true, true),
+        MOVEMENT_SPEED(SimpleStat.ItemType.ARMOR, true, true, true),
+
+        // All the other types
         AOE_DAMAGE(SimpleStat.ItemType.WEAPON, true, false, true),
         PVP_DAMAGE(SimpleStat.ItemType.WEAPON, true, true, true),
         PVE_DAMAGE(SimpleStat.ItemType.WEAPON, true, true, true),
@@ -61,19 +71,14 @@ public interface TypedStat {
         CRITICAL_RATE(SimpleStat.ItemType.WEAPON, true, true, true),
         CRITICAL_DAMAGE(SimpleStat.ItemType.WEAPON, false, false, true),
         DURABILITY(SimpleStat.ItemType.BOTH, false, true, false),
-        MOVEMENT_SPEED(SimpleStat.ItemType.ARMOR, true, true, true),
         PENETRATION(SimpleStat.ItemType.WEAPON, true, true, true),
-        BASE_ATTACK_SPEED(SimpleStat.ItemType.BOTH, false, true, true),
-        ATTACK_SPEED(SimpleStat.ItemType.BOTH, true, true, true),
         VAMPIRISM(SimpleStat.ItemType.WEAPON, true, true, true),
-        MAX_HEALTH(SimpleStat.ItemType.BOTH, false, true, true),
         BLEED_RATE(SimpleStat.ItemType.WEAPON, true, true, true),
         DISARM_RATE(SimpleStat.ItemType.WEAPON, true, true, true),
         SALE_PRICE(SimpleStat.ItemType.BOTH, true, true, false),
         THORNMAIL(SimpleStat.ItemType.ARMOR, true, false, true),
         HEALTH_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
         MANA_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
-        ARMOR_TOUGHNESS(SimpleStat.ItemType.ARMOR, false, true, true),
         ;
 
         private final SimpleStat.ItemType type;

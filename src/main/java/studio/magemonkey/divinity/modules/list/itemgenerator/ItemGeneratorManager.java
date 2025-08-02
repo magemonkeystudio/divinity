@@ -204,6 +204,11 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private       Map<Enchantment, String[]> enchantsList;
         private final TreeMap<Double, String>    armorTrims = new TreeMap<>();
 
+        private boolean randomShieldPatterns = true;
+        private List<String>    shieldBaseColors = new ArrayList<>();
+        private List<String>    shieldPatternColors = new ArrayList<>();
+        private List<String>    shieldPatterns = new ArrayList<>();
+
         private Set<IAttributeGenerator> attributeGenerators;
         private AbilityGenerator         abilityGenerator;
 
@@ -538,6 +543,19 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 this.enchantsList.put(en, reqRaw.split(":"));
             }
 
+            // Shield Patterns
+            path = "generator.shield-patterns.";
+            cfg.addMissing(path + "random", true);
+            cfg.addMissing(path + "base-color", Arrays.stream(DyeColor.values()).map(DyeColor::name));
+            cfg.addMissing(path + "pattern-color", Arrays.stream(DyeColor.values()).map(DyeColor::name));
+            cfg.addMissing(path + "pattern", Arrays.stream(PatternType.values()).map(PatternType::name));
+
+            this.randomShieldPatterns = cfg.getBoolean(path + "random");
+            this.shieldBaseColors = cfg.getStringList(path + "base-color");
+            this.shieldPatternColors = cfg.getStringList(path + "pattern-color");
+            this.shieldPatterns = cfg.getStringList(path + "pattern");
+
+            // Armor Trims
             if (Version.CURRENT.isHigher(Version.V1_19_R3)) {
                 path = "generator.armor-trimmings";
                 double totalWeight = 0;
@@ -866,33 +884,35 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             //      LEATHER AND SHIELDS
             // +-------------------------+
             // TODO More options, mb generator?
-            if (meta instanceof BlockStateMeta) {
-                BlockStateMeta bmeta  = (BlockStateMeta) meta;
-                Banner         banner = (Banner) bmeta.getBlockState();
+            if(randomShieldPatterns) {
+                if (meta instanceof BlockStateMeta) {
+                    BlockStateMeta bmeta = (BlockStateMeta) meta;
+                    Banner banner = (Banner) bmeta.getBlockState();
 
-                DyeColor bBaseColor    = Rnd.get(DyeColor.values());
-                DyeColor bPatternColor = Rnd.get(DyeColor.values());
-                banner.setBaseColor(bBaseColor);
+                    DyeColor bBaseColor = DyeColor.valueOf(Rnd.get(shieldBaseColors));
+                    DyeColor bPatternColor = DyeColor.valueOf(Rnd.get(shieldPatternColors));
+                    banner.setBaseColor(bBaseColor);
 
-                try {
-                    PatternType bPattern = Rnd.get(PatternType.values());
-                    banner.addPattern(new Pattern(bPatternColor, bPattern));
-                } catch (IncompatibleClassChangeError ignored) {
                     try {
-                        Class<?> pattern  = Reflex.getClass("org.bukkit.block.banner.PatternType");
-                        Object[] patterns = (Object[]) pattern.getMethod("values").invoke(null);
-                        Object   bPattern = Rnd.get(patterns);
-                        banner.addPattern(Pattern.class.getConstructor(DyeColor.class, pattern)
-                                .newInstance(bPatternColor, bPattern));
-                    } catch (InvocationTargetException | InstantiationException | NoSuchMethodException |
-                             IllegalAccessException e) {
-                        plugin.getLogger().warning("Failed to create banner pattern: " + e.getMessage());
-                        e.printStackTrace();
+                        PatternType bPattern = PatternType.valueOf(Rnd.get(shieldPatterns));
+                        banner.addPattern(new Pattern(bPatternColor, bPattern));
+                    } catch (IncompatibleClassChangeError ignored) {
+                        try {
+                            Class<?> pattern = Reflex.getClass("org.bukkit.block.banner.PatternType");
+                            Object[] patterns = (Object[]) pattern.getMethod("values").invoke(null);
+                            Object bPattern = Rnd.get(patterns);
+                            banner.addPattern(Pattern.class.getConstructor(DyeColor.class, pattern)
+                                    .newInstance(bPatternColor, bPattern));
+                        } catch (InvocationTargetException | InstantiationException | NoSuchMethodException |
+                                 IllegalAccessException e) {
+                            plugin.getLogger().warning("Failed to create banner pattern: " + e.getMessage());
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-                banner.update();
-                bmeta.setBlockState(banner);
+                    banner.update();
+                    bmeta.setBlockState(banner);
+                }
             }
 
             if (!armorTrims.isEmpty()) {
