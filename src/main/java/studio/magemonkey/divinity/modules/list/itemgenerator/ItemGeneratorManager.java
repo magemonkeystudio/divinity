@@ -546,14 +546,14 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             // Shield Patterns
             path = "generator.shield-patterns.";
             cfg.addMissing(path + "random", true);
-            cfg.addMissing(path + "base-color", Arrays.stream(DyeColor.values()).map(DyeColor::name));
-            cfg.addMissing(path + "pattern-color", Arrays.stream(DyeColor.values()).map(DyeColor::name));
-            cfg.addMissing(path + "pattern", Arrays.stream(PatternType.values()).map(PatternType::name));
+            cfg.addMissing(path + "base-colors", List.of("LIGHT_GRAY", "GRAY"));
+            cfg.addMissing(path + "pattern-colors", List.of("LIGHT_GRAY", "GRAY"));
+            cfg.addMissing(path + "patterns", List.of("BASE", "BORDER"));
 
             this.randomShieldPatterns = cfg.getBoolean(path + "random");
-            this.shieldBaseColors = cfg.getStringList(path + "base-color");
-            this.shieldPatternColors = cfg.getStringList(path + "pattern-color");
-            this.shieldPatterns = cfg.getStringList(path + "pattern");
+            this.shieldBaseColors = cfg.getStringList(path + "base-colors");
+            this.shieldPatternColors = cfg.getStringList(path + "pattern-colors");
+            this.shieldPatterns = cfg.getStringList(path + "patterns");
 
             // Armor Trims
             if (Version.CURRENT.isHigher(Version.V1_19_R3)) {
