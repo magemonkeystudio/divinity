@@ -4,6 +4,50 @@
 #  format: '&f▸ %name%: &f%value%'
 #  capacity: 100.0
 
+# Vanilla Stats
+ARMOR:
+  enabled: true
+  name: Armor
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+ARMOR_TOUGHNESS:
+  enabled: true
+  name: Armor Toughness
+  format: '&9▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+BASE_ATTACK_SPEED:
+  enabled: true
+  name: Base Attack Speed
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+ATTACK_SPEED:
+  enabled: true
+  name: Attack Speed
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+KNOCKBACK_RESISTANCE:
+  enabled: true
+  name: Knockback Resistance
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+MOVEMENT_SPEED:
+  enabled: true
+  name: Movement Speed
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: 70.0
+
+MAX_HEALTH:
+  enabled: true
+  name: Max Health
+  format: '&c▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+# Custom Stats
 AOE_DAMAGE:
   enabled: true
   name: AoE Damage
@@ -76,12 +120,6 @@ LOOT_RATE:
   format: '&e▸ %name%: &f%value% %condition%'
   capacity: 250.0
 
-MOVEMENT_SPEED:
-  enabled: true
-  name: Movement Speed
-  format: '&e▸ %name%: &f%value% %condition%'
-  capacity: 70.0
-
 DURABILITY:
   enabled: true
   name: Durability
@@ -105,24 +143,6 @@ BURN_RATE:
   name: Chance to Burn
   format: '&c▸ %name%: &f%value% %condition%'
   capacity: 100.0
-
-BASE_ATTACK_SPEED:
-  enabled: true
-  name: Base Attack Speed
-  format: '&e▸ %name%: &f%value% %condition%'
-  capacity: -1
-
-ATTACK_SPEED:
-  enabled: true
-  name: Attack Speed
-  format: '&e▸ %name%: &f%value% %condition%'
-  capacity: -1
-
-MAX_HEALTH:
-  enabled: true
-  name: Max Health
-  format: '&c▸ %name%: &f%value% %condition%'
-  capacity: -1
 
 SALE_PRICE:
   enabled: true
@@ -169,9 +189,3 @@ MANA_REGEN:
   name: Mana Regen
   format: '&9▸ %name%: &f%value% %condition%'
   capacity: -1.0
-
-ARMOR_TOUGHNESS:
-  enabled: true
-  name: Armor Toughness
-  format: '&9▸ %name%: &f%value% %condition%'
-  capacity: 100.0
