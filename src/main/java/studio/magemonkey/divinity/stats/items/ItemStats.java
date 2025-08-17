@@ -310,11 +310,13 @@ public class ItemStats {
         addAttribute(item, player, NBTAttribute.MAX_HEALTH, getStat(item, player, TypedStat.Type.MAX_HEALTH));
         addAttribute(item, player, NBTAttribute.MOVEMENT_SPEED, getStat(item, player, TypedStat.Type.MOVEMENT_SPEED));
         addAttribute(item, player, NBTAttribute.ATTACK_SPEED, getStat(item, player, TypedStat.Type.ATTACK_SPEED));
+        addAttribute(item, player, NBTAttribute.KNOCKBACK_RESISTANCE, getStat(item, player, TypedStat.Type.KNOCKBACK_RESISTANCE));
 
         double vanilla = DamageAttribute.getVanillaDamage(item);
         if (vanilla > 1) addAttribute(item, player, NBTAttribute.ATTACK_DAMAGE, vanilla);
         if (ItemUtils.isArmor(item)) {
-            addAttribute(item, player, NBTAttribute.ARMOR, DefenseAttribute.getVanillaArmor(item));
+            double armor = getStat(item, player, TypedStat.Type.ARMOR);
+            addAttribute(item, player, NBTAttribute.ARMOR, armor == 0 ? DefenseAttribute.getVanillaArmor(item) : armor);
             double toughness = getStat(item, player, TypedStat.Type.ARMOR_TOUGHNESS);
             addAttribute(item,
                     player,

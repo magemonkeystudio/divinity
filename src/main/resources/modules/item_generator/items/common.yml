@@ -326,4 +326,15 @@ generator:
         max-level: 1
         lore-format:
           - '&bSample Ability: &7[&f%level%&7]'
+  shield-patterns:
+    random: true
+    base-colors:
+      - LIGHT_GRAY
+      - GRAY
+    pattern-colors:
+      - LIGHT_GRAY
+      - GRAY
+    patterns:
+      - BASE
+      - BORDER
 target-requirements: { }
