@@ -204,10 +204,10 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private       Map<Enchantment, String[]> enchantsList;
         private final TreeMap<Double, String>    armorTrims = new TreeMap<>();
 
-        private boolean randomShieldPatterns = true;
-        private List<String>    shieldBaseColors = new ArrayList<>();
-        private List<String>    shieldPatternColors = new ArrayList<>();
-        private List<String>    shieldPatterns = new ArrayList<>();
+        private boolean      randomShieldPatterns = true;
+        private List<String> shieldBaseColors     = new ArrayList<>();
+        private List<String> shieldPatternColors  = new ArrayList<>();
+        private List<String> shieldPatterns       = new ArrayList<>();
 
         private Set<IAttributeGenerator> attributeGenerators;
         private AbilityGenerator         abilityGenerator;
@@ -884,12 +884,12 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             //      LEATHER AND SHIELDS
             // +-------------------------+
             // TODO More options, mb generator?
-            if(randomShieldPatterns) {
+            if (randomShieldPatterns) {
                 if (meta instanceof BlockStateMeta) {
-                    BlockStateMeta bmeta = (BlockStateMeta) meta;
-                    Banner banner = (Banner) bmeta.getBlockState();
+                    BlockStateMeta bmeta  = (BlockStateMeta) meta;
+                    Banner         banner = (Banner) bmeta.getBlockState();
 
-                    DyeColor bBaseColor = DyeColor.valueOf(Rnd.get(shieldBaseColors));
+                    DyeColor bBaseColor    = DyeColor.valueOf(Rnd.get(shieldBaseColors));
                     DyeColor bPatternColor = DyeColor.valueOf(Rnd.get(shieldPatternColors));
                     banner.setBaseColor(bBaseColor);
 
@@ -898,9 +898,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                         banner.addPattern(new Pattern(bPatternColor, bPattern));
                     } catch (IncompatibleClassChangeError ignored) {
                         try {
-                            Class<?> pattern = Reflex.getClass("org.bukkit.block.banner.PatternType");
+                            Class<?> pattern  = Reflex.getClass("org.bukkit.block.banner.PatternType");
                             Object[] patterns = (Object[]) pattern.getMethod("values").invoke(null);
-                            Object bPattern = Rnd.get(patterns);
+                            Object   bPattern = Rnd.get(patterns);
                             banner.addPattern(Pattern.class.getConstructor(DyeColor.class, pattern)
                                     .newInstance(bPatternColor, bPattern));
                         } catch (InvocationTargetException | InstantiationException | NoSuchMethodException |
@@ -924,7 +924,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             item.setItemMeta(meta);
 
             // Add enchants
-            int                                    enchRoll  =
+            int enchRoll =
                     Rnd.get(this.getMinEnchantments(), this.getMaxEnchantments());
             int                                    enchCount = 0;
             List<Map.Entry<Enchantment, String[]>> enchants  = new ArrayList<>(this.enchantsList.entrySet());
