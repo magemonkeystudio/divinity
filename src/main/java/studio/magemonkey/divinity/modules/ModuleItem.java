@@ -4,20 +4,22 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.*;
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.codex.Codex;
 import studio.magemonkey.codex.CodexEngine;
 import studio.magemonkey.codex.api.items.ItemType;
 import studio.magemonkey.codex.api.items.exception.MissingItemException;
 import studio.magemonkey.codex.api.items.exception.MissingProviderException;
 import studio.magemonkey.codex.api.items.providers.VanillaProvider;
+import studio.magemonkey.codex.api.meta.NBTAttribute;
+import studio.magemonkey.codex.compat.VersionManager;
 import studio.magemonkey.codex.config.api.JYML;
 import studio.magemonkey.codex.manager.LoadableItem;
 import studio.magemonkey.codex.util.ItemUT;
@@ -38,19 +40,21 @@ import studio.magemonkey.divinity.utils.LoreUT;
 import java.util.*;
 
 public abstract class ModuleItem extends LoadableItem {
-    protected final QModuleDrop<?>            module;
-    protected       Divinity                  plugin;
-    protected       String                    name;
-    protected       ItemType                  material;
-    protected       List<String>              lore;
-    protected       int                       modelData;
-    protected       int                       durability;
-    protected       int[]                     color;
-    protected       boolean                   enchanted;
-    protected       String                    hash;
-    protected       Set<ItemFlag>             flags;
-    protected       boolean                   isUnbreakable;
-    protected       Map<Enchantment, Integer> enchants;
+    protected final QModuleDrop<?>                    module;
+    protected       Divinity                          plugin;
+    protected       String                            name;
+    protected       ItemType                          material;
+    protected       List<String>                      lore;
+    protected       int                               modelData;
+    protected       int                               durability;
+    protected       int[]                             color;
+    protected       boolean                           enchanted;
+    protected       String                            hash;
+    protected       Set<ItemFlag>                     flags;
+    protected       boolean                           isUnbreakable;
+    protected       Map<Enchantment, Integer>         enchants;
+    protected       String                            armorTrim;
+    protected       Map<Attribute, AttributeModifier> attributes;
 
     // Creating new config
     @Deprecated
@@ -99,6 +103,7 @@ public abstract class ModuleItem extends LoadableItem {
 
         this.enchanted = cfg.getBoolean("enchanted");
         this.hash = cfg.getString("skull-hash");
+        this.armorTrim = cfg.getString("armor-trim");
 
         this.flags = new HashSet<>();
         for (String flag : cfg.getStringList("item-flags")) {
@@ -126,6 +131,21 @@ public abstract class ModuleItem extends LoadableItem {
             int level = cfg.getInt("enchantments." + sId, 1);
 
             this.enchants.put(en, level);
+        }
+
+        this.attributes = new HashMap<>();
+        for (String attr : cfg.getSection("attributes")) {
+            String[]          attrData     = cfg.getString("attributes." + attr, "").split(":");
+            double            value        = Double.parseDouble(attrData[0]);
+            String            operation    = attrData.length > 1 ? attrData[1] : "ADD_NUMBER";
+            NBTAttribute      nbtAttr      = NBTAttribute.valueOf(attr.toUpperCase());
+            AttributeModifier attrModifier = VersionManager.getCompat()
+                    .createAttributeModifier(nbtAttr, value, AttributeModifier.Operation.valueOf(operation));
+            if (attrModifier == null) {
+                Codex.warn("Invalid attribute provided: " + attr + " (" + cfg.getFile().getName() + ")");
+                continue;
+            }
+            this.attributes.put(nbtAttr.getAttribute(), attrModifier);
         }
 
         cfg.saveChanges();
@@ -234,9 +254,18 @@ public abstract class ModuleItem extends LoadableItem {
             if (meta instanceof LeatherArmorMeta) {
                 LeatherArmorMeta lm = (LeatherArmorMeta) meta;
                 lm.setColor(Color.fromRGB(r, g, b));
+                if (this.armorTrim != null) {
+                    String[] trimData = this.armorTrim.split(":");
+                    VersionManager.getArmorUtil().addTrim(meta, trimData[0].toLowerCase(), trimData[1].toLowerCase());
+                }
             } else if (meta instanceof PotionMeta) {
                 PotionMeta pm = (PotionMeta) meta;
                 pm.setColor(Color.fromRGB(r, g, b));
+            } else if (meta instanceof ArmorMeta) {
+                if (this.armorTrim != null) {
+                    String[] trimData = this.armorTrim.split(":");
+                    VersionManager.getArmorUtil().addTrim(meta, trimData[0].toLowerCase(), trimData[1].toLowerCase());
+                }
             }
         }
 
@@ -246,6 +275,11 @@ public abstract class ModuleItem extends LoadableItem {
             meta.addEnchant(NamespaceResolver.getEnchantment("POWER", "ARROW_DAMAGE"), 1, true); // ARROW_DAMAGE/POWER
         }
 
+        for (Map.Entry<Attribute, AttributeModifier> attribute : this.attributes.entrySet()) {
+            if (attribute != null) {
+                meta.addAttributeModifier(attribute.getKey(), attribute.getValue());
+            }
+        }
         item.setItemMeta(meta);
 
         for (Map.Entry<Enchantment, Integer> e : this.enchants.entrySet()) {

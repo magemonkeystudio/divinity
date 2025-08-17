@@ -1,11 +1,11 @@
 package studio.magemonkey.divinity.hooks.external;
 
 import org.bukkit.Bukkit;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.hooks.HookState;
 import studio.magemonkey.codex.hooks.NHook;
