@@ -1,7 +1,6 @@
 package studio.magemonkey.divinity.modules;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -36,7 +35,6 @@ import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.requirements.ItemRequirements;
 import studio.magemonkey.divinity.stats.items.requirements.user.UntradeableRequirement;
-import studio.magemonkey.divinity.utils.ItemUtils;
 import studio.magemonkey.divinity.utils.LoreUT;
 
 import java.util.*;

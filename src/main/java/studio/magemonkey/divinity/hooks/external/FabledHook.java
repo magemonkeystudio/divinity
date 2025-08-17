@@ -14,7 +14,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.hooks.HookState;
 import studio.magemonkey.codex.hooks.NHook;
-import studio.magemonkey.codex.util.DataUT;
 import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.config.EngineCfg;
