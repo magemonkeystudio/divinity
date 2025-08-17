@@ -3,8 +3,8 @@ package studio.magemonkey.divinity.utils;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.Color;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -396,5 +396,44 @@ public class ItemUtils {
         } else return;
 
         item.setItemMeta(meta2);
+    }
+
+    // TODO might want to consider distributing this into CodexCore
+    public static Attribute resolveAttribute(String keyAttr) {
+        Registry<Attribute> reg = Bukkit.getRegistry(Attribute.class);
+        if (reg == null) return null;
+
+        // 1) Accept full namespaced keys, e.g. "minecraft:generic.max_health"
+        NamespacedKey nk = NamespacedKey.fromString(keyAttr);
+        if (nk != null) {
+            Attribute a = reg.get(nk);
+            if (a != null) return a;
+        }
+
+        // 2) Accept simple forms like "GENERIC_MAX_HEALTH" or "MAX_HEALTH"
+        String simple = keyAttr.toLowerCase();
+        // normalize known GENERIC_ prefix and dots
+        String normalized = simple
+                .replace("generic_", "generic.")
+                .replace('_', '.');
+
+        // try minecraft: prefix
+        NamespacedKey guess = NamespacedKey.fromString("minecraft:" + normalized);
+        if (guess != null) {
+            Attribute a = reg.get(guess);
+            if (a != null) return a;
+        }
+
+        // 3) Last resort: scan registry and match by end segment / legacy names
+        for (Attribute a : reg) {
+            String s = a.getKey().getKey(); // e.g. "minecraft:generic.max_health"
+            if (s.equalsIgnoreCase(keyAttr) ||
+                    s.equalsIgnoreCase(normalized) ||
+                    s.endsWith("." + normalized) ||
+                    s.toUpperCase().endsWith("_" + keyAttr.toUpperCase()) ) {
+                return a;
+            }
+        }
+        return null;
     }
 }
