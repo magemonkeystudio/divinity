@@ -140,14 +140,13 @@ public abstract class ModuleItem extends LoadableItem {
             String[] attrData = cfg.getString("attributes." + attr, "").split(":");
             double value = Double.parseDouble(attrData[0]);
             String operation = attrData.length > 1 ? attrData[1] : "ADD_NUMBER";
-            AttributeModifier attrModifier = VersionManager.getCompat().createAttributeModifier(NBTAttribute.valueOf(attr.toUpperCase()), value, AttributeModifier.Operation.valueOf(operation));
+            NBTAttribute nbtAttr = NBTAttribute.valueOf(attr.toUpperCase());
+            AttributeModifier attrModifier = VersionManager.getCompat().createAttributeModifier(nbtAttr, value, AttributeModifier.Operation.valueOf(operation));
             if(attrModifier == null) {
                 Codex.warn("Invalid attribute provided: " + attr + " (" + cfg.getFile().getName() + ")");
                 continue;
             }
-            // Todo find a robust solution one day
-            Attribute attribute = ItemUtils.resolveAttribute(attrModifier.getName());
-            this.attributes.put(attribute, attrModifier);
+            this.attributes.put(nbtAttr.getAttribute(), attrModifier);
         }
 
         cfg.saveChanges();
