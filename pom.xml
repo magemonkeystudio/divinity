@@ -27,7 +27,7 @@
         </repository>
         <repository>
             <id>magemonkey-snapshots</id>
-            <url>https://repo.travja.dev/releases</url>
+            <url>https://repo.travja.dev/snapshots</url>
         </repository>
         <!-- Magic API -->
         <repository>
