@@ -1,5 +1,5 @@
-[![Build](https://github.com/magemonkeystudio/divinity/actions/workflows/release.yml/badge.svg?branch=main)](https://repo1.maven.org/maven2/studio/magemonkey/divinity/1.0.2-R0.48-SNAPSHOT)
-[![Build](https://github.com/magemonkeystudio/divinity/actions/workflows/devbuild.yml/badge.svg?branch=dev)](https://central.sonatype.com/repository/maven-snapshots/studio/magemonkey/divinity/1.0.2-R0.48-SNAPSHOT)
+[![Build](https://github.com/magemonkeystudio/divinity/actions/workflows/release.yml/badge.svg?branch=main)](https://repo.travja.dev/releases/studio/magemonkey/divinity/1.0.2-R0.49-SNAPSHOT)
+[![Build](https://github.com/magemonkeystudio/divinity/actions/workflows/devbuild.yml/badge.svg?branch=dev)](https://repo.travja.dev/snapshots/studio/magemonkey/divinity/1.0.2-R0.49-SNAPSHOT)
 [![Discord](https://dcbadge.limes.pink/api/server/6UzkTe6RvW?style=flat)](https://discord.gg/6UzkTe6RvW)
 
 # Divinity
@@ -9,14 +9,14 @@ or snapshots through Sonatype.
 
 ```xml
 <repository>
-    <id>sonatype</id>
-    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+    <id>magemonkey-snapshots</id>
+    <url>https://repo.travja.dev/snapshots</url>
 </repository>
 ...
 <dependency>
     <groupId>studio.magemonkey</groupId>
     <artifactId>divinity</artifactId>
-    <version>1.0.2-R0.48-SNAPSHOT</version>
+    <version>1.0.2-R0.49-SNAPSHOT</version>
 </dependency>
 ```
 
