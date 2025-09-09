@@ -37,6 +37,7 @@ class DivinityProviderTest {
     void setUp() {
         divinity = mock(Divinity.class);
         when(divinity.getName()).thenReturn("Divinity");
+        when(divinity.namespace()).thenReturn("divinity");
 
         divinityStatic = mockStatic(Divinity.class);
         divinityStatic.when(Divinity::getInstance).thenReturn(divinity);

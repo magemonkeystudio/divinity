@@ -334,6 +334,7 @@ public class WorthManager implements Loadable {
         if (lvlMap == null) return 0D;
 
         int itemLvl = ItemStats.getLevel(item);
+        if (itemLvl == 0) itemLvl = 1;
 
         Map.Entry<Integer, Double> ePrice = lvlMap.floorEntry(itemLvl);
         if (ePrice == null) return 0D;
