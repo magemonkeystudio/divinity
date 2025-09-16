@@ -193,7 +193,7 @@ public class LootManager extends QModule {
 
             block = loc.getBlock();
             if (!block.isEmpty() && block.getType().isSolid()) {
-                block = world.getHighestBlockAt(loc);
+                block = world.getHighestBlockAt(loc).getRelative(BlockFace.UP);
             }
         }
 
