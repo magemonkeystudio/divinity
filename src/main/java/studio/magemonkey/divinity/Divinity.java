@@ -119,8 +119,10 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
         }
 
         if (!minCoreVersionMet) {
-            warn("Missing required Codex version. " + coreVersion + " installed. "
-                    + DependencyRequirement.MIN_CORE_VERSION + " required. Disabling.");
+            error("\n\n===== [ INITIALIZATION ERROR ] =====\n"
+                    + "Missing required Codex version. "
+                    + coreVersion + " installed. "
+                    + DependencyRequirement.MIN_CORE_VERSION + " required. Disabling.\n\n");
             this.getPluginManager().disablePlugin(this);
             return;
         }
