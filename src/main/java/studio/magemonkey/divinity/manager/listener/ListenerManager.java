@@ -3,6 +3,8 @@ package studio.magemonkey.divinity.manager.listener;
 import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.manager.api.Loadable;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.config.Config;
+import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.HookListener;
 import studio.magemonkey.divinity.manager.listener.object.*;
 import studio.magemonkey.divinity.stats.items.ItemStats;
@@ -45,8 +47,13 @@ public class ListenerManager implements Loadable {
         this.lisDynamic = new DynamicStatListener(this.plugin);
         this.lisDynamic.registerListeners();
 
-        this.lisQuantum = new VanillaWrapperListener(this.plugin);
-        this.lisQuantum.registerListeners();
+        if(!EngineCfg.LEGACY_COMBAT) {
+            this.lisQuantum = new VanillaWrapperListener(this.plugin);
+            this.lisQuantum.registerListeners();
+            Divinity.getInstance().getLogger().info("Loaded " + this.lisQuantum.getClass().getSimpleName());
+        } else {
+            Divinity.getInstance().getLogger().info("Skipped " + VanillaWrapperListener.class.getSimpleName() + " due to legacy combat being enabled.");
+        }
 
         this.updater = new ItemUpdaterListener(this.plugin);
         this.updater.registerListeners();
