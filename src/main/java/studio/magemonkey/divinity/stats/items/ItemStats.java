@@ -308,7 +308,7 @@ public class ItemStats {
     // ----------------------------------------------------------------- //
 
     public static void updateVanillaAttributes(@NotNull ItemStack item, @Nullable Player player) {
-        //if(EngineCfg.LEGACY_COMBAT) return;
+        if(EngineCfg.FULL_LEGACY || EngineCfg.LEGACY_COMBAT) return;
 
         addAttribute(item, player, NBTAttribute.MAX_HEALTH, getStat(item, player, TypedStat.Type.MAX_HEALTH));
         addAttribute(item, player, NBTAttribute.MOVEMENT_SPEED, getStat(item, player, TypedStat.Type.MOVEMENT_SPEED));
