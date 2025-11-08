@@ -49,7 +49,7 @@ public class ItemModuleRequirement extends ItemRequirement<String[]> {
     @Override
     public boolean canApply(@NotNull ItemStack src, @NotNull ItemStack target) {
         String[] modules = this.getRaw(src);
-        if (modules == null || modules.length == 0) return true;
+        if (modules == null || modules.length == 0) return false;
 
         QModule targetModule = ItemStats.getModule(target);
         if (targetModule == null) return false;
