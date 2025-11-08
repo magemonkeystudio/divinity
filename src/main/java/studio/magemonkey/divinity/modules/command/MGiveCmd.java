@@ -115,7 +115,7 @@ public class MGiveCmd extends MCmd<QModuleDrop<?>> {
 
         ItemType material;
         try {
-            material = args.length >= 6 ? CodexEngine.get().getItemManager().getItemType(args[5].toUpperCase()) : null;
+            material = args.length >= 6 ? CodexEngine.get().getItemManager().getItemType(args[5]) : null;
         } catch (MissingProviderException | MissingItemException e) {
             material = null;
         }

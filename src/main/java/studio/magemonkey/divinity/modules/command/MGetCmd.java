@@ -99,7 +99,7 @@ public class MGetCmd extends MCmd<QModuleDrop<?>> {
 
         ItemType material;
         try {
-            material = args.length >= 5 ? CodexEngine.get().getItemManager().getItemType(args[4].toUpperCase()) : null;
+            material = args.length >= 5 ? CodexEngine.get().getItemManager().getItemType(args[4]) : null;
         } catch (MissingProviderException | MissingItemException e) {
             material = null;
         }

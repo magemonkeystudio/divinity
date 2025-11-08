@@ -78,7 +78,7 @@ public abstract class ModuleItem extends LoadableItem {
         } else {
             String[] matSplit = cfg.getString("material", "STONE").split(":");
             try {
-                this.material = CodexEngine.get().getItemManager().getItemType(matSplit[0].toUpperCase());
+                this.material = CodexEngine.get().getItemManager().getItemType(matSplit[0]);
             } catch (MissingItemException | MissingProviderException e) {
                 throw new IllegalArgumentException("Invalid item material!", e);
             }

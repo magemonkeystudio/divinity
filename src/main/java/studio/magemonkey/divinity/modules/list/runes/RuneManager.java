@@ -82,8 +82,7 @@ public class RuneManager extends ModuleSocket<Rune> {
     // CLASSES
 
     public class Rune extends SocketItem {
-
-        private TreeMap<Integer, PotionEffect> effects;
+        private final TreeMap<Integer, PotionEffect> effects;
 
         public Rune(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, RuneManager.this);
