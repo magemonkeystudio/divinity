@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>divinity</artifactId>
-    <version>1.0.2-R0.53-SNAPSHOT</version>
+    <version>1.0.2-R0.54-SNAPSHOT</version>
     <name>Divinity</name>
     <description>Custom items, combat, and more!</description>
 
@@ -234,7 +234,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.5.0</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
