@@ -18,7 +18,7 @@ success-rate-by-level:
   '3': '30:50'
 effect:
   type: FOOT
-  name: REDSTONE:225,225,125
+  name: DUST:225,225,125
   speed: 0.2
   amount: 15
   offset-x: 0.25
