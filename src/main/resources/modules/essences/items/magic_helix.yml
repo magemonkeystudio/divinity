@@ -18,7 +18,7 @@ success-rate-by-level:
   '3': '30:50'
 effect:
   type: HELIX
-  name: SPELL_WITCH
+  name: WITCH
   speed: 0
   amount: 1
   offset-x: 0

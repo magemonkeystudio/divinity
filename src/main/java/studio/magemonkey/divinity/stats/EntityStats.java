@@ -414,7 +414,10 @@ public class EntityStats {
     private void updateInventory() {
         this.inventory.clear();
 
-        ItemStack[] armor = this.equipment.getArmorContents();
+        ItemStack[] armor = new ItemStack[0];
+        if (this.equipment != null) {
+            armor = this.equipment.getArmorContents();
+        }
         Arrays.stream(armor)
                 .filter(item -> item != null && !ItemUT.isAir(item))
                 .forEach(this.inventory::add);
@@ -594,7 +597,7 @@ public class EntityStats {
             } catch (Exception ignored) {
             }
 
-            String attKey = VersionManager.getCompat().getAttributeKey(attMod);
+            String attKey    = VersionManager.getCompat().getAttributeKey(attMod);
             String targetKey = VersionManager.getCompat().getAttributeKey(att);
             if (Compat.ATTRIBUTE_BONUS_UUID.equals(uuid) || targetKey.equals(attKey)) {
                 if (attMod.getAmount() == value) {
