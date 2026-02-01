@@ -63,6 +63,8 @@ attributes:
   # When enabled, allows to hold in hand items with requirements that player don't meet.
   # Even when this is 'true', item attributes won't be applied to a player until he meet the requirements.
   allow-hold-items-you-cant-use: false
+  # When enabled, hides attributes and enchantments by default on all custom items.
+  hide-flags: true
 
 combat:
   # Whether to use the old combat formula for calculating defenses

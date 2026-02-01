@@ -19,6 +19,7 @@ import studio.magemonkey.codex.core.Version;
 import studio.magemonkey.codex.modules.IModule;
 import studio.magemonkey.codex.util.DataUT;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import studio.magemonkey.divinity.stats.items.api.DuplicableItemLoreStat;
 import studio.magemonkey.divinity.stats.items.api.DynamicStat;
@@ -307,6 +308,8 @@ public class ItemStats {
     // ----------------------------------------------------------------- //
 
     public static void updateVanillaAttributes(@NotNull ItemStack item, @Nullable Player player) {
+        if(EngineCfg.FULL_LEGACY || EngineCfg.LEGACY_COMBAT) return;
+
         addAttribute(item, player, NBTAttribute.MAX_HEALTH, getStat(item, player, TypedStat.Type.MAX_HEALTH));
         addAttribute(item, player, NBTAttribute.MOVEMENT_SPEED, getStat(item, player, TypedStat.Type.MOVEMENT_SPEED));
         addAttribute(item, player, NBTAttribute.ATTACK_SPEED, getStat(item, player, TypedStat.Type.ATTACK_SPEED));
@@ -344,6 +347,7 @@ public class ItemStats {
                                      @Nullable Player player,
                                      @NotNull NBTAttribute att,
                                      double value) {
+        //if(EngineCfg.LEGACY_COMBAT) return;
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
