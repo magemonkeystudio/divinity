@@ -1,5 +1,7 @@
 package studio.magemonkey.divinity.stats.items.attributes.stats;
 
+
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.enchantments.Enchantment;
@@ -155,7 +157,14 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
             }
         }
 
-        return this.add(item, new double[]{lose, max}, -1);
+        boolean result = this.add(item, new double[]{lose, max}, -1);
+
+        if (result) {
+            syncVanillaBar(item, lose, max);
+        }
+
+        return result;
+
     }
 
     @Override
@@ -163,4 +172,22 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
     public String formatValue(@NotNull ItemStack item, double[] values) {
         return EngineCfg.getDurabilityFormat((int) values[0], (int) values[1]);
     }
+    public void syncVanillaBar(@NotNull ItemStack item, double current, double maxCustom) {
+
+    ItemMeta meta = item.getItemMeta();
+    if (!(meta instanceof org.bukkit.inventory.meta.Damageable)) return;
+
+    org.bukkit.inventory.meta.Damageable damageable =
+            (org.bukkit.inventory.meta.Damageable) meta;
+
+    int maxVanilla = item.getType().getMaxDurability();
+    if (maxVanilla <= 0) return;
+
+    double percent = current / maxCustom;
+    int vanillaDamage = (int) ((1.0 - percent) * maxVanilla);
+
+    damageable.setDamage(vanillaDamage);
+    item.setItemMeta((ItemMeta) damageable);
+}
+
 }

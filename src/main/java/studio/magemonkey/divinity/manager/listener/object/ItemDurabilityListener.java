@@ -1,5 +1,8 @@
 package studio.magemonkey.divinity.manager.listener.object;
 
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -111,6 +114,53 @@ public class ItemDurabilityListener extends IListener<Divinity> {
             if (!ItemUT.isAir(hoe) && hoe.getType().name().endsWith("_HOE")) {
                 this.duraStat.reduceDurability(player, hoe, 1);
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onMend(PlayerItemMendEvent e) {
+
+        ItemStack item = e.getItem();
+
+        if (!ItemStats.hasStat(item, null, TypedStat.Type.DURABILITY)) return;
+
+        double[] durability = duraStat.getRaw(item);
+        if (durability == null) return;
+
+        if (duraStat.isUnbreakable(item)) return;
+
+        double current = durability[0];
+        double max = durability[1];
+
+        int vanillaMax = item.getType().getMaxDurability();
+        if (vanillaMax <= 0) return;
+
+        int repair = e.getRepairAmount();
+
+        double customRepair = ((double) repair / vanillaMax) * max;
+
+        double newValue = current + customRepair;
+
+        if (newValue > max) {
+            newValue = max;
+        }
+
+        newValue = Math.round(newValue * 100.0) / 100.0;
+
+        duraStat.add(item, new double[]{newValue, max}, -1);
+        duraStat.syncVanillaBar(item, newValue, max);
+
+        e.setCancelled(true);
+
+        Damageable damageable = (Damageable) item.getItemMeta();
+
+        int vanillaDamage = damageable.getDamage();
+
+        if (vanillaDamage == 0) {
+            duraStat.add(item, new double[]{max, max}, -1);
+            duraStat.syncVanillaBar(item, max, max);
+            e.setCancelled(true);
+            return;
         }
     }
 }
