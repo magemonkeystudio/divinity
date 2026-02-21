@@ -68,7 +68,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         Vector       orig    = pj.getVelocity();
         double       power   = e.getForce();
 
-        if (Version.CURRENT.isAtLeast(Version.V1_20_R4)) {
+        if (Version.CURRENT.isAtLeast(Version.V1_20_R4) && Version.CURRENT.isLower(Version.V1_21_R4)) {
             power /= 3;
         }
 
