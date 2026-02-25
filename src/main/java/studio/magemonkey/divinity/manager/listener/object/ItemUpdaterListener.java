@@ -25,7 +25,6 @@ import studio.magemonkey.codex.api.meta.NBTAttribute;
 import studio.magemonkey.codex.manager.IListener;
 import studio.magemonkey.codex.util.DataUT;
 import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 
 public class ItemUpdaterListener extends IListener<Divinity> {
@@ -94,7 +93,6 @@ public class ItemUpdaterListener extends IListener<Divinity> {
     }
 
     public void update(ItemStack item, @Nullable Player player) {
-        if(EngineCfg.LEGACY_COMBAT ||EngineCfg.FULL_LEGACY) return;
         if (item == null || item.getType() == Material.AIR) return;
 
         ItemType itemType = CodexEngine.get().getItemManager().getMainItemType(item);

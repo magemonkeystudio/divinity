@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.manager.IListener;
 import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.api.DynamicStat;
 
@@ -28,7 +27,6 @@ public class DynamicStatListener extends IListener<Divinity> {
     }
 
     public static void updateItem(@Nullable Player p, @NotNull ItemStack item) {
-        if(EngineCfg.FULL_LEGACY) return;
         for (DynamicStat<?> dynamicStat : ItemStats.getDynamicStats()) {
             dynamicStat.updateItem(p, item);
         }
@@ -36,14 +34,12 @@ public class DynamicStatListener extends IListener<Divinity> {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onDrop(PlayerDropItemEvent e) {
-        if(EngineCfg.FULL_LEGACY) return;
         ItemStack item = e.getItemDrop().getItemStack();
         updateItem(null, item);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPick(EntityPickupItemEvent e) {
-        if(EngineCfg.FULL_LEGACY) return;
         LivingEntity entity = e.getEntity();
         if (!(entity instanceof Player)) return;
 
@@ -54,7 +50,6 @@ public class DynamicStatListener extends IListener<Divinity> {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onInvOpen(InventoryOpenEvent e) {
-        if(EngineCfg.FULL_LEGACY) return;
         List<ItemStack> list   = new ArrayList<>();
         Player          player = (Player) e.getPlayer();
 
@@ -69,7 +64,6 @@ public class DynamicStatListener extends IListener<Divinity> {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onInvClose(InventoryCloseEvent e) {
-        if(EngineCfg.FULL_LEGACY) return;
         Player player = (Player) e.getPlayer();
 
         List<ItemStack> list = new ArrayList<>();

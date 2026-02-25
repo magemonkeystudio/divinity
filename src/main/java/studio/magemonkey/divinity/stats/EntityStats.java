@@ -438,7 +438,6 @@ public class EntityStats {
     }
 
     public void updateAll() {
-        if(EngineCfg.LEGACY_COMBAT) return;
         if (!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer()) {
             return;
         }
