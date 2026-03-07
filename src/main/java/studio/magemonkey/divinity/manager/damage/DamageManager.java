@@ -292,7 +292,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         // Compare modified damage and invulnerable prot. If they're within 0.0001 of each other, set the damage to 0.
         // and cancel the event
         if (modifiedDamage + invulnerableProt < 0.001) {
-            if (!e.getOriginalEvent().getEntity().getName().contains("ItemsAdder")) {
+            if (e.getOriginalEvent().getEntity().getType() != EntityType.ARMOR_STAND) {
                 e.setCancelled(true);
                 e.getOriginalEvent().setCancelled(true);
             }
