@@ -213,7 +213,7 @@ public class RPGClass extends LoadableItem {
         if (!this.isPermissionRequired()) return true;
 
         String node = Perms.CLASS_CLASS + "." + this.getId();
-        return player.hasPermission(node);
+        return Perms.has(player, node);
     }
 
     @NotNull

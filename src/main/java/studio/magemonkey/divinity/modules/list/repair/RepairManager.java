@@ -177,7 +177,7 @@ public class RepairManager extends QModuleDrop<RepairItem> {
             @Nullable RepairType type,
             boolean isForce) {
 
-        if (!isForce && !player.hasPermission(Perms.REPAIR_GUI)) {
+        if (!isForce && !Perms.has(player, Perms.REPAIR_GUI)) {
             plugin.lang().Error_NoPerm.send(player);
             return false;
         }

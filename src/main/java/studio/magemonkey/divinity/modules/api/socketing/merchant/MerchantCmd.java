@@ -40,7 +40,7 @@ public class MerchantCmd extends MCmd<ModuleSocket<?>> {
     @Override
     @NotNull
     public List<String> getTab(@NotNull Player player, int i, @NotNull String[] args) {
-        if (player.hasPermission(Perms.getSocketCmdMerchantOthers(this.module))) {
+        if (Perms.has(player, Perms.getSocketCmdMerchantOthers(this.module))) {
             if (i == 1) {
                 return PlayerUT.getPlayerNames();
             }
@@ -57,7 +57,7 @@ public class MerchantCmd extends MCmd<ModuleSocket<?>> {
             this.printUsage(sender);
             return;
         }
-        if (args.length > 1 && !sender.hasPermission(Perms.getSocketCmdMerchantOthers(this.module))) {
+        if (args.length > 1 && !Perms.has(sender, Perms.getSocketCmdMerchantOthers(this.module))) {
             this.errPerm(sender);
             return;
         }

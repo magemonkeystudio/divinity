@@ -74,7 +74,7 @@ public class SellManager extends QModule {
     }
 
     public void openSellGUI(@NotNull Player player, boolean isForce) {
-        if (!isForce && !player.hasPermission(Perms.SELL_GUI)) {
+        if (!isForce && !Perms.has(player, Perms.SELL_GUI)) {
             plugin.lang().Error_NoPerm.send(player);
             return;
         }
