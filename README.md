@@ -4,8 +4,8 @@
 
 # Divinity
 
-If you wish to use Divinity as a dependency in your projects, Divinity is available through Maven Central
-or snapshots through Sonatype.
+If you wish to use Divinity as a dependency in your projects, Divinity is available through our repository.
+
 
 ```xml
 <repository>
