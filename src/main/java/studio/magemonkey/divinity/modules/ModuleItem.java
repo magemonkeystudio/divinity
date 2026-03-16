@@ -282,6 +282,13 @@ public abstract class ModuleItem extends LoadableItem {
             meta.addEnchant(NamespaceResolver.getEnchantment("POWER", "ARROW_DAMAGE"), 1, true); // ARROW_DAMAGE/POWER
         }
 
+        if (meta.hasAttributeModifiers()) {
+            Set<Attribute> existing = new HashSet<>(meta.getAttributeModifiers().keySet());
+            for (Attribute attr : existing) {
+                meta.removeAttributeModifier(attr);
+            }
+        }
+
         for (Map.Entry<Attribute, AttributeModifier> attribute : this.attributes.entrySet()) {
             if (attribute != null) {
                 meta.addAttributeModifier(attribute.getKey(), attribute.getValue());
