@@ -570,28 +570,49 @@ public class ItemStats {
         return 0;
     }
 
-    public static void setUsableSlots(@NotNull ItemStack item, @NotNull Set<EquipmentSlot> slots) {
+    public static void setUsableSlots(@NotNull ItemStack item, @NotNull Set<String> slots) {
         if (slots.isEmpty()) {
             DataUT.removeData(item, KEY_USABLE_SLOTS);
             return;
         }
-        String slotString = slots.stream().map(EquipmentSlot::name).collect(Collectors.joining(","));
-        DataUT.setData(item, KEY_USABLE_SLOTS, slotString);
+        DataUT.setData(item, KEY_USABLE_SLOTS, String.join(",", slots));
     }
 
     @Nullable
     public static EquipmentSlot[] getUsableSlots(@NotNull ItemStack item) {
         String data = DataUT.getStringData(item, KEY_USABLE_SLOTS);
         if (data == null || data.isEmpty()) return null;
-        return Arrays.stream(data.split(","))
+        EquipmentSlot[] slots = Arrays.stream(data.split(","))
                 .map(s -> {
                     try {
-                        return EquipmentSlot.valueOf(s.trim().toUpperCase());
-                    } catch (IllegalArgumentException ignored) {
-                        return null;
+                        Integer.parseInt(s.trim());
+                        return null; // numeric slot — skip for equipment-slot purposes
+                    } catch (NumberFormatException ignored2) {
+                        try {
+                            return EquipmentSlot.valueOf(s.trim().toUpperCase());
+                        } catch (IllegalArgumentException ignored) {
+                            return null;
+                        }
                     }
                 })
                 .filter(Objects::nonNull)
                 .toArray(EquipmentSlot[]::new);
+        return slots.length == 0 ? null : slots;
+    }
+
+    public static int[] getUsableSlotIndices(@NotNull ItemStack item) {
+        String data = DataUT.getStringData(item, KEY_USABLE_SLOTS);
+        if (data == null || data.isEmpty()) return new int[0];
+        return Arrays.stream(data.split(","))
+                .map(String::trim)
+                .mapToInt(s -> {
+                    try {
+                        return Integer.parseInt(s);
+                    } catch (NumberFormatException ignored) {
+                        return -1;
+                    }
+                })
+                .filter(i -> i >= 0)
+                .toArray();
     }
 }

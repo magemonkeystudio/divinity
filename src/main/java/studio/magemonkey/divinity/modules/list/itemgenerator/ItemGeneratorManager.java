@@ -213,7 +213,7 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private Set<IAttributeGenerator> attributeGenerators;
         private AbilityGenerator         abilityGenerator;
         @Getter
-        private Set<EquipmentSlot>        usableSlots;
+        private Set<String>              usableSlots;
 
         public GeneratorItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, ItemGeneratorManager.this);
@@ -593,15 +593,22 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             this.attributeGenerators = new HashSet<>();
 
-            // Load Usable Slots
+            // Load Usable Slots (supports EquipmentSlot names and numeric inventory slot indices)
             this.usableSlots = new HashSet<>();
             for (String slotName : cfg.getStringList("generator.usable-slots")) {
+                String trimmed = slotName.trim();
                 try {
-                    EquipmentSlot slot = EquipmentSlot.valueOf(slotName.trim().toUpperCase());
-                    this.usableSlots.add(slot);
-                } catch (IllegalArgumentException e) {
-                    this.error("Invalid equipment slot '" + slotName + "' in 'generator.usable-slots'. File: "
-                            + cfg.getFile().getName());
+                    int index = Integer.parseInt(trimmed);
+                    this.usableSlots.add(String.valueOf(index));
+                } catch (NumberFormatException ignored) {
+                    try {
+                        EquipmentSlot slot = EquipmentSlot.valueOf(trimmed.toUpperCase());
+                        this.usableSlots.add(slot.name());
+                    } catch (IllegalArgumentException e) {
+                        this.error("Invalid slot '" + trimmed + "' in 'generator.usable-slots'. " +
+                                "Use an EquipmentSlot name (e.g. CHEST) or an inventory slot index. File: "
+                                + cfg.getFile().getName());
+                    }
                 }
             }
 
