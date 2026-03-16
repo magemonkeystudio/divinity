@@ -43,6 +43,7 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
     private String       itemNameFormat;
     private List<String> itemLoreFormat;
     private boolean      autoUpdate;
+    private boolean      autoUpdateOverrideChanges;
 
     public QModuleDrop(@NotNull Divinity plugin, @NotNull Class<I> clazz) {
         super(plugin);
@@ -63,11 +64,13 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
         cfg.addMissing(path + "name", ItemTags.PLACEHOLDER_ITEM_NAME);
         cfg.addMissing(path + "lore", Arrays.asList(ItemTags.PLACEHOLDER_ITEM_LORE));
         cfg.addMissing("auto-update", false);
+        cfg.addMissing("auto-update-override-changes", false);
         cfg.saveChanges();
 
         this.itemNameFormat = StringUT.color(cfg.getString(path + "name", ItemTags.PLACEHOLDER_ITEM_NAME));
         this.itemLoreFormat = StringUT.color(cfg.getStringList(path + "lore"));
         this.autoUpdate = cfg.getBoolean("auto-update");
+        this.autoUpdateOverrideChanges = cfg.getBoolean("auto-update-override-changes");
     }
 
     protected void loadItems() {
@@ -112,6 +115,10 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
 
     public boolean isAutoUpdate() {
         return this.autoUpdate;
+    }
+
+    public boolean isAutoUpdateOverrideChanges() {
+        return this.autoUpdateOverrideChanges;
     }
 
     @Nullable

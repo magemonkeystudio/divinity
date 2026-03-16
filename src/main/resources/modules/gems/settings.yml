@@ -1,5 +1,6 @@
 command-aliases: gems
 auto-update: false
+auto-update-override-changes: false
 
 socketing:
   allow-duplicated-items: true

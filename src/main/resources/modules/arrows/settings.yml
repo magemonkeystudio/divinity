@@ -1,5 +1,6 @@
 command-aliases: arrows
 auto-update: false
+auto-update-override-changes: false
 
 settings:
   allow-infinity-enchant: false
