@@ -10,6 +10,7 @@ import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
@@ -211,6 +212,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
         private Set<IAttributeGenerator> attributeGenerators;
         private AbilityGenerator         abilityGenerator;
+        @Getter
+        private Set<EquipmentSlot>        usableSlots;
 
         public GeneratorItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, ItemGeneratorManager.this);
@@ -590,6 +593,18 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             this.attributeGenerators = new HashSet<>();
 
+            // Load Usable Slots
+            this.usableSlots = new HashSet<>();
+            for (String slotName : cfg.getStringList("generator.usable-slots")) {
+                try {
+                    EquipmentSlot slot = EquipmentSlot.valueOf(slotName.trim().toUpperCase());
+                    this.usableSlots.add(slot);
+                } catch (IllegalArgumentException e) {
+                    this.error("Invalid equipment slot '" + slotName + "' in 'generator.usable-slots'. File: "
+                            + cfg.getFile().getName());
+                }
+            }
+
             // Pre-cache Ammo Attributes
             this.addAttributeGenerator(new SingleAttributeGenerator<>(this.plugin,
                     this,
@@ -952,6 +967,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             }
 
             ItemUT.addSkullTexture(item, this.hash, this.getId());
+            if (!this.usableSlots.isEmpty()) {
+                ItemStats.setUsableSlots(item, this.usableSlots);
+            }
             this.getAttributeGenerators().forEach(generator -> generator.generate(item, itemLvl));
 
             LoreUT.replacePlaceholder(item, PLACE_GEN_DAMAGE, null);

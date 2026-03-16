@@ -31,6 +31,7 @@ import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ItemStats {
 
@@ -76,6 +77,8 @@ public class ItemStats {
                             "prorpgitems:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())),
                     Objects.requireNonNull(NamespacedKey.fromString(
                             "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())));
+    private static final NamespacedKey                           KEY_USABLE_SLOTS =
+            new NamespacedKey(plugin, ItemTags.TAG_ITEM_USABLE_SLOTS.toLowerCase());
     private static       DamageAttribute                         DAMAGE_DEFAULT;
     private static       DefenseAttribute                        DEFENSE_DEFAULT;
 
@@ -565,5 +568,30 @@ public class ItemStats {
             if (data != 0) return data;
         }
         return 0;
+    }
+
+    public static void setUsableSlots(@NotNull ItemStack item, @NotNull Set<EquipmentSlot> slots) {
+        if (slots.isEmpty()) {
+            DataUT.removeData(item, KEY_USABLE_SLOTS);
+            return;
+        }
+        String slotString = slots.stream().map(EquipmentSlot::name).collect(Collectors.joining(","));
+        DataUT.setData(item, KEY_USABLE_SLOTS, slotString);
+    }
+
+    @Nullable
+    public static EquipmentSlot[] getUsableSlots(@NotNull ItemStack item) {
+        String data = DataUT.getStringData(item, KEY_USABLE_SLOTS);
+        if (data == null || data.isEmpty()) return null;
+        return Arrays.stream(data.split(","))
+                .map(s -> {
+                    try {
+                        return EquipmentSlot.valueOf(s.trim().toUpperCase());
+                    } catch (IllegalArgumentException ignored) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toArray(EquipmentSlot[]::new);
     }
 }

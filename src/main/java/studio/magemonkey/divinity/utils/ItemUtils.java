@@ -113,6 +113,10 @@ public class ItemUtils {
 
     @NotNull
     public static EquipmentSlot[] getItemSlots(@NotNull ItemStack item) {
+        EquipmentSlot[] custom = ItemStats.getUsableSlots(item);
+        if (custom != null && custom.length > 0) {
+            return custom;
+        }
         if (isArmor(item) || !EngineCfg.ATTRIBUTES_EFFECTIVE_IN_OFFHAND) {
             return new EquipmentSlot[]{getEquipmentSlotByItemType(item)};
         }
