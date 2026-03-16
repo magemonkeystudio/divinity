@@ -105,11 +105,6 @@ public class ItemAutoUpdateListener extends IListener<Divinity> {
         if (sourceMeta.hasDisplayName() != templateMeta.hasDisplayName()) return true;
         if (sourceMeta.hasDisplayName() && !sourceMeta.getDisplayName().equals(templateMeta.getDisplayName())) return true;
 
-        if (sourceMeta.hasLore() != templateMeta.hasLore()) return true;
-        if (sourceMeta.hasLore() && !sourceMeta.getLore().equals(templateMeta.getLore())) return true;
-
-        if (!sourceMeta.getItemFlags().equals(templateMeta.getItemFlags())) return true;
-
         if (sourceMeta instanceof Damageable && templateMeta instanceof Damageable) {
             if (((Damageable) sourceMeta).getDamage() != ((Damageable) templateMeta).getDamage()) return true;
         }
@@ -136,13 +131,6 @@ public class ItemAutoUpdateListener extends IListener<Divinity> {
         if (sourceMeta.hasDisplayName()) {
             updatedMeta.setDisplayName(sourceMeta.getDisplayName());
         }
-
-        if (sourceMeta.hasLore()) {
-            updatedMeta.setLore(sourceMeta.getLore());
-        }
-
-        updatedMeta.removeItemFlags(updatedMeta.getItemFlags().toArray(new ItemFlag[0]));
-        updatedMeta.addItemFlags(sourceMeta.getItemFlags().toArray(new ItemFlag[0]));
 
         if (sourceMeta instanceof Damageable && updatedMeta instanceof Damageable) {
             ((Damageable) updatedMeta).setDamage(((Damageable) sourceMeta).getDamage());
