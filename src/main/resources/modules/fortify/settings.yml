@@ -1,4 +1,5 @@
 command-aliases: fortify
+auto-update: false
 format:
   item-name:
     as-prefix: false

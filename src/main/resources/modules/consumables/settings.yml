@@ -1,4 +1,5 @@
 command-aliases: consumables,consumes
+auto-update: false
 consuming:
   allow-on-full-health: true
   allow-on-full-food: true

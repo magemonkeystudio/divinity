@@ -42,6 +42,7 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
 
     private String       itemNameFormat;
     private List<String> itemLoreFormat;
+    private boolean      autoUpdate;
 
     public QModuleDrop(@NotNull Divinity plugin, @NotNull Class<I> clazz) {
         super(plugin);
@@ -61,10 +62,12 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
         String path = "item-format.";
         cfg.addMissing(path + "name", ItemTags.PLACEHOLDER_ITEM_NAME);
         cfg.addMissing(path + "lore", Arrays.asList(ItemTags.PLACEHOLDER_ITEM_LORE));
+        cfg.addMissing("auto-update", false);
         cfg.saveChanges();
 
         this.itemNameFormat = StringUT.color(cfg.getString(path + "name", ItemTags.PLACEHOLDER_ITEM_NAME));
         this.itemLoreFormat = StringUT.color(cfg.getStringList(path + "lore"));
+        this.autoUpdate = cfg.getBoolean("auto-update");
     }
 
     protected void loadItems() {
@@ -105,6 +108,10 @@ public abstract class QModuleDrop<I extends ModuleItem> extends QModule {
     @NotNull
     public List<String> getItemLoreFormat() {
         return this.itemLoreFormat;
+    }
+
+    public boolean isAutoUpdate() {
+        return this.autoUpdate;
     }
 
     @Nullable

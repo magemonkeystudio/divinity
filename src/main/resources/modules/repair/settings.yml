@@ -1,4 +1,5 @@
 command-aliases: rpgrepair
+auto-update: false
 repair:
   actions-complete:
     default:

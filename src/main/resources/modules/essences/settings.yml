@@ -1,5 +1,6 @@
 cfg_version: 1.0
 command-aliases: essence,essences
+auto-update: false
 socketing:
   allow-duplicated-items: true
   animated-bar:

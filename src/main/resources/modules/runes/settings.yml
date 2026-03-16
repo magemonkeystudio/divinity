@@ -1,4 +1,5 @@
 command-aliases: runes
+auto-update: false
 general:
   stack-levels: false
 socketing:

@@ -1,4 +1,5 @@
 command-aliases: magicdust
+auto-update: false
 general:
   actions-apply:
     default:

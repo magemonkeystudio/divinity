@@ -1,4 +1,5 @@
 command-aliases: activeitems
+auto-update: false
 
 item-format:
   name: '%TIER_COLOR%%ITEM_NAME% %ITEM_LEVEL_ROMAN%'

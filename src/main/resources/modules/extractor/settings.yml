@@ -1,4 +1,5 @@
 command-aliases: extractor
+auto-update: false
 extraction:
   price:
     GEM:

@@ -1,4 +1,5 @@
 command-aliases: arrows
+auto-update: false
 
 settings:
   allow-infinity-enchant: false
