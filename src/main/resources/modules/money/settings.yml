@@ -1,4 +1,5 @@
 command-aliases: moneymodule
+auto-update: false
 
 item-format:
   name: '%ITEM_NAME%'

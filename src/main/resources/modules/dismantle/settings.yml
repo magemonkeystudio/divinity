@@ -1,4 +1,5 @@
 command-aliases: dismantle
+auto-update: false
 general:
   actions-complete:
     default:

@@ -1,4 +1,5 @@
 command-aliases: refine
+auto-update: false
 refine:
   actions-on-success:
     default:

@@ -1,4 +1,5 @@
 command-aliases: itemgenerator,itemgen
+auto-update: false
 item-format:
   name: '%TIER_COLOR%%ITEM_NAME%'
   lore:

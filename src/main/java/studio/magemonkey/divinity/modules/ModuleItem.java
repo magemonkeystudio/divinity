@@ -215,6 +215,13 @@ public abstract class ModuleItem extends LoadableItem {
     }
 
     @NotNull
+    public ItemStack update(@NotNull ItemStack item) {
+        ItemStack updated = this.build(item.clone());
+        updated.setAmount(item.getAmount());
+        return updated;
+    }
+
+    @NotNull
     protected ItemStack build() {
         return build(this.getMaterial().create());
     }

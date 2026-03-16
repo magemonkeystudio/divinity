@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.manager.IListener;
 import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.modules.LeveledItem;
 import studio.magemonkey.divinity.modules.ModuleItem;
 import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import studio.magemonkey.divinity.stats.items.ItemStats;
@@ -62,14 +61,6 @@ public class ItemAutoUpdateListener extends IListener<Divinity> {
         ModuleItem moduleItem = module.getItemById(itemId);
         if (moduleItem == null) return null;
 
-        ItemStack updated;
-        if (moduleItem instanceof LeveledItem) {
-            int level = ItemStats.getLevel(item);
-            updated = ((LeveledItem) moduleItem).create(level);
-        } else {
-            updated = moduleItem.create();
-        }
-        updated.setAmount(item.getAmount());
-        return updated;
+        return moduleItem.update(item);
     }
 }
