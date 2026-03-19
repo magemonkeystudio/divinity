@@ -1,5 +1,6 @@
 package studio.magemonkey.divinity.stats.items;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -310,7 +311,10 @@ public class ItemStats {
         addAttribute(item, player, NBTAttribute.MAX_HEALTH, getStat(item, player, TypedStat.Type.MAX_HEALTH));
         addAttribute(item, player, NBTAttribute.MOVEMENT_SPEED, getStat(item, player, TypedStat.Type.MOVEMENT_SPEED));
         addAttribute(item, player, NBTAttribute.ATTACK_SPEED, getStat(item, player, TypedStat.Type.ATTACK_SPEED));
-        addAttribute(item, player, NBTAttribute.KNOCKBACK_RESISTANCE, getStat(item, player, TypedStat.Type.KNOCKBACK_RESISTANCE));
+        addAttribute(item,
+                player,
+                NBTAttribute.KNOCKBACK_RESISTANCE,
+                getStat(item, player, TypedStat.Type.KNOCKBACK_RESISTANCE));
 
         double vanilla = DamageAttribute.getVanillaDamage(item);
         if (vanilla > 1) addAttribute(item, player, NBTAttribute.ATTACK_DAMAGE, vanilla);
@@ -324,12 +328,16 @@ public class ItemStats {
                     toughness == 0 ? DefenseAttribute.getVanillaToughness(item) : toughness);
         }
         ItemMeta im = item.getItemMeta();
+        if (im == null) {
+            im = Bukkit.getItemFactory().getItemMeta(item.getType());
+        }
 
         // For 1.20.4+, the HIDE_ATTRIBUTES flag doesn't work unless an attribute has been added that's not the default.
         // Note: This only applies to Paper and its forks.
         if (Version.CURRENT.isAtLeast(Version.V1_20_R4)) {
             Attribute moveSpeed = VersionManager.getNms().getAttribute("MOVEMENT_SPEED");
-            if (im.getAttributeModifiers(VersionManager.getNms().getAttribute("MOVEMENT_SPEED")) == null) {
+            if (!im.hasAttributeModifiers()
+                    || im.getAttributeModifiers(VersionManager.getNms().getAttribute("MOVEMENT_SPEED")) == null) {
                 //noinspection RedundantCast
                 im.addAttributeModifier(moveSpeed,
                         new AttributeModifier(((Keyed) moveSpeed).getKey().getKey(), 0, Operation.ADD_NUMBER));
