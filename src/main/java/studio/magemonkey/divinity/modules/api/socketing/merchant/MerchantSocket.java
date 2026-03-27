@@ -69,7 +69,7 @@ public class MerchantSocket implements Loadable {
     }
 
     public void openMerchantGUI(@NotNull Player player, boolean force) {
-        if (!force && !player.hasPermission(Perms.getSocketGuiMerchant(this.moduleSocket))) {
+        if (!force && !Perms.has(player, Perms.getSocketGuiMerchant(this.moduleSocket))) {
             plugin.lang().Error_NoPerm.send(player);
             return;
         }

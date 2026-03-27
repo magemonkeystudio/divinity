@@ -1,11 +1,13 @@
 package studio.magemonkey.divinity;
 
+import org.bukkit.permissions.Permissible;
 import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.divinity.modules.api.socketing.ModuleSocket;
 
 public class Perms {
 
-    private static final String PREFIX = "quantumrpg.";
+    private static final String PREFIX  = "quantumrpg.";
+    private static final String DIVINITY = "divinity.";
 
     public static final String USER  = PREFIX + "user";
     public static final String ADMIN = PREFIX + "admin";
@@ -97,5 +99,21 @@ public class Perms {
     @NotNull
     public static String getSocketGuiMerchant(@NotNull ModuleSocket<?> module) {
         return SOCKET_GUI_MERCHANT.replace("%module%", module.getId());
+    }
+
+    /**
+     * Checks whether the permissible has the given permission, accepting both
+     * the legacy {@code quantumrpg.*} namespace and the current {@code divinity.*}
+     * namespace as equivalent.
+     */
+    public static boolean has(@NotNull Permissible permissible, @NotNull String permission) {
+        if (permissible.hasPermission(permission)) return true;
+        if (permission.startsWith(PREFIX)) {
+            return permissible.hasPermission(DIVINITY + permission.substring(PREFIX.length()));
+        }
+        if (permission.startsWith(DIVINITY)) {
+            return permissible.hasPermission(PREFIX + permission.substring(DIVINITY.length()));
+        }
+        return false;
     }
 }

@@ -48,7 +48,6 @@ public class EngineCfg {
     public static boolean ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS;
 
     public static boolean     ATTRIBUTES_DURABILITY_BREAK_ITEMS;
-    public static boolean     ATTRIBUTES_HIDE_FLAGS;
     public static boolean     ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS;
     public static Set<String> ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API;
 
@@ -57,7 +56,6 @@ public class EngineCfg {
     public static double  COMBAT_SHIELD_BLOCK_BONUS_DAMAGE_MOD;
     public static int     COMBAT_SHIELD_BLOCK_COOLDOWN;
     public static boolean LEGACY_COMBAT;
-    public static boolean FULL_LEGACY;
     public static boolean COMBAT_DISABLE_VANILLA_SWEEP;
     public static boolean COMBAT_REDUCE_PLAYER_HEALTH_BAR;
     public static boolean COMBAT_FISHING_HOOK_DO_DAMAGE;
@@ -179,7 +177,6 @@ public class EngineCfg {
         EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS = cfg.getBoolean(path + "effective-for-mobs");
         EngineCfg.ATTRIBUTES_EFFECTIVE_IN_OFFHAND = cfg.getBoolean(path + "effective-in-offhand");
         EngineCfg.ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS = cfg.getBoolean(path + "allow-hold-items-you-cant-use");
-        EngineCfg.ATTRIBUTES_HIDE_FLAGS = cfg.getBoolean(path + "hide-flags");
 
         path = "attributes.durability.";
         EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS = cfg.getBoolean(path + "break-items-on-zero");

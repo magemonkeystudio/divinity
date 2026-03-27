@@ -7,16 +7,16 @@
     <parent>
         <groupId>studio.magemonkey</groupId>
         <artifactId>magemonkey-parent</artifactId>
-        <version>1.21.11-R1</version>
+        <version>1.21.11-R2</version>
     </parent>
 
     <artifactId>divinity</artifactId>
-    <version>1.0.2-R0.57-SNAPSHOT</version>
+    <version>1.0.2-R0.64-SNAPSHOT</version>
     <name>Divinity</name>
     <description>Custom items, combat, and more!</description>
 
     <properties>
-        <codex.version>1.1.1-R0.17-SNAPSHOT</codex.version>
+        <codex.version>1.1.1-R1</codex.version>
         <fabled.version>1.0.4-R0.76-SNAPSHOT</fabled.version>
     </properties>
 
@@ -38,6 +38,10 @@
         <repository>
             <id>neetgames</id>
             <url>https://nexus.neetgames.com/repository/maven-releases/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -69,7 +73,7 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- MageMonkeyStudio -->
+        <!-- VoidEdge -->
         <dependency>
             <groupId>studio.magemonkey</groupId>
             <artifactId>codex</artifactId>
@@ -256,9 +260,9 @@
 
     <developers>
         <developer>
-            <name>MageMonkeyStudio</name>
-            <organization>MageMonkeyStudio</organization>
-            <organizationUrl>https://magemonkey.studio</organizationUrl>
+            <name>VoidEdge</name>
+            <organization>VoidEdge</organization>
+            <organizationUrl>https://void.travja.dev</organizationUrl>
         </developer>
     </developers>
 

@@ -1,10 +1,9 @@
 package studio.magemonkey.divinity.manager.listener;
 
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.codex.core.Version;
 import studio.magemonkey.codex.manager.api.Loadable;
 import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.config.Config;
-import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.HookListener;
 import studio.magemonkey.divinity.manager.listener.object.*;
 import studio.magemonkey.divinity.stats.items.ItemStats;
@@ -21,6 +20,7 @@ public class ListenerManager implements Loadable {
     private       ItemUpdaterListener     updater;
     private       VanillaWrapperListener  lisQuantum;
     private       HookListener            hookListener;
+    private       GrindstoneListener      grindstoneListener;
 
     public ListenerManager(@NotNull Divinity plugin) {
         this.plugin = plugin;
@@ -47,19 +47,19 @@ public class ListenerManager implements Loadable {
         this.lisDynamic = new DynamicStatListener(this.plugin);
         this.lisDynamic.registerListeners();
 
-        if(!EngineCfg.LEGACY_COMBAT) {
-            this.lisQuantum = new VanillaWrapperListener(this.plugin);
-            this.lisQuantum.registerListeners();
-            Divinity.getInstance().getLogger().info("Loaded " + this.lisQuantum.getClass().getSimpleName());
-        } else {
-            Divinity.getInstance().getLogger().info("Skipped " + VanillaWrapperListener.class.getSimpleName() + " due to legacy combat being enabled.");
-        }
+        this.lisQuantum = new VanillaWrapperListener(this.plugin);
+        this.lisQuantum.registerListeners();
 
         this.updater = new ItemUpdaterListener(this.plugin);
         this.updater.registerListeners();
 
         this.hookListener = new HookListener(this.plugin);
         this.hookListener.registerListeners();
+
+        if (Version.CURRENT.isAtLeast(Version.V1_19_R3)) {
+            this.grindstoneListener = new GrindstoneListener(this.plugin);
+            this.grindstoneListener.registerListeners();
+        }
     }
 
     @Override
@@ -79,6 +79,10 @@ public class ListenerManager implements Loadable {
         if (this.lisQuantum != null) {
             this.lisQuantum.unregisterListeners();
             this.lisQuantum = null;
+        }
+        if (this.grindstoneListener != null) {
+            this.grindstoneListener.unregisterListeners();
+            this.grindstoneListener = null;
         }
     }
 }
