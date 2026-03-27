@@ -6,6 +6,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,12 +24,8 @@ import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat {
     private double cap;
 
-    public DurabilityStat(
-            @NotNull String name,
-            @NotNull String format,
-            double cap) {
-        super(
-                TypedStat.Type.DURABILITY.name(),
+    public DurabilityStat(@NotNull String name, @NotNull String format, double cap) {
+        super(TypedStat.Type.DURABILITY.name(),
                 name,
                 format,
                 "%ITEM_STAT_" + TypedStat.Type.DURABILITY.name() + "%",
@@ -114,9 +111,7 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
         return durability != null && durability[0] == 0 && !EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS;
     }
 
-    public boolean reduceDurability(
-            @NotNull LivingEntity li, @NotNull ItemStack item, int amount) {
-
+    public boolean reduceDurability(@NotNull LivingEntity li, @NotNull ItemStack item, int amount) {
         if (!(li instanceof Player) && !EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS) return false;
         if (this.isUnbreakable(item)) return false;
 
@@ -155,7 +150,14 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
             }
         }
 
-        return this.add(item, new double[]{lose, max}, -1);
+        boolean result = this.add(item, new double[]{lose, max}, -1);
+
+        if (result) {
+            syncVanillaBar(item, lose, max);
+        }
+
+        return result;
+
     }
 
     @Override
@@ -163,4 +165,30 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
     public String formatValue(@NotNull ItemStack item, double[] values) {
         return EngineCfg.getDurabilityFormat((int) values[0], (int) values[1]);
     }
+
+    /**
+     * Syncs the durability stat with the vanilla durability bar. Should be called after any change to the durability stat.
+     * Note: This method assumes that the durability stat is already updated with the new values before calling it.
+     *
+     * @param item the item that needs updating
+     * @param current the current durability value on the item
+     * @param maxCustom the max value possible to be set for the item
+     */
+    public void syncVanillaBar(@NotNull ItemStack item, double current, double maxCustom) {
+        ItemMeta meta = item.getItemMeta();
+        if (!(meta instanceof Damageable)) return;
+
+        Damageable damageable = (Damageable) meta;
+
+        int maxVanilla = item.getType().getMaxDurability();
+        if (maxVanilla <= 0) return;
+
+        double percent       = current / maxCustom;
+        // Scale the vanilla value to the custom percentage
+        int    vanillaDamage = (int) ((1.0 - percent) * maxVanilla);
+
+        damageable.setDamage(vanillaDamage);
+        item.setItemMeta(damageable);
+    }
+
 }
