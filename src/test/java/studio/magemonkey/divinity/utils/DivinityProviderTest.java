@@ -5,14 +5,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
+import org.bukkit.inventory.ItemStack;
 import studio.magemonkey.codex.Codex;
 import studio.magemonkey.codex.CodexEngine;
 import studio.magemonkey.codex.items.CodexItemManager;
 import studio.magemonkey.codex.modules.ModuleManager;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import studio.magemonkey.divinity.modules.list.arrows.ArrowManager;
 import studio.magemonkey.divinity.modules.list.customitems.CustomItemsManager;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
+import studio.magemonkey.divinity.stats.items.ItemStats;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -60,9 +63,11 @@ class DivinityProviderTest {
         itemGenModule = spy(new ItemGeneratorManager(divinity));
         when(moduleManager.getModule("item_generator")).thenReturn(itemGenModule);
         when(moduleManager.getModules()).thenReturn(List.of(arrowModule, itemGenModule));
+        doReturn("item_generator").when(itemGenModule).getId();
 
         customItemsModule = spy(new CustomItemsManager(divinity));
         when(moduleManager.getModule("custom_items")).thenReturn(customItemsModule);
+        doReturn("custom_items").when(customItemsModule).getId();
 
         //noinspection unchecked
         when(divinity.getModuleManager()).thenReturn(moduleManager);
@@ -78,6 +83,8 @@ class DivinityProviderTest {
     void getItem_usesLevel() {
         ItemGeneratorManager.GeneratorItem generatorItem = mock(ItemGeneratorManager.GeneratorItem.class);
         doReturn(generatorItem).when(itemGenModule).getItemById("foobar");
+        when(generatorItem.getId()).thenReturn("foobar");
+        doReturn((QModuleDrop<?>) itemGenModule).when(generatorItem).getModule();
 
         DivinityProvider.DivinityItemType item = provider.getItem("DIVINITY_item_generator:foobar~level:5");
 
@@ -93,6 +100,8 @@ class DivinityProviderTest {
     void getItem_usesMaterial() {
         ItemGeneratorManager.GeneratorItem generatorItem = mock(ItemGeneratorManager.GeneratorItem.class);
         doReturn(generatorItem).when(itemGenModule).getItemById("foobar");
+        when(generatorItem.getId()).thenReturn("foobar");
+        doReturn((QModuleDrop<?>) itemGenModule).when(generatorItem).getModule();
 
         DivinityProvider.DivinityItemType item =
                 provider.getItem("DIVINITY_item_generator:foobar~material:VANILLA_DIAMOND");
@@ -110,6 +119,8 @@ class DivinityProviderTest {
     void getItem_noModule_returnsItem() {
         ItemGeneratorManager.GeneratorItem generatorItem = mock(ItemGeneratorManager.GeneratorItem.class);
         doReturn(generatorItem).when(itemGenModule).getItemById("foobar");
+        when(generatorItem.getId()).thenReturn("foobar");
+        doReturn((QModuleDrop<?>) itemGenModule).when(generatorItem).getModule();
 
         DivinityProvider.DivinityItemType item = provider.getItem("DIVINITY_foobar");
 
@@ -125,6 +136,8 @@ class DivinityProviderTest {
     void getItem_customItems_returnsItem() {
         CustomItemsManager.CustomItem codexItem = mock(CustomItemsManager.CustomItem.class);
         doReturn(codexItem).when(customItemsModule).getItemById("foobar");
+        when(codexItem.getId()).thenReturn("foobar");
+        doReturn((QModuleDrop<?>) customItemsModule).when(codexItem).getModule();
 
         DivinityProvider.DivinityItemType item = provider.getItem("DIVINITY_custom_items:foobar");
 
@@ -134,5 +147,41 @@ class DivinityProviderTest {
         assertNull(item.getMaterial());
         assertEquals(codexItem, item.getModuleItem());
         assertInstanceOf(DivinityProvider.DivinityItemType.class, item);
+    }
+
+    @Test
+    void getItem_namespacedIdIncludesModule() {
+        CustomItemsManager.CustomItem codexItem = mock(CustomItemsManager.CustomItem.class);
+        doReturn(codexItem).when(customItemsModule).getItemById("foobar");
+        when(codexItem.getId()).thenReturn("foobar");
+        doReturn((QModuleDrop<?>) customItemsModule).when(codexItem).getModule();
+
+        DivinityProvider.DivinityItemType item = provider.getItem("DIVINITY_custom_items:foobar");
+
+        assertNotNull(item);
+        assertEquals("DIVINITY_custom_items:foobar", item.getNamespacedID());
+    }
+
+    @Test
+    void getItem_itemStackUsesStoredModule() {
+        ItemStack itemStack = mock(ItemStack.class);
+
+        ItemGeneratorManager.GeneratorItem generatorItem = mock(ItemGeneratorManager.GeneratorItem.class);
+        doReturn(generatorItem).when(itemGenModule).getItemById("foobar");
+
+        CustomItemsManager.CustomItem codexItem = mock(CustomItemsManager.CustomItem.class);
+        doReturn(codexItem).when(customItemsModule).getItemById("foobar");
+
+        try (MockedStatic<ItemStats> itemStats = mockStatic(ItemStats.class)) {
+            itemStats.when(() -> ItemStats.getId(itemStack)).thenReturn("foobar");
+            itemStats.when(() -> ItemStats.getModule(itemStack)).thenReturn(customItemsModule);
+
+            DivinityProvider.DivinityItemType item = provider.getItem(itemStack);
+
+            assertNotNull(item);
+            assertEquals(codexItem, item.getModuleItem());
+            verify(customItemsModule).getItemById("foobar");
+            verify(itemGenModule, never()).getItemById("foobar");
+        }
     }
 }

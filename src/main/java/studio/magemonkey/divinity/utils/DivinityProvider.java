@@ -101,6 +101,10 @@ public class DivinityProvider implements ICodexItemProvider<DivinityProvider.Div
     public DivinityProvider.DivinityItemType getItem(ItemStack itemStack) {
         String id = ItemStats.getId(itemStack);
         if (id == null) return null;
+        QModuleDrop<?> module = ItemStats.getModule(itemStack);
+        if (module != null) {
+            id = module.getId() + ":" + id;
+        }
         return getItem(id);
     }
 
@@ -114,7 +118,15 @@ public class DivinityProvider implements ICodexItemProvider<DivinityProvider.Div
         id = PrefixHelper.stripPrefix(NAMESPACE, id);
 
         String itemId = ItemStats.getId(item);
-        return itemId != null && itemId.equals(id);
+        if (itemId == null) return false;
+
+        String[] split = id.split(":", 2);
+        if (split.length < 2) {
+            return itemId.equals(id);
+        }
+
+        QModuleDrop<?> module = ItemStats.getModule(item);
+        return module != null && module.getId().equalsIgnoreCase(split[0]) && itemId.equals(split[1]);
     }
 
     public static class DivinityItemType extends ItemType {
@@ -146,7 +158,7 @@ public class DivinityProvider implements ICodexItemProvider<DivinityProvider.Div
 
         @Override
         public String getID() {
-            return this.moduleItem.getId();
+            return this.moduleItem.getModule().getId() + ":" + this.moduleItem.getId();
         }
 
         @Override
