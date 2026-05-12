@@ -46,8 +46,126 @@ MAX_HEALTH:
   name: Max Health
   format: '&c▸ %name%: &f%value% %condition%'
   capacity: -1
+<<<<<<< Updated upstream
 
 # Custom Stats
+=======
+BLOCK_BREAK_SPEED:
+  enabled: true
+  name: Block Break Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 200.0
+
+BLOCK_INTERACTION_RANGE:
+  enabled: true
+  name: Block Reach
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SCALE:
+  enabled: true
+  name: Scale
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+WATER_MOVEMENT_EFFICIENCY:
+  enabled: true
+  name: Water Movement Efficiency
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+MOVEMENT_EFFICIENCY:
+  enabled: true
+  name: Movement Efficiency
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+SNEAKING_SPEED:
+  enabled: true
+  name: Sneaking Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 70.0
+
+ENTITY_INTERACTION_RANGE:
+  enabled: true
+  name: Entity Reach
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+EXPLOSION_KNOCKBACK_RESISTANCE:
+  enabled: true
+  name: Explosion KB Resistance
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+FALL_DAMAGE_MULTIPLIER:
+  enabled: true
+  name: Fall Damage Modifier
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+FLYING_SPEED:
+  enabled: true
+  name: Flying Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+GRAVITY:
+  enabled: true
+  name: Gravity
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+JUMP_STRENGTH:
+  enabled: true
+  name: Jump Strength
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+MAX_ABSORPTION:
+  enabled: true
+  name: Max Absorption
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+MINING_EFFICIENCY:
+  enabled: true
+  name: Mining Efficiency
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+OXYGEN_BONUS:
+  enabled: true
+  name: Oxygen Bonus
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SAFE_FALL_DISTANCE:
+  enabled: true
+  name: Safe Fall Distance
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+STEP_HEIGHT:
+  enabled: true
+  name: Step Height
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SUBMERGED_MINING_SPEED:
+  enabled: true
+  name: Submerged Mining Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+# Custom Stats
+
+MAX_MANA:
+  enabled: true
+  name: Max Mana
+  format: '&9▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+>>>>>>> Stashed changes
 AOE_DAMAGE:
   enabled: true
   name: AoE Damage
@@ -203,6 +321,7 @@ HEALING_RECEIVED:
   format: '&a▸ %name%: &f%value% %condition%'
   capacity: -1
 
+<<<<<<< Updated upstream
 SCALE:
   enabled: true
   name: Scale
@@ -311,6 +430,9 @@ SUBMERGED_MINING_SPEED:
   format: '&3▸ %name%: &f%value% %condition%'
   capacity: 100.0
 
+=======
+## PLACEHOLDERS (THEY DON'T WORK ON THEIR OWN)
+>>>>>>> Stashed changes
 SKILL_EFFECTIVNESS:
   enabled: true
   name: Skill Effectivness

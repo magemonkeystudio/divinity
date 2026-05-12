@@ -79,6 +79,10 @@ public interface TypedStat {
         THORNMAIL(SimpleStat.ItemType.BOTH, true, false, true),
         HEALTH_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
         MANA_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
+<<<<<<< Updated upstream
+=======
+        MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
+>>>>>>> Stashed changes
         CC_RESISTANCE(SimpleStat.ItemType.BOTH, true, false, true),
         HEALING_CAST(SimpleStat.ItemType.BOTH, true, false, true),
         HEALING_RECEIVED(SimpleStat.ItemType.BOTH, true, false, true),

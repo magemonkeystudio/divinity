@@ -30,6 +30,7 @@ import studio.magemonkey.fabled.api.DefaultCombatProtection;
 import studio.magemonkey.fabled.api.enums.ExpSource;
 import studio.magemonkey.fabled.api.event.DynamicTriggerEvent;
 import studio.magemonkey.fabled.api.event.PlayerManaGainEvent;
+import studio.magemonkey.fabled.api.event.PlayerMaxManaChangeEvent;
 import studio.magemonkey.fabled.api.event.SkillDamageEvent;
 import studio.magemonkey.fabled.api.player.PlayerData;
 import studio.magemonkey.fabled.api.player.PlayerSkill;
@@ -115,6 +116,17 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         double regen = 1D + EntityStats.get(player).getItemStat(TypedStat.Type.MANA_REGEN, false) / 100D;
         if (regen > 0) {
             e.setAmount(e.getAmount() * regen);
+        }
+    }
+
+    @EventHandler
+    public void onMaxManaChange(PlayerMaxManaChangeEvent e) {
+        Player player = e.getPlayerData().getPlayer();
+        if (player == null) return;
+
+        double bonus = EntityStats.get(player).getItemStat(TypedStat.Type.MAX_MANA, false);
+        if (bonus != 0) {
+            e.setMaxMana(e.getMaxMana() + bonus);
         }
     }
 
@@ -292,6 +304,10 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
      */
     public double applyStatScale(@NotNull Player player, @NotNull String statId, double value) {
         try {
+<<<<<<< Updated upstream
+=======
+            if (!Fabled.hasPlayerData(player)) return value;
+>>>>>>> Stashed changes
             PlayerData data = Fabled.getData(player);
             if (data == null) return value;
             return data.scaleStat(statId, value);
