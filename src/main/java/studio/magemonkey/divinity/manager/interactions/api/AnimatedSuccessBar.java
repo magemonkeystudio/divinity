@@ -147,9 +147,11 @@ public class AnimatedSuccessBar extends ICustomInteraction {
 
         Task() {
             super(AnimatedSuccessBar.this.plugin, AnimatedSuccessBar.this.fillInterval, true);
-            int calculatedResult = Math.round(Rnd.get(true));
-            int iterations       = (int) Math.ceil(100D / fillAmount);
-            // Map the iteration to the relative success for the result
+            int iterations = (int) Math.ceil(100D / fillAmount);
+            // At 100% chance the bar should animate fully green — no red segments
+            int calculatedResult = (chance >= 100)
+                    ? iterations * fillAmount + 1
+                    : Math.round(Rnd.get(true));
             for (int i = 0; i < iterations; i++) {
                 mappedResult.add(i * fillAmount < calculatedResult);
             }

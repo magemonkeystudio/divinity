@@ -147,7 +147,11 @@ public class MainStatsGUI extends AbstractEditorGUI {
                 "&eModify")) {
             @Override
             public void onLeftClick() {
-                openSubMenu(new StatListGUI(player, itemGenerator, itemType));
+                if (itemType == EditorGUI.ItemType.ITEM_STATS) {
+                    openSubMenu(new StatCategoryGUI(player, itemGenerator));
+                } else {
+                    openSubMenu(new StatListGUI(player, itemGenerator, itemType));
+                }
             }
         });
     }

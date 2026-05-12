@@ -63,10 +63,34 @@ attributes:
   # When enabled, allows to hold in hand items with requirements that player don't meet.
   # Even when this is 'true', item attributes won't be applied to a player until he meet the requirements.
   allow-hold-items-you-cant-use: false
+  # When enabled, hides attributes and enchantments by default on all custom items.
+  hide-flags: true
 
 combat:
   # Whether to use the old combat formula for calculating defenses
   legacy-combat: false
+  # Defense formula. Only used when legacy-combat is false.
+  # Options: FACTOR (minecraft formula), CUSTOM
+  defense-formula: FACTOR
+  # Custom defense formula. Only used when defense-formula is CUSTOM.
+  # Placeholders: damage, defense (sum of all matching defenses after all penetration),
+  #   defense_<id> (individual defense, e.g. defense_weapon, defense_physical),
+  #   toughness
+  # NOTE: 'defense' is ALWAYS >= 0 here. Penetration cannot make defense go negative —
+  #   all defense values are clamped to 0 before being passed to this formula.
+  # In CUSTOM mode, ALL defenses with matching block-damage-types are summed.
+  # In FACTOR mode, only the highest priority defense is used (1:1).
+  custom-defense-formula: 'damage*(25/(25+defense))'
+  # If true, flat penetration that exceeds the target's total defense amplifies damage.
+  # Example: flatPen=100, defense=30 → overflow=70 → bonus damage via overflow-pen-formula.
+  # Only applies in CUSTOM defense formula mode.
+  overflow-pen-amplifies: false
+  # Formula for bonus damage when flat pen overflow occurs (overflow-pen-amplifies must be true).
+  # Placeholders: damage (incoming damage before defense), overflow (flatPen - defense),
+  #   defense (total defense before flat pen was applied)
+  # Result is added on top of the post-defense damage.
+  # Tune this for your server's typical defense and flat pen values.
+  overflow-pen-formula: 'damage*(overflow/100)'
   # Shield settings.
   shield:
     block:
@@ -226,6 +250,7 @@ lore:
             format:
               main: '&c▸ %name%: %value%'
       enchantments:
+        roman-system: true  # true = roman numerals (I, II, III...), false = arabic numbers (1, 2, 3...)
         format:
           main: '&c▸ %name% %value%'
           max-roman: 10

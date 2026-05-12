@@ -17,17 +17,31 @@ import java.util.List;
 
 public class StatListGUI extends AbstractEditorGUI {
     private final EditorGUI.ItemType itemType;
+    /** Full config path to the list section, e.g. "generator.item-stats.list" */
+    private final String             listSectionPath;
 
+    /**
+     * Opens the stat list for a specific sub-section (e.g. "list", "list-damage-buffs").
+     */
+    public StatListGUI(Player player, ItemGeneratorReference itemGenerator,
+                       EditorGUI.ItemType itemType, String listSection) {
+        super(player, 6, "Editor/" + itemType.getTitle() + " (" + listSection + ")", itemGenerator);
+        this.itemType        = itemType;
+        this.listSectionPath = itemType.getPath() + '.' + listSection;
+    }
+
+    /**
+     * Backward-compatible constructor — defaults to the standard "list" section.
+     */
     public StatListGUI(Player player, ItemGeneratorReference itemGenerator, EditorGUI.ItemType itemType) {
-        super(player, 6, "Editor/" + itemType.getTitle(), itemGenerator);
-        this.itemType = itemType;
+        this(player, itemGenerator, itemType, "list");
     }
 
     @Override
     public void setContents() {
         JYML                 cfg     = itemGenerator.getConfig();
         List<String>         list    = new ArrayList<>();
-        ConfigurationSection section = cfg.getConfigurationSection(MainStatsGUI.ItemType.LIST.getPath(this.itemType));
+        ConfigurationSection section = cfg.getConfigurationSection(this.listSectionPath);
         if (section != null) {
             list.addAll(section.getKeys(false));
         }
@@ -70,11 +84,22 @@ public class StatListGUI extends AbstractEditorGUI {
                     if (fabledHook != null) itemStack = fabledHook.getAttributeIndicator(entry);
                     break;
                 }
+                default: {
+                    // For ITEM_STATS categories, read per-entry icon from config
+                    String iconKey = this.listSectionPath + '.' + entry + ".icon";
+                    String iconName = cfg.getString(iconKey, "PAPER");
+                    try {
+                        itemStack = new ItemStack(Material.valueOf(iconName.toUpperCase()));
+                    } catch (IllegalArgumentException ignored) {
+                        itemStack = new ItemStack(Material.PAPER);
+                    }
+                    break;
+                }
             }
             if (itemStack == null) {
                 itemStack = new ItemStack(Material.PAPER);
             }
-            String path = MainStatsGUI.ItemType.LIST.getPath(this.itemType) + '.' + entry + '.';
+            String path = this.listSectionPath + '.' + entry + '.';
             String roundDisplay = this.itemType == EditorGUI.ItemType.FABLED_ATTRIBUTES
                     ? ""
                     : "&bRound: &a" + cfg.getBoolean(path + "round", false);
@@ -90,13 +115,14 @@ public class StatListGUI extends AbstractEditorGUI {
                     roundDisplay,
                     "",
                     "&eModify");
+            final String entryPath = this.listSectionPath + '.' + entry;
             setSlot(i, new Slot(itemStack) {
                 @Override
                 public void onLeftClick() {
                     openSubMenu(new StatGUI(player,
                             itemGenerator,
                             itemType,
-                            MainStatsGUI.ItemType.LIST.getPath(itemType) + '.' + entry));
+                            entryPath));
                 }
             });
 

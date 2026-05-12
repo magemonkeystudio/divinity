@@ -105,7 +105,7 @@ public class DismantleManager extends QModuleDrop<DismantleItem> {
     // METHODS
 
     public void openDismantleGUI(@NotNull Player player, boolean isForce) {
-        if (!isForce && !Perms.has(player, Perms.DISMANTLE_GUI)) {
+        if (!isForce && !player.hasPermission(Perms.DISMANTLE_GUI)) {
             plugin.lang().Error_NoPerm.send(player);
             return;
         }

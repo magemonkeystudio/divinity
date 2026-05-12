@@ -286,6 +286,20 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         }.runTaskLater(plugin, 1L);
     }
 
+    /**
+     * Scales a Divinity stat value using Fabled's attribute and stat modifier system.
+     * Fabled attributes.yml can reference Divinity stat names (lowercase type names, e.g. "critical_rate").
+     */
+    public double applyStatScale(@NotNull Player player, @NotNull String statId, double value) {
+        try {
+            PlayerData data = Fabled.getData(player);
+            if (data == null) return value;
+            return data.scaleStat(statId, value);
+        } catch (Exception ignored) {
+            return value;
+        }
+    }
+
     public boolean isFakeDamage(EntityDamageByEntityEvent event) {
         return DefaultCombatProtection.isFakeDamageEvent(event);
     }

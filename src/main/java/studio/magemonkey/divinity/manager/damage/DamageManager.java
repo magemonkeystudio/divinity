@@ -23,6 +23,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.api.items.PrefixHelper;
+import studio.magemonkey.codex.util.eval.Evaluator;
 import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.manager.IListener;
 import studio.magemonkey.codex.registry.provider.DamageTypeProvider;
@@ -46,6 +47,8 @@ import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.stats.items.attributes.stats.BleedStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.DynamicBuffStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.PenetrationStat;
 
 import java.util.*;
 import java.util.function.DoubleUnaryOperator;
@@ -251,24 +254,119 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
             if (!e.isExempt())
                 dmgType *= powerMod;
             dmgType *= blockMod;
+            // Apply damage buff % from attacker's equipment
+            if (statsDamager != null && dmgAtt != null) {
+                for (DynamicBuffStat buff : ItemStats.getDamageBuffs()) {
+                    if (buff.isApplicableTo(dmgAtt.getId())) {
+                        double buffPct = statsDamager.getDynamicBuff(buff);
+                        if (buffPct != 0) dmgType *= (1.0 + buffPct / 100.0);
+                    }
+                }
+            }
+            // Per-type penetration (PenetrationStat from penetration.yml)
+            // perTypePenMod: additional % pen multiplier (all formulas)
+            // perTypeFlatPen: flat defense reduction (CUSTOM formula only)
+            double perTypePenMod  = 1.0;
+            double perTypeFlatPen = 0.0;
+            if (statsDamager != null && dmgAtt != null) {
+                for (PenetrationStat penStat : ItemStats.getPenetrations()) {
+                    if (penStat.isApplicableTo(dmgAtt.getId())) {
+                        double penValue = statsDamager.getPenetration(penStat);
+                        if (penValue != 0) {
+                            if (penStat.isPercentPen()) {
+                                perTypePenMod *= Math.max(0D, 1.0 - penValue / 100.0);
+                            } else {
+                                perTypeFlatPen += penValue;
+                            }
+                        }
+                    }
+                }
+            }
             double directType = dmgType * directMod; // Get direct value for this Damage Attribute
             dmgType = Math.max(0, dmgType - directType); // Deduct this value from damage
 
             if (dmgType > 0) {
-                DefenseAttribute defAtt = dmgAtt != null ? dmgAtt.getAttachedDefense() : null;
-                if (defAtt != null && defenses.containsKey(defAtt)) {
-                    double def = Math.max(0, defenses.get(defAtt) * pveDefenseMod * penetrateMod);
-
-                    double defCalced;
-                    if (EngineCfg.LEGACY_COMBAT) {
-                        defCalced = Math.max(0, dmgType * (1 - (def * defAtt.getProtectionFactor() * 0.01)));
-                    } else {
-                        defCalced = Math.max(0,
+                if (EngineCfg.LEGACY_COMBAT) {
+                    // Legacy: 1:1, highest priority defense only
+                    DefenseAttribute defAtt = dmgAtt != null ? dmgAtt.getAttachedDefense() : null;
+                    if (defAtt != null && defenses.containsKey(defAtt)) {
+                        double def = Math.max(0, defenses.get(defAtt) * pveDefenseMod * penetrateMod * perTypePenMod);
+                        // Apply defense buff % from victim's equipment
+                        for (DynamicBuffStat dBuff : ItemStats.getDefenseBuffs()) {
+                            if (dBuff.isApplicableTo(defAtt.getId())) {
+                                double buffPct = statsVictim.getDynamicBuff(dBuff);
+                                if (buffPct != 0) def *= (1.0 + buffPct / 100.0);
+                            }
+                        }
+                        double defCalced = Math.max(0, dmgType * (1 - (def * defAtt.getProtectionFactor() * 0.01)));
+                        meta.setDefendedDamage(defAtt, dmgType - defCalced);
+                        dmgType = defCalced;
+                    }
+                } else if ("CUSTOM".equals(EngineCfg.DEFENSE_FORMULA_MODE)) {
+                    // Custom: collect ALL matching defenses (group sum + individual placeholders)
+                    double totalDef = 0;
+                    Map<String, Double> individualDefs = new HashMap<>();
+                    for (DefenseAttribute defAtt : ItemStats.getDefenses()) {
+                        if (dmgAtt != null && defAtt.isBlockable(dmgAtt) && defenses.containsKey(defAtt)) {
+                            double def = Math.max(0, defenses.get(defAtt) * pveDefenseMod * penetrateMod * perTypePenMod);
+                            totalDef += def;
+                            individualDefs.put(defAtt.getId(), def);
+                        }
+                    }
+                    // Apply defense buff % from victim's equipment (on summed total)
+                    if (totalDef > 0 && dmgAtt != null) {
+                        for (DynamicBuffStat dBuff : ItemStats.getDefenseBuffs()) {
+                            if (dBuff.isApplicableTo(dmgAtt.getId())) {
+                                double buffPct = statsVictim.getDynamicBuff(dBuff);
+                                if (buffPct != 0) totalDef *= (1.0 + buffPct / 100.0);
+                            }
+                        }
+                    }
+                    // Apply flat penetration to total defense (CUSTOM formula only)
+                    double overflowFlatPen  = 0;
+                    double preFlatPenDefVal = totalDef; // saved for overflow formula's 'defense' placeholder
+                    if (perTypeFlatPen > 0) {
+                        totalDef = Math.max(0, totalDef - perTypeFlatPen);
+                        if (EngineCfg.COMBAT_OVERFLOW_PEN_AMPLIFIES && perTypeFlatPen > preFlatPenDefVal) {
+                            overflowFlatPen = perTypeFlatPen - preFlatPenDefVal;
+                        }
+                    }
+                    if (totalDef > 0) {
+                        double defCalced = Math.max(0, evaluateDefenseFormula(
+                                EngineCfg.CUSTOM_DEFENSE_FORMULA, dmgType, totalDef, toughness, individualDefs));
+                        DefenseAttribute primaryDef = dmgAtt != null ? dmgAtt.getAttachedDefense() : null;
+                        if (primaryDef != null) {
+                            meta.setDefendedDamage(primaryDef, dmgType - defCalced);
+                        }
+                        dmgType = defCalced;
+                    }
+                    // Apply flat pen overflow amplification
+                    if (overflowFlatPen > 0) {
+                        // defense = original totalDef before flat pen; overflow = flatPen - defense
+                        double bonus = evaluateOverflowFormula(
+                                EngineCfg.COMBAT_OVERFLOW_PEN_FORMULA, dmgType, overflowFlatPen, preFlatPenDefVal);
+                        if (bonus > 0) {
+                            dmgType += bonus;
+                        }
+                    }
+                } else {
+                    // Factor: 1:1, highest priority defense only (minecraft formula)
+                    DefenseAttribute defAtt = dmgAtt != null ? dmgAtt.getAttachedDefense() : null;
+                    if (defAtt != null && defenses.containsKey(defAtt)) {
+                        double def = Math.max(0, defenses.get(defAtt) * pveDefenseMod * penetrateMod * perTypePenMod);
+                        // Apply defense buff % from victim's equipment
+                        for (DynamicBuffStat dBuff : ItemStats.getDefenseBuffs()) {
+                            if (dBuff.isApplicableTo(defAtt.getId())) {
+                                double buffPct = statsVictim.getDynamicBuff(dBuff);
+                                if (buffPct != 0) def *= (1.0 + buffPct / 100.0);
+                            }
+                        }
+                        double defCalced = Math.max(0,
                                 dmgType * (1 - Math.max(def / 5, def - 4 * dmgType / Math.max(1, toughness + 8))
                                         * defAtt.getProtectionFactor() * 0.05));
+                        meta.setDefendedDamage(defAtt, dmgType - defCalced);
+                        dmgType = defCalced;
                     }
-                    meta.setDefendedDamage(defAtt, dmgType - defCalced);
-                    dmgType = defCalced;
                 }
             }
             //Should we reactivate direct damage, remove directType here and deal the damage straight.
@@ -292,15 +390,13 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         // Compare modified damage and invulnerable prot. If they're within 0.0001 of each other, set the damage to 0.
         // and cancel the event
         if (modifiedDamage + invulnerableProt < 0.001) {
-            if (e.getOriginalEvent().getEntity().getType() != EntityType.ARMOR_STAND) {
-                e.setCancelled(true);
-                e.getOriginalEvent().setCancelled(true);
-            }
+            e.setCancelled(true);
+            e.getOriginalEvent().setCancelled(true);
             return;
         }
 
         meta.setInvulnerableProtection(invulnerableProt);
-        double dmgTotal = meta.getTotalDamage();
+        double dmgTotal = Math.round(meta.getTotalDamage() * 100.0) / 100.0;
 //        Divinity.getInstance().getLogger().info("Damage total: " + dmgTotal);
 //        Divinity.getInstance().getLogger().info("Defended: " + meta.getDefendedDamage());
         orig.setDamage(DamageModifier.BASE, dmgTotal);
@@ -570,5 +666,38 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
             HandlerList.unregisterAll(listener);
         }
         return success[0];
+    }
+
+    private static double evaluateDefenseFormula(String formula, double damage, double defense,
+                                                   double toughness, Map<String, Double> individualDefs) {
+        String expr = formula
+                .replace("damage", String.valueOf(damage))
+                .replace("toughness", String.valueOf(toughness));
+        // Replace individual defense placeholders BEFORE the sum placeholder
+        // because "defense" is a prefix of "defense_<id>"
+        for (Map.Entry<String, Double> entry : individualDefs.entrySet()) {
+            expr = expr.replace("defense_" + entry.getKey(), String.valueOf(entry.getValue()));
+        }
+        expr = expr.replace("defense", String.valueOf(defense));
+        return Evaluator.eval(expr, 1);
+    }
+
+    /**
+     * Evaluates the overflow pen formula and returns the bonus damage to add.
+     *
+     * @param formula  the formula string from config (overflow-pen-formula)
+     * @param damage   incoming damage after defense reduction (post-formula)
+     * @param overflow flat pen amount that exceeded the target's total defense
+     * @param defense  total defense before flat pen was applied
+     * @return bonus damage to add; 0 on invalid result (NaN / Infinity / negative)
+     */
+    private static double evaluateOverflowFormula(String formula, double damage,
+                                                   double overflow, double defense) {
+        String expr = formula
+                .replace("damage",   String.valueOf(damage))
+                .replace("overflow", String.valueOf(overflow))
+                .replace("defense",  String.valueOf(defense));
+        double result = Evaluator.eval(expr, 1);
+        return Double.isFinite(result) ? Math.max(0, result) : 0;
     }
 }

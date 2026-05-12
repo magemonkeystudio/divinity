@@ -166,12 +166,6 @@ DISARM_RATE:
   format: '&c▸ %name%: &f%value% %condition%'
   capacity: 25.0
 
-RANGE:
-  enabled: true
-  name: Range
-  format: '&6▸ %name%: &f%value% %condition%'
-  capacity: 7.0
-
 THORNMAIL:
   enabled: true
   name: Thornmail
@@ -190,58 +184,195 @@ MANA_REGEN:
   format: '&9▸ %name%: &f%value% %condition%'
   capacity: -1.0
 
-# IT DOES NOTHING, THEY ARE JUST A PLACEHOLDERS FOR FABLED
+# CC & Healing Stats
+CC_RESISTANCE:
+  enabled: true
+  name: CC Resistance
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: 60.0
+
+HEALING_CAST:
+  enabled: true
+  name: Healing Cast
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+HEALING_RECEIVED:
+  enabled: true
+  name: Healing Received
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SCALE:
+  enabled: true
+  name: Scale
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+WATER_MOVEMENT_EFFICIENCY:
+  enabled: true
+  name: Water Movement Efficiency
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+MOVEMENT_EFFICIENCY:
+  enabled: true
+  name: Movement Efficiency
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+SNEAKING_SPEED:
+  enabled: true
+  name: Sneaking Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 70.0
+
+BLOCK_BREAK_SPEED:
+  enabled: true
+  name: Block Break Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 200.0
+
+BLOCK_INTERACTION_RANGE:
+  enabled: true
+  name: Block Reach
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+ENTITY_INTERACTION_RANGE:
+  enabled: true
+  name: Entity Reach
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+EXPLOSION_KNOCKBACK_RESISTANCE:
+  enabled: true
+  name: Explosion KB Resistance
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+FALL_DAMAGE_MULTIPLIER:
+  enabled: true
+  name: Fall Damage Modifier
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+FLYING_SPEED:
+  enabled: true
+  name: Flying Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+GRAVITY:
+  enabled: true
+  name: Gravity
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+JUMP_STRENGTH:
+  enabled: true
+  name: Jump Strength
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+MAX_ABSORPTION:
+  enabled: true
+  name: Max Absorption
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+MINING_EFFICIENCY:
+  enabled: true
+  name: Mining Efficiency
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+OXYGEN_BONUS:
+  enabled: true
+  name: Oxygen Bonus
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SAFE_FALL_DISTANCE:
+  enabled: true
+  name: Safe Fall Distance
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+STEP_HEIGHT:
+  enabled: true
+  name: Step Height
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SUBMERGED_MINING_SPEED:
+  enabled: true
+  name: Submerged Mining Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
 
 SKILL_EFFECTIVNESS:
   enabled: true
-  name: Skill effectivness
-  format: '&9▸ %name%: &f%value% %condition%'
-  capacity: -1.0
-
-PHYSICAL_SKILL_DAMAGE:
-  enabled: true
-  name: Physical Skill Damage
-  format: '&9▸ %name%: &f%value% %condition%'
-  capacity: -1.0
-
-MAGICIAL_SKILL_DAMAGE:
-  enabled: true
-  name: Magicial Skill Damage
-  format: '&9▸ %name%: &f%value% %condition%'
-  capacity: -1.0
+  name: Skill Effectivness
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
 
 SUMMON_POWER:
   enabled: true
-  name: Summon Power
-  format: '&9▸ %name%: &f%value% %condition%'
-  capacity: -1.0
+  name: Summon power
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
 
 SUMMON_HP:
   enabled: true
-  name: Summon hp 
-  format: '&9▸ %name%: &f%value% %condition%'
-  capacity: -1.0
+  name: Summon HP
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
 
 SUMMON_DURATION:
   enabled: true
-  name: Summon draution 
-  format: '&9▸ %name%: &f%value% %condition%'
-  capacity: -1.0
+  name: Summon duration
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
 
 BLEED_STACKS:
   enabled: true
-  name: Bleed stacks 
-  format: '&9▸ %name%: -&f%value% %condition%'
-  capacity: -1.0
+  name: Bleed Stacks
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
 
 BLEED_DURATION:
   enabled: true
-  name: Bleed duration
-  format: '&9▸ %name%: &f%value% %condition%'
-  capacity: -1.0
+  name: Bleed Duration
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
 
 STUN_STACKS:
   enabled: true
-  name: Stun stacks 
-  format: '&9▸ %name%: -&f%value% %condition%'
-  capacity: -1.0
+  name: Stun Stacks
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+STUN_DURATION:
+  enabled: true
+  name: Stun Duration
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+PROJECTILE_COUNT:
+  enabled: true
+  name: Projectile Count
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+PROJECTILE_SPEED:
+  enabled: true
+  name: Projectile Speed
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+BLEED_DAMAGEBUFF:
+  enabled: true
+  name: Bleed base 
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
