@@ -242,6 +242,122 @@ BLEED_DURATION:
 
 STUN_STACKS:
   enabled: true
-  name: Stun stacks 
+  name: Stun stacks
   format: '&9▸ %name%: -&f%value% %condition%'
   capacity: -1.0
+
+STUN_DURATION:
+  enabled: true
+  name: Stun Duration
+  format: '&9▸ %name%: &f%value% %condition%'
+  capacity: -1.0
+
+# MC 1.20.5+ / 1.21+ Vanilla Attributes
+
+SCALE:
+  enabled: true
+  name: Scale
+  format: '&7▸ %name%: &f%value% %condition%'
+  capacity: 16.0
+
+WATER_MOVEMENT_EFFICIENCY:
+  enabled: true
+  name: Water Movement Efficiency
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+MOVEMENT_EFFICIENCY:
+  enabled: true
+  name: Movement Efficiency
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+SNEAKING_SPEED:
+  enabled: true
+  name: Sneaking Speed
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+BLOCK_BREAK_SPEED:
+  enabled: true
+  name: Block Break Speed
+  format: '&6▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+BLOCK_INTERACTION_RANGE:
+  enabled: true
+  name: Block Interaction Range
+  format: '&6▸ %name%: &f%value% %condition%'
+  capacity: 64.0
+
+ENTITY_INTERACTION_RANGE:
+  enabled: true
+  name: Entity Interaction Range
+  format: '&6▸ %name%: &f%value% %condition%'
+  capacity: 64.0
+
+EXPLOSION_KNOCKBACK_RESISTANCE:
+  enabled: true
+  name: Explosion Knockback Resistance
+  format: '&7▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+FALL_DAMAGE_MULTIPLIER:
+  enabled: true
+  name: Fall Damage Multiplier
+  format: '&c▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+FLYING_SPEED:
+  enabled: true
+  name: Flying Speed
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: -1.0
+
+GRAVITY:
+  enabled: true
+  name: Gravity
+  format: '&7▸ %name%: &f%value% %condition%'
+  capacity: -1.0
+
+JUMP_STRENGTH:
+  enabled: true
+  name: Jump Strength
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: 32.0
+
+MAX_ABSORPTION:
+  enabled: true
+  name: Max Absorption
+  format: '&6▸ %name%: &f%value% %condition%'
+  capacity: -1.0
+
+MINING_EFFICIENCY:
+  enabled: true
+  name: Mining Efficiency
+  format: '&6▸ %name%: &f%value% %condition%'
+  capacity: -1.0
+
+OXYGEN_BONUS:
+  enabled: true
+  name: Oxygen Bonus
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1.0
+
+SAFE_FALL_DISTANCE:
+  enabled: true
+  name: Safe Fall Distance
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: -1.0
+
+STEP_HEIGHT:
+  enabled: true
+  name: Step Height
+  format: '&7▸ %name%: &f%value% %condition%'
+  capacity: 10.0
+
+SUBMERGED_MINING_SPEED:
+  enabled: true
+  name: Submerged Mining Speed
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: 100.0
