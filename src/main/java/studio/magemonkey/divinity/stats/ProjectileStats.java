@@ -27,8 +27,9 @@ public class ProjectileStats {
             return ((Trident) e).getItem();
         }
         if (!e.hasMetadata(PROJECTILE_SOURCE_WEAPON)) return null;
-
-        Object val = e.getMetadata(PROJECTILE_SOURCE_WEAPON).get(0).value();
+        var meta = e.getMetadata(PROJECTILE_SOURCE_WEAPON);
+        if (meta.isEmpty()) return null;
+        Object val = meta.get(0).value();
         return (ItemStack) val;
     }
 
@@ -38,8 +39,9 @@ public class ProjectileStats {
 
     public static double getPower(@NotNull Projectile e) {
         if (!e.hasMetadata(PROJECTILE_LAUNCH_POWER)) return 1D;
-
-        return e.getMetadata(PROJECTILE_LAUNCH_POWER).get(0).asDouble();
+        var meta = e.getMetadata(PROJECTILE_LAUNCH_POWER);
+        if (meta.isEmpty()) return 1D;
+        return meta.get(0).asDouble();
     }
 
     public static void setPickable(@NotNull Entity pp, boolean b) {
@@ -48,7 +50,8 @@ public class ProjectileStats {
 
     public static boolean isPickable(@NotNull Entity pp) {
         if (!pp.hasMetadata(PROJECTILE_PICKABLE)) return true;
-
-        return pp.getMetadata(PROJECTILE_PICKABLE).get(0).asBoolean();
+        var meta = pp.getMetadata(PROJECTILE_PICKABLE);
+        if (meta.isEmpty()) return true;
+        return meta.get(0).asBoolean();
     }
 }

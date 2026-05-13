@@ -305,6 +305,10 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
     public double applyStatScale(@NotNull Player player, @NotNull String statId, double value) {
         try {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+            if (!Fabled.hasPlayerData(player)) return value;
+>>>>>>> Stashed changes
 =======
             if (!Fabled.hasPlayerData(player)) return value;
 >>>>>>> Stashed changes

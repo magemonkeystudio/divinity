@@ -47,9 +47,12 @@ MAX_HEALTH:
   format: '&c▸ %name%: &f%value% %condition%'
   capacity: -1
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 # Custom Stats
 =======
+=======
+>>>>>>> Stashed changes
 BLOCK_BREAK_SPEED:
   enabled: true
   name: Block Break Speed
@@ -165,6 +168,9 @@ MAX_MANA:
   format: '&9▸ %name%: &f%value% %condition%'
   capacity: -1
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 AOE_DAMAGE:
   enabled: true
@@ -322,6 +328,7 @@ HEALING_RECEIVED:
   capacity: -1
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 SCALE:
   enabled: true
   name: Scale
@@ -430,6 +437,9 @@ SUBMERGED_MINING_SPEED:
   format: '&3▸ %name%: &f%value% %condition%'
   capacity: 100.0
 
+=======
+## PLACEHOLDERS (THEY DON'T WORK ON THEIR OWN)
+>>>>>>> Stashed changes
 =======
 ## PLACEHOLDERS (THEY DON'T WORK ON THEIR OWN)
 >>>>>>> Stashed changes

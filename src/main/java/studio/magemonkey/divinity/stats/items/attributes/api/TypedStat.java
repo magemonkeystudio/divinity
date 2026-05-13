@@ -80,6 +80,10 @@ public interface TypedStat {
         HEALTH_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
         MANA_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+        MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
+>>>>>>> Stashed changes
 =======
         MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
 >>>>>>> Stashed changes
