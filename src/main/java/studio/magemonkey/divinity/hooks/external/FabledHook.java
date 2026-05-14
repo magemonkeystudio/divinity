@@ -388,31 +388,6 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         } catch (Exception ignored) {
             return value;
         }
-<<<<<<< Updated upstream
-    }
-
-    /**
-     * Scales a Divinity stat value using Fabled's attribute and stat modifier system.
-     * Fabled attributes.yml can reference Divinity stat names (lowercase type names, e.g. "critical_rate").
-     */
-    public double applyStatScale(@NotNull Player player, @NotNull String statId, double value) {
-        try {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-            if (!Fabled.hasPlayerData(player)) return value;
->>>>>>> Stashed changes
-=======
-            if (!Fabled.hasPlayerData(player)) return value;
->>>>>>> Stashed changes
-            PlayerData data = Fabled.getData(player);
-            if (data == null) return value;
-            return data.scaleStat(statId, value);
-        } catch (Exception ignored) {
-            return value;
-        }
-=======
->>>>>>> Stashed changes
     }
 
     public boolean isFakeDamage(EntityDamageByEntityEvent event) {

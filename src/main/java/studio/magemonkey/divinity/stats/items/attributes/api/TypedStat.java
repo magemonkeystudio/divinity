@@ -79,27 +79,9 @@ public interface TypedStat {
         THORNMAIL(SimpleStat.ItemType.BOTH, true, false, true),
         HEALTH_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
         MANA_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-        MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
->>>>>>> Stashed changes
-=======
-        MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
->>>>>>> Stashed changes
-        CC_RESISTANCE(SimpleStat.ItemType.BOTH, true, false, true),
-=======
         MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
         CC_RESISTANCE(SimpleStat.ItemType.BOTH, true, false, true),
         CC_DURATION(SimpleStat.ItemType.BOTH, true, false, true),
->>>>>>> Stashed changes
-=======
-        MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
-        CC_RESISTANCE(SimpleStat.ItemType.BOTH, true, false, true),
-        CC_DURATION(SimpleStat.ItemType.BOTH, true, false, true),
->>>>>>> Stashed changes
         HEALING_CAST(SimpleStat.ItemType.BOTH, true, false, true),
         HEALING_RECEIVED(SimpleStat.ItemType.BOTH, true, false, true),
         //PLACEHOLDERS
