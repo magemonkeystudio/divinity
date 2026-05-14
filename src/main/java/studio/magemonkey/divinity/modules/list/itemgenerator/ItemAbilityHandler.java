@@ -70,6 +70,14 @@ public class ItemAbilityHandler extends IListener<Divinity> implements Loadable 
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        FabledHook fabledHook = (FabledHook) this.plugin.getHook(EHook.SKILL_API);
+        if (fabledHook != null) {
+            fabledHook.clearFabledAttributes(event.getPlayer());
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void playerDeath(PlayerDeathEvent event) {
         FabledHook fabledHook = (FabledHook) this.plugin.getHook(EHook.SKILL_API);
