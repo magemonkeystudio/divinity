@@ -82,6 +82,7 @@ public interface TypedStat {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
         MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
 >>>>>>> Stashed changes
@@ -89,6 +90,11 @@ public interface TypedStat {
         MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
 >>>>>>> Stashed changes
         CC_RESISTANCE(SimpleStat.ItemType.BOTH, true, false, true),
+=======
+        MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
+        CC_RESISTANCE(SimpleStat.ItemType.BOTH, true, false, true),
+        CC_DURATION(SimpleStat.ItemType.BOTH, true, false, true),
+>>>>>>> Stashed changes
 =======
         MAX_MANA(SimpleStat.ItemType.BOTH, false, false, true),
         CC_RESISTANCE(SimpleStat.ItemType.BOTH, true, false, true),

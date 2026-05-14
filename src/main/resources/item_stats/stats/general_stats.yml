@@ -49,9 +49,12 @@ MAX_HEALTH:
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
 # Custom Stats
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
@@ -173,6 +176,9 @@ MAX_MANA:
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -322,13 +328,19 @@ CC_RESISTANCE:
   capacity: 60.0
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 CC_DURATION:
   enabled: true
   name: CC Duration
   format: '&e▸ %name%: &f%value% %condition%'
   capacity: -1.0
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 HEALING_CAST:
   enabled: true
@@ -342,6 +354,7 @@ HEALING_RECEIVED:
   format: '&a▸ %name%: &f%value% %condition%'
   capacity: -1
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -453,6 +466,9 @@ SUBMERGED_MINING_SPEED:
   format: '&3▸ %name%: &f%value% %condition%'
   capacity: 100.0
 
+=======
+## PLACEHOLDERS (THEY DON'T WORK ON THEIR OWN)
+>>>>>>> Stashed changes
 =======
 ## PLACEHOLDERS (THEY DON'T WORK ON THEIR OWN)
 >>>>>>> Stashed changes

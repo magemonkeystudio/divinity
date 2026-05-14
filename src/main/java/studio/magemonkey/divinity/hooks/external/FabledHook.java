@@ -388,6 +388,7 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         } catch (Exception ignored) {
             return value;
         }
+<<<<<<< Updated upstream
     }
 
     /**
@@ -410,6 +411,8 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         } catch (Exception ignored) {
             return value;
         }
+=======
+>>>>>>> Stashed changes
     }
 
     public boolean isFakeDamage(EntityDamageByEntityEvent event) {
