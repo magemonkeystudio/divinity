@@ -48,6 +48,7 @@ public class EngineCfg {
     public static boolean ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS;
 
     public static boolean     ATTRIBUTES_DURABILITY_BREAK_ITEMS;
+    public static boolean     ATTRIBUTES_HIDE_FLAGS;
     public static boolean     ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS;
     public static Set<String> ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API;
 
@@ -56,6 +57,11 @@ public class EngineCfg {
     public static double  COMBAT_SHIELD_BLOCK_BONUS_DAMAGE_MOD;
     public static int     COMBAT_SHIELD_BLOCK_COOLDOWN;
     public static boolean LEGACY_COMBAT;
+    public static String  DEFENSE_FORMULA_MODE;
+    public static String  CUSTOM_DEFENSE_FORMULA;
+    public static boolean COMBAT_OVERFLOW_PEN_AMPLIFIES;
+    public static String  COMBAT_OVERFLOW_PEN_FORMULA;
+    public static boolean FULL_LEGACY;
     public static boolean COMBAT_DISABLE_VANILLA_SWEEP;
     public static boolean COMBAT_REDUCE_PLAYER_HEALTH_BAR;
     public static boolean COMBAT_FISHING_HOOK_DO_DAMAGE;
@@ -108,8 +114,9 @@ public class EngineCfg {
     public static String LORE_STYLE_REQ_ITEM_MODULE_FORMAT_SEPAR;
     public static String LORE_STYLE_REQ_ITEM_MODULE_FORMAT_COLOR;
 
-    public static String LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN;
-    public static int    LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN;
+    public static String  LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN;
+    public static int     LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN;
+    public static boolean LORE_STYLE_ENCHANTMENTS_ROMAN_SYSTEM;
 
     public static String LORE_STYLE_FABLED_ATTRIBUTE_FORMAT;
 
@@ -177,6 +184,7 @@ public class EngineCfg {
         EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS = cfg.getBoolean(path + "effective-for-mobs");
         EngineCfg.ATTRIBUTES_EFFECTIVE_IN_OFFHAND = cfg.getBoolean(path + "effective-in-offhand");
         EngineCfg.ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS = cfg.getBoolean(path + "allow-hold-items-you-cant-use");
+        EngineCfg.ATTRIBUTES_HIDE_FLAGS = cfg.getBoolean(path + "hide-flags");
 
         path = "attributes.durability.";
         EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS = cfg.getBoolean(path + "break-items-on-zero");
@@ -208,6 +216,10 @@ public class EngineCfg {
 
         path = "combat.";
         EngineCfg.LEGACY_COMBAT = cfg.getBoolean(path + "legacy-combat", false);
+        EngineCfg.DEFENSE_FORMULA_MODE = cfg.getString(path + "defense-formula", "FACTOR").toUpperCase();
+        EngineCfg.CUSTOM_DEFENSE_FORMULA        = cfg.getString(path + "custom-defense-formula", "damage*(25/(25+defense))");
+        EngineCfg.COMBAT_OVERFLOW_PEN_AMPLIFIES = cfg.getBoolean(path + "overflow-pen-amplifies", false);
+        EngineCfg.COMBAT_OVERFLOW_PEN_FORMULA   = cfg.getString(path + "overflow-pen-formula", "damage*(overflow/100)");
         EngineCfg.COMBAT_DISABLE_VANILLA_SWEEP = cfg.getBoolean(path + "disable-vanilla-sweep-attack");
         EngineCfg.COMBAT_REDUCE_PLAYER_HEALTH_BAR = cfg.getBoolean(path + "compress-player-health-bar");
         EngineCfg.COMBAT_FISHING_HOOK_DO_DAMAGE = cfg.getBoolean(path + "fishing-hook-do-damage");
@@ -415,9 +427,11 @@ public class EngineCfg {
         path = "lore.stats.style.enchantments.";
         cfg.addMissing(path + "format.main", "&c▸ %name% %value%");
         cfg.addMissing(path + "format.max-roman", 10);
+        cfg.addMissing(path + "roman-system", true);
         EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN =
                 StringUT.color(cfg.getString(path + "format.main", "&c▸ %name% %value%"));
         EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN = cfg.getInt(path + "format.max-roman", 10);
+        EngineCfg.LORE_STYLE_ENCHANTMENTS_ROMAN_SYSTEM = cfg.getBoolean(path + "roman-system", true);
 
         path = "lore.stats.style.fabled-attribute-format";
         cfg.addMissing(path, "&7%attrPre%&3%name%&7%attrPost%");
