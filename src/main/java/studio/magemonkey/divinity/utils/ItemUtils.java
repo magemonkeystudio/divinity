@@ -33,7 +33,6 @@ import studio.magemonkey.divinity.modules.list.identify.IdentifyManager;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
 import studio.magemonkey.divinity.stats.items.requirements.ItemRequirements;
-import studio.magemonkey.divinity.Perms;
 import studio.magemonkey.divinity.stats.items.requirements.api.UserRequirement;
 import studio.magemonkey.divinity.types.ItemGroup;
 import studio.magemonkey.divinity.types.ItemSubType;
@@ -63,7 +62,7 @@ public class ItemUtils {
 
         if (!Hooks.isNPC(player)) {
             for (UserRequirement<?> req : ItemRequirements.getUserRequirements()) {
-                if (!Perms.has(player, req.getBypassPermission()) && !req.canUse(player, item)) {
+                if (!player.hasPermission(req.getBypassPermission()) && !req.canUse(player, item)) {
                     if (msg) req.getDenyMessage(player, item)
                             .replace("%item%", ItemUT.getItemName(item))
                             .replace("%player%", player.getName())

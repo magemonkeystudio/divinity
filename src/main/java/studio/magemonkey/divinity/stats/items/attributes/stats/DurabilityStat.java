@@ -24,8 +24,12 @@ import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat {
     private double cap;
 
-    public DurabilityStat(@NotNull String name, @NotNull String format, double cap) {
-        super(TypedStat.Type.DURABILITY.name(),
+    public DurabilityStat(
+            @NotNull String name,
+            @NotNull String format,
+            double cap) {
+        super(
+                TypedStat.Type.DURABILITY.name(),
                 name,
                 format,
                 "%ITEM_STAT_" + TypedStat.Type.DURABILITY.name() + "%",
@@ -111,7 +115,9 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
         return durability != null && durability[0] == 0 && !EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS;
     }
 
-    public boolean reduceDurability(@NotNull LivingEntity li, @NotNull ItemStack item, int amount) {
+    public boolean reduceDurability(
+            @NotNull LivingEntity li, @NotNull ItemStack item, int amount) {
+
         if (!(li instanceof Player) && !EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS) return false;
         if (this.isUnbreakable(item)) return false;
 
@@ -151,13 +157,33 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
         }
 
         boolean result = this.add(item, new double[]{lose, max}, -1);
+        if (result) syncVanillaBar(item);
+        return result;
+    }
 
-        if (result) {
-            syncVanillaBar(item, lose, max);
+    /**
+     * Synchronizes the vanilla durability bar to reflect Divinity custom durability as a percentage.
+     * Safeguard: if vanilla bar would show 100% but Divinity dura is not max, vanilla bar shows at least 1 damage.
+     */
+    public void syncVanillaBar(@NotNull ItemStack item) {
+        double[] dur = this.getRaw(item);
+        if (dur == null || dur[1] <= 0) return;
+        if (!(item.getItemMeta() instanceof Damageable)) return;
+
+        double percent = dur[0] / dur[1];
+        int maxVanilla = item.getType().getMaxDurability();
+        if (maxVanilla <= 0) return;
+
+        int vanillaDamage = (int) Math.round(maxVanilla * (1.0 - percent));
+
+        // Safeguard: don't show full vanilla bar when divinity dura is not max
+        if (vanillaDamage == 0 && dur[0] < dur[1]) {
+            vanillaDamage = 1;
         }
 
-        return result;
-
+        Damageable meta = (Damageable) item.getItemMeta();
+        meta.setDamage(vanillaDamage);
+        item.setItemMeta((ItemMeta) meta);
     }
 
     @Override
@@ -165,30 +191,4 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
     public String formatValue(@NotNull ItemStack item, double[] values) {
         return EngineCfg.getDurabilityFormat((int) values[0], (int) values[1]);
     }
-
-    /**
-     * Syncs the durability stat with the vanilla durability bar. Should be called after any change to the durability stat.
-     * Note: This method assumes that the durability stat is already updated with the new values before calling it.
-     *
-     * @param item the item that needs updating
-     * @param current the current durability value on the item
-     * @param maxCustom the max value possible to be set for the item
-     */
-    public void syncVanillaBar(@NotNull ItemStack item, double current, double maxCustom) {
-        ItemMeta meta = item.getItemMeta();
-        if (!(meta instanceof Damageable)) return;
-
-        Damageable damageable = (Damageable) meta;
-
-        int maxVanilla = item.getType().getMaxDurability();
-        if (maxVanilla <= 0) return;
-
-        double percent       = current / maxCustom;
-        // Scale the vanilla value to the custom percentage
-        int    vanillaDamage = (int) ((1.0 - percent) * maxVanilla);
-
-        damageable.setDamage(vanillaDamage);
-        item.setItemMeta(damageable);
-    }
-
 }

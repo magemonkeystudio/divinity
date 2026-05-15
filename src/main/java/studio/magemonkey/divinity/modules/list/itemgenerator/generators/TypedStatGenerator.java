@@ -232,6 +232,7 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
                     } else if (stat instanceof DurabilityStat) {
                         DurabilityStat rStat = (DurabilityStat) stat;
                         rStat.add(item, new double[]{vFin, vFin}, -1);
+                        rStat.syncVanillaBar(item);
                     }
                 }
 

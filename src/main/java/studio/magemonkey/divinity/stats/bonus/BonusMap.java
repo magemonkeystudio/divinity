@@ -14,6 +14,8 @@ import studio.magemonkey.divinity.stats.items.api.ItemLoreStat;
 import studio.magemonkey.divinity.stats.items.attributes.*;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.DynamicBuffStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.PenetrationStat;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -185,6 +187,57 @@ public class BonusMap {
             } catch (IllegalArgumentException e) {
                 continue;
             }
+
+            String sVal = cfg.getString(path + "." + id);
+            if (sVal == null) continue;
+
+            String[] split = sVal.split("%", 2);
+            boolean  perc  = split.length == 2 && split[1].isEmpty();
+            double   val   = StringUT.getDouble(split[0], 0, true);
+
+            BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
+            this.bonus.put(stat, func);
+        }
+    }
+
+    public void loadDamageBuffs(@NotNull JYML cfg, @NotNull String path) {
+        for (String id : cfg.getSection(path)) {
+            DynamicBuffStat stat = ItemStats.getDamageBuff(id);
+            if (stat == null) continue;
+
+            String sVal = cfg.getString(path + "." + id);
+            if (sVal == null) continue;
+
+            String[] split = sVal.split("%", 2);
+            boolean  perc  = split.length == 2 && split[1].isEmpty();
+            double   val   = StringUT.getDouble(split[0], 0, true);
+
+            BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
+            this.bonus.put(stat, func);
+        }
+    }
+
+    public void loadDefenseBuffs(@NotNull JYML cfg, @NotNull String path) {
+        for (String id : cfg.getSection(path)) {
+            DynamicBuffStat stat = ItemStats.getDefenseBuff(id);
+            if (stat == null) continue;
+
+            String sVal = cfg.getString(path + "." + id);
+            if (sVal == null) continue;
+
+            String[] split = sVal.split("%", 2);
+            boolean  perc  = split.length == 2 && split[1].isEmpty();
+            double   val   = StringUT.getDouble(split[0], 0, true);
+
+            BiFunction<Boolean, Double, Double> func = (isBonus, apply) -> perc == isBonus ? apply + val : apply;
+            this.bonus.put(stat, func);
+        }
+    }
+
+    public void loadPenetrations(@NotNull JYML cfg, @NotNull String path) {
+        for (String id : cfg.getSection(path)) {
+            PenetrationStat stat = ItemStats.getPenetration(id);
+            if (stat == null) continue;
 
             String sVal = cfg.getString(path + "." + id);
             if (sVal == null) continue;
