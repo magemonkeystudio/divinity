@@ -234,14 +234,6 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                     }
                 }
 
-                // Anti-weapon damage bug, when shot was from a bow,
-                // but user swap his weapon to replace bow stats/damage.
-                if (weapon != null && weapon.getType() != Material.TRIDENT
-                        && !weapon.isSimilar(statsDamager.getItemInMainHand())) {
-                    damageStart = 1D;
-                    break labelFullDamage;
-                }
-
                 // Applying attack power multiplier depends on
                 // projectile launch power for proper damage values.
                 double power = ProjectileStats.getPower(projectile);
