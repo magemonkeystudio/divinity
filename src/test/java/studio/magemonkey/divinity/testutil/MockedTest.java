@@ -27,6 +27,7 @@ import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockbukkit.mockbukkit.matcher.plugin.PluginManagerFiredEventClassMatcher.hasFiredEventInstance;
 import static org.mockbukkit.mockbukkit.matcher.plugin.PluginManagerFiredEventFilterMatcher.hasFiredFilteredEvent;
 import static org.mockito.Mockito.*;
@@ -126,11 +127,13 @@ public abstract class MockedTest {
     }
 
     public <T extends Event> void assertEventFired(Class<T> clazz) {
-        hasFiredEventInstance(clazz).matches(server.getPluginManager());
+        assertTrue(hasFiredEventInstance(clazz).matches(server.getPluginManager()),
+                "Expected event to fire: " + clazz.getSimpleName());
     }
 
     public <T extends Event> void assertEventFired(Class<T> clazz, Predicate<T> predicate) {
-        hasFiredFilteredEvent(clazz, predicate).matches(server.getPluginManager());
+        assertTrue(hasFiredFilteredEvent(clazz, predicate).matches(server.getPluginManager()),
+                "Expected matching event to fire: " + clazz.getSimpleName());
     }
 
     public void clearEvents() {
