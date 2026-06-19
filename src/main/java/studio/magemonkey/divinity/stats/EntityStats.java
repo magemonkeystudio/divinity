@@ -650,13 +650,18 @@ public class EntityStats {
     // Damage not cached due to broke of range values
     @NotNull
     public Map<DamageAttribute, Double> getDamageTypes(boolean safe) {
+        return this.getDamageTypes(safe, null);
+    }
+
+    @NotNull
+    public Map<DamageAttribute, Double> getDamageTypes(boolean safe, @Nullable ItemStack mainHandOverride) {
         if (!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer()) {
             return Collections.emptyMap();
         }
 
         Map<DamageAttribute, Double> map   = new HashMap<>();
         Biome                        bio   = this.entity.getLocation().getBlock().getBiome();
-        List<ItemStack>              equip = this.getEquipment();
+        List<ItemStack>              equip = this.getEquipmentForStats(mainHandOverride);
 
         for (DamageAttribute dmgAtt : ItemStats.getDamages()) {
             List<BiFunction<Boolean, double[], double[]>> bonuses = new ArrayList<>();
@@ -725,6 +730,10 @@ public class EntityStats {
     }
 
     public Map<SimpleStat.Type, Double> getItemStats(boolean safe) {
+        return this.getItemStats(safe, null);
+    }
+
+    public Map<SimpleStat.Type, Double> getItemStats(boolean safe, @Nullable ItemStack mainHandOverride) {
         if ((!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer())) {
             return Collections.emptyMap();
         }
@@ -732,7 +741,7 @@ public class EntityStats {
         Map<SimpleStat.Type, Double> map = new HashMap<>();
 
         for (SimpleStat.Type type : TypedStat.Type.values()) {
-            double value = this.getItemStat(type, safe);
+            double value = this.getItemStat(type, safe, mainHandOverride);
 
             if (value > 0D) {
                 map.put(type, value);
@@ -743,6 +752,10 @@ public class EntityStats {
     }
 
     public double getItemStat(@NotNull SimpleStat.Type type, boolean safe) {
+        return this.getItemStat(type, safe, null);
+    }
+
+    public double getItemStat(@NotNull SimpleStat.Type type, boolean safe, @Nullable ItemStack mainHandOverride) {
         if ((!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer()) || !type.isGlobal()) {
             return 0D;
         }
@@ -750,7 +763,7 @@ public class EntityStats {
         SimpleStat stat = (SimpleStat) ItemStats.getStat(type);
         if (stat == null) return 0D;
 
-        List<ItemStack>                           equip   = this.getEquipment();
+        List<ItemStack>                           equip   = this.getEquipmentForStats(mainHandOverride);
         List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
 
         for (ItemStack item : equip) {
@@ -779,6 +792,28 @@ public class EntityStats {
         }
 
         return value;
+    }
+
+    @NotNull
+    private List<ItemStack> getEquipmentForStats(@Nullable ItemStack mainHandOverride) {
+        List<ItemStack> equip = this.getEquipment();
+        if (mainHandOverride == null) {
+            return equip;
+        }
+
+        ItemStack currentMainHand = this.getItemInMainHand();
+        equip.removeIf(item -> item != null && item.isSimilar(currentMainHand));
+
+        if (!ItemUT.isAir(mainHandOverride) && (!ItemUtils.isArmor(mainHandOverride)
+                || mainHandOverride.getType() == Material.SHIELD)) {
+            equip.add(mainHandOverride);
+        }
+
+        if (this.isPlayer()) {
+            equip.removeIf(item -> item == null || !ItemUtils.canUse(item, this.player, false));
+        }
+
+        return equip;
     }
 
     public double getEnchantProtectFactor(@NotNull Enchantment en) {
