@@ -268,7 +268,8 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
         // Pre-cache damager damage types.
         if (statsDamager != null && !skillShouldIgnore && isFullDamage) {
-            damages.putAll(statsDamager.getDamageTypes(false));
+            ItemStack statWeapon = projectile != null ? weapon : null;
+            damages.putAll(statsDamager.getDamageTypes(false, statWeapon));
         }
         if (damages.isEmpty()) {
             DamageAttribute dmgCause = ItemStats.getDamageByCause(cause);
@@ -278,7 +279,8 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         }
 
         if (statsDamager != null) {
-            stats.putAll(statsDamager.getItemStats(false));
+            ItemStack statWeapon = projectile != null ? weapon : null;
+            stats.putAll(statsDamager.getItemStats(false, statWeapon));
         }
 
         defenses.putAll(statsVictim.getDefenseTypes(false));
