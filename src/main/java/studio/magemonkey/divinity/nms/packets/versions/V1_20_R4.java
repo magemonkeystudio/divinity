@@ -198,8 +198,9 @@ public class V1_20_R4 extends V1_20_R3 {
         if (list == null) return;
 
         // Hide or show custom entity names
-        if (list.size() > 13) {
-            Object index3 = list.get(13);
+        // Custom name shown is index 3: see https://c4k3.github.io/wiki.vg/Entity_metadata.html#Entity
+        if (list.size() > 3) {
+            Object index3 = list.get(3);
 
             Method bMethod = Reflex.getMethod(index3.getClass(), "c");
 

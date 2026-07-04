@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.CodexEngine;
 import studio.magemonkey.codex.api.events.EnginePlayerPacketEvent;
-import studio.magemonkey.codex.api.events.EngineServerPacketEvent;
 import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.nms.packets.IPacketHandler;
 import studio.magemonkey.codex.util.Reflex;
@@ -56,10 +55,6 @@ public class UniversalPacketHandler implements IPacketHandler {
         if (playOutEntityEquipment.isInstance(packet)) {
             this.managePlayerHelmet(e, packet);
         }
-    }
-
-    @Override
-    public void manageServerPacket(@NotNull EngineServerPacketEvent e) {
     }
 
     public void manageEquipmentChanges(@NotNull EnginePlayerPacketEvent e, @NotNull Object packet) {
@@ -144,8 +139,8 @@ public class UniversalPacketHandler implements IPacketHandler {
         if (list == null) return;
 
         // Hide or show custom entity names
-        if (list.size() > 13) {
-            Object index3 = list.get(13);
+        if (list.size() > 3) {
+            Object index3 = list.get(3);
 
             Method bMethod = Reflex.getMethod(index3.getClass(), "b");
 

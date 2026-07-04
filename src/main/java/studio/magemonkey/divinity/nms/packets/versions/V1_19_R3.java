@@ -176,8 +176,8 @@ public class V1_19_R3 extends V1_19_R2 {
         if (list == null) return;
 
         // Hide or show custom entity names
-        if (list.size() > 13) {
-            Object index3 = list.get(13);
+        if (list.size() > 3) {
+            Object index3 = list.get(3);
 
             Method bMethod = Reflex.getMethod(index3.getClass(), "c");
 

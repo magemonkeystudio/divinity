@@ -25,7 +25,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class V1_21_R3 extends V1_21_R1 {
-    protected final Class<?> playoutUpdateAttributes = Reflex.getClass(PACKET_LOCATION, "PacketPlayOutUpdateAttributes");
+    protected final Class<?> playoutUpdateAttributes =
+            Reflex.getClass(PACKET_LOCATION, "PacketPlayOutUpdateAttributes");
     protected final Class<?> craftServerClass        = Reflex.getCraftClass("CraftServer");
     protected final Class<?> nmsEntityClass          = Reflex.getClass("net.minecraft.world.entity", "Entity");
     protected final Class<?> worldServerClass        = Reflex.getClass("net.minecraft.server.level", "WorldServer");
@@ -167,9 +168,9 @@ public class V1_21_R3 extends V1_21_R1 {
             String   mcKey        = "minecraft:damage_indicator";
             Class<?> keyClass     = Reflex.getClass("net.minecraft.resources.MinecraftKey");
             Object key = Version.CURRENT.isAtLeast(Version.V1_21_R2) ? Reflex.getConstructor(keyClass,
-                            String.class,
-                            String.class)
-                    .newInstance("minecraft", "damage_indicator")
+                    String.class,
+                    String.class)
+                                                                       .newInstance("minecraft", "damage_indicator")
                     : Reflex.getConstructor(keyClass, String.class).newInstance(mcKey);
             Object damageIndicator = Reflex.invokeMethod(
                     Reflex.getMethod(particleRegistry.getClass(), "a", keyClass),

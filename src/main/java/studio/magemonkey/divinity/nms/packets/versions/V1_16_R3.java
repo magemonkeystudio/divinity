@@ -146,8 +146,8 @@ public class V1_16_R3 extends UniversalPacketHandler {
 //        if (list == null) return;
 //
 //        // Hide or show custom entity names
-//        if (list.size() > 13) {
-//            Item<?> index3 = list.get(13);
+//        if (list.size() > 3) {
+//            Item<?> index3 = list.get(3);
 //            Object b = index3.b();
 //            if (b == null || !b.getClass().equals(Boolean.class)) return;
 //            //Object nameVisible = Reflex.getFieldValue(index3, "b");
