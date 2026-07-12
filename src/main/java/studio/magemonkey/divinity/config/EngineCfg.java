@@ -46,6 +46,7 @@ public class EngineCfg {
     public static boolean ATTRIBUTES_EFFECTIVE_FOR_MOBS;
     public static boolean ATTRIBUTES_EFFECTIVE_IN_OFFHAND;
     public static boolean ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS;
+    public static boolean ATTRIBUTES_HIDE_FLAGS;
 
     public static boolean     ATTRIBUTES_DURABILITY_BREAK_ITEMS;
     public static boolean     ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS;
@@ -177,6 +178,7 @@ public class EngineCfg {
         EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS = cfg.getBoolean(path + "effective-for-mobs");
         EngineCfg.ATTRIBUTES_EFFECTIVE_IN_OFFHAND = cfg.getBoolean(path + "effective-in-offhand");
         EngineCfg.ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS = cfg.getBoolean(path + "allow-hold-items-you-cant-use");
+        EngineCfg.ATTRIBUTES_HIDE_FLAGS = cfg.getBoolean(path + "hide-flags");
 
         path = "attributes.durability.";
         EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS = cfg.getBoolean(path + "break-items-on-zero");

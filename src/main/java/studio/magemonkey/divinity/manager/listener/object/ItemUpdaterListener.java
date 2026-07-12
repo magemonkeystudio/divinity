@@ -25,6 +25,7 @@ import studio.magemonkey.codex.api.meta.NBTAttribute;
 import studio.magemonkey.codex.manager.IListener;
 import studio.magemonkey.codex.util.DataUT;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 
 public class ItemUpdaterListener extends IListener<Divinity> {
@@ -106,7 +107,7 @@ public class ItemUpdaterListener extends IListener<Divinity> {
             if (fixed) {
                 DataUT.removeData(item, key);
                 meta.removeItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            } else {
+            } else if(EngineCfg.ATTRIBUTES_HIDE_FLAGS) {
                 meta.addItemFlags(ItemFlag.values());
             }
             item.setItemMeta(meta);
