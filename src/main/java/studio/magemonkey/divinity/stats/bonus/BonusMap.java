@@ -137,6 +137,14 @@ public class BonusMap {
     }
 
     public void loadDefenses(@NotNull JYML cfg, @NotNull String path) {
+        loadDefenses(cfg, path, 1D);
+    }
+
+    /**
+     * @param sign multiplier applied to the parsed value, e.g. -1 to have the loaded
+     *             values reduce the stat instead of increasing it (defense-ignoring arrows).
+     */
+    public void loadDefenses(@NotNull JYML cfg, @NotNull String path, double sign) {
         for (String id : cfg.getSection(path)) {
             DefenseAttribute dt = ItemStats.getDefenseById(id);
             if (dt == null) continue;
@@ -146,7 +154,7 @@ public class BonusMap {
 
             String[] split = sVal.split("%", 2);
             boolean  perc  = split.length == 2 && split[1].isEmpty();
-            double   val   = StringUT.getDouble(split[0], 0, true);
+            double   val   = StringUT.getDouble(split[0], 0, true) * sign;
 
             BiFunction<Boolean, Double, Double> func = (bonus, apply) -> perc == bonus ? apply + val : apply;
             this.bonus.put(dt, func);

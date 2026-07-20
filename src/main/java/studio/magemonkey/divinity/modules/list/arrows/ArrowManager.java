@@ -27,7 +27,6 @@ import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import studio.magemonkey.divinity.modules.list.arrows.ArrowManager.QArrow;
 import studio.magemonkey.divinity.stats.bonus.BonusMap;
 import studio.magemonkey.divinity.stats.items.ItemStats;
-import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
 
 import java.util.*;
 
@@ -214,15 +213,9 @@ public class ArrowManager extends QModuleDrop<QArrow> {
                 BonusMap bMap = new BonusMap();
                 bMap.loadStats(cfg, path + "additional-stats");
                 bMap.loadDamages(cfg, path + "additional-damage");
-                bMap.loadDefenses(cfg, path + "defense-ignoring");
-
-                // Here we adjust the defense bonus function to negative value.
-                // So it will reduce the victim's defense on hit.
-                bMap.getBonuses().forEach((stat, func) -> {
-                    if (stat instanceof DefenseAttribute) {
-                        bMap.getBonuses().compute(stat, (kStat, vFunc) -> vFunc.andThen(result -> -result));
-                    }
-                });
+                // Negative sign so these values reduce the victim's defense on hit
+                // instead of granting defense, without touching the passthrough branch.
+                bMap.loadDefenses(cfg, path + "defense-ignoring", -1D);
 
                 this.bonusMap.put(itemLvl, bMap);
             }
