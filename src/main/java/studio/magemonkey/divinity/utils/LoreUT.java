@@ -127,8 +127,10 @@ public class LoreUT {
             String value = EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN
                     .replace("%name%", plugin.lang().getEnchantment(e))
                     .replace("%value%",
-                            level > EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN ? String.valueOf(level)
-                                    : NumberUT.toRoman(level));
+                            !EngineCfg.LORE_STYLE_ENCHANTMENTS_ROMAN_SYSTEM ? String.valueOf(level)
+                                    : (level > EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN
+                                            ? String.valueOf(level)
+                                            : NumberUT.toRoman(level)));
             lore.add(pos, value);
         }
         meta.setLore(lore);
