@@ -52,6 +52,8 @@ import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.DynamicBuffStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.PenetrationStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
 
 import java.util.*;
@@ -957,6 +959,34 @@ public class EntityStats {
             }
         }
 
+        return value;
+    }
+
+    public double getPenetration(@NotNull PenetrationStat pen) {
+        List<ItemStack> equip = this.getEquipment();
+        List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
+        for (ItemStack item : equip) {
+            if (item == null || item.getType().isAir()) continue;
+            bonuses.addAll(pen.get(item, player));
+        }
+        double value = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
+        if (pen.getCapacity() >= 0 && value > pen.getCapacity()) {
+            value = pen.getCapacity();
+        }
+        return value;
+    }
+
+    public double getDynamicBuff(@NotNull DynamicBuffStat buff) {
+        List<ItemStack> equip = this.getEquipment();
+        List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
+        for (ItemStack item : equip) {
+            if (item == null || item.getType().isAir()) continue;
+            bonuses.addAll(buff.get(item, player));
+        }
+        double value = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
+        if (buff.getCapacity() >= 0 && value > buff.getCapacity()) {
+            value = buff.getCapacity();
+        }
         return value;
     }
 

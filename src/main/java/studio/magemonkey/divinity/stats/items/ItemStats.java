@@ -29,6 +29,8 @@ import studio.magemonkey.divinity.stats.items.attributes.SocketAttribute.Type;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.DynamicBuffStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.PenetrationStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
 
 import java.util.*;
@@ -44,6 +46,9 @@ public class ItemStats {
     private static final Map<String, ItemLoreStat<?>>            ATTRIBUTES       = new HashMap<>();
     private static final Map<String, DuplicableItemLoreStat<?>>  MULTI_ATTRIBUTES = new HashMap<>();
     private static final Set<DynamicStat>                        DYNAMIC_STATS    = new HashSet<>();
+    private static final Map<String, DynamicBuffStat>            DAMAGE_BUFFS     = new LinkedHashMap<>();
+    private static final Map<String, DynamicBuffStat>            DEFENSE_BUFFS    = new LinkedHashMap<>();
+    private static final Map<String, PenetrationStat>            PENETRATIONS     = new LinkedHashMap<>();
     private static final Divinity                                plugin           = Divinity.getInstance();
     private static final List<NamespacedKey>                     KEY_ID           =
             List.of(new NamespacedKey(plugin, ItemTags.TAG_ITEM_ID),
@@ -95,6 +100,9 @@ public class ItemStats {
         MULTI_ATTRIBUTES.clear();
         DAMAGE_DEFAULT = null;
         DEFENSE_DEFAULT = null;
+        DAMAGE_BUFFS.clear();
+        DEFENSE_BUFFS.clear();
+        PENETRATIONS.clear();
     }
 
     public static void registerDamage(@NotNull DamageAttribute dmg) {
@@ -136,6 +144,48 @@ public class ItemStats {
 
     public static Collection<DynamicStat> getDynamicStats() {
         return Collections.unmodifiableSet(DYNAMIC_STATS);
+    }
+
+    public static void registerDamageBuff(@NotNull DynamicBuffStat buff) {
+        DAMAGE_BUFFS.put(buff.getBuffId(), buff);
+    }
+
+    public static void registerDefenseBuff(@NotNull DynamicBuffStat buff) {
+        DEFENSE_BUFFS.put(buff.getBuffId(), buff);
+    }
+
+    @NotNull
+    public static Collection<DynamicBuffStat> getDamageBuffs() {
+        return DAMAGE_BUFFS.values();
+    }
+
+    @NotNull
+    public static Collection<DynamicBuffStat> getDefenseBuffs() {
+        return DEFENSE_BUFFS.values();
+    }
+
+    @Nullable
+    public static DynamicBuffStat getDamageBuff(@NotNull String id) {
+        return DAMAGE_BUFFS.get(id.toLowerCase());
+    }
+
+    @Nullable
+    public static DynamicBuffStat getDefenseBuff(@NotNull String id) {
+        return DEFENSE_BUFFS.get(id.toLowerCase());
+    }
+
+    public static void registerPenetration(@NotNull PenetrationStat pen) {
+        PENETRATIONS.put(pen.getPenId(), pen);
+    }
+
+    @NotNull
+    public static Collection<PenetrationStat> getPenetrations() {
+        return PENETRATIONS.values();
+    }
+
+    @Nullable
+    public static PenetrationStat getPenetration(@NotNull String id) {
+        return PENETRATIONS.get(id.toLowerCase());
     }
 
     private static void updateDefenseByDefault() {
