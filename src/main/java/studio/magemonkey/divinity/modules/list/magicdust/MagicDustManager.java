@@ -171,7 +171,7 @@ public class MagicDustManager extends QModuleDrop<MagicDust> {
     }
 
     public void openGUIPaid(@NotNull Player player, @Nullable ItemStack target, boolean force) {
-        if (!force && !Perms.has(player, Perms.MAGIC_DUST_GUI)) {
+        if (!force && !player.hasPermission(Perms.MAGIC_DUST_GUI)) {
             plugin.lang().Error_NoPerm.send(player);
             return;
         }

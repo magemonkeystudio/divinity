@@ -110,7 +110,7 @@ public class ExtractorManager extends QModuleDrop<ExtractorTool> {
             boolean force
     ) {
 
-        if (!force && !Perms.has(player, Perms.EXTRACTOR_GUI)) {
+        if (!force && !player.hasPermission(Perms.EXTRACTOR_GUI)) {
             plugin.lang().Error_NoPerm.send(player);
             return false;
         }
