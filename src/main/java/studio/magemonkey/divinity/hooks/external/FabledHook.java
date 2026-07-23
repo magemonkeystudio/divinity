@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -16,6 +17,7 @@ import studio.magemonkey.codex.hooks.HookState;
 import studio.magemonkey.codex.hooks.NHook;
 import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.HookClass;
 import studio.magemonkey.divinity.hooks.HookLevel;
@@ -28,9 +30,12 @@ import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
 import studio.magemonkey.fabled.Fabled;
 import studio.magemonkey.fabled.api.DefaultCombatProtection;
 import studio.magemonkey.fabled.api.enums.ExpSource;
+import studio.magemonkey.fabled.api.enums.Operation;
 import studio.magemonkey.fabled.api.event.DynamicTriggerEvent;
 import studio.magemonkey.fabled.api.event.PlayerManaGainEvent;
+import studio.magemonkey.fabled.api.event.PlayerMaxManaChangeEvent;
 import studio.magemonkey.fabled.api.event.SkillDamageEvent;
+import studio.magemonkey.fabled.api.player.PlayerAttributeModifier;
 import studio.magemonkey.fabled.api.player.PlayerData;
 import studio.magemonkey.fabled.api.player.PlayerSkill;
 import studio.magemonkey.fabled.api.skills.Skill;
@@ -118,6 +123,17 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         }
     }
 
+    @EventHandler
+    public void onMaxManaChange(PlayerMaxManaChangeEvent e) {
+        Player player = e.getPlayerData().getPlayer();
+        if (player == null) return;
+
+        double bonus = EntityStats.get(player).getItemStat(TypedStat.Type.MAX_MANA, false);
+        if (bonus != 0) {
+            e.setMaxMana(e.getMaxMana() + bonus);
+        }
+    }
+
     @Override
     public void takeMana(@NotNull Player player, double amount, boolean ofMax) {
         PlayerData data = Fabled.getData(player);
@@ -133,7 +149,7 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         data.setMana(Math.max(0, cur - amount));
     }
 
-    private final List<UUID> divinityIgnored = new ArrayList<>();
+    private final Set<UUID> divinityIgnored = new HashSet<>();
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void skillDamage(SkillDamageEvent event) {
@@ -145,10 +161,38 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void damage(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof LivingEntity))
-            return;
+        UUID damagerUuid = null;
+        if (event.getDamager() instanceof LivingEntity) {
+            damagerUuid = ((LivingEntity) event.getDamager()).getUniqueId();
+        } else if (event.getDamager() instanceof Projectile) {
+            Projectile proj = (Projectile) event.getDamager();
+            if (proj.getShooter() instanceof LivingEntity)
+                damagerUuid = ((LivingEntity) proj.getShooter()).getUniqueId();
+        }
+        if (damagerUuid != null)
+            divinityIgnored.remove(damagerUuid);
+    }
 
-        divinityIgnored.remove(event.getDamager().getUniqueId());
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onDivinityDamageStart(DivinityDamageEvent.Start e) {
+        LivingEntity damager = e.getDamager();
+        if (damager == null || !damager.hasMetadata("fabled_dmg_flags")) return;
+
+        int flags = damager.getMetadata("fabled_dmg_flags").get(0).asInt();
+        if ((flags & 0x01) != 0) e.getDamageMeta().setIgnoreCrit(true);
+        if ((flags & 0x04) != 0) e.getDamageMeta().setBlockModifier(1.0);
+        if ((flags & 0x08) != 0) e.getDamagerItemStatsMap().put(TypedStat.Type.BLEED_RATE, 0.0);
+        if ((flags & 0x10) != 0) e.getDamagerItemStatsMap().put(TypedStat.Type.VAMPIRISM, 0.0);
+        if ((flags & 0x20) != 0) e.getDamageMeta().setIgnoreSkillCrit(true);
+    }
+
+    @EventHandler
+    public void onDivinityDodge(DivinityDamageEvent.Dodge e) {
+        LivingEntity damager = e.getDamager();
+        if (damager == null || !damager.hasMetadata("fabled_dmg_flags")) return;
+
+        int flags = damager.getMetadata("fabled_dmg_flags").get(0).asInt();
+        if ((flags & 0x02) != 0) e.setCancelled(true);
     }
 
     public void ignoreDivinity(LivingEntity player, boolean ignore) {
@@ -241,6 +285,58 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         return itemStack;
     }
 
+    private final Map<UUID, List<UUID>> playerAttrModifiers = new HashMap<>();
+
+    public void updateFabledAttributes(Player player) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!Fabled.hasPlayerData(player)) return;
+                PlayerData data = Fabled.getData(player);
+                if (data == null) return;
+
+                List<UUID> oldUuids = playerAttrModifiers.remove(player.getUniqueId());
+                if (oldUuids != null) {
+                    for (UUID uuid : oldUuids) {
+                        data.removeAttributeModifier(uuid, false);
+                    }
+                }
+
+                List<UUID> newUuids = new ArrayList<>();
+                PlayerInventory inventory = player.getInventory();
+                int[] slots = {inventory.getHeldItemSlot(), 36, 37, 38, 39, 40};
+                for (int slot : slots) {
+                    ItemStack item = inventory.getItem(slot);
+                    if (item == null) continue;
+                    for (FabledAttribute attr : getAttributes()) {
+                        Integer value = attr.getRaw(item);
+                        if (value == null || value == 0) continue;
+                        PlayerAttributeModifier modifier = new PlayerAttributeModifier(
+                                "divinity.fabled_attr", value, Operation.ADD_NUMBER, false);
+                        newUuids.add(modifier.getUUID());
+                        data.addAttributeModifier(attr.getId(), modifier, false);
+                    }
+                }
+
+                if (!newUuids.isEmpty()) {
+                    playerAttrModifiers.put(player.getUniqueId(), newUuids);
+                }
+
+                data.updatePlayerStat(player);
+            }
+        }.runTaskLater(plugin, 1L);
+    }
+
+    public void clearFabledAttributes(Player player) {
+        List<UUID> uuids = playerAttrModifiers.remove(player.getUniqueId());
+        if (uuids == null || !Fabled.hasPlayerData(player)) return;
+        PlayerData data = Fabled.getData(player);
+        if (data == null) return;
+        for (UUID uuid : uuids) {
+            data.removeAttributeModifier(uuid, false);
+        }
+    }
+
     public void updateSkills(Player player) {
         new BukkitRunnable() {
             @Override
@@ -284,6 +380,22 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
                 }
             }
         }.runTaskLater(plugin, 1L);
+        updateFabledAttributes(player);
+    }
+
+    /**
+     * Scales a Divinity stat value using Fabled's attribute and stat modifier system.
+     * Fabled attributes.yml can reference Divinity stat names (lowercase type names, e.g. "critical_rate").
+     */
+    public double applyStatScale(@NotNull Player player, @NotNull String statId, double value) {
+        try {
+            if (!Fabled.hasPlayerData(player)) return value;
+            PlayerData data = Fabled.getData(player);
+            if (data == null) return value;
+            return data.scaleStat(statId, value);
+        } catch (Exception ignored) {
+            return value;
+        }
     }
 
     public boolean isFakeDamage(EntityDamageByEntityEvent event) {

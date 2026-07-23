@@ -245,4 +245,9 @@ public class ModuleCache {
     public MoneyManager getMoneyManager() {
         return this.moneyManager;
     }
+
+    @Nullable
+    public ConsumablesManager getConsumablesManager() {
+        return this.consumablesManager;
+    }
 }

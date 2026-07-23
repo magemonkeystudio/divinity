@@ -31,6 +31,8 @@ import studio.magemonkey.divinity.api.event.EntityStatsBonusUpdateEvent;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.data.api.DivinityUser;
 import studio.magemonkey.divinity.data.api.UserProfile;
+import studio.magemonkey.divinity.hooks.EHook;
+import studio.magemonkey.divinity.hooks.external.FabledHook;
 import studio.magemonkey.divinity.manager.damage.DamageMeta;
 import studio.magemonkey.divinity.manager.effects.IEffect;
 import studio.magemonkey.divinity.manager.effects.IEffectType;
@@ -857,6 +859,10 @@ public class EntityStats {
             double   value = Rnd.getDouble(range[0], range[1]);
             value *= dmgAtt.getDamageModifierByBiome(bio); // Multiply by Biome
             value = this.getEffectBonus(dmgAtt, safe).applyAsDouble(value);
+            if (this.isPlayer()) {
+                FabledHook fHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
+                if (fHook != null) value = fHook.applyStatScale(this.player, "damage_" + dmgAtt.getId(), value);
+            }
 
             if (value > 0D) {
                 map.put(dmgAtt, value);
@@ -890,6 +896,10 @@ public class EntityStats {
 
             double value = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
             value = this.getEffectBonus(dt, safe).applyAsDouble(value);
+            if (this.isPlayer()) {
+                FabledHook fHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
+                if (fHook != null) value = fHook.applyStatScale(this.player, "defense_" + dt.getId(), value);
+            }
             if (value > 0D) {
                 map.put(dt, value);
             }
@@ -960,6 +970,14 @@ public class EntityStats {
             }
         }
 
+        // Apply Fabled attribute/stat scaling if player and Fabled is loaded
+        if (this.isPlayer()) {
+            FabledHook fHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
+            if (fHook != null) {
+                value = fHook.applyStatScale(this.player, type.name().toLowerCase(), value);
+            }
+        }
+
         return value;
     }
 
@@ -974,6 +992,12 @@ public class EntityStats {
         if (pen.getCapacity() >= 0 && value > pen.getCapacity()) {
             value = pen.getCapacity();
         }
+        if (this.isPlayer()) {
+            FabledHook fHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
+            if (fHook != null) {
+                value = fHook.applyStatScale(this.player, "penetration_" + pen.getPenId(), value);
+            }
+        }
         return value;
     }
 
@@ -987,6 +1011,14 @@ public class EntityStats {
         double value = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
         if (buff.getCapacity() >= 0 && value > buff.getCapacity()) {
             value = buff.getCapacity();
+        }
+        if (this.isPlayer()) {
+            FabledHook fHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
+            if (fHook != null) {
+                String buffKey = (buff.getBuffTarget() == DynamicBuffStat.BuffTarget.DAMAGE ? "damagebuff_" : "defensebuff_")
+                        + buff.getBuffId();
+                value = fHook.applyStatScale(this.player, buffKey, value);
+            }
         }
         return value;
     }
