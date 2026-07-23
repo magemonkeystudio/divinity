@@ -685,7 +685,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         return success[0];
     }
 
-    private static double evaluateDefenseFormula(String formula, double damage, double defense,
+    static double evaluateDefenseFormula(String formula, double damage, double defense,
                                                    double toughness, Map<String, Double> individualDefs) {
         String expr = formula
                 .replace("damage", String.valueOf(damage))
@@ -708,7 +708,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
      * @param defense  total defense before flat pen was applied
      * @return bonus damage to add; 0 on invalid result (NaN / Infinity / negative)
      */
-    private static double evaluateOverflowFormula(String formula, double damage,
+    static double evaluateOverflowFormula(String formula, double damage,
                                                    double overflow, double defense) {
         String expr = formula
                 .replace("damage",   String.valueOf(damage))
