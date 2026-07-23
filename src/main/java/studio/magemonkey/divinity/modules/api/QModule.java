@@ -6,6 +6,7 @@ import studio.magemonkey.codex.modules.IModule;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.modules.api.socketing.ModuleSocket;
 import studio.magemonkey.divinity.modules.command.*;
+import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 
 public abstract class QModule extends IModule<Divinity> {
 
@@ -29,6 +30,9 @@ public abstract class QModule extends IModule<Divinity> {
                 this.moduleCommand.addSubCommand(new MGiveCmd(md));
                 this.moduleCommand.addSubCommand(new MDropCmd(md));
                 this.moduleCommand.addSubCommand(new MListCmd(md));
+                if (this instanceof ItemGeneratorManager) {
+                    this.moduleCommand.addSubCommand(new MMobEquipCmd(md));
+                }
             }
             this.moduleCommand.addSubCommand(new MReloadCmd(this));
         }

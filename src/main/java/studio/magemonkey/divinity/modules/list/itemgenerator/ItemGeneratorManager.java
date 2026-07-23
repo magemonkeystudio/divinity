@@ -46,12 +46,15 @@ import studio.magemonkey.divinity.modules.list.itemgenerator.command.EditCommand
 import studio.magemonkey.divinity.modules.list.itemgenerator.editor.AbstractEditorGUI;
 import studio.magemonkey.divinity.modules.list.itemgenerator.generators.AbilityGenerator;
 import studio.magemonkey.divinity.modules.list.itemgenerator.generators.AttributeGenerator;
+import studio.magemonkey.divinity.modules.list.itemgenerator.generators.DuplicableStatGenerator;
 import studio.magemonkey.divinity.modules.list.itemgenerator.generators.SingleAttributeGenerator;
 import studio.magemonkey.divinity.modules.list.itemgenerator.generators.TypedStatGenerator;
 import studio.magemonkey.divinity.modules.list.sets.SetManager;
 import studio.magemonkey.divinity.stats.bonus.BonusMap;
 import studio.magemonkey.divinity.stats.bonus.StatBonus;
 import studio.magemonkey.divinity.stats.items.ItemStats;
+import studio.magemonkey.divinity.stats.items.attributes.stats.DynamicBuffStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.PenetrationStat;
 import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.api.ItemLoreStat;
 import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
@@ -85,12 +88,15 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
     private static ResourceManager    resourceManager;
     private        ItemAbilityHandler abilityHandler;
 
-    public static final String PLACE_GEN_DAMAGE      = "%GENERATOR_DAMAGE%";
-    public static final String PLACE_GEN_DEFENSE     = "%GENERATOR_DEFENSE%";
-    public static final String PLACE_GEN_STATS       = "%GENERATOR_STATS%";
-    public static final String PLACE_GEN_SOCKETS     = "%GENERATOR_SOCKETS_%TYPE%%";
-    public static final String PLACE_GEN_ABILITY     = "%GENERATOR_SKILLS%";
-    public static final String PLACE_GEN_FABLED_ATTR = "%GENERATOR_FABLED_ATTR%";
+    public static final String PLACE_GEN_DAMAGE        = "%GENERATOR_DAMAGE%";
+    public static final String PLACE_GEN_DEFENSE       = "%GENERATOR_DEFENSE%";
+    public static final String PLACE_GEN_STATS         = "%GENERATOR_STATS%";
+    public static final String PLACE_GEN_SOCKETS       = "%GENERATOR_SOCKETS_%TYPE%%";
+    public static final String PLACE_GEN_ABILITY       = "%GENERATOR_SKILLS%";
+    public static final String PLACE_GEN_FABLED_ATTR   = "%GENERATOR_FABLED_ATTR%";
+    public static final String PLACE_GEN_DAMAGE_BUFFS  = "%GENERATOR_DAMAGE_BUFFS%";
+    public static final String PLACE_GEN_DEFENSE_BUFFS = "%GENERATOR_DEFENSE_BUFFS%";
+    public static final String PLACE_GEN_PENETRATION   = "%GENERATOR_PENETRATION%";
 
     public ItemGeneratorManager(@NotNull Divinity plugin) {
         super(plugin, GeneratorItem.class);
@@ -617,6 +623,22 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                     "generator.item-stats.",
                     ItemStats.getStats(),
                     ItemGeneratorManager.PLACE_GEN_STATS));
+
+            // DuplicableStatGenerators for damage buffs, defense buffs, and penetration.
+            // Each handles its own config section and auto-populates missing keys.
+            this.addAttributeGenerator(new DuplicableStatGenerator<>(
+                    this.plugin, this, "generator.item-stats.", "list-damage-buffs",
+                    ItemStats.getDamageBuffs(), DynamicBuffStat::getBuffId,
+                    ItemGeneratorManager.PLACE_GEN_DAMAGE_BUFFS));
+            this.addAttributeGenerator(new DuplicableStatGenerator<>(
+                    this.plugin, this, "generator.item-stats.", "list-defense-buffs",
+                    ItemStats.getDefenseBuffs(), DynamicBuffStat::getBuffId,
+                    ItemGeneratorManager.PLACE_GEN_DEFENSE_BUFFS));
+            this.addAttributeGenerator(new DuplicableStatGenerator<>(
+                    this.plugin, this, "generator.item-stats.", "list-penetration",
+                    ItemStats.getPenetrations(), PenetrationStat::getPenId,
+                    ItemGeneratorManager.PLACE_GEN_PENETRATION));
+
             this.addAttributeGenerator(
                     this.abilityGenerator = new AbilityGenerator(this.plugin, this, PLACE_GEN_ABILITY));
             FabledHook fabledHook = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
@@ -956,6 +978,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             LoreUT.replacePlaceholder(item, PLACE_GEN_DAMAGE, null);
             LoreUT.replacePlaceholder(item, PLACE_GEN_DEFENSE, null);
+            LoreUT.replacePlaceholder(item, PLACE_GEN_DAMAGE_BUFFS, null);
+            LoreUT.replacePlaceholder(item, PLACE_GEN_DEFENSE_BUFFS, null);
+            LoreUT.replacePlaceholder(item, PLACE_GEN_PENETRATION, null);
 
             LevelRequirement reqLevel = ItemRequirements.getUserRequirement(LevelRequirement.class);
             if (reqLevel != null) {
@@ -1013,6 +1038,15 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
                 lore.remove(at.getPlaceholder());
             }
             for (ItemLoreStat<?> at : ItemStats.getDefenses()) {
+                lore.remove(at.getPlaceholder());
+            }
+            for (DynamicBuffStat at : ItemStats.getDamageBuffs()) {
+                lore.remove(at.getPlaceholder());
+            }
+            for (DynamicBuffStat at : ItemStats.getDefenseBuffs()) {
+                lore.remove(at.getPlaceholder());
+            }
+            for (PenetrationStat at : ItemStats.getPenetrations()) {
                 lore.remove(at.getPlaceholder());
             }
 

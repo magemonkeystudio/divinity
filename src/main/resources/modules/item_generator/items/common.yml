@@ -16,6 +16,9 @@ lore:
   - '%GENERATOR_SKILLS%'
   - '%GENERATOR_DEFENSE%'
   - '%GENERATOR_DAMAGE%'
+  - '%GENERATOR_DAMAGE_BUFFS%'
+  - '%GENERATOR_DEFENSE_BUFFS%'
+  - '%GENERATOR_PENETRATION%'
   - '%GENERATOR_STATS%'
   - '%GENERATOR_FABLED_ATTR%'
   - '%GENERATOR_SOCKETS_GEM%'
@@ -265,6 +268,36 @@ generator:
         min: 0
         max: 0
         flat-range: false
+    list-damage-buffs:
+      # Per-damage-type % damage buff stats (DynamicBuffStat DAMAGE)
+      # Add entries here matching IDs from damage_buffs_percent.yml
+      # Example:
+      # physical:
+      #   chance: 10.0
+      #   scale-by-level: 1.025
+      #   min: 5.0
+      #   max: 15.0
+      #   flat-range: false
+    list-defense-buffs:
+      # Per-damage-type % defense buff stats (DynamicBuffStat DEFENSE)
+      # Add entries here matching IDs from defense_buffs_percent.yml
+      # Example:
+      # physical:
+      #   chance: 10.0
+      #   scale-by-level: 1.025
+      #   min: 5.0
+      #   max: 15.0
+      #   flat-range: false
+    list-penetration:
+      # Per-damage-type penetration stats (PenetrationStat)
+      # Add entries here matching IDs from penetration.yml
+      # Example:
+      # physical_pen:
+      #   chance: 6.0
+      #   scale-by-level: 1.025
+      #   min: 4.0
+      #   max: 10.0
+      #   flat-range: false
   fabled-attributes:
     minimum: 1
     maximum: 4

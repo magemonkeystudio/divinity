@@ -17,6 +17,8 @@ import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 
+import studio.magemonkey.divinity.utils.LoreUT;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -61,17 +63,22 @@ public class MGiveCmd extends MCmd<QModuleDrop<?>> {
         if (i == 4) {
             return Arrays.asList("1", "10");
         }
-
-        // Support for material argument for ItemGenerator
-        if (i == 5 && this.module instanceof ItemGeneratorManager) {
-            ItemGeneratorManager itemGeneratorManager = (ItemGeneratorManager) this.module;
-            GeneratorItem        generatorItem        = itemGeneratorManager.getItemById(args[2]);
-            if (generatorItem != null) {
-                List<String> list = generatorItem.getMaterialsList().stream()
-                        .map(ItemType::getNamespacedID).collect(Collectors.toList());
-                return list;
+        if (i == 5) {
+            List<String> list = new java.util.ArrayList<>();
+            if (this.module instanceof ItemGeneratorManager) {
+                ItemGeneratorManager itemGeneratorManager = (ItemGeneratorManager) this.module;
+                GeneratorItem        generatorItem        = itemGeneratorManager.getItemById(args[2]);
+                if (generatorItem != null) {
+                    list.addAll(generatorItem.getMaterialsList().stream()
+                            .map(ItemType::getNamespacedID).collect(Collectors.toList()));
+                }
             }
+            return list;
         }
+        if (i == 6) {
+            return Arrays.asList("-noenchants");
+        }
+
         return super.getTab(player, i, args);
     }
 
@@ -111,13 +118,18 @@ public class MGiveCmd extends MCmd<QModuleDrop<?>> {
             amount = this.getNumI(sender, args[4], 1);
         }
 
+        boolean noEnchants = Arrays.stream(args).anyMatch(a -> a.equalsIgnoreCase("-noenchants"));
+
         ItemStack item = null;
 
-        ItemType material;
-        try {
-            material = args.length >= 6 ? CodexEngine.get().getItemManager().getItemType(args[5]) : null;
-        } catch (MissingProviderException | MissingItemException e) {
-            material = null;
+        // Find first material arg from position 5 onwards, skipping -noenchants
+        ItemType material = null;
+        for (int j = 5; j < args.length; j++) {
+            if (args[j].equalsIgnoreCase("-noenchants")) continue;
+            try {
+                material = CodexEngine.get().getItemManager().getItemType(args[j]);
+                break;
+            } catch (MissingProviderException | MissingItemException ignored) {}
         }
         ItemGeneratorManager itemGenerator =
                 this.module instanceof ItemGeneratorManager ? (ItemGeneratorManager) this.module : null;
@@ -134,6 +146,7 @@ public class MGiveCmd extends MCmd<QModuleDrop<?>> {
                 item = DivinityAPI.getItemByModule(this.module, id, iLevel, -1, -1);
             }
             if (item == null) continue;
+            if (noEnchants) LoreUT.removeEnchants(item);
             ItemUT.addItem(p, item);
 
             String name = ItemUT.getItemName(item);
