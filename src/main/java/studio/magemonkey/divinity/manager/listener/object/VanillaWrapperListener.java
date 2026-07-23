@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.inventory.PrepareGrindstoneEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -67,7 +68,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         Vector       orig    = pj.getVelocity();
         double       power   = e.getForce();
 
-        if (Version.CURRENT.isAtLeast(Version.V1_20_R4) && Version.CURRENT.isLower(Version.V1_21_R4)) {
+        if (Version.CURRENT.isAtLeast(Version.V1_20_R4)) {
             power /= 3;
         }
 
@@ -166,6 +167,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
         EntityStats statsDamager = null;
         EntityStats statsVictim  = EntityStats.get(victim);
+        if (!(victim instanceof Player)) statsVictim.updateInventory();
 
         DamageMeta meta = new DamageMeta(victim, damager, weapon, cause);
         statsVictim.setLastDamageMeta(meta);
@@ -196,6 +198,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
                 meta.setDamager(damager);
                 statsDamager = EntityStats.get(damager);
+                if (!(damager instanceof Player)) statsDamager.updateInventory();
                 statsDamager.setLastDamageMeta(meta);
                 weapon = statsDamager.getItemInMainHand();
 
@@ -218,6 +221,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                 damager = (LivingEntity) shooter;
                 meta.setDamager(damager);
                 statsDamager = EntityStats.get(damager);
+                if (!(damager instanceof Player)) statsDamager.updateInventory();
                 statsDamager.setLastDamageMeta(meta);
                 weapon = ProjectileStats.getSrcWeapon(projectile);
 
@@ -501,6 +505,13 @@ public class VanillaWrapperListener extends IListener<Divinity> {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEnchantingTable(PrepareItemEnchantEvent e) {
         ItemStack result = e.getItem();
+        ItemGeneratorManager.updateGeneratorItemLore(result);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onGrindStone(PrepareGrindstoneEvent e) {
+        ItemStack result = e.getResult();
+        if (result == null) return;
         ItemGeneratorManager.updateGeneratorItemLore(result);
     }
 }

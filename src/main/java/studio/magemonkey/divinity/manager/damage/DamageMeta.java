@@ -31,6 +31,8 @@ public class DamageMeta {
     private       double                        pveDefModifier            = 1D;
     private       double                        directModifier            = 0D;
     private       double                        criticalModifier          = 1D;
+    private       boolean                       ignoreCrit                = false;
+    private       boolean                       ignoreSkillCrit           = false;
     private       double                        penetrateModifier         = 1D;
     private       double                        enchantProtectionModifier = 1D;
     @Getter
@@ -206,6 +208,22 @@ public class DamageMeta {
 
     public void setCriticalModifier(double critMod) {
         this.criticalModifier = critMod;
+    }
+
+    public boolean isIgnoreCrit() {
+        return this.ignoreCrit;
+    }
+
+    public void setIgnoreCrit(boolean ignoreCrit) {
+        this.ignoreCrit = ignoreCrit;
+    }
+
+    public boolean isIgnoreSkillCrit() {
+        return this.ignoreSkillCrit;
+    }
+
+    public void setIgnoreSkillCrit(boolean ignoreSkillCrit) {
+        this.ignoreSkillCrit = ignoreSkillCrit;
     }
 
     public double getDirectModifier() {

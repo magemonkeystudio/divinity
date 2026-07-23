@@ -414,7 +414,7 @@ public class EntityStats {
         return new ArrayList<>(this.inventory);
     }
 
-    private void updateInventory() {
+    public void updateInventory() {
         this.inventory.clear();
 
         ItemStack[] armor = new ItemStack[0];
@@ -441,6 +441,7 @@ public class EntityStats {
     }
 
     public void updateAll() {
+        if(EngineCfg.LEGACY_COMBAT) return;
         if (!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer()) {
             return;
         }

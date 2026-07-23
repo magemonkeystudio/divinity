@@ -56,6 +56,11 @@ public class EngineCfg {
     public static double  COMBAT_SHIELD_BLOCK_BONUS_DAMAGE_MOD;
     public static int     COMBAT_SHIELD_BLOCK_COOLDOWN;
     public static boolean LEGACY_COMBAT;
+    public static String  DEFENSE_FORMULA_MODE;
+    public static String  CUSTOM_DEFENSE_FORMULA;
+    public static boolean COMBAT_OVERFLOW_PEN_AMPLIFIES;
+    public static String  COMBAT_OVERFLOW_PEN_FORMULA;
+    public static boolean FULL_LEGACY;
     public static boolean COMBAT_DISABLE_VANILLA_SWEEP;
     public static boolean COMBAT_REDUCE_PLAYER_HEALTH_BAR;
     public static boolean COMBAT_FISHING_HOOK_DO_DAMAGE;
@@ -208,6 +213,10 @@ public class EngineCfg {
 
         path = "combat.";
         EngineCfg.LEGACY_COMBAT = cfg.getBoolean(path + "legacy-combat", false);
+        EngineCfg.DEFENSE_FORMULA_MODE = cfg.getString(path + "defense-formula", "FACTOR").toUpperCase();
+        EngineCfg.CUSTOM_DEFENSE_FORMULA        = cfg.getString(path + "custom-defense-formula", "damage*(25/(25+defense))");
+        EngineCfg.COMBAT_OVERFLOW_PEN_AMPLIFIES = cfg.getBoolean(path + "overflow-pen-amplifies", false);
+        EngineCfg.COMBAT_OVERFLOW_PEN_FORMULA   = cfg.getString(path + "overflow-pen-formula", "damage*(overflow/100)");
         EngineCfg.COMBAT_DISABLE_VANILLA_SWEEP = cfg.getBoolean(path + "disable-vanilla-sweep-attack");
         EngineCfg.COMBAT_REDUCE_PLAYER_HEALTH_BAR = cfg.getBoolean(path + "compress-player-health-bar");
         EngineCfg.COMBAT_FISHING_HOOK_DO_DAMAGE = cfg.getBoolean(path + "fishing-hook-do-damage");
