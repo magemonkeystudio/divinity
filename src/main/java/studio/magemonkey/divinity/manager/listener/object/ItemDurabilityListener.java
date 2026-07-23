@@ -13,7 +13,6 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerItemMendEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.jetbrains.annotations.NotNull;
 import studio.magemonkey.codex.manager.IListener;
 import studio.magemonkey.codex.util.ItemUT;
@@ -39,6 +38,22 @@ public class ItemDurabilityListener extends IListener<Divinity> {
         if (ItemStats.hasStat(item, null, TypedStat.Type.DURABILITY) || this.duraStat.isUnbreakable(item)) {
             e.setCancelled(true);
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onMending(PlayerItemMendEvent e) {
+        ItemStack item = e.getItem();
+        if (!ItemStats.hasStat(item, null, TypedStat.Type.DURABILITY)) return;
+
+        e.setCancelled(true); // block vanilla mending
+
+        double[] dur = duraStat.getRaw(item);
+        if (dur == null || dur[1] <= 0 || dur[0] >= dur[1]) return; // full, unbreakable, or no data
+
+        int repairAmount = e.getRepairAmount();
+        double newCurrent = Math.min(dur[0] + repairAmount, dur[1]);
+        duraStat.add(item, new double[]{newCurrent, dur[1]}, -1);
+        duraStat.syncVanillaBar(item);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -112,50 +127,6 @@ public class ItemDurabilityListener extends IListener<Divinity> {
 
             if (!ItemUT.isAir(hoe) && hoe.getType().name().endsWith("_HOE")) {
                 this.duraStat.reduceDurability(player, hoe, 1);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onMend(PlayerItemMendEvent e) {
-        ItemStack item = e.getItem();
-
-        if (!ItemStats.hasStat(item, null, TypedStat.Type.DURABILITY)) return;
-
-        double[] durability = duraStat.getRaw(item);
-        if (durability == null || duraStat.isUnbreakable(item)) return;
-
-        double current    = durability[0];
-        double max        = durability[1];
-        int    vanillaMax = item.getType().getMaxDurability();
-
-        if (vanillaMax <= 0) return;
-
-        int repair = e.getRepairAmount();
-        // Scale the repair amount to the durability max, so we can
-        // properly update the custom durability amount.
-        double customRepair = ((double) repair / vanillaMax) * max;
-        double newValue     = current + customRepair;
-
-        // Cap the durability at the max
-        if (newValue > max) {
-            newValue = max;
-        }
-
-        newValue = Math.round(newValue * 100.0) / 100.0;
-
-        duraStat.add(item, new double[]{newValue, max}, -1);
-        duraStat.syncVanillaBar(item, newValue, max);
-
-        e.setCancelled(true);
-
-        Damageable damageable = (Damageable) item.getItemMeta();
-        if (damageable != null) {
-            int vanillaDamage = damageable.getDamage();
-            if (vanillaDamage == 0) {
-                duraStat.add(item, new double[]{max, max}, -1);
-                duraStat.syncVanillaBar(item, max, max);
-                e.setCancelled(true);
             }
         }
     }
