@@ -174,19 +174,13 @@ public class Config extends IConfigTemplate {
     private void setupStats() {
         JYML cfg;
         try {
-            cfg = JYML.loadOrExtract(plugin, "/item_stats/stats.yml");
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/stats/general_stats.yml");
         } catch (InvalidConfigurationException e) {
             this.plugin.error("Failed to load stats config (" + this.plugin.getName()
-                    + "/item_stats/stats.yml): Configuration error");
+                    + "/item_stats/stats/general_stats.yml): Configuration error");
             e.printStackTrace();
             return;
         }
-
-        cfg.addMissing("ARMOR_TOUGHNESS.enabled", true);
-        cfg.addMissing("ARMOR_TOUGHNESS.name", "Armor Toughness");
-        cfg.addMissing("ARMOR_TOUGHNESS.format", "&9▸ %name%: &f%value% %condition%");
-        cfg.addMissing("ARMOR_TOUGHNESS.capacity", 100.0);
-        cfg.save();
 
         for (SimpleStat.Type statType : TypedStat.Type.values()) {
             String path2 = statType.name() + ".";

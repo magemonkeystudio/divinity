@@ -1,0 +1,402 @@
+#DIRECT_DAMAGE:
+#  enabled: true
+#  name: Direct Damage
+#  format: '&f▸ %name%: &f%value%'
+#  capacity: 100.0
+
+# Vanilla Stats
+ARMOR:
+  enabled: true
+  name: Armor
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+ARMOR_TOUGHNESS:
+  enabled: true
+  name: Armor Toughness
+  format: '&9▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+BASE_ATTACK_SPEED:
+  enabled: true
+  name: Base Attack Speed
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+ATTACK_SPEED:
+  enabled: true
+  name: Attack Speed
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+KNOCKBACK_RESISTANCE:
+  enabled: true
+  name: Knockback Resistance
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+MOVEMENT_SPEED:
+  enabled: true
+  name: Movement Speed
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: 70.0
+
+MAX_HEALTH:
+  enabled: true
+  name: Max Health
+  format: '&c▸ %name%: &f%value% %condition%'
+  capacity: -1
+BLOCK_BREAK_SPEED:
+  enabled: true
+  name: Block Break Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 200.0
+
+BLOCK_INTERACTION_RANGE:
+  enabled: true
+  name: Block Reach
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SCALE:
+  enabled: true
+  name: Scale
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+WATER_MOVEMENT_EFFICIENCY:
+  enabled: true
+  name: Water Movement Efficiency
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+MOVEMENT_EFFICIENCY:
+  enabled: true
+  name: Movement Efficiency
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+SNEAKING_SPEED:
+  enabled: true
+  name: Sneaking Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 70.0
+
+ENTITY_INTERACTION_RANGE:
+  enabled: true
+  name: Entity Reach
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+EXPLOSION_KNOCKBACK_RESISTANCE:
+  enabled: true
+  name: Explosion KB Resistance
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+FALL_DAMAGE_MULTIPLIER:
+  enabled: true
+  name: Fall Damage Modifier
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+FLYING_SPEED:
+  enabled: true
+  name: Flying Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+GRAVITY:
+  enabled: true
+  name: Gravity
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+JUMP_STRENGTH:
+  enabled: true
+  name: Jump Strength
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+MAX_ABSORPTION:
+  enabled: true
+  name: Max Absorption
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+MINING_EFFICIENCY:
+  enabled: true
+  name: Mining Efficiency
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+OXYGEN_BONUS:
+  enabled: true
+  name: Oxygen Bonus
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SAFE_FALL_DISTANCE:
+  enabled: true
+  name: Safe Fall Distance
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+STEP_HEIGHT:
+  enabled: true
+  name: Step Height
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SUBMERGED_MINING_SPEED:
+  enabled: true
+  name: Submerged Mining Speed
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+# Custom Stats
+
+MAX_MANA:
+  enabled: true
+  name: Max Mana
+  format: '&9▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+AOE_DAMAGE:
+  enabled: true
+  name: AoE Damage
+  format: '&3▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+PVP_DAMAGE:
+  enabled: true
+  name: PvP Damage
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: 200.0
+
+PVE_DAMAGE:
+  enabled: true
+  name: PvE Damage
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: 200.0
+
+DODGE_RATE:
+  enabled: true
+  name: Dodge Rate
+  format: '&6▸ %name%: &f%value% %condition%'
+  capacity: 45.0
+
+ACCURACY_RATE:
+  enabled: true
+  name: Accuracy Rate
+  format: '&6▸ %name%: &f%value% %condition%'
+  capacity: 30.0
+
+BLOCK_RATE:
+  enabled: true
+  name: Block Rate
+  format: '&6▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+BLOCK_DAMAGE:
+  enabled: true
+  name: Block Damage
+  format: '&6▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+CRITICAL_RATE:
+  enabled: true
+  name: Crit. Strike Rate
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+CRITICAL_DAMAGE:
+  enabled: true
+  name: Crit. Strike Dmg
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: 3.5
+
+SKILL_CRITICAL_RATE:
+  enabled: true
+  name: Skill Crit. Rate
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+SKILL_CRITICAL_DAMAGE:
+  enabled: true
+  name: Skill Crit. Dmg
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: 3.5
+
+PVP_DEFENSE:
+  enabled: true
+  name: PvP Defense
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+PVE_DEFENSE:
+  enabled: true
+  name: PvE Defense
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+LOOT_RATE:
+  enabled: true
+  name: Loot Rate
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: 250.0
+
+DURABILITY:
+  enabled: true
+  name: Durability
+  format: '&7▸ %name%: &f%value%'
+  capacity: -1
+
+PENETRATION:
+  enabled: true
+  name: Armor Penetration
+  format: '&c▸ %name%: &f%value% %condition%'
+  capacity: 60.0
+
+VAMPIRISM:
+  enabled: true
+  name: Vampirism
+  format: '&c▸ %name%: &f%value% %condition%'
+  capacity: 35.0
+
+BURN_RATE:
+  enabled: true
+  name: Chance to Burn
+  format: '&c▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+SALE_PRICE:
+  enabled: true
+  name: Sale Price
+  format: '&d▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+BLEED_RATE:
+  enabled: true
+  name: Chance to Open Wounds
+  format: '&c▸ %name%: &f%value% %condition%'
+  capacity: 75.0
+  settings:
+    damage: '%damage% * 0.5'
+    of-max-health: false
+    duration: 10.0
+
+DISARM_RATE:
+  enabled: true
+  name: Chance to Disarm
+  format: '&c▸ %name%: &f%value% %condition%'
+  capacity: 25.0
+
+THORNMAIL:
+  enabled: true
+  name: Thornmail
+  format: '&c▸ %name%: &f%value% %condition%'
+  capacity: 35.0
+
+HEALTH_REGEN:
+  enabled: true
+  name: Health Regen
+  format: '&c▸ %name%: &f%value% %condition%'
+  capacity: -1.0
+
+MANA_REGEN:
+  enabled: true
+  name: Mana Regen
+  format: '&9▸ %name%: &f%value% %condition%'
+  capacity: -1.0
+
+# CC & Healing Stats
+CC_RESISTANCE:
+  enabled: true
+  name: CC Resistance
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: 60.0
+
+CC_DURATION:
+  enabled: true
+  name: CC Duration
+  format: '&e▸ %name%: &f%value% %condition%'
+  capacity: -1.0
+
+HEALING_CAST:
+  enabled: true
+  name: Healing Cast
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+HEALING_RECEIVED:
+  enabled: true
+  name: Healing Received
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+## PLACEHOLDERS (THEY DON'T WORK ON THEIR OWN)
+SKILL_EFFECTIVNESS:
+  enabled: true
+  name: Skill Effectivness
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SUMMON_POWER:
+  enabled: true
+  name: Summon power
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SUMMON_HP:
+  enabled: true
+  name: Summon HP
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+SUMMON_DURATION:
+  enabled: true
+  name: Summon duration
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+BLEED_STACKS:
+  enabled: true
+  name: Bleed Stacks
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+BLEED_DURATION:
+  enabled: true
+  name: Bleed Duration
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+STUN_STACKS:
+  enabled: true
+  name: Stun Stacks
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+STUN_DURATION:
+  enabled: true
+  name: Stun Duration
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+PROJECTILE_COUNT:
+  enabled: true
+  name: Projectile Count
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+PROJECTILE_SPEED:
+  enabled: true
+  name: Projectile Speed
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
+
+BLEED_DAMAGEBUFF:
+  enabled: true
+  name: Bleed base 
+  format: '&b▸ %name%: &f%value% %condition%'
+  capacity: -1
