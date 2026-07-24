@@ -171,7 +171,31 @@ public class Config extends IConfigTemplate {
         }
     }
 
+    /**
+     * item_stats/stats.yml was relocated to item_stats/stats/general_stats.yml. Servers upgrading
+     * with an already-customized stats.yml would otherwise have it orphaned and silently replaced
+     * by a fresh, default-only general_stats.yml. If the old file is still present and the new one
+     * hasn't been created yet, carry the old file's content forward so existing customizations
+     * (names, formats, capacities, enabled/disabled toggles) survive the upgrade.
+     */
+    private void migrateLegacyStatsFile() {
+        java.io.File oldFile = new java.io.File(plugin.getDataFolder(), "item_stats/stats.yml");
+        java.io.File newFile = new java.io.File(plugin.getDataFolder(), "item_stats/stats/general_stats.yml");
+        if (!oldFile.exists() || newFile.exists()) return;
+
+        try {
+            newFile.getParentFile().mkdirs();
+            java.nio.file.Files.copy(oldFile.toPath(), newFile.toPath());
+            this.plugin.info("Migrated item_stats/stats.yml to item_stats/stats/general_stats.yml");
+        } catch (java.io.IOException e) {
+            this.plugin.error("Failed to migrate item_stats/stats.yml to the new "
+                    + "item_stats/stats/general_stats.yml location: " + e.getMessage());
+        }
+    }
+
     private void setupStats() {
+        this.migrateLegacyStatsFile();
+
         JYML cfg;
         try {
             cfg = JYML.loadOrExtract(plugin, "/item_stats/stats/general_stats.yml");
@@ -181,6 +205,11 @@ public class Config extends IConfigTemplate {
             e.printStackTrace();
             return;
         }
+
+        // Seed the new MC 1.20.5+/1.21+ vanilla-attribute stats with their shipped defaults for
+        // servers carrying forward a pre-upgrade stats.yml that predates them, so upgrading
+        // servers get the new attributes working out of the box rather than silently disabled.
+        addMissingVanillaAttributeStatDefaults(cfg);
 
         for (SimpleStat.Type statType : TypedStat.Type.values()) {
             String path2 = statType.name() + ".";
@@ -206,6 +235,46 @@ public class Config extends IConfigTemplate {
 
             ItemStats.registerStat(stat);
         }
+    }
+
+    private void addMissingVanillaAttributeStatDefaults(@NotNull JYML cfg) {
+        addMissingStatDefault(cfg, "SCALE", "Scale", "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "WATER_MOVEMENT_EFFICIENCY", "Water Movement Efficiency",
+                "&3▸ %name%: &f%value% %condition%", 100.0);
+        addMissingStatDefault(cfg, "MOVEMENT_EFFICIENCY", "Movement Efficiency",
+                "&3▸ %name%: &f%value% %condition%", 100.0);
+        addMissingStatDefault(cfg, "SNEAKING_SPEED", "Sneaking Speed", "&3▸ %name%: &f%value% %condition%", 70.0);
+        addMissingStatDefault(cfg, "BLOCK_BREAK_SPEED", "Block Break Speed",
+                "&3▸ %name%: &f%value% %condition%", 200.0);
+        addMissingStatDefault(cfg, "BLOCK_INTERACTION_RANGE", "Block Reach",
+                "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "ENTITY_INTERACTION_RANGE", "Entity Reach",
+                "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "EXPLOSION_KNOCKBACK_RESISTANCE", "Explosion KB Resistance",
+                "&3▸ %name%: &f%value% %condition%", 100.0);
+        addMissingStatDefault(cfg, "FALL_DAMAGE_MULTIPLIER", "Fall Damage Modifier",
+                "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "FLYING_SPEED", "Flying Speed", "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "GRAVITY", "Gravity", "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "JUMP_STRENGTH", "Jump Strength", "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "MAX_ABSORPTION", "Max Absorption", "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "MINING_EFFICIENCY", "Mining Efficiency",
+                "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "OXYGEN_BONUS", "Oxygen Bonus", "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "SAFE_FALL_DISTANCE", "Safe Fall Distance",
+                "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "STEP_HEIGHT", "Step Height", "&3▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "SUBMERGED_MINING_SPEED", "Submerged Mining Speed",
+                "&3▸ %name%: &f%value% %condition%", 100.0);
+        cfg.saveChanges();
+    }
+
+    private void addMissingStatDefault(
+            @NotNull JYML cfg, @NotNull String path, @NotNull String name, @NotNull String format, double capacity) {
+        cfg.addMissing(path + ".enabled", true);
+        cfg.addMissing(path + ".name", name);
+        cfg.addMissing(path + ".format", format);
+        cfg.addMissing(path + ".capacity", capacity);
     }
 
     private void setupHand() {
