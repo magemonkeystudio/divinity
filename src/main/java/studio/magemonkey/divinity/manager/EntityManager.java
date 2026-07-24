@@ -19,6 +19,7 @@ import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
 import studio.magemonkey.divinity.api.event.EntityDivinityItemPickupEvent;
 import studio.magemonkey.divinity.api.event.EntityEquipmentChangeEvent;
+import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import studio.magemonkey.divinity.stats.EntityStats;
 import studio.magemonkey.divinity.stats.EntityStatsTask;
@@ -90,6 +91,7 @@ public class EntityManager extends IListener<Divinity> {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onStatsDeath(EntityDeathEvent e) {
+        if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
         LivingEntity entity = e.getEntity();
         previousEquipment.remove(e.getEntity().getUniqueId());
         EntityStats.get(entity).handleDeath();
@@ -98,22 +100,26 @@ public class EntityManager extends IListener<Divinity> {
     // Clear stats on player exit
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onStatsQuit(PlayerQuitEvent e) {
+        if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
         EntityStats.purge(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onStatsJoin(PlayerJoinEvent e) {
+        if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
         EntityStats.get(e.getPlayer());
         this.pushToUpdate(e.getPlayer(), 1D);
     }
 
     @EventHandler
     public void quit(PlayerQuitEvent event) {
+        if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
         previousEquipment.remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onStatsRegen(EntityRegainHealthEvent e) {
+        if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
         Entity e1 = e.getEntity();
         if (!(e1 instanceof LivingEntity)) return;
 
@@ -124,6 +130,7 @@ public class EntityManager extends IListener<Divinity> {
 
     @EventHandler(ignoreCancelled = true)
     public void onPickup(EntityPickupItemEvent e) {
+        if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
         if (!ProjectileStats.isPickable(e.getItem())) {
             e.setCancelled(true);
         }
@@ -138,6 +145,7 @@ public class EntityManager extends IListener<Divinity> {
     }
 
     private final void pushToUpdate(@NotNull LivingEntity entity, double time) {
+        if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
         EntityEquipment equip = new EntityEquipmentSnapshot(entity);
         previousEquipment.put(entity.getUniqueId(), equip);
         if (time <= 0D) {
@@ -153,6 +161,7 @@ public class EntityManager extends IListener<Divinity> {
     }
 
     private final void addDuplicatorFixer(@NotNull Entity entity) {
+        if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
         entity.setMetadata(PACKET_DUPLICATOR_FIXER, new FixedMetadataValue(plugin, "fixed"));
     }
 

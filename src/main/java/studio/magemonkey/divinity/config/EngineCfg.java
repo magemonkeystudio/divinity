@@ -114,6 +114,9 @@ public class EngineCfg {
 
     public static String LORE_STYLE_FABLED_ATTRIBUTE_FORMAT;
 
+    public static boolean LEGACY_VANILLA_ENTITY_STATS;
+    public static boolean LEGACY_VANILLA_ITEM_STATS;
+
     public void setup() {
         this.plugin.info("Loading engine configuration...");
 
@@ -425,6 +428,14 @@ public class EngineCfg {
         cfg.addMissing(path, "&7%attrPre%&3%name%&7%attrPost%");
         EngineCfg.LORE_STYLE_FABLED_ATTRIBUTE_FORMAT =
                 StringUT.color(cfg.getString(path, "&7%attrPre%&3%name%&7%attrPost%"));
+
+
+        path = "legacy.vanilla-entity-stats";
+        cfg.addMissing(path, false);
+        EngineCfg.LEGACY_VANILLA_ENTITY_STATS = cfg.getBoolean(path, false);
+        path = "legacy.vanilla-item-stats";
+        cfg.addMissing(path, false);
+        EngineCfg.LEGACY_VANILLA_ITEM_STATS = cfg.getBoolean(path, false);
 
         cfg.saveChanges();
     }

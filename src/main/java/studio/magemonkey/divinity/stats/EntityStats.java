@@ -438,6 +438,7 @@ public class EntityStats {
     }
 
     public void updateAll() {
+        if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
         if (!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer()) {
             return;
         }

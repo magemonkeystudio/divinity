@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.manager.IListener;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.api.DynamicStat;
 
@@ -27,6 +28,7 @@ public class DynamicStatListener extends IListener<Divinity> {
     }
 
     public static void updateItem(@Nullable Player p, @NotNull ItemStack item) {
+        if(EngineCfg.LEGACY_VANILLA_ITEM_STATS) return;
         for (DynamicStat<?> dynamicStat : ItemStats.getDynamicStats()) {
             dynamicStat.updateItem(p, item);
         }
