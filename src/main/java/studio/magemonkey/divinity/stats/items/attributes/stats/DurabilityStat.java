@@ -162,6 +162,18 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
     }
 
     /**
+     * @deprecated the current/max arguments are no longer used — the stat now reads its own
+     *             values directly, since deriving the vanilla-bar percentage from caller-supplied
+     *             values (rather than the stat's own state) was the source of the sync bug this
+     *             replaced. Kept for source/binary compatibility with existing callers; use
+     *             {@link #syncVanillaBar(ItemStack)} instead.
+     */
+    @Deprecated
+    public void syncVanillaBar(@NotNull ItemStack item, double current, double maxCustom) {
+        syncVanillaBar(item);
+    }
+
+    /**
      * Synchronizes the vanilla durability bar to reflect Divinity custom durability as a percentage.
      * Safeguard: if vanilla bar would show 100% but Divinity dura is not max, vanilla bar shows at least 1 damage.
      */
