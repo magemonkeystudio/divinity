@@ -114,7 +114,15 @@ public class DivinityProvider implements ICodexItemProvider<DivinityProvider.Div
         id = PrefixHelper.stripPrefix(NAMESPACE, id);
 
         String itemId = ItemStats.getId(item);
-        return itemId != null && itemId.equals(id);
+        if (itemId == null) return false;
+        if (itemId.equals(id)) return true;
+
+        // Backward compatibility: older callers may still pass the legacy
+        // "module:id" namespaced form this method used to require.
+        String[] split = id.split(":", 2);
+        if (split.length < 2) return false;
+        QModuleDrop<?> module = ItemStats.getModule(item);
+        return module != null && module.getId().equalsIgnoreCase(split[0]) && itemId.equals(split[1]);
     }
 
     public static class DivinityItemType extends ItemType {
