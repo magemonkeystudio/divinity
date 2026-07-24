@@ -376,16 +376,23 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         // +----------------------------------------------------+
 //        Divinity.getInstance().info("Damage Final Check: " + e.getFinalDamage() + "/" + e.getDamage());
         if (e.getFinalDamage() != e.getDamage()) {
-            double absorption = Math.min(e.getDamage(), victim.getAbsorptionAmount());
+            double damageBeforeAbsorption = e.getDamage();
+            if (e.isApplicable(DamageModifier.RESISTANCE)) {
+                damageBeforeAbsorption += e.getDamage(DamageModifier.RESISTANCE);
+            }
+            double absorption = Math.min(Math.max(0D, damageBeforeAbsorption), victim.getAbsorptionAmount());
             for (DamageModifier dmgModifier : DamageModifier.values()) {
-                if (dmgModifier == DamageModifier.ABSORPTION) continue;
                 if (e.isApplicable(dmgModifier)) {
                     if (dmgModifier == DamageModifier.BASE) {
 //                        Divinity.getInstance().info("FINAL - " + dmgModifier.name() + ": " + e.getDamage());
-                        e.setDamage(dmgModifier, e.getDamage() - absorption);
+                        e.setDamage(dmgModifier, e.getDamage());
                     } else if (dmgModifier == DamageModifier.ABSORPTION) {
-                        e.setDamage(dmgModifier, absorption);
-                    } else if (!dmgModifier.name().equals("INVULNERABILITY_REDUCTION"))
+                        // Bukkit represents absorption as a negative damage modifier.
+                        // Keep it in the final damage calculation instead of subtracting
+                        // it from BASE (which caused the absorption modifier to be applied
+                        // twice or not at all depending on the damage source).
+                        e.setDamage(dmgModifier, -absorption);
+                    } else if (!dmgModifier.name().equals("INVULNERABILITY_REDUCTION") && !dmgModifier.name().equals("RESISTANCE"))
                         e.setDamage(dmgModifier, 0); // Fix
                 }
             }
