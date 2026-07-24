@@ -2,6 +2,7 @@ package studio.magemonkey.divinity.manager;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -160,6 +161,23 @@ public class EntityManager extends IListener<Divinity> {
         }.runTask(Divinity.getInstance());
     }
 
+    private void updateVanillaItemAttributes(@NotNull LivingEntity entity) {
+        if (EngineCfg.LEGACY_VANILLA_ITEM_STATS) return;
+
+        EntityEquipment equipment = entity.getEquipment();
+        if (equipment == null) return;
+
+        for (ItemStack item : equipment.getArmorContents()) {
+            if (item != null) ItemStats.updateVanillaAttributes(item, entity instanceof Player ? (Player) entity : null);
+        }
+
+        ItemStack main = equipment.getItemInMainHand();
+        if (main != null) ItemStats.updateVanillaAttributes(main, entity instanceof Player ? (Player) entity : null);
+
+        ItemStack off = equipment.getItemInOffHand();
+        if (off != null) ItemStats.updateVanillaAttributes(off, entity instanceof Player ? (Player) entity : null);
+    }
+
     private final void addDuplicatorFixer(@NotNull Entity entity) {
         if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
         entity.setMetadata(PACKET_DUPLICATOR_FIXER, new FixedMetadataValue(plugin, "fixed"));
@@ -206,6 +224,7 @@ public class EntityManager extends IListener<Divinity> {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityUpdateEquipmentChange(EntityEquipmentChangeEvent e) {
+        this.updateVanillaItemAttributes(e.getEntity());
         this.pushToUpdate(e.getEntity(), 0.5D);
     }
 }
