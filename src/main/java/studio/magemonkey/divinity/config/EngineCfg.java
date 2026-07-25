@@ -430,7 +430,7 @@ public class EngineCfg {
                 StringUT.color(cfg.getString(path, "&7%attrPre%&3%name%&7%attrPost%"));
 
 
-        path = "legacy.vanilla-entity-stats";
+        path = "vanilla-only.entity-stats";
         cfg.addMissing(path, false);
         EngineCfg.VANILLA_ONLY_ENTITY_STATS = cfg.getBoolean(path, false);
         path = "vanilla-only.item-stats";
