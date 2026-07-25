@@ -114,7 +114,7 @@ public class EngineCfg {
 
     public static String LORE_STYLE_FABLED_ATTRIBUTE_FORMAT;
 
-    public static boolean LEGACY_VANILLA_ENTITY_STATS;
+    public static boolean VANILLA_ONLY_ENTITY_STATS;
     public static boolean LEGACY_VANILLA_ITEM_STATS;
 
     public void setup() {
