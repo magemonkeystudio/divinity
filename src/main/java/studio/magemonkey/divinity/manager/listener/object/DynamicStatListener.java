@@ -28,7 +28,7 @@ public class DynamicStatListener extends IListener<Divinity> {
     }
 
     public static void updateItem(@Nullable Player p, @NotNull ItemStack item) {
-        if(EngineCfg.LEGACY_VANILLA_ITEM_STATS) return;
+        if(EngineCfg.VANILLA_ONLY_ITEM_STATS) return;
         for (DynamicStat<?> dynamicStat : ItemStats.getDynamicStats()) {
             dynamicStat.updateItem(p, item);
         }
