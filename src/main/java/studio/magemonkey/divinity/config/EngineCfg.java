@@ -433,7 +433,7 @@ public class EngineCfg {
         path = "legacy.vanilla-entity-stats";
         cfg.addMissing(path, false);
         EngineCfg.VANILLA_ONLY_ENTITY_STATS = cfg.getBoolean(path, false);
-        path = "legacy.vanilla-item-stats";
+        path = "vanilla-only.item-stats";
         cfg.addMissing(path, false);
         EngineCfg.VANILLA_ONLY_ITEM_STATS = cfg.getBoolean(path, false);
 
