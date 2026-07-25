@@ -21,12 +21,12 @@ class EntityManagerTest extends MockedTest {
 
     @AfterEach
     void resetFlag() {
-        EngineCfg.LEGACY_VANILLA_ENTITY_STATS = false;
+        EngineCfg.VANILLA_ONLY_ENTITY_STATS = false;
     }
 
     @Test
     void entityStatsHandlingAppliesDuplicatorFixerByDefault() {
-        EngineCfg.LEGACY_VANILLA_ENTITY_STATS = false;
+        EngineCfg.VANILLA_ONLY_ENTITY_STATS = false;
 
         server.getPluginManager().callEvent(new PlayerToggleSprintEvent(player, true));
 
@@ -36,7 +36,7 @@ class EntityManagerTest extends MockedTest {
 
     @Test
     void legacyVanillaEntityStatsSkipsDuplicatorFixer() {
-        EngineCfg.LEGACY_VANILLA_ENTITY_STATS = true;
+        EngineCfg.VANILLA_ONLY_ENTITY_STATS = true;
 
         server.getPluginManager().callEvent(new PlayerToggleSprintEvent(player, true));
 

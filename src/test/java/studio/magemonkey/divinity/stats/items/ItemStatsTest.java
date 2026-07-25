@@ -21,12 +21,12 @@ class ItemStatsTest extends MockedTest {
 
     @AfterEach
     void resetFlag() {
-        EngineCfg.LEGACY_VANILLA_ITEM_STATS = false;
+        EngineCfg.VANILLA_ONLY_ITEM_STATS = false;
     }
 
     @Test
     void legacyVanillaItemStatsLeavesItemCompletelyUntouched() {
-        EngineCfg.LEGACY_VANILLA_ITEM_STATS = true;
+        EngineCfg.VANILLA_ONLY_ITEM_STATS = true;
 
         ItemStack item   = new ItemStack(Material.DIAMOND_SWORD);
         ItemStack before = item.clone();
