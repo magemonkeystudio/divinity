@@ -139,6 +139,8 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onVanillaDamage(EntityDamageEvent e) {
+        if (EngineCfg.VANILLA_ONLY_DAMAGE_HANDLING) return;
+
         boolean isEde = e instanceof EntityDamageByEntityEvent;
         if (isEde && plugin.getPluginManager().isPluginEnabled("Fabled")) {
             EntityDamageByEntityEvent ede        = (EntityDamageByEntityEvent) e;

@@ -63,6 +63,7 @@ public class EngineCfg {
     public static boolean COMBAT_BOWS_DO_FULL_MELEE_DAMAGE;
     public static double  COMBAT_DAMAGE_MODIFIER_FOR_COOLDOWN;
     public static double  COMBAT_MAX_GET_TARGET_DISTANCE;
+    public static boolean VANILLA_ONLY_DAMAGE_HANDLING;
 
     public static String LORE_CHAR_PERCENT;
     public static String LORE_CHAR_NEGATIVE;
@@ -436,6 +437,9 @@ public class EngineCfg {
         path = "vanilla-only.item-stats";
         cfg.addMissing(path, false);
         EngineCfg.VANILLA_ONLY_ITEM_STATS = cfg.getBoolean(path, false);
+        path = "vanilla-only.damage-handling";
+        cfg.addMissing(path, false);
+        EngineCfg.VANILLA_ONLY_DAMAGE_HANDLING = cfg.getBoolean(path, false);
 
         cfg.saveChanges();
     }
