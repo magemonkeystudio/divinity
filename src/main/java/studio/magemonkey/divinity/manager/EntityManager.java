@@ -92,7 +92,7 @@ public class EntityManager extends IListener<Divinity> {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onStatsDeath(EntityDeathEvent e) {
-        if(EngineCfg.LEGACY_VANILLA_ENTITY_STATS) return;
+        if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         LivingEntity entity = e.getEntity();
         previousEquipment.remove(e.getEntity().getUniqueId());
         EntityStats.get(entity).handleDeath();
