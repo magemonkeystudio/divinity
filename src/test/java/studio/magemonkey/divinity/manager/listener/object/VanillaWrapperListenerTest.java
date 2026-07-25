@@ -21,9 +21,10 @@ import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
 import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
 import studio.magemonkey.divinity.testutil.MockedTest;
 
+import com.google.common.base.Function;
+
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
