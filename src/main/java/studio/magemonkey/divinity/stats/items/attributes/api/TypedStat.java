@@ -70,6 +70,8 @@ public interface TypedStat {
         PVE_DEFENSE(SimpleStat.ItemType.BOTH, true, true, true),
         CRITICAL_RATE(SimpleStat.ItemType.BOTH, true, true, true),
         CRITICAL_DAMAGE(SimpleStat.ItemType.BOTH, false, false, true),
+        SKILL_CRITICAL_RATE(SimpleStat.ItemType.BOTH, true, true, true),
+        SKILL_CRITICAL_DAMAGE(SimpleStat.ItemType.BOTH, false, false, true),
         DURABILITY(SimpleStat.ItemType.BOTH, false, true, false),
         PENETRATION(SimpleStat.ItemType.BOTH, true, true, true),
         VAMPIRISM(SimpleStat.ItemType.BOTH, true, true, true),

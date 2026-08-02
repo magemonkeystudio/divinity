@@ -209,6 +209,18 @@ CRITICAL_DAMAGE:
   format: '&a▸ %name%: &f%value% %condition%'
   capacity: 3.5
 
+SKILL_CRITICAL_RATE:
+  enabled: true
+  name: Skill Crit. Rate
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: 100.0
+
+SKILL_CRITICAL_DAMAGE:
+  enabled: true
+  name: Skill Crit. Dmg
+  format: '&a▸ %name%: &f%value% %condition%'
+  capacity: 3.5
+
 PVP_DEFENSE:
   enabled: true
   name: PvP Defense
