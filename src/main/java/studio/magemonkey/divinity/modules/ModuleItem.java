@@ -1,7 +1,6 @@
 package studio.magemonkey.divinity.modules;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -137,24 +136,18 @@ public abstract class ModuleItem extends LoadableItem {
 
         this.attributes = new HashMap<>();
         for (String attr : cfg.getSection("attributes")) {
-            String[]          attrData      = cfg.getString("attributes." + attr, "").split(":");
-            double            value         = Double.parseDouble(attrData[0]);
-            String            operation     = attrData.length > 1 ? attrData[1] : "ADD_NUMBER";
-            String            equipmentSlot = attrData.length > 2 ? attrData[2] : null;
-            NBTAttribute      nbtAttr       = NBTAttribute.valueOf(attr.toUpperCase());
+            String[]      attrData      = cfg.getString("attributes." + attr, "").split(":");
+            double        value         = Double.parseDouble(attrData[0]);
+            String        operation     = attrData.length > 1 ? attrData[1] : "ADD_NUMBER";
+            String        equipmentSlot = attrData.length > 2 ? attrData[2] : null;
+            NBTAttribute  nbtAttr       = NBTAttribute.valueOf(attr.toUpperCase());
+            EquipmentSlot slot          = equipmentSlot != null ? EquipmentSlot.valueOf(equipmentSlot.toUpperCase()) : null;
 
-            // Check attribute through compat support
-            AttributeModifier attrModifier  = VersionManager.getCompat().createAttributeModifier(nbtAttr, value, AttributeModifier.Operation.valueOf(operation));
+            AttributeModifier attrModifier = VersionManager.getCompat()
+                    .createAttributeModifier(nbtAttr, value, AttributeModifier.Operation.valueOf(operation), slot);
             if (attrModifier == null) {
                 Codex.warn("Invalid attribute provided: " + attr + " (" + cfg.getFile().getName() + ")");
                 continue;
-            }
-            // If everything was fine and equipmentslot != null, recreate the modifier including the equipment slot
-            if(equipmentSlot != null) {
-                EquipmentSlot slot = EquipmentSlot.valueOf(equipmentSlot.toUpperCase());
-                attrModifier = new AttributeModifier(attrModifier.getUniqueId(), attrModifier.getName(), attrModifier.getAmount(), attrModifier.getOperation(), slot);
-                // Debug
-                //Bukkit.getLogger().info("Registered attribute " + nbtAttr.name() + " with value " + value + ", operation " + operation + " and equipment slot " + equipmentSlot + " for item " + this.getId());
             }
             this.attributes.put(nbtAttr.getAttribute(), attrModifier);
         }
@@ -288,7 +281,6 @@ public abstract class ModuleItem extends LoadableItem {
 
         for (Map.Entry<Attribute, AttributeModifier> attribute : this.attributes.entrySet()) {
             if (attribute != null) {
-                AttributeModifier mod = new AttributeModifier(attribute.getValue().getName(), attribute.getValue().getAmount(), attribute.getValue().getOperation());
                 meta.addAttributeModifier(attribute.getKey(), attribute.getValue());
             }
         }
