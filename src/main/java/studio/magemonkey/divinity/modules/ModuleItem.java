@@ -8,6 +8,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.*;
@@ -135,12 +136,15 @@ public abstract class ModuleItem extends LoadableItem {
 
         this.attributes = new HashMap<>();
         for (String attr : cfg.getSection("attributes")) {
-            String[]          attrData     = cfg.getString("attributes." + attr, "").split(":");
-            double            value        = Double.parseDouble(attrData[0]);
-            String            operation    = attrData.length > 1 ? attrData[1] : "ADD_NUMBER";
-            NBTAttribute      nbtAttr      = NBTAttribute.valueOf(attr.toUpperCase());
+            String[]      attrData      = cfg.getString("attributes." + attr, "").split(":");
+            double        value         = Double.parseDouble(attrData[0]);
+            String        operation     = attrData.length > 1 ? attrData[1] : "ADD_NUMBER";
+            String        equipmentSlot = attrData.length > 2 ? attrData[2] : null;
+            NBTAttribute  nbtAttr       = NBTAttribute.valueOf(attr.toUpperCase());
+            EquipmentSlot slot          = equipmentSlot != null ? EquipmentSlot.valueOf(equipmentSlot.toUpperCase()) : null;
+
             AttributeModifier attrModifier = VersionManager.getCompat()
-                    .createAttributeModifier(nbtAttr, value, AttributeModifier.Operation.valueOf(operation));
+                    .createAttributeModifier(nbtAttr, value, AttributeModifier.Operation.valueOf(operation), slot);
             if (attrModifier == null) {
                 Codex.warn("Invalid attribute provided: " + attr + " (" + cfg.getFile().getName() + ")");
                 continue;
