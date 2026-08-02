@@ -25,7 +25,11 @@ import studio.magemonkey.codex.api.meta.NBTAttribute;
 import studio.magemonkey.codex.manager.IListener;
 import studio.magemonkey.codex.util.DataUT;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.api.DivinityAPI;
+import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.stats.items.ItemStats;
+
+import java.util.Objects;
 
 public class ItemUpdaterListener extends IListener<Divinity> {
 
@@ -106,8 +110,20 @@ public class ItemUpdaterListener extends IListener<Divinity> {
             if (fixed) {
                 DataUT.removeData(item, key);
                 meta.removeItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            } else {
+            } else if(EngineCfg.ATTRIBUTES_HIDE_FLAGS) {
                 meta.addItemFlags(ItemFlag.values());
+            } else {
+                // Reapply only the required flags on from a copied item
+                try {
+                    var itemCopy = Objects.requireNonNull(CodexEngine.get().getItemManager().getMainItemType(item)).create();
+                    if(itemCopy == null) return;
+                    var itemCopyMeta = itemCopy.getItemMeta();
+                    if(itemCopyMeta == null) return;
+                    meta.removeItemFlags(ItemFlag.values());
+                    meta.addItemFlags(itemCopyMeta.getItemFlags().toArray(new ItemFlag[0]));
+                } catch (Exception e) {
+                    return;
+                }
             }
             item.setItemMeta(meta);
         }

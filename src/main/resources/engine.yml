@@ -233,3 +233,11 @@ lore:
           main: '&c▸ %name% %value%'
           max-roman: 10
       fabled-attribute-format: '&7%attrPre%&3%name%&7%attrPost%'
+
+vanilla-only:
+  # When enabled, Divinity will not replace vanilla entity-stat handling.
+  entity-stats: false
+  # When enabled, Divinity will not add generated vanilla item attributes.
+  item-stats: false
+  # When enabled, Divinity leaves damage events to Minecraft's vanilla handling.
+  damage-handling: false

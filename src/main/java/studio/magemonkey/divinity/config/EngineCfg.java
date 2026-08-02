@@ -46,6 +46,7 @@ public class EngineCfg {
     public static boolean ATTRIBUTES_EFFECTIVE_FOR_MOBS;
     public static boolean ATTRIBUTES_EFFECTIVE_IN_OFFHAND;
     public static boolean ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS;
+    public static boolean ATTRIBUTES_HIDE_FLAGS;
 
     public static boolean     ATTRIBUTES_DURABILITY_BREAK_ITEMS;
     public static boolean     ATTRIBUTES_HIDE_FLAGS;
@@ -63,6 +64,7 @@ public class EngineCfg {
     public static boolean COMBAT_BOWS_DO_FULL_MELEE_DAMAGE;
     public static double  COMBAT_DAMAGE_MODIFIER_FOR_COOLDOWN;
     public static double  COMBAT_MAX_GET_TARGET_DISTANCE;
+    public static boolean VANILLA_ONLY_DAMAGE_HANDLING;
 
     public static String LORE_CHAR_PERCENT;
     public static String LORE_CHAR_NEGATIVE;
@@ -114,6 +116,9 @@ public class EngineCfg {
     public static boolean LORE_STYLE_ENCHANTMENTS_ROMAN_SYSTEM;
 
     public static String LORE_STYLE_FABLED_ATTRIBUTE_FORMAT;
+
+    public static boolean VANILLA_ONLY_ENTITY_STATS;
+    public static boolean VANILLA_ONLY_ITEM_STATS;
 
     public void setup() {
         this.plugin.info("Loading engine configuration...");
@@ -176,6 +181,7 @@ public class EngineCfg {
 
         // A T T R I B U T E S //
         path = "attributes.";
+        cfg.addMissing(path + "hide-flags", true);
         EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS = cfg.getBoolean(path + "effective-for-mobs");
         EngineCfg.ATTRIBUTES_EFFECTIVE_IN_OFFHAND = cfg.getBoolean(path + "effective-in-offhand");
         EngineCfg.ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS = cfg.getBoolean(path + "allow-hold-items-you-cant-use");
@@ -428,6 +434,17 @@ public class EngineCfg {
         cfg.addMissing(path, "&7%attrPre%&3%name%&7%attrPost%");
         EngineCfg.LORE_STYLE_FABLED_ATTRIBUTE_FORMAT =
                 StringUT.color(cfg.getString(path, "&7%attrPre%&3%name%&7%attrPost%"));
+
+
+        path = "vanilla-only.entity-stats";
+        cfg.addMissing(path, false);
+        EngineCfg.VANILLA_ONLY_ENTITY_STATS = cfg.getBoolean(path, false);
+        path = "vanilla-only.item-stats";
+        cfg.addMissing(path, false);
+        EngineCfg.VANILLA_ONLY_ITEM_STATS = cfg.getBoolean(path, false);
+        path = "vanilla-only.damage-handling";
+        cfg.addMissing(path, false);
+        EngineCfg.VANILLA_ONLY_DAMAGE_HANDLING = cfg.getBoolean(path, false);
 
         cfg.saveChanges();
     }
