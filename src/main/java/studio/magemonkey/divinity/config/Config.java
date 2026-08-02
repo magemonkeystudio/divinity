@@ -216,6 +216,7 @@ public class Config extends IConfigTemplate {
         // servers get the new attributes working out of the box rather than silently disabled.
         addMissingVanillaAttributeStatDefaults(cfg);
         addMissingStatFoundationDefaults(cfg);
+        addMissingSkillCritStatDefaults(cfg);
 
         for (SimpleStat.Type statType : TypedStat.Type.values()) {
             String path2 = statType.name() + ".";
@@ -307,6 +308,20 @@ public class Config extends IConfigTemplate {
         addMissingStatDefault(cfg, "BLEED_DAMAGEBUFF", "Bleed base", "&b▸ %name%: &f%value% %condition%", -1);
         addMissingStatDefault(cfg, "STUN_STACKS", "Stun Stacks", "&b▸ %name%: &f%value% %condition%", -1);
         addMissingStatDefault(cfg, "STUN_DURATION", "Stun Duration", "&b▸ %name%: &f%value% %condition%", -1);
+        cfg.saveChanges();
+    }
+
+    /**
+     * Seeds SKILL_CRITICAL_RATE/DAMAGE (Fabled-skill-only crit, separated from the auto-attack-only
+     * CRITICAL_RATE/DAMAGE) into general_stats.yml so servers upgrading with a pre-existing stats
+     * file still get them, the same way addMissingVanillaAttributeStatDefaults backfills the
+     * vanilla-attribute stats.
+     */
+    private void addMissingSkillCritStatDefaults(@NotNull JYML cfg) {
+        addMissingStatDefault(cfg, "SKILL_CRITICAL_RATE", "Skill Crit. Rate",
+                "&a▸ %name%: &f%value% %condition%", 100.0);
+        addMissingStatDefault(cfg, "SKILL_CRITICAL_DAMAGE", "Skill Crit. Dmg",
+                "&a▸ %name%: &f%value% %condition%", 3.5);
         cfg.saveChanges();
     }
 
