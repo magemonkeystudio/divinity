@@ -334,13 +334,13 @@ public class ItemStats {
         if (im == null) {
             im = Bukkit.getItemFactory().getItemMeta(item.getType());
         }
+        if (im == null) return; // e.g. AIR, which doesn't support ItemMeta at all
 
         // For 1.20.4+, the HIDE_ATTRIBUTES flag doesn't work unless an attribute has been added that's not the default.
         // Note: This only applies to Paper and its forks.
         if (Version.CURRENT.isAtLeast(Version.V1_20_R4)) {
             Attribute moveSpeed = VersionManager.getNms().getAttribute("MOVEMENT_SPEED");
-            if (!im.hasAttributeModifiers()
-                    || im.getAttributeModifiers(VersionManager.getNms().getAttribute("MOVEMENT_SPEED")) == null) {
+            if (!im.hasAttributeModifiers() || im.getAttributeModifiers(moveSpeed) == null) {
                 //noinspection RedundantCast
                 im.addAttributeModifier(moveSpeed,
                         new AttributeModifier(((Keyed) moveSpeed).getKey().getKey(), 0, Operation.ADD_NUMBER));

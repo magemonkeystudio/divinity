@@ -1,5 +1,6 @@
 package studio.magemonkey.divinity.manager;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -167,15 +168,17 @@ public class EntityManager extends IListener<Divinity> {
         EntityEquipment equipment = entity.getEquipment();
         if (equipment == null) return;
 
+        Player player = entity instanceof Player ? (Player) entity : null;
+
         for (ItemStack item : equipment.getArmorContents()) {
-            if (item != null) ItemStats.updateVanillaAttributes(item, entity instanceof Player ? (Player) entity : null);
+            if (item != null && item.getType() != Material.AIR) ItemStats.updateVanillaAttributes(item, player);
         }
 
         ItemStack main = equipment.getItemInMainHand();
-        if (main != null) ItemStats.updateVanillaAttributes(main, entity instanceof Player ? (Player) entity : null);
+        if (main.getType() != Material.AIR) ItemStats.updateVanillaAttributes(main, player);
 
         ItemStack off = equipment.getItemInOffHand();
-        if (off != null) ItemStats.updateVanillaAttributes(off, entity instanceof Player ? (Player) entity : null);
+        if (off.getType() != Material.AIR) ItemStats.updateVanillaAttributes(off, player);
     }
 
     private final void addDuplicatorFixer(@NotNull Entity entity) {
