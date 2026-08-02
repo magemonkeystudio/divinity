@@ -2,6 +2,7 @@ package studio.magemonkey.divinity.manager;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -19,6 +20,7 @@ import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
 import studio.magemonkey.divinity.api.event.EntityDivinityItemPickupEvent;
 import studio.magemonkey.divinity.api.event.EntityEquipmentChangeEvent;
+import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import studio.magemonkey.divinity.stats.EntityStats;
 import studio.magemonkey.divinity.stats.EntityStatsTask;
@@ -90,6 +92,7 @@ public class EntityManager extends IListener<Divinity> {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onStatsDeath(EntityDeathEvent e) {
+        if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         LivingEntity entity = e.getEntity();
         previousEquipment.remove(e.getEntity().getUniqueId());
         EntityStats.get(entity).handleDeath();
@@ -98,22 +101,26 @@ public class EntityManager extends IListener<Divinity> {
     // Clear stats on player exit
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onStatsQuit(PlayerQuitEvent e) {
+        if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         EntityStats.purge(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onStatsJoin(PlayerJoinEvent e) {
+        if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         EntityStats.get(e.getPlayer());
         this.pushToUpdate(e.getPlayer(), 1D);
     }
 
     @EventHandler
     public void quit(PlayerQuitEvent event) {
+        if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         previousEquipment.remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onStatsRegen(EntityRegainHealthEvent e) {
+        if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         Entity e1 = e.getEntity();
         if (!(e1 instanceof LivingEntity)) return;
 
@@ -124,6 +131,7 @@ public class EntityManager extends IListener<Divinity> {
 
     @EventHandler(ignoreCancelled = true)
     public void onPickup(EntityPickupItemEvent e) {
+        if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         if (!ProjectileStats.isPickable(e.getItem())) {
             e.setCancelled(true);
         }
@@ -138,6 +146,7 @@ public class EntityManager extends IListener<Divinity> {
     }
 
     private final void pushToUpdate(@NotNull LivingEntity entity, double time) {
+        if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         EntityEquipment equip = new EntityEquipmentSnapshot(entity);
         previousEquipment.put(entity.getUniqueId(), equip);
         if (time <= 0D) {
@@ -152,7 +161,25 @@ public class EntityManager extends IListener<Divinity> {
         }.runTask(Divinity.getInstance());
     }
 
+    private void updateVanillaItemAttributes(@NotNull LivingEntity entity) {
+        if (EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
+
+        EntityEquipment equipment = entity.getEquipment();
+        if (equipment == null) return;
+
+        for (ItemStack item : equipment.getArmorContents()) {
+            if (item != null) ItemStats.updateVanillaAttributes(item, entity instanceof Player ? (Player) entity : null);
+        }
+
+        ItemStack main = equipment.getItemInMainHand();
+        if (main != null) ItemStats.updateVanillaAttributes(main, entity instanceof Player ? (Player) entity : null);
+
+        ItemStack off = equipment.getItemInOffHand();
+        if (off != null) ItemStats.updateVanillaAttributes(off, entity instanceof Player ? (Player) entity : null);
+    }
+
     private final void addDuplicatorFixer(@NotNull Entity entity) {
+        if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         entity.setMetadata(PACKET_DUPLICATOR_FIXER, new FixedMetadataValue(plugin, "fixed"));
     }
 
@@ -197,6 +224,7 @@ public class EntityManager extends IListener<Divinity> {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onEntityUpdateEquipmentChange(EntityEquipmentChangeEvent e) {
+        this.updateVanillaItemAttributes(e.getEntity());
         this.pushToUpdate(e.getEntity(), 0.5D);
     }
 }

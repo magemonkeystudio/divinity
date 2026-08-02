@@ -63,6 +63,8 @@ attributes:
   # When enabled, allows to hold in hand items with requirements that player don't meet.
   # Even when this is 'true', item attributes won't be applied to a player until he meet the requirements.
   allow-hold-items-you-cant-use: false
+  # When enabled, hides attributes and enchantments by default on all custom items.
+  hide-flags: true
 
 combat:
   # Whether to use the old combat formula for calculating defenses
@@ -230,3 +232,11 @@ lore:
           main: '&c▸ %name% %value%'
           max-roman: 10
       fabled-attribute-format: '&7%attrPre%&3%name%&7%attrPost%'
+
+vanilla-only:
+  # When enabled, Divinity will not replace vanilla entity-stat handling.
+  entity-stats: false
+  # When enabled, Divinity will not add generated vanilla item attributes.
+  item-stats: false
+  # When enabled, Divinity leaves damage events to Minecraft's vanilla handling.
+  damage-handling: false
