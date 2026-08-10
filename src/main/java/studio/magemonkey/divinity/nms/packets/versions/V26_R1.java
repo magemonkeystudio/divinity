@@ -46,7 +46,7 @@ public class V26_R1 extends UniversalPacketHandler implements IPacketHandler {
     // Candidate deobfuscated method names:
     protected static final String METHOD_GET_ALL_LEVELS = "getAllLevels";
     protected static final String METHOD_GET_ENTITY     = "getEntity";
-    protected static final String METHOD_FROM_NAME      = "fromName";
+    protected static final String METHOD_FROM_NAME      = "byName";
     protected static final String METHOD_GET_TYPE       = "getType";
 
     // Candidate packet field names:
@@ -232,12 +232,13 @@ public class V26_R1 extends UniversalPacketHandler implements IPacketHandler {
         Class<?> particleTypeClass    = Reflex.getClass(NMS_PARTICLES, "ParticleType");
         Class<?> registryClass        = Reflex.getClass(NMS_CORE, "Registry");
         Class<?> builtInRegistries    = Reflex.getClass(NMS_CORE + ".registries.BuiltInRegistries");
-        Class<?> resourceKeyClass     = Reflex.getClass(NMS_RESOURCES, "ResourceLocation");
+        // 26.x renamed ResourceLocation to Identifier.
+        Class<?> identifierClass      = Reflex.getClass(NMS_RESOURCES, "Identifier");
         if (particleOptionsClass == null
                 || particleTypeClass == null
                 || registryClass == null
                 || builtInRegistries == null
-                || resourceKeyClass == null) {
+                || identifierClass == null) {
             return;
         }
 
@@ -252,7 +253,7 @@ public class V26_R1 extends UniversalPacketHandler implements IPacketHandler {
                 particleType
         );
         String path = (String) Reflex.invokeMethod(
-                Reflex.getMethod(resourceKeyClass, "getPath"),
+                Reflex.getMethod(identifierClass, "getPath"),
                 key
         );
         boolean isDamageParticle = Objects.equals(path, "damage_indicator");
