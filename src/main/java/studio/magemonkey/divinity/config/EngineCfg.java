@@ -49,7 +49,6 @@ public class EngineCfg {
     public static boolean ATTRIBUTES_HIDE_FLAGS;
 
     public static boolean     ATTRIBUTES_DURABILITY_BREAK_ITEMS;
-    public static boolean     ATTRIBUTES_HIDE_FLAGS;
     public static boolean     ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS;
     public static Set<String> ATTRIBUTES_DURABILITY_REDUCE_FOR_SKILL_API;
 
