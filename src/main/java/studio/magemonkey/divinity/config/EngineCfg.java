@@ -110,8 +110,9 @@ public class EngineCfg {
     public static String LORE_STYLE_REQ_ITEM_MODULE_FORMAT_SEPAR;
     public static String LORE_STYLE_REQ_ITEM_MODULE_FORMAT_COLOR;
 
-    public static String LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN;
-    public static int    LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN;
+    public static String  LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN;
+    public static int     LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN;
+    public static boolean LORE_STYLE_ENCHANTMENTS_ROMAN_SYSTEM;
 
     public static String LORE_STYLE_FABLED_ATTRIBUTE_FORMAT;
 
@@ -184,6 +185,7 @@ public class EngineCfg {
         EngineCfg.ATTRIBUTES_EFFECTIVE_IN_OFFHAND = cfg.getBoolean(path + "effective-in-offhand");
         EngineCfg.ATTRIBUTES_ALLOW_HOLD_REQUIREMENTS = cfg.getBoolean(path + "allow-hold-items-you-cant-use");
         EngineCfg.ATTRIBUTES_HIDE_FLAGS = cfg.getBoolean(path + "hide-flags");
+
         path = "attributes.durability.";
         EngineCfg.ATTRIBUTES_DURABILITY_BREAK_ITEMS = cfg.getBoolean(path + "break-items-on-zero");
         EngineCfg.ATTRIBUTES_DURABILITY_REDUCE_FOR_MOBS = cfg.getBoolean(path + "effective-for.mobs");
@@ -421,9 +423,11 @@ public class EngineCfg {
         path = "lore.stats.style.enchantments.";
         cfg.addMissing(path + "format.main", "&c▸ %name% %value%");
         cfg.addMissing(path + "format.max-roman", 10);
+        cfg.addMissing(path + "roman-system", true);
         EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN =
                 StringUT.color(cfg.getString(path + "format.main", "&c▸ %name% %value%"));
         EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN = cfg.getInt(path + "format.max-roman", 10);
+        EngineCfg.LORE_STYLE_ENCHANTMENTS_ROMAN_SYSTEM = cfg.getBoolean(path + "roman-system", true);
 
         path = "lore.stats.style.fabled-attribute-format";
         cfg.addMissing(path, "&7%attrPre%&3%name%&7%attrPost%");
