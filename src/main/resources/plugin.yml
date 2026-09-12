@@ -49,60 +49,80 @@ permissions:
     description: User access
     default: true
 
-  divinity.bypass:
+  # Legacy aliases kept so servers granting the old quantumrpg.* nodes
+  # directly (instead of divinity.*) don't need to change anything.
+  quantumrpg.admin:
+    description: Legacy alias for divinity.admin.
+    default: op
+    children:
+      divinity.admin: true
+  quantumrpg.user:
+    description: Legacy alias for divinity.user.
+    default: true
+    children:
+      divinity.user: true
+
+  quantumrpg.bypass:
     description: Bypass all the plugin restrictions and requirements.
     default: op
     children:
-      divinity.bypass.requirement: true
-  divinity.bypass.requirement:
+      quantumrpg.bypass.requirement: true
+  quantumrpg.bypass.requirement:
     description: Bypass all item player requirements.
     default: op
     children:
-      quantumrpg.bypass.requirement: true
-      divinity.bypass.requirement.class: true
-      divinity.bypass.requirement.level: true
-      divinity.bypass.requirement.soulbound: true
-      divinity.bypass.requirement.untradeable: true
-  divinity.bypass.requirement.level:
+      divinity.bypass.requirement: true
+      quantumrpg.bypass.requirement.class: true
+      quantumrpg.bypass.requirement.level: true
+      quantumrpg.bypass.requirement.soulbound: true
+      quantumrpg.bypass.requirement.untradeable: true
+  quantumrpg.bypass.requirement.level:
     description: Bypass item player level requirement.
     default: op
     children:
-      quantumrpg.bypass.requirement.level: true
-  divinity.bypass.requirement.class:
+      divinity.bypass.requirement.level: true
+  quantumrpg.bypass.requirement.class:
     description: Bypass item player class requirement.
     default: op
     children:
-      quantumrpg.bypass.requirement.class: true
-  divinity.bypass.requirement.soulbound:
+      divinity.bypass.requirement.class: true
+  quantumrpg.bypass.requirement.soulbound:
     description: Bypass item player soulbound requirement.
     default: op
     children:
-      quantumrpg.bypass.requirement.soulbound: true
-  divinity.bypass.requirement.untradeable:
+      divinity.bypass.requirement.soulbound: true
+  quantumrpg.bypass.requirement.untradeable:
     description: Bypass item untradeable requirement.
     default: op
 
     children:
-      quantumrpg.bypass.requirement.untradeable: true
+      divinity.bypass.requirement.untradeable: true
   # Classes ----------------------------------------------------
-  divinity.classes:
+  quantumrpg.classes:
     description: Full access to Classes module.
     default: op
     children:
-      quantumrpg.classes: true
-      divinity.classes.cmd: true
-      divinity.classes.class.*: true
-  divinity.classes.cmd:
+      divinity.classes: true
+      quantumrpg.classes.cmd: true
+      quantumrpg.classes.class.*: true
+  quantumrpg.classes.cmd:
     description: Full access to Classes commands.
     default: op
     children:
-      divinity.classes.cmd.cast: true
-      divinity.classes.cmd.select: true
-      divinity.classes.cmd.skills: true
-      divinity.classes.cmd.stats: true
-      divinity.classes.cmd.aspects: true
-      divinity.classes.cmd.addexp: true
-      divinity.classes.cmd.addlevel: true
+      quantumrpg.classes.cmd.cast: true
+      quantumrpg.classes.cmd.select: true
+      quantumrpg.classes.cmd.skills: true
+      quantumrpg.classes.cmd.stats: true
+      quantumrpg.classes.cmd.aspects: true
+      quantumrpg.classes.cmd.addexp: true
+      quantumrpg.classes.cmd.addlevel: true
+      quantumrpg.classes.cmd.addskill: true
+      quantumrpg.classes.cmd.addaspectpoints: true
+      quantumrpg.classes.cmd.addskillpoints: true
+      quantumrpg.classes.cmd.setclass: true
+      quantumrpg.classes.cmd.reset: true
+      quantumrpg.classes.cmd.resetaspectpoints: true
+      quantumrpg.classes.cmd.resetskillpoints: true
       divinity.classes.cmd.addskill: true
       divinity.classes.cmd.addaspectpoints: true
       divinity.classes.cmd.addskillpoints: true
@@ -110,616 +130,516 @@ permissions:
       divinity.classes.cmd.reset: true
       divinity.classes.cmd.resetaspectpoints: true
       divinity.classes.cmd.resetskillpoints: true
-      quantumrpg.classes.cmd.addskill: true
-      quantumrpg.classes.cmd.addaspectpoints: true
-      quantumrpg.classes.cmd.addskillpoints: true
-      quantumrpg.classes.cmd.setclass: true
-      quantumrpg.classes.cmd.reset: true
-      quantumrpg.classes.cmd.resetaspectpoints: true
-      quantumrpg.classes.cmd.resetskillpoints: true
-  divinity.classes.cmd.cast:
-    description: Access to /class cast command.
-    default: op
-    children:
-      quantumrpg.classes.cmd.cast: true
-  divinity.classes.cmd.select:
-    description: Access to /class select command.
-    default: true
-    children:
-      quantumrpg.classes.cmd.select: true
-  divinity.classes.cmd.skills:
-    description: Access to /class skills command.
-    default: true
-    children:
-      quantumrpg.classes.cmd.skills: true
-  divinity.classes.cmd.stats:
-    description: Access to /class stats command.
-    default: true
-    children:
-      quantumrpg.classes.cmd.stats: true
-  divinity.classes.cmd.aspects:
-    description: Access to /class aspects command.
-    default: true
-    children:
-      quantumrpg.classes.cmd.aspects: true
-  divinity.classes.cmd.addexp:
-    description: Access to /class addexp command.
-    default: op
-    children:
-      quantumrpg.classes.cmd.addexp: true
-  divinity.classes.cmd.addlevel:
-    description: Access to /class addlevel command.
-    default: op
-    children:
-      quantumrpg.classes.cmd.addlevel: true
-  divinity.classes.cmd.addskill:
-    description: Access to /class addskill command.
-    default: op
-    children:
-      quantumrpg.classes.cmd.addskill: true
-  divinity.classes.cmd.addaspectpoints:
-    description: Access to /class addaspectpoints command.
-    default: op
-    children:
-      quantumrpg.classes.cmd.addaspectpoints: true
-  divinity.classes.cmd.addskillpoints:
-    description: Access to /class addskillpoints command.
-    default: op
-    children:
-      quantumrpg.classes.cmd.addskillpoints: true
-  divinity.classes.cmd.setclass:
-    description: Access to /class setclass command.
-    default: op
-    children:
-      quantumrpg.classes.cmd.setclass: true
-  divinity.classes.cmd.reset:
-    description: Access to /class reset command.
-    default: op
-    children:
-      quantumrpg.classes.cmd.reset: true
-  divinity.classes.cmd.resetaspectpoints:
-    description: Access to /class resetaspectpoints command.
-    default: op
-    children:
-      quantumrpg.classes.cmd.resetaspectpoints: true
-  divinity.classes.cmd.resetskillpoints:
-    description: Access to /class resetskillpoints command.
-    default: op
-    children:
-      quantumrpg.classes.cmd.resetskillpoints: true
-  divinity.classes.class.*:
-    description: Access to all classes.
-    default: op
   quantumrpg.classes.cmd.cast:
     description: Access to /class cast command.
     default: op
+    children:
+      divinity.classes.cmd.cast: true
   quantumrpg.classes.cmd.select:
     description: Access to /class select command.
     default: true
+    children:
+      divinity.classes.cmd.select: true
   quantumrpg.classes.cmd.skills:
     description: Access to /class skills command.
     default: true
+    children:
+      divinity.classes.cmd.skills: true
   quantumrpg.classes.cmd.stats:
     description: Access to /class stats command.
     default: true
+    children:
+      divinity.classes.cmd.stats: true
   quantumrpg.classes.cmd.aspects:
     description: Access to /class aspects command.
     default: true
+    children:
+      divinity.classes.cmd.aspects: true
   quantumrpg.classes.cmd.addexp:
     description: Access to /class addexp command.
     default: op
-  quantumrpg.classes.cmd.addskillpoints:
-    description: Access to /class addskillpoints command.
-    default: op
-  quantumrpg.classes.cmd.addaspectpoints:
-    description: Access to /class addaspectpoints command.
-    default: op
+    children:
+      divinity.classes.cmd.addexp: true
   quantumrpg.classes.cmd.addlevel:
     description: Access to /class addlevel command.
     default: op
+    children:
+      divinity.classes.cmd.addlevel: true
+  quantumrpg.classes.cmd.addskill:
+    description: Access to /class addskill command.
+    default: op
+    children:
+      divinity.classes.cmd.addskill: true
+  quantumrpg.classes.cmd.addaspectpoints:
+    description: Access to /class addaspectpoints command.
+    default: op
+    children:
+      divinity.classes.cmd.addaspectpoints: true
+  quantumrpg.classes.cmd.addskillpoints:
+    description: Access to /class addskillpoints command.
+    default: op
+    children:
+      divinity.classes.cmd.addskillpoints: true
   quantumrpg.classes.cmd.setclass:
     description: Access to /class setclass command.
     default: op
+    children:
+      divinity.classes.cmd.setclass: true
   quantumrpg.classes.cmd.reset:
     description: Access to /class reset command.
     default: op
+    children:
+      divinity.classes.cmd.reset: true
   quantumrpg.classes.cmd.resetaspectpoints:
     description: Access to /class resetaspectpoints command.
     default: op
+    children:
+      divinity.classes.cmd.resetaspectpoints: true
   quantumrpg.classes.cmd.resetskillpoints:
     description: Access to /class resetskillpoints command.
     default: op
+    children:
+      divinity.classes.cmd.resetskillpoints: true
   quantumrpg.classes.class.*:
+    description: Access to all classes.
+    default: op
+  divinity.classes.cmd.cast:
+    description: Access to /class cast command.
+    default: op
+  divinity.classes.cmd.select:
+    description: Access to /class select command.
+    default: true
+  divinity.classes.cmd.skills:
+    description: Access to /class skills command.
+    default: true
+  divinity.classes.cmd.stats:
+    description: Access to /class stats command.
+    default: true
+  divinity.classes.cmd.aspects:
+    description: Access to /class aspects command.
+    default: true
+  divinity.classes.cmd.addexp:
+    description: Access to /class addexp command.
+    default: op
+  divinity.classes.cmd.addskillpoints:
+    description: Access to /class addskillpoints command.
+    default: op
+  divinity.classes.cmd.addaspectpoints:
+    description: Access to /class addaspectpoints command.
+    default: op
+  divinity.classes.cmd.addlevel:
+    description: Access to /class addlevel command.
+    default: op
+  divinity.classes.cmd.setclass:
+    description: Access to /class setclass command.
+    default: op
+  divinity.classes.cmd.reset:
+    description: Access to /class reset command.
+    default: op
+  divinity.classes.cmd.resetaspectpoints:
+    description: Access to /class resetaspectpoints command.
+    default: op
+  divinity.classes.cmd.resetskillpoints:
+    description: Access to /class resetskillpoints command.
+    default: op
+  divinity.classes.class.*:
     description: Access to all classes.
     default: op
 
   # Combat Log ----------------------------------------------------
-  divinity.combatlog:
-    description: Full access to Combat Log module.
-    default: op
-    children:
-      divinity.combatlog.cmd: true
-      quantumrpg.combatlog.cmd: true
-  divinity.combatlog.cmd:
-    description: Access to all Combat Log commands.
-    default: op
-    children:
-      divinity.combatlog.cmd.log: true
-      quantumrpg.combatlog.cmd.log: true
-  divinity.combatlog.cmd.log:
-    description: Access to /combatlog log command.
-    default: true
-    children:
-      quantumrpg.combatlog.cmd.log: true
   quantumrpg.combatlog:
     description: Full access to Combat Log module.
     default: op
     children:
       quantumrpg.combatlog.cmd: true
+      divinity.combatlog.cmd: true
   quantumrpg.combatlog.cmd:
     description: Access to all Combat Log commands.
     default: op
     children:
       quantumrpg.combatlog.cmd.log: true
+      divinity.combatlog.cmd.log: true
   quantumrpg.combatlog.cmd.log:
+    description: Access to /combatlog log command.
+    default: true
+    children:
+      divinity.combatlog.cmd.log: true
+  divinity.combatlog:
+    description: Full access to Combat Log module.
+    default: op
+    children:
+      divinity.combatlog.cmd: true
+  divinity.combatlog.cmd:
+    description: Access to all Combat Log commands.
+    default: op
+    children:
+      divinity.combatlog.cmd.log: true
+  divinity.combatlog.cmd.log:
     description: Access to /combatlog log command.
     default: true
 
   # Dismantle ----------------------------------------------------
-  divinity.dismantle:
-    description: Full access to the Dismantle module.
-    default: op
-    children:
-      divinity.dismantle.cmd: true
-      divinity.dismantle.gui: true
-      quantumrpg.dismantle.cmd: true
-      quantumrpg.dismantle.gui: true
-  divinity.dismantle.cmd:
-    description: Access to Dismantle commands.
-    default: op
-    children:
-      divinity.dismantle.cmd.open: true
-      quantumrpg.dismantle.cmd.open: true
-  divinity.dismantle.cmd.open:
-    description: Access to /dismantle open command.
-    default: op
-    children:
-      quantumrpg.dismantle.cmd.open: true
-  divinity.dismantle.gui:
-    description: Access to Dismantle GUI.
-    default: op
-    children:
-      quantumrpg.dismantle.gui: true
   quantumrpg.dismantle:
     description: Full access to the Dismantle module.
     default: op
     children:
       quantumrpg.dismantle.cmd: true
       quantumrpg.dismantle.gui: true
+      divinity.dismantle.cmd: true
+      divinity.dismantle.gui: true
   quantumrpg.dismantle.cmd:
     description: Access to Dismantle commands.
     default: op
     children:
       quantumrpg.dismantle.cmd.open: true
+      divinity.dismantle.cmd.open: true
+  quantumrpg.dismantle.cmd.open:
+    description: Access to /dismantle open command.
+    default: op
+    children:
+      divinity.dismantle.cmd.open: true
   quantumrpg.dismantle.gui:
+    description: Access to Dismantle GUI.
+    default: op
+    children:
+      divinity.dismantle.gui: true
+  divinity.dismantle:
+    description: Full access to the Dismantle module.
+    default: op
+    children:
+      divinity.dismantle.cmd: true
+      divinity.dismantle.gui: true
+  divinity.dismantle.cmd:
+    description: Access to Dismantle commands.
+    default: op
+    children:
+      divinity.dismantle.cmd.open: true
+  divinity.dismantle.gui:
     description: Access to Dismantle GUI.
     default: op
 
   # Essences ----------------------------------------------------
-  divinity.essences:
-    description: Full access to Essences module.
-    default: op
-    children:
-      divinity.essences.cmd: true
-      divinity.essences.gui: true
-      quantumrpg.essences.cmd: true
-      quantumrpg.essences.gui: true
-  divinity.essences.cmd:
-    description: Access to all Essences commands.
-    default: op
-    children:
-      divinity.essences.cmd.merchant: true
-      divinity.essences.cmd.merchant.others: true
-      quantumrpg.essences.cmd.merchant: true
-      quantumrpg.essences.cmd.merchant.others: true
-  divinity.essences.cmd.merchant:
-    description: Access to /essences merchant command.
-    default: op
-    children:
-      quantumrpg.essences.cmd.merchant: true
-  divinity.essences.cmd.merchant.others:
-    description: Access to /essences merchant [player] command.
-    default: op
-    children:
-      quantumrpg.essences.cmd.merchant.others: true
-  divinity.essences.gui:
-    description: Access to all Essences GUIs.
-    default: op
-    children:
-      divinity.essences.gui.user: true
-      divinity.essences.gui.merchant: true
-      quantumrpg.essences.gui.user: true
-      quantumrpg.essences.gui.merchant: true
-  divinity.essences.gui.user:
-    description: Access to Default Socketing GUI.
-    default: op
-    children:
-      quantumrpg.essences.gui.user: true
-  divinity.essences.gui.merchant:
-    description: Access to Merchant Socketing GUI.
-    default: op
-    children:
-      quantumrpg.essences.gui.merchant: true
   quantumrpg.essences:
     description: Full access to Essences module.
     default: op
     children:
       quantumrpg.essences.cmd: true
       quantumrpg.essences.gui: true
-
+      divinity.essences.cmd: true
+      divinity.essences.gui: true
   quantumrpg.essences.cmd:
     description: Access to all Essences commands.
     default: op
     children:
       quantumrpg.essences.cmd.merchant: true
       quantumrpg.essences.cmd.merchant.others: true
+      divinity.essences.cmd.merchant: true
+      divinity.essences.cmd.merchant.others: true
   quantumrpg.essences.cmd.merchant:
     description: Access to /essences merchant command.
     default: op
+    children:
+      divinity.essences.cmd.merchant: true
   quantumrpg.essences.cmd.merchant.others:
     description: Access to /essences merchant [player] command.
     default: op
-
+    children:
+      divinity.essences.cmd.merchant.others: true
   quantumrpg.essences.gui:
     description: Access to all Essences GUIs.
     default: op
     children:
       quantumrpg.essences.gui.user: true
       quantumrpg.essences.gui.merchant: true
+      divinity.essences.gui.user: true
+      divinity.essences.gui.merchant: true
   quantumrpg.essences.gui.user:
     description: Access to Default Socketing GUI.
     default: op
+    children:
+      divinity.essences.gui.user: true
   quantumrpg.essences.gui.merchant:
+    description: Access to Merchant Socketing GUI.
+    default: op
+    children:
+      divinity.essences.gui.merchant: true
+  divinity.essences:
+    description: Full access to Essences module.
+    default: op
+    children:
+      divinity.essences.cmd: true
+      divinity.essences.gui: true
+
+  divinity.essences.cmd:
+    description: Access to all Essences commands.
+    default: op
+    children:
+      divinity.essences.cmd.merchant: true
+      divinity.essences.cmd.merchant.others: true
+  divinity.essences.cmd.merchant:
+    description: Access to /essences merchant command.
+    default: op
+  divinity.essences.cmd.merchant.others:
+    description: Access to /essences merchant [player] command.
+    default: op
+
+  divinity.essences.gui:
+    description: Access to all Essences GUIs.
+    default: op
+    children:
+      divinity.essences.gui.user: true
+      divinity.essences.gui.merchant: true
+  divinity.essences.gui.user:
+    description: Access to Default Socketing GUI.
+    default: op
+  divinity.essences.gui.merchant:
     description: Access to Merchant Socketing GUI.
     default: op
 
   # Extractor ----------------------------------------------------
-  divinity.extractor:
-    description: Full access to Extractor module.
-    default: op
-    children:
-      divinity.extractor.cmd: true
-      divinity.extractor.gui: true
-      quantumrpg.extractor.cmd: true
-      quantumrpg.extractor.gui: true
-  divinity.extractor.cmd:
-    description: Access to all Extractor commands.
-    default: op
-    children:
-      divinity.extractor.cmd.open: true
-      quantumrpg.extractor.cmd.open: true
-  divinity.extractor.cmd.open:
-    description: Access to /extractor open command.
-    default: op
-    children:
-      quantumrpg.extractor.cmd.open: true
-  divinity.extractor.gui:
-    description: Access Extractor GUI.
-    default: op
-    children:
-      quantumrpg.extractor.gui: true
   quantumrpg.extractor:
     description: Full access to Extractor module.
     default: op
     children:
       quantumrpg.extractor.cmd: true
       quantumrpg.extractor.gui: true
+      divinity.extractor.cmd: true
+      divinity.extractor.gui: true
   quantumrpg.extractor.cmd:
     description: Access to all Extractor commands.
     default: op
     children:
       quantumrpg.extractor.cmd.open: true
+      divinity.extractor.cmd.open: true
   quantumrpg.extractor.cmd.open:
     description: Access to /extractor open command.
     default: op
+    children:
+      divinity.extractor.cmd.open: true
   quantumrpg.extractor.gui:
+    description: Access Extractor GUI.
+    default: op
+    children:
+      divinity.extractor.gui: true
+  divinity.extractor:
+    description: Full access to Extractor module.
+    default: op
+    children:
+      divinity.extractor.cmd: true
+      divinity.extractor.gui: true
+  divinity.extractor.cmd:
+    description: Access to all Extractor commands.
+    default: op
+    children:
+      divinity.extractor.cmd.open: true
+  divinity.extractor.cmd.open:
+    description: Access to /extractor open command.
+    default: op
+  divinity.extractor.gui:
     description: Access Extractor GUI.
     default: op
 
   # Fortify ----------------------------------------------------
-  divinity.fortify:
-    description: Full access to Fortify module.
-    default: op
-    children:
-      divinity.fortify.cmd: true
-      quantumrpg.fortify.cmd: true
-  divinity.fortify.cmd:
-    description: Access to all Fortify commands.
-    default: op
-    children:
-      divinity.fortify.cmd.fortify: true
-      divinity.fortify.cmd.unfortify: true
-      quantumrpg.fortify.cmd.fortify: true
-      quantumrpg.fortify.cmd.unfortify: true
-  divinity.fortify.cmd.fortify:
-    description: Access to /fortify fortify command.
-    default: op
-    children:
-      quantumrpg.fortify.cmd.fortify: true
-  divinity.fortify.cmd.unfortify:
-    description: Access to /fortify unfortify command.
-    default: op
-    children:
-      quantumrpg.fortify.cmd.unfortify: true
   quantumrpg.fortify:
     description: Full access to Fortify module.
     default: op
     children:
       quantumrpg.fortify.cmd: true
+      divinity.fortify.cmd: true
   quantumrpg.fortify.cmd:
     description: Access to all Fortify commands.
     default: op
     children:
       quantumrpg.fortify.cmd.fortify: true
       quantumrpg.fortify.cmd.unfortify: true
+      divinity.fortify.cmd.fortify: true
+      divinity.fortify.cmd.unfortify: true
   quantumrpg.fortify.cmd.fortify:
     description: Access to /fortify fortify command.
     default: op
+    children:
+      divinity.fortify.cmd.fortify: true
   quantumrpg.fortify.cmd.unfortify:
+    description: Access to /fortify unfortify command.
+    default: op
+    children:
+      divinity.fortify.cmd.unfortify: true
+  divinity.fortify:
+    description: Full access to Fortify module.
+    default: op
+    children:
+      divinity.fortify.cmd: true
+  divinity.fortify.cmd:
+    description: Access to all Fortify commands.
+    default: op
+    children:
+      divinity.fortify.cmd.fortify: true
+      divinity.fortify.cmd.unfortify: true
+  divinity.fortify.cmd.fortify:
+    description: Access to /fortify fortify command.
+    default: op
+  divinity.fortify.cmd.unfortify:
     description: Access to /fortify unfortify command.
     default: op
 
   # Gems ----------------------------------------------------
-  divinity.gems:
-    description: Full access to Gems module.
-    default: op
-    children:
-      divinity.gems.cmd: true
-      divinity.gems.gui: true
-      quantumrpg.gems.cmd: true
-      quantumrpg.gems.gui: true
-  divinity.gems.cmd:
-    description: Access to all Gems commands.
-    default: op
-    children:
-      divinity.gems.cmd.merchant: true
-      divinity.gems.cmd.merchant.others: true
-      quantumrpg.gems.cmd.merchant: true
-      quantumrpg.gems.cmd.merchant.others: true
-  divinity.gems.cmd.merchant:
-    description: Access to /gems merchant command.
-    default: op
-    children:
-      quantumrpg.gems.cmd.merchant: true
-  divinity.gems.cmd.merchant.others:
-    description: Access to /gems merchant [player] command.
-    default: op
-    children:
-      quantumrpg.gems.cmd.merchant.others: true
-  divinity.gems.gui:
-    description: Access to all Gems GUIs.
-    default: op
-    children:
-      divinity.gems.gui.user: true
-      divinity.gems.gui.merchant: true
-      quantumrpg.gems.gui.user: true
-      quantumrpg.gems.gui.merchant: true
-  divinity.gems.gui.user:
-    description: Access to user socketing GUI.
-    default: op
-    children:
-      quantumrpg.gems.gui.user: true
-  divinity.gems.gui.merchant:
-    description: Access to Merchant socketing GUI.
-    default: op
-    children:
-      quantumrpg.gems.gui.merchant: true
   quantumrpg.gems:
     description: Full access to Gems module.
     default: op
     children:
       quantumrpg.gems.cmd: true
       quantumrpg.gems.gui: true
+      divinity.gems.cmd: true
+      divinity.gems.gui: true
   quantumrpg.gems.cmd:
     description: Access to all Gems commands.
     default: op
     children:
       quantumrpg.gems.cmd.merchant: true
       quantumrpg.gems.cmd.merchant.others: true
+      divinity.gems.cmd.merchant: true
+      divinity.gems.cmd.merchant.others: true
   quantumrpg.gems.cmd.merchant:
     description: Access to /gems merchant command.
     default: op
+    children:
+      divinity.gems.cmd.merchant: true
   quantumrpg.gems.cmd.merchant.others:
     description: Access to /gems merchant [player] command.
     default: op
+    children:
+      divinity.gems.cmd.merchant.others: true
   quantumrpg.gems.gui:
     description: Access to all Gems GUIs.
     default: op
     children:
       quantumrpg.gems.gui.user: true
       quantumrpg.gems.gui.merchant: true
+      divinity.gems.gui.user: true
+      divinity.gems.gui.merchant: true
   quantumrpg.gems.gui.user:
+    description: Access to user socketing GUI.
+    default: op
+    children:
+      divinity.gems.gui.user: true
+  quantumrpg.gems.gui.merchant:
+    description: Access to Merchant socketing GUI.
+    default: op
+    children:
+      divinity.gems.gui.merchant: true
+  divinity.gems:
+    description: Full access to Gems module.
+    default: op
+    children:
+      divinity.gems.cmd: true
+      divinity.gems.gui: true
+  divinity.gems.cmd:
+    description: Access to all Gems commands.
+    default: op
+    children:
+      divinity.gems.cmd.merchant: true
+      divinity.gems.cmd.merchant.others: true
+  divinity.gems.cmd.merchant:
+    description: Access to /gems merchant command.
+    default: op
+  divinity.gems.cmd.merchant.others:
+    description: Access to /gems merchant [player] command.
+    default: op
+  divinity.gems.gui:
+    description: Access to all Gems GUIs.
+    default: op
+    children:
+      divinity.gems.gui.user: true
+      divinity.gems.gui.merchant: true
+  divinity.gems.gui.user:
     description: Access to user GUI.
     default: op
-  quantumrpg.gems.gui.merchant:
+  divinity.gems.gui.merchant:
     description: Access to Merchant GUI.
     default: op
 
   # Identify ----------------------------------------------------
-  divinity.identify:
-    description: Full access to Identify module.
-    default: op
-    children:
-      divinity.identify.cmd: true
-      quantumrpg.identify.cmd: true
-  divinity.identify.cmd:
-    description: Access to all Identify commands.
-    default: op
-    children:
-      divinity.identify.cmd.identify: true
-      quantumrpg.identify.cmd.identify: true
-  divinity.identify.cmd.identify:
-    description: Access to /identify identify command.
-    default: op
-    children:
-      quantumrpg.identify.cmd.identify: true
   quantumrpg.identify:
     description: Full access to Identify module.
     default: op
     children:
       quantumrpg.identify.cmd: true
+      divinity.identify.cmd: true
   quantumrpg.identify.cmd:
     description: Access to all Identify commands.
     default: op
     children:
       quantumrpg.identify.cmd.identify: true
+      divinity.identify.cmd.identify: true
   quantumrpg.identify.cmd.identify:
+    description: Access to /identify identify command.
+    default: op
+    children:
+      divinity.identify.cmd.identify: true
+  divinity.identify:
+    description: Full access to Identify module.
+    default: op
+    children:
+      divinity.identify.cmd: true
+  divinity.identify.cmd:
+    description: Access to all Identify commands.
+    default: op
+    children:
+      divinity.identify.cmd.identify: true
+  divinity.identify.cmd.identify:
     description: Access to /identify identify command.
     default: op
 
   # Magic Dust ----------------------------------------------------
-  divinity.magicdust:
-    description: Full access to Magic Dust module.
-    default: op
-    children:
-      divinity.magicdust.cmd: true
-      divinity.magicdust.gui: true
-      quantumrpg.magicdust.cmd: true
-      quantumrpg.magicdust.gui: true
-  divinity.magicdust.cmd:
-    description: Full access to Magic Dust commands.
-    default: op
-    children:
-      divinity.magicdust.cmd.open: true
-      quantumrpg.magicdust.cmd.open: true
-  divinity.magicdust.cmd.open:
-    description: Allows to use /magicdust open command.
-    default: op
-    children:
-      quantumrpg.magicdust.cmd.open: true
-  divinity.magicdust.gui:
-    description: Allows to use Magic Dust GUI.
-    default: op
-    children:
-      quantumrpg.magicdust.gui: true
   quantumrpg.magicdust:
     description: Full access to Magic Dust module.
     default: op
     children:
       quantumrpg.magicdust.cmd: true
       quantumrpg.magicdust.gui: true
+      divinity.magicdust.cmd: true
+      divinity.magicdust.gui: true
   quantumrpg.magicdust.cmd:
     description: Full access to Magic Dust commands.
     default: op
     children:
       quantumrpg.magicdust.cmd.open: true
+      divinity.magicdust.cmd.open: true
   quantumrpg.magicdust.cmd.open:
     description: Allows to use /magicdust open command.
     default: op
+    children:
+      divinity.magicdust.cmd.open: true
   quantumrpg.magicdust.gui:
+    description: Allows to use Magic Dust GUI.
+    default: op
+    children:
+      divinity.magicdust.gui: true
+  divinity.magicdust:
+    description: Full access to Magic Dust module.
+    default: op
+    children:
+      divinity.magicdust.cmd: true
+      divinity.magicdust.gui: true
+  divinity.magicdust.cmd:
+    description: Full access to Magic Dust commands.
+    default: op
+    children:
+      divinity.magicdust.cmd.open: true
+  divinity.magicdust.cmd.open:
+    description: Allows to use /magicdust open command.
+    default: op
+  divinity.magicdust.gui:
     description: Allows to use Magic Dust GUI.
     default: op
 
   # Party ----------------------------------------------------
-  divinity.party:
-    description: Access to Party module.
-    default: true
-    children:
-      divinity.party.cmd: true
-      quantumrpg.party.cmd: true
-  divinity.party.cmd:
-    description: Access to Party commands.
-    default: op
-    children:
-      divinity.party.cmd.chat: true
-      divinity.party.cmd.create: true
-      divinity.party.cmd.disband: true
-      divinity.party.cmd.drop: true
-      divinity.party.cmd.exp: true
-      divinity.party.cmd.invite: true
-      divinity.party.cmd.join: true
-      divinity.party.cmd.kick: true
-      divinity.party.cmd.leave: true
-      divinity.party.cmd.menu: true
-      divinity.party.cmd.roll: true
-      divinity.party.cmd.tp: true
-      quantumrpg.party.cmd.chat: true
-      quantumrpg.party.cmd.create: true
-      quantumrpg.party.cmd.disband: true
-      quantumrpg.party.cmd.drop: true
-      quantumrpg.party.cmd.exp: true
-      quantumrpg.party.cmd.invite: true
-      quantumrpg.party.cmd.join: true
-      quantumrpg.party.cmd.kick: true
-      quantumrpg.party.cmd.leave: true
-      quantumrpg.party.cmd.menu: true
-      quantumrpg.party.cmd.roll: true
-      quantumrpg.party.cmd.tp: true
-  divinity.party.cmd.chat:
-    description: Access to /party chat command.
-    default: true
-    children:
-      quantumrpg.party.cmd.chat: true
-  divinity.party.cmd.create:
-    description: Access to /party create command.
-    default: true
-    children:
-      quantumrpg.party.cmd.create: true
-  divinity.party.cmd.disband:
-    description: Access to /party disband command.
-    default: true
-    children:
-      quantumrpg.party.cmd.disband: true
-  divinity.party.cmd.drop:
-    description: Access to /party drop command.
-    default: true
-    children:
-      quantumrpg.party.cmd.drop: true
-  divinity.party.cmd.exp:
-    description: Access to /party exp command.
-    default: true
-    children:
-      quantumrpg.party.cmd.exp: true
-  divinity.party.cmd.invite:
-    description: Access to /party invite command.
-    default: true
-    children:
-      quantumrpg.party.cmd.invite: true
-  divinity.party.cmd.join:
-    description: Access to /party join command.
-    default: true
-    children:
-      quantumrpg.party.cmd.join: true
-  divinity.party.cmd.kick:
-    description: Access to /party kick command.
-    default: true
-    children:
-      quantumrpg.party.cmd.kick: true
-  divinity.party.cmd.leave:
-    description: Access to /party leave command.
-    default: true
-    children:
-      quantumrpg.party.cmd.leave: true
-  divinity.party.cmd.menu:
-    description: Access to /party menu command.
-    default: true
-    children:
-      quantumrpg.party.cmd.menu: true
-  divinity.party.cmd.roll:
-    description: Access to /party roll command.
-    default: true
-    children:
-      quantumrpg.party.cmd.roll: true
-  divinity.party.cmd.tp:
-    description: Access to /party tp command.
-    default: true
-    children:
-      quantumrpg.party.cmd.tp: true
   quantumrpg.party:
     description: Access to Party module.
     default: true
     children:
       quantumrpg.party.cmd: true
+      divinity.party.cmd: true
   quantumrpg.party.cmd:
     description: Access to Party commands.
     default: op
@@ -736,271 +656,364 @@ permissions:
       quantumrpg.party.cmd.menu: true
       quantumrpg.party.cmd.roll: true
       quantumrpg.party.cmd.tp: true
+      divinity.party.cmd.chat: true
+      divinity.party.cmd.create: true
+      divinity.party.cmd.disband: true
+      divinity.party.cmd.drop: true
+      divinity.party.cmd.exp: true
+      divinity.party.cmd.invite: true
+      divinity.party.cmd.join: true
+      divinity.party.cmd.kick: true
+      divinity.party.cmd.leave: true
+      divinity.party.cmd.menu: true
+      divinity.party.cmd.roll: true
+      divinity.party.cmd.tp: true
   quantumrpg.party.cmd.chat:
     description: Access to /party chat command.
     default: true
+    children:
+      divinity.party.cmd.chat: true
   quantumrpg.party.cmd.create:
     description: Access to /party create command.
     default: true
+    children:
+      divinity.party.cmd.create: true
   quantumrpg.party.cmd.disband:
     description: Access to /party disband command.
     default: true
+    children:
+      divinity.party.cmd.disband: true
   quantumrpg.party.cmd.drop:
     description: Access to /party drop command.
     default: true
+    children:
+      divinity.party.cmd.drop: true
   quantumrpg.party.cmd.exp:
     description: Access to /party exp command.
     default: true
+    children:
+      divinity.party.cmd.exp: true
   quantumrpg.party.cmd.invite:
     description: Access to /party invite command.
     default: true
+    children:
+      divinity.party.cmd.invite: true
   quantumrpg.party.cmd.join:
     description: Access to /party join command.
     default: true
+    children:
+      divinity.party.cmd.join: true
   quantumrpg.party.cmd.kick:
     description: Access to /party kick command.
     default: true
+    children:
+      divinity.party.cmd.kick: true
   quantumrpg.party.cmd.leave:
     description: Access to /party leave command.
     default: true
+    children:
+      divinity.party.cmd.leave: true
   quantumrpg.party.cmd.menu:
     description: Access to /party menu command.
     default: true
+    children:
+      divinity.party.cmd.menu: true
   quantumrpg.party.cmd.roll:
     description: Access to /party roll command.
     default: true
+    children:
+      divinity.party.cmd.roll: true
   quantumrpg.party.cmd.tp:
+    description: Access to /party tp command.
+    default: true
+    children:
+      divinity.party.cmd.tp: true
+  divinity.party:
+    description: Access to Party module.
+    default: true
+    children:
+      divinity.party.cmd: true
+  divinity.party.cmd:
+    description: Access to Party commands.
+    default: op
+    children:
+      divinity.party.cmd.chat: true
+      divinity.party.cmd.create: true
+      divinity.party.cmd.disband: true
+      divinity.party.cmd.drop: true
+      divinity.party.cmd.exp: true
+      divinity.party.cmd.invite: true
+      divinity.party.cmd.join: true
+      divinity.party.cmd.kick: true
+      divinity.party.cmd.leave: true
+      divinity.party.cmd.menu: true
+      divinity.party.cmd.roll: true
+      divinity.party.cmd.tp: true
+  divinity.party.cmd.chat:
+    description: Access to /party chat command.
+    default: true
+  divinity.party.cmd.create:
+    description: Access to /party create command.
+    default: true
+  divinity.party.cmd.disband:
+    description: Access to /party disband command.
+    default: true
+  divinity.party.cmd.drop:
+    description: Access to /party drop command.
+    default: true
+  divinity.party.cmd.exp:
+    description: Access to /party exp command.
+    default: true
+  divinity.party.cmd.invite:
+    description: Access to /party invite command.
+    default: true
+  divinity.party.cmd.join:
+    description: Access to /party join command.
+    default: true
+  divinity.party.cmd.kick:
+    description: Access to /party kick command.
+    default: true
+  divinity.party.cmd.leave:
+    description: Access to /party leave command.
+    default: true
+  divinity.party.cmd.menu:
+    description: Access to /party menu command.
+    default: true
+  divinity.party.cmd.roll:
+    description: Access to /party roll command.
+    default: true
+  divinity.party.cmd.tp:
     description: Access to /party tp command.
     default: true
 
   # Refine ----------------------------------------------------
-  divinity.refine:
-    description: Access to Refine module.
-    default: op
-    children:
-      divinity.refine.cmd: true
-      quantumrpg.refine.cmd: true
-  divinity.refine.cmd:
-    description: Access to Refine commands.
-    default: op
-    children:
-      divinity.refine.cmd.refine: true
-      divinity.refine.cmd.downgrade: true
-      quantumrpg.refine.cmd.refine: true
-      quantumrpg.refine.cmd.downgrade: true
-  divinity.refine.cmd.refine:
-    description: Access to /refine refine command.
-    default: op
-    children:
-      quantumrpg.refine.cmd.refine: true
-  divinity.refine.cmd.downgrade:
-    description: Access to /refine downgrade command.
-    default: op
-    children:
-      quantumrpg.refine.cmd.downgrade: true
   quantumrpg.refine:
     description: Access to Refine module.
     default: op
     children:
       quantumrpg.refine.cmd: true
+      divinity.refine.cmd: true
   quantumrpg.refine.cmd:
     description: Access to Refine commands.
     default: op
     children:
       quantumrpg.refine.cmd.refine: true
       quantumrpg.refine.cmd.downgrade: true
+      divinity.refine.cmd.refine: true
+      divinity.refine.cmd.downgrade: true
+  quantumrpg.refine.cmd.refine:
+    description: Access to /refine refine command.
+    default: op
+    children:
+      divinity.refine.cmd.refine: true
+  quantumrpg.refine.cmd.downgrade:
+    description: Access to /refine downgrade command.
+    default: op
+    children:
+      divinity.refine.cmd.downgrade: true
+  divinity.refine:
+    description: Access to Refine module.
+    default: op
+    children:
+      divinity.refine.cmd: true
+  divinity.refine.cmd:
+    description: Access to Refine commands.
+    default: op
+    children:
+      divinity.refine.cmd.refine: true
+      divinity.refine.cmd.downgrade: true
 
   # Repair ----------------------------------------------------
-  divinity.repair:
-    description: Access to Repair module.
-    default: op
-    children:
-      divinity.repair.cmd: true
-      divinity.repair.gui: true
-      quantumrpg.repair.cmd: true
-      quantumrpg.repair.gui: true
-  divinity.repair.cmd:
-    description: Access to Repair commands.
-    default: op
-    children:
-      divinity.repair.cmd.open: true
-      quantumrpg.repair.cmd.open: true
-  divinity.repair.cmd.open:
-    description: Access to /repair open command.
-    default: op
-    children:
-      quantumrpg.repair.cmd.open: true
-  divinity.repair.gui:
-    description: Access to Repair GUI.
-    default: op
-    children:
-      quantumrpg.repair.gui: true
   quantumrpg.repair:
     description: Access to Repair module.
     default: op
     children:
       quantumrpg.repair.cmd: true
       quantumrpg.repair.gui: true
+      divinity.repair.cmd: true
+      divinity.repair.gui: true
   quantumrpg.repair.cmd:
     description: Access to Repair commands.
     default: op
     children:
       quantumrpg.repair.cmd.open: true
+      divinity.repair.cmd.open: true
+  quantumrpg.repair.cmd.open:
+    description: Access to /repair open command.
+    default: op
+    children:
+      divinity.repair.cmd.open: true
   quantumrpg.repair.gui:
+    description: Access to Repair GUI.
+    default: op
+    children:
+      divinity.repair.gui: true
+  divinity.repair:
+    description: Access to Repair module.
+    default: op
+    children:
+      divinity.repair.cmd: true
+      divinity.repair.gui: true
+  divinity.repair.cmd:
+    description: Access to Repair commands.
+    default: op
+    children:
+      divinity.repair.cmd.open: true
+  divinity.repair.gui:
     description: Access to Repair GUI.
     default: op
 
   # Runes ----------------------------------------------------
-  divinity.runes:
-    description: Full access to Runes module.
-    default: op
-    children:
-      divinity.runes.cmd: true
-      divinity.runes.gui: true
-      quantumrpg.runes.cmd: true
-      quantumrpg.runes.gui: true
-  divinity.runes.cmd:
-    description: Access to all Runes commands.
-    default: op
-    children:
-      divinity.runes.cmd.merchant: true
-      divinity.runes.cmd.merchant.others: true
-      quantumrpg.runes.cmd.merchant: true
-      quantumrpg.runes.cmd.merchant.others: true
-  divinity.runes.cmd.merchant:
-    description: Access to /runes merchant command.
-    default: op
-    children:
-      quantumrpg.runes.cmd.merchant: true
-  divinity.runes.cmd.merchant.others:
-    description: Access to /runes merchant [player] command.
-    default: op
-    children:
-      quantumrpg.runes.cmd.merchant.others: true
-  divinity.runes.gui:
-    description: Access to all Runes GUIs.
-    default: op
-    children:
-      divinity.runes.gui.user: true
-      divinity.runes.gui.merchant: true
-      quantumrpg.runes.gui.user: true
-      quantumrpg.runes.gui.merchant: true
-  divinity.runes.gui.user:
-    description: Access to Default Socketing GUI.
-    default: op
-    children:
-      quantumrpg.runes.gui.user: true
-  divinity.runes.gui.merchant:
-    description: Access to Merchant Socketing GUI.
-    default: op
-    children:
-      quantumrpg.runes.gui.merchant: true
   quantumrpg.runes:
     description: Full access to Runes module.
     default: op
     children:
       quantumrpg.runes.cmd: true
       quantumrpg.runes.gui: true
-
+      divinity.runes.cmd: true
+      divinity.runes.gui: true
   quantumrpg.runes.cmd:
     description: Access to all Runes commands.
     default: op
     children:
       quantumrpg.runes.cmd.merchant: true
       quantumrpg.runes.cmd.merchant.others: true
+      divinity.runes.cmd.merchant: true
+      divinity.runes.cmd.merchant.others: true
   quantumrpg.runes.cmd.merchant:
     description: Access to /runes merchant command.
     default: op
+    children:
+      divinity.runes.cmd.merchant: true
   quantumrpg.runes.cmd.merchant.others:
     description: Access to /runes merchant [player] command.
     default: op
-
+    children:
+      divinity.runes.cmd.merchant.others: true
   quantumrpg.runes.gui:
     description: Access to all Runes GUIs.
     default: op
     children:
       quantumrpg.runes.gui.user: true
       quantumrpg.runes.gui.merchant: true
+      divinity.runes.gui.user: true
+      divinity.runes.gui.merchant: true
   quantumrpg.runes.gui.user:
     description: Access to Default Socketing GUI.
     default: op
+    children:
+      divinity.runes.gui.user: true
   quantumrpg.runes.gui.merchant:
+    description: Access to Merchant Socketing GUI.
+    default: op
+    children:
+      divinity.runes.gui.merchant: true
+  divinity.runes:
+    description: Full access to Runes module.
+    default: op
+    children:
+      divinity.runes.cmd: true
+      divinity.runes.gui: true
+
+  divinity.runes.cmd:
+    description: Access to all Runes commands.
+    default: op
+    children:
+      divinity.runes.cmd.merchant: true
+      divinity.runes.cmd.merchant.others: true
+  divinity.runes.cmd.merchant:
+    description: Access to /runes merchant command.
+    default: op
+  divinity.runes.cmd.merchant.others:
+    description: Access to /runes merchant [player] command.
+    default: op
+
+  divinity.runes.gui:
+    description: Access to all Runes GUIs.
+    default: op
+    children:
+      divinity.runes.gui.user: true
+      divinity.runes.gui.merchant: true
+  divinity.runes.gui.user:
+    description: Access to Default Socketing GUI.
+    default: op
+  divinity.runes.gui.merchant:
     description: Access to Merchant Socketing GUI.
     default: op
 
   # Sell ----------------------------------------------------
-  divinity.sell:
-    description: Full access to the Sell module.
-    default: op
-    children:
-      divinity.sell.cmd: true
-      divinity.sell.gui: true
-      quantumrpg.sell.cmd: true
-      quantumrpg.sell.gui: true
-  divinity.sell.cmd:
-    description: Access to Sell commands.
-    default: op
-    children:
-      divinity.sell.cmd.open: true
-      quantumrpg.sell.cmd.open: true
-  divinity.sell.cmd.open:
-    description: Access to /sell open command.
-    default: op
-    children:
-      quantumrpg.sell.cmd.open: true
-  divinity.sell.gui:
-    description: Access to Sell GUI.
-    default: op
-    children:
-      quantumrpg.sell.gui: true
   quantumrpg.sell:
     description: Full access to the Sell module.
     default: op
     children:
       quantumrpg.sell.cmd: true
       quantumrpg.sell.gui: true
+      divinity.sell.cmd: true
+      divinity.sell.gui: true
   quantumrpg.sell.cmd:
     description: Access to Sell commands.
     default: op
     children:
       quantumrpg.sell.cmd.open: true
+      divinity.sell.cmd.open: true
+  quantumrpg.sell.cmd.open:
+    description: Access to /sell open command.
+    default: op
+    children:
+      divinity.sell.cmd.open: true
   quantumrpg.sell.gui:
+    description: Access to Sell GUI.
+    default: op
+    children:
+      divinity.sell.gui: true
+  divinity.sell:
+    description: Full access to the Sell module.
+    default: op
+    children:
+      divinity.sell.cmd: true
+      divinity.sell.gui: true
+  divinity.sell.cmd:
+    description: Access to Sell commands.
+    default: op
+    children:
+      divinity.sell.cmd.open: true
+  divinity.sell.gui:
     description: Access to Sell GUI.
     default: op
 
   # Soulbound ----------------------------------------------------
-  divinity.soulbound:
-    description: Access to Soulbound module.
-    default: op
-    children:
-      divinity.soulbound.cmd: true
-      quantumrpg.soulbound.cmd: true
-  divinity.soulbound.cmd:
-    description: Access to Soulbound commands.
-    default: op
-    children:
-      divinity.soulbound.cmd.soul: true
-      divinity.soulbound.cmd.untradeable: true
-      quantumrpg.soulbound.cmd.soul: true
-      quantumrpg.soulbound.cmd.untradeable: true
-  divinity.soulbound.cmd.soul:
-    description: Access to /soulbound soul command.
-    default: op
-    children:
-      quantumrpg.soulbound.cmd.soul: true
-  divinity.soulbound.cmd.untradeable:
-    description: Access to /soulbound untradeable command.
-    default: op
-    children:
-      quantumrpg.soulbound.cmd.untradeable: true
   quantumrpg.soulbound:
     description: Access to Soulbound module.
     default: op
     children:
       quantumrpg.soulbound.cmd: true
+      divinity.soulbound.cmd: true
   quantumrpg.soulbound.cmd:
     description: Access to Soulbound commands.
     default: op
     children:
       quantumrpg.soulbound.cmd.soul: true
       quantumrpg.soulbound.cmd.untradeable: true
+      divinity.soulbound.cmd.soul: true
+      divinity.soulbound.cmd.untradeable: true
+  quantumrpg.soulbound.cmd.soul:
+    description: Access to /soulbound soul command.
+    default: op
+    children:
+      divinity.soulbound.cmd.soul: true
+  quantumrpg.soulbound.cmd.untradeable:
+    description: Access to /soulbound untradeable command.
+    default: op
+    children:
+      divinity.soulbound.cmd.untradeable: true
+  divinity.soulbound:
+    description: Access to Soulbound module.
+    default: op
+    children:
+      divinity.soulbound.cmd: true
+  divinity.soulbound.cmd:
+    description: Access to Soulbound commands.
+    default: op
+    children:
+      divinity.soulbound.cmd.soul: true
+      divinity.soulbound.cmd.untradeable: true

@@ -5,7 +5,7 @@ import studio.magemonkey.divinity.modules.api.socketing.ModuleSocket;
 
 public class Perms {
 
-    private static final String PREFIX = "quantumrpg.";
+    private static final String PREFIX = "divinity.";
 
     public static final String USER  = PREFIX + "user";
     public static final String ADMIN = PREFIX + "admin";
