@@ -33,6 +33,7 @@ import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ItemStats {
 
@@ -78,6 +79,8 @@ public class ItemStats {
                             "prorpgitems:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())),
                     Objects.requireNonNull(NamespacedKey.fromString(
                             "quantumrpg:qrpg_" + ItemTags.TAG_ITEM_SOCKET_RATE.toLowerCase())));
+    private static final NamespacedKey                           KEY_USABLE_SLOTS =
+            new NamespacedKey(plugin, ItemTags.TAG_ITEM_USABLE_SLOTS.toLowerCase());
     private static       DamageAttribute                         DAMAGE_DEFAULT;
     private static       DefenseAttribute                        DEFENSE_DEFAULT;
 
@@ -576,5 +579,51 @@ public class ItemStats {
             if (data != 0) return data;
         }
         return 0;
+    }
+
+    public static void setUsableSlots(@NotNull ItemStack item, @NotNull Set<String> slots) {
+        if (slots.isEmpty()) {
+            DataUT.removeData(item, KEY_USABLE_SLOTS);
+            return;
+        }
+        DataUT.setData(item, KEY_USABLE_SLOTS, String.join(",", slots));
+    }
+
+    @Nullable
+    public static EquipmentSlot[] getUsableSlots(@NotNull ItemStack item) {
+        String data = DataUT.getStringData(item, KEY_USABLE_SLOTS);
+        if (data == null || data.isEmpty()) return null;
+        EquipmentSlot[] slots = Arrays.stream(data.split(","))
+                .map(s -> {
+                    try {
+                        Integer.parseInt(s.trim());
+                        return null; // numeric slot — skip for equipment-slot purposes
+                    } catch (NumberFormatException ignored2) {
+                        try {
+                            return EquipmentSlot.valueOf(s.trim().toUpperCase());
+                        } catch (IllegalArgumentException ignored) {
+                            return null;
+                        }
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toArray(EquipmentSlot[]::new);
+        return slots.length == 0 ? null : slots;
+    }
+
+    public static int[] getUsableSlotIndices(@NotNull ItemStack item) {
+        String data = DataUT.getStringData(item, KEY_USABLE_SLOTS);
+        if (data == null || data.isEmpty()) return new int[0];
+        return Arrays.stream(data.split(","))
+                .map(String::trim)
+                .mapToInt(s -> {
+                    try {
+                        return Integer.parseInt(s);
+                    } catch (NumberFormatException ignored) {
+                        return -1;
+                    }
+                })
+                .filter(i -> i >= 0)
+                .toArray();
     }
 }
