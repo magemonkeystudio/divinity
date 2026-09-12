@@ -18,9 +18,12 @@ import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class DivinityProvider implements ICodexItemProvider<DivinityProvider.DivinityItemType> {
     public static final String NAMESPACE = "DIVINITY";
@@ -82,12 +85,23 @@ public class DivinityProvider implements ICodexItemProvider<DivinityProvider.Div
             IModule<?> module = Divinity.getInstance().getModuleManager().getModule(split[0]);
             if (!(module instanceof QModuleDrop)) return null;
             moduleItem = ((QModuleDrop<?>) module).getItemById(split[1]);
-        } else { // Look in all modules
+        } else { // Look in all modules; require the id to be unambiguous
+            List<IModule<?>> matches = new ArrayList<>();
             for (IModule<?> module : Divinity.getInstance().getModuleManager().getModules()) {
                 if (!(module instanceof QModuleDrop)) continue;
 
-                moduleItem = ((QModuleDrop<? extends ModuleItem>) module).getItemById(id);
-                if (moduleItem != null) break;
+                ModuleItem candidate = ((QModuleDrop<? extends ModuleItem>) module).getItemById(id);
+                if (candidate != null) {
+                    matches.add(module);
+                    moduleItem = candidate;
+                }
+            }
+
+            if (matches.size() > 1) {
+                Codex.error("Ambiguous Divinity item id '" + id + "' found in multiple modules ("
+                        + matches.stream().map(IModule::getId).collect(Collectors.joining(", "))
+                        + "). Refer to it as '<module>:" + id + "' to disambiguate.");
+                return null;
             }
         }
 
@@ -101,6 +115,10 @@ public class DivinityProvider implements ICodexItemProvider<DivinityProvider.Div
     public DivinityProvider.DivinityItemType getItem(ItemStack itemStack) {
         String id = ItemStats.getId(itemStack);
         if (id == null) return null;
+        QModuleDrop<?> module = ItemStats.getModule(itemStack);
+        if (module != null) {
+            id = module.getId() + ":" + id;
+        }
         return getItem(id);
     }
 

@@ -1,6 +1,7 @@
 package studio.magemonkey.divinity.utils;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.modules.list.arrows.ArrowManager;
 import studio.magemonkey.divinity.modules.list.customitems.CustomItemsManager;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
+import studio.magemonkey.divinity.stats.items.ItemStats;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -59,10 +61,13 @@ class DivinityProviderTest {
 
         itemGenModule = spy(new ItemGeneratorManager(divinity));
         when(moduleManager.getModule("item_generator")).thenReturn(itemGenModule);
-        when(moduleManager.getModules()).thenReturn(List.of(arrowModule, itemGenModule));
+        doReturn("item_generator").when(itemGenModule).getId();
 
         customItemsModule = spy(new CustomItemsManager(divinity));
         when(moduleManager.getModule("custom_items")).thenReturn(customItemsModule);
+        doReturn("custom_items").when(customItemsModule).getId();
+
+        when(moduleManager.getModules()).thenReturn(List.of(arrowModule, itemGenModule, customItemsModule));
 
         //noinspection unchecked
         when(divinity.getModuleManager()).thenReturn(moduleManager);
@@ -134,5 +139,73 @@ class DivinityProviderTest {
         assertNull(item.getMaterial());
         assertEquals(codexItem, item.getModuleItem());
         assertInstanceOf(DivinityProvider.DivinityItemType.class, item);
+    }
+
+    @Test
+    void getItem_itemStackUsesStoredModule() {
+        ItemStack itemStack = mock(ItemStack.class);
+
+        ItemGeneratorManager.GeneratorItem generatorItem = mock(ItemGeneratorManager.GeneratorItem.class);
+        doReturn(generatorItem).when(itemGenModule).getItemById("foobar");
+
+        CustomItemsManager.CustomItem codexItem = mock(CustomItemsManager.CustomItem.class);
+        doReturn(codexItem).when(customItemsModule).getItemById("foobar");
+
+        try (MockedStatic<ItemStats> itemStats = mockStatic(ItemStats.class)) {
+            itemStats.when(() -> ItemStats.getId(itemStack)).thenReturn("foobar");
+            itemStats.when(() -> ItemStats.getModule(itemStack)).thenReturn(customItemsModule);
+
+            DivinityProvider.DivinityItemType item = provider.getItem(itemStack);
+
+            assertNotNull(item);
+            assertEquals(codexItem, item.getModuleItem());
+            verify(customItemsModule).getItemById("foobar");
+            verify(itemGenModule, never()).getItemById("foobar");
+        }
+    }
+
+    @Test
+    void getItem_itemStackWithoutStoredModule_fallsBackToBareIdLookup() {
+        ItemStack itemStack = mock(ItemStack.class);
+
+        ItemGeneratorManager.GeneratorItem generatorItem = mock(ItemGeneratorManager.GeneratorItem.class);
+        doReturn(generatorItem).when(itemGenModule).getItemById("foobar");
+
+        try (MockedStatic<ItemStats> itemStats = mockStatic(ItemStats.class)) {
+            itemStats.when(() -> ItemStats.getId(itemStack)).thenReturn("foobar");
+            itemStats.when(() -> ItemStats.getModule(itemStack)).thenReturn(null);
+
+            DivinityProvider.DivinityItemType item = provider.getItem(itemStack);
+
+            assertNotNull(item);
+            assertEquals(generatorItem, item.getModuleItem());
+        }
+    }
+
+    @Test
+    void getItem_ambiguousBareId_returnsNull() {
+        ItemGeneratorManager.GeneratorItem generatorItem = mock(ItemGeneratorManager.GeneratorItem.class);
+        doReturn(generatorItem).when(itemGenModule).getItemById("foobar");
+
+        CustomItemsManager.CustomItem codexItem = mock(CustomItemsManager.CustomItem.class);
+        doReturn(codexItem).when(customItemsModule).getItemById("foobar");
+
+        DivinityProvider.DivinityItemType item = provider.getItem("DIVINITY_foobar");
+
+        assertNull(item);
+    }
+
+    @Test
+    void getItem_ambiguousId_stillResolvableWithModulePrefix() {
+        ItemGeneratorManager.GeneratorItem generatorItem = mock(ItemGeneratorManager.GeneratorItem.class);
+        doReturn(generatorItem).when(itemGenModule).getItemById("foobar");
+
+        CustomItemsManager.CustomItem codexItem = mock(CustomItemsManager.CustomItem.class);
+        doReturn(codexItem).when(customItemsModule).getItemById("foobar");
+
+        DivinityProvider.DivinityItemType item = provider.getItem("DIVINITY_custom_items:foobar");
+
+        assertNotNull(item);
+        assertEquals(codexItem, item.getModuleItem());
     }
 }
