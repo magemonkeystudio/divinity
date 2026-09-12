@@ -969,7 +969,8 @@ public class EntityStats {
             if (item == null || item.getType().isAir()) continue;
             bonuses.addAll(pen.get(item, player));
         }
-        double value = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
+        bonuses.addAll(this.getBonuses(pen));
+        double value = BonusCalculator.SIMPLE_ADDITIVE.apply(0D, bonuses);
         if (pen.getCapacity() >= 0 && value > pen.getCapacity()) {
             value = pen.getCapacity();
         }
@@ -983,7 +984,8 @@ public class EntityStats {
             if (item == null || item.getType().isAir()) continue;
             bonuses.addAll(buff.get(item, player));
         }
-        double value = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
+        bonuses.addAll(this.getBonuses(buff));
+        double value = BonusCalculator.SIMPLE_ADDITIVE.apply(0D, bonuses);
         if (buff.getCapacity() >= 0 && value > buff.getCapacity()) {
             value = buff.getCapacity();
         }

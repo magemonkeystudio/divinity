@@ -58,6 +58,11 @@ public class DynamicBuffStat extends DuplicableItemLoreStat<StatBonus> implement
         this.hooks = hooks;
         this.capacity = capacity;
 
+        if (buffTarget == BuffTarget.DAMAGE) {
+            ItemStats.registerDamageBuff(this);
+        } else {
+            ItemStats.registerDefenseBuff(this);
+        }
         ItemStats.registerDynamicStat(this);
     }
 
@@ -72,7 +77,7 @@ public class DynamicBuffStat extends DuplicableItemLoreStat<StatBonus> implement
     }
 
     public double getTotal(@NotNull ItemStack item, @Nullable Player player) {
-        return BonusCalculator.SIMPLE_FULL.apply(0D, get(item, player));
+        return BonusCalculator.SIMPLE_ADDITIVE.apply(0D, get(item, player));
     }
 
     @NotNull

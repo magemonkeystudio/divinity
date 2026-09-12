@@ -79,7 +79,7 @@ public class PenetrationStat extends DuplicableItemLoreStat<StatBonus> implement
     }
 
     public double getTotal(@NotNull ItemStack item, @Nullable Player player) {
-        return BonusCalculator.SIMPLE_FULL.apply(0D, get(item, player));
+        return BonusCalculator.SIMPLE_ADDITIVE.apply(0D, get(item, player));
     }
 
     @NotNull

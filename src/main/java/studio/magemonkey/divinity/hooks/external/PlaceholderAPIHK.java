@@ -72,7 +72,7 @@ public class PlaceholderAPIHK extends NHook<Divinity> {
                 try {
                     SimpleStat.Type type = TypedStat.Type.valueOf(tt.toUpperCase());
                     return String.valueOf(NumberUT.round(EntityStats.get(player).getItemStat(type, true)));
-                } catch (Exception ex) {
+                } catch (IllegalArgumentException ex) {
                     return "0";
                 }
             }
@@ -83,11 +83,7 @@ public class PlaceholderAPIHK extends NHook<Divinity> {
                 if (dt == null) {
                     return "0";
                 }
-                try {
-                    return String.valueOf(NumberUT.round(EntityStats.get(player).getDamageByType(dt)));
-                } catch (Exception ex) {
-                    return "0";
-                }
+                return String.valueOf(NumberUT.round(EntityStats.get(player).getDamageByType(dt)));
             }
 
             if (tmp.startsWith("defense_")) {
@@ -96,44 +92,28 @@ public class PlaceholderAPIHK extends NHook<Divinity> {
                 if (dt == null) {
                     return "0";
                 }
-                try {
-                    return String.valueOf(NumberUT.round(EntityStats.get(player).getDefenseByType(dt)));
-                } catch (Exception ex) {
-                    return "0";
-                }
+                return String.valueOf(NumberUT.round(EntityStats.get(player).getDefenseByType(dt)));
             }
 
             if (tmp.startsWith("damagebuff_")) {
                 String          tt   = tmp.replace("damagebuff_", "");
                 DynamicBuffStat buff = ItemStats.getDamageBuff(tt);
                 if (buff == null) return "0";
-                try {
-                    return String.valueOf(NumberUT.round(EntityStats.get(player).getDynamicBuff(buff)));
-                } catch (Exception ex) {
-                    return "0";
-                }
+                return String.valueOf(NumberUT.round(EntityStats.get(player).getDynamicBuff(buff)));
             }
 
             if (tmp.startsWith("defensebuff_")) {
                 String          tt   = tmp.replace("defensebuff_", "");
                 DynamicBuffStat buff = ItemStats.getDefenseBuff(tt);
                 if (buff == null) return "0";
-                try {
-                    return String.valueOf(NumberUT.round(EntityStats.get(player).getDynamicBuff(buff)));
-                } catch (Exception ex) {
-                    return "0";
-                }
+                return String.valueOf(NumberUT.round(EntityStats.get(player).getDynamicBuff(buff)));
             }
 
             if (tmp.startsWith("penetration_")) {
-                String         tt  = tmp.replace("penetration_", "");
+                String          tt  = tmp.replace("penetration_", "");
                 PenetrationStat pen = ItemStats.getPenetration(tt);
                 if (pen == null) return "0";
-                try {
-                    return String.valueOf(NumberUT.round(EntityStats.get(player).getPenetration(pen)));
-                } catch (Exception ex) {
-                    return "0";
-                }
+                return String.valueOf(NumberUT.round(EntityStats.get(player).getPenetration(pen)));
             }
 
             if (tmp.startsWith("class_")) {
