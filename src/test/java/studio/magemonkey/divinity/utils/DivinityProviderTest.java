@@ -208,4 +208,32 @@ class DivinityProviderTest {
         assertNotNull(item);
         assertEquals(codexItem, item.getModuleItem());
     }
+
+    @Test
+    void getID_uniqueId_returnsBareId() {
+        CustomItemsManager.CustomItem codexItem = mock(CustomItemsManager.CustomItem.class);
+        doReturn(codexItem).when(customItemsModule).getItemById("foobar");
+        when(codexItem.getId()).thenReturn("foobar");
+
+        DivinityProvider.DivinityItemType item = provider.getItem("DIVINITY_custom_items:foobar");
+
+        assertNotNull(item);
+        assertEquals("foobar", item.getID());
+    }
+
+    @Test
+    void getID_ambiguousId_returnsModulePrefixedId() {
+        ItemGeneratorManager.GeneratorItem generatorItem = mock(ItemGeneratorManager.GeneratorItem.class);
+        doReturn(generatorItem).when(itemGenModule).getItemById("foobar");
+
+        CustomItemsManager.CustomItem codexItem = mock(CustomItemsManager.CustomItem.class);
+        doReturn(codexItem).when(customItemsModule).getItemById("foobar");
+        when(codexItem.getId()).thenReturn("foobar");
+        doReturn(customItemsModule).when(codexItem).getModule();
+
+        DivinityProvider.DivinityItemType item = provider.getItem("DIVINITY_custom_items:foobar");
+
+        assertNotNull(item);
+        assertEquals("custom_items:foobar", item.getID());
+    }
 }

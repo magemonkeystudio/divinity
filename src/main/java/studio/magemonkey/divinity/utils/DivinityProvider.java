@@ -18,8 +18,8 @@ import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -86,28 +86,37 @@ public class DivinityProvider implements ICodexItemProvider<DivinityProvider.Div
             if (!(module instanceof QModuleDrop)) return null;
             moduleItem = ((QModuleDrop<?>) module).getItemById(split[1]);
         } else { // Look in all modules; require the id to be unambiguous
-            List<IModule<?>> matches = new ArrayList<>();
-            for (IModule<?> module : Divinity.getInstance().getModuleManager().getModules()) {
-                if (!(module instanceof QModuleDrop)) continue;
-
-                ModuleItem candidate = ((QModuleDrop<? extends ModuleItem>) module).getItemById(id);
-                if (candidate != null) {
-                    matches.add(module);
-                    moduleItem = candidate;
-                }
-            }
+            Map<IModule<?>, ModuleItem> matches = findModuleItemsById(id);
 
             if (matches.size() > 1) {
                 Codex.error("Ambiguous Divinity item id '" + id + "' found in multiple modules ("
-                        + matches.stream().map(IModule::getId).collect(Collectors.joining(", "))
+                        + matches.keySet().stream().map(IModule::getId).collect(Collectors.joining(", "))
                         + "). Refer to it as '<module>:" + id + "' to disambiguate.");
                 return null;
+            }
+
+            if (!matches.isEmpty()) {
+                moduleItem = matches.values().iterator().next();
             }
         }
 
         if (moduleItem != null) return new DivinityItemType(moduleItem, level, material);
 
         return null;
+    }
+
+    /**
+     * Finds every module that has an item registered under the given plain id.
+     */
+    private static Map<IModule<?>, ModuleItem> findModuleItemsById(String id) {
+        Map<IModule<?>, ModuleItem> matches = new LinkedHashMap<>();
+        for (IModule<?> module : Divinity.getInstance().getModuleManager().getModules()) {
+            if (!(module instanceof QModuleDrop)) continue;
+
+            ModuleItem candidate = ((QModuleDrop<? extends ModuleItem>) module).getItemById(id);
+            if (candidate != null) matches.put(module, candidate);
+        }
+        return matches;
     }
 
     @Override
@@ -172,7 +181,11 @@ public class DivinityProvider implements ICodexItemProvider<DivinityProvider.Div
 
         @Override
         public String getID() {
-            return this.moduleItem.getId();
+            String id = this.moduleItem.getId();
+            if (findModuleItemsById(id).size() > 1) {
+                return this.moduleItem.getModule().getId() + ":" + id;
+            }
+            return id;
         }
 
         @Override
