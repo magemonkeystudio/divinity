@@ -210,7 +210,7 @@ public class SoulboundManager extends QModule {
             }
         } else {
             if (this.hasOwner(item)) {
-                if (!this.isOwner(item, p) && !Perms.has(p, Perms.BYPASS_REQ_USER_UNTRADEABLE)) {
+                if (!this.isOwner(item, p) && !p.hasPermission(Perms.BYPASS_REQ_USER_UNTRADEABLE)) {
                     e.setCancelled(true);
                     return;
                 }

@@ -212,8 +212,12 @@ public class RPGClass extends LoadableItem {
     public boolean hasPermission(@NotNull Player player) {
         if (!this.isPermissionRequired()) return true;
 
-        String node = Perms.CLASS_CLASS + "." + this.getId();
-        return Perms.has(player, node);
+        // Class IDs are user-defined, so plugin.yml can't statically alias this
+        // node between namespaces the way it does for the fixed permission
+        // nodes elsewhere in the plugin.
+        String id = this.getId();
+        return player.hasPermission(Perms.CLASS_CLASS + "." + id)
+                || player.hasPermission("quantumrpg.classes.class." + id);
     }
 
     @NotNull

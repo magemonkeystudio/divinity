@@ -160,7 +160,7 @@ public abstract class ModuleSocket<I extends SocketItem> extends QModuleDrop<I> 
             @NotNull I mItem,
             @NotNull InventoryClickEvent e) {
 
-        if (!Perms.has(player, Perms.getSocketGuiUser(this))) {
+        if (!player.hasPermission(Perms.getSocketGuiUser(this))) {
             plugin.lang().Error_NoPerm.send(player);
             return false;
         }
