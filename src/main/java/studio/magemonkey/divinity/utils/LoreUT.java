@@ -9,7 +9,9 @@ import studio.magemonkey.codex.util.NumberUT;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.config.EngineCfg;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class LoreUT {
@@ -135,5 +137,43 @@ public class LoreUT {
         item.setItemMeta(meta);
 
         replacePlaceholder(item, "%ENCHANTS%", null);
+    }
+
+    /**
+     * Removes all enchantments from both the item's NBT/meta and its lore.
+     * Mirrors the same format used by {@link #replaceEnchants} so the generated
+     * lore lines are identified and stripped correctly.
+     * Call this instead of the raw {@code meta.removeEnchant} loop when you
+     * want the lore to stay clean (e.g. the {@code -noenchants} command flag).
+     */
+    public static void removeEnchants(@NotNull ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+
+        // Snapshot before clearing so we know which lore lines to remove
+        Map<Enchantment, Integer> enchants = new HashMap<>(meta.getEnchants());
+
+        // Strip lore lines that replaceEnchants() would have added
+        List<String> lore = meta.getLore();
+        if (lore != null) {
+            for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
+                Enchantment e     = entry.getKey();
+                int         level = entry.getValue();
+                String line = EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAIN
+                        .replace("%name%", plugin.lang().getEnchantment(e))
+                        .replace("%value%",
+                                level > EngineCfg.LORE_STYLE_ENCHANTMENTS_FORMAT_MAX_ROMAN
+                                        ? String.valueOf(level)
+                                        : NumberUT.toRoman(level));
+                lore.remove(studio.magemonkey.codex.util.StringUT.color(line));
+                lore.remove(line); // fallback – uncolored form
+            }
+            lore.remove("%ENCHANTS%"); // placeholder if still present (shouldn't happen after generation)
+            meta.setLore(lore);
+        }
+
+        // Remove from meta enchant map
+        enchants.keySet().forEach(meta::removeEnchant);
+        item.setItemMeta(meta);
     }
 }

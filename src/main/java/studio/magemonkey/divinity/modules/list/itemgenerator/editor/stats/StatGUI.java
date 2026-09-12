@@ -140,6 +140,37 @@ public class StatGUI extends AbstractEditorGUI {
                 }
             });
         }
+
+        // Slot 6 — icon material (cosmetic; shown in StatListGUI)
+        String  iconRaw  = itemGenerator.getConfig().getString(ItemType.ICON.getPath(this.path), "PAPER");
+        Material iconMat = Material.PAPER;
+        try { iconMat = Material.valueOf(iconRaw.toUpperCase()); } catch (IllegalArgumentException ignored) {}
+        setSlot(6, new Slot(createItem(iconMat,
+                "&eIcon Material",
+                "&bCurrent: &a" + iconRaw,
+                "&6Left-Click: &eSet (type material name)",
+                "&6Right-Click: &eReset to PAPER")) {
+            @Override
+            public void onLeftClick() {
+                sendSetMessage(ItemType.ICON.getTitle(),
+                        itemGenerator.getConfig().getString(ItemType.ICON.getPath(path), "PAPER"),
+                        s -> {
+                            try {
+                                Material.valueOf(s.toUpperCase()); // validate
+                            } catch (IllegalArgumentException e) {
+                                throw new IllegalArgumentException("Unknown material: " + s);
+                            }
+                            itemGenerator.getConfig().set(ItemType.ICON.getPath(path), s.toUpperCase());
+                            saveAndReopen();
+                        });
+            }
+
+            @Override
+            public void onRightClick() {
+                itemGenerator.getConfig().set(ItemType.ICON.getPath(path), "PAPER");
+                saveAndReopen();
+            }
+        });
     }
 
     public enum ItemType {
@@ -149,6 +180,7 @@ public class StatGUI extends AbstractEditorGUI {
         MAX("max"),
         FLAT_RANGE("flat-range"),
         ROUND("round"),
+        ICON("icon"),
         ;
 
         private final String path;
