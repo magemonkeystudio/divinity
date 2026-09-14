@@ -1,4 +1,6 @@
 command-aliases: itemgenerator,itemgen
+auto-update: false
+auto-update-override-changes: false
 item-format:
   name: '%TIER_COLOR%%ITEM_NAME%'
   lore:
