@@ -1,0 +1,14 @@
+# Defense Buff % stats — auto-generated from defense.yml on first server start.
+# Each entry buffs the listed defense type(s) by a percentage.
+# You can manually add cross-type buffs by listing multiple IDs under 'hook'.
+#
+# Example:
+# physical_and_pierce:
+#   enabled: true
+#   name: '&9Physical & Pierce Defense Buff %'
+#   format: '&9▸ %name%: &f%value%%condition%'
+#   capacity: -1
+#   hook:
+#     - physical
+#     - pierce
+# PLACEHOLDER: %DEFENSE_BUFF_{ID}%

@@ -1,0 +1,76 @@
+# ============================================================
+#  Penetration Stats — penetration.yml
+# ============================================================
+#
+# Each entry defines one penetration stat that players can roll
+# on their items. On server start, an entry is auto-generated
+# for every registered damage type (damage.yml) if missing.
+#
+# Fields:
+#   enabled     — whether this penetration stat is active
+#   name        — display name (supports color codes)
+#   format      — lore line format. Placeholders: %name%, %value%, %condition%
+#   capacity    — maximum value (-1 = unlimited)
+#   percent-pen — true  = % penetration (reduces defense by a percentage)
+#                 false = flat penetration (subtracts flat defense value)
+#                 NOTE: flat penetration only works with CUSTOM defense formula.
+#   hooks       — list of damage-type IDs (from damage.yml) this stat applies to
+#
+# Example: a sword enchanted with 30 physical_pen (flat) will subtract
+# 30 from the target's physical defense before damage is calculated.
+# PLACEHOLDER: %PENETRATION_{ID}%
+# ============================================================
+
+physical_pen:
+  enabled: true
+  name: '&cPhysical Penetration'
+  format: '&c▸ %name%: &f%value%%condition%'
+  capacity: -1
+  percent-pen: false
+  hooks:
+    - physical
+
+magical_pen:
+  enabled: true
+  name: '&dMagical Penetration'
+  format: '&d▸ %name%: &f%value%%condition%'
+  capacity: 60
+  percent-pen: true
+  hooks:
+    - magical
+
+fire_pen:
+  enabled: true
+  name: '&6Fire Penetration'
+  format: '&6▸ %name%: &f%value%%condition%'
+  capacity: -1
+  percent-pen: false
+  hooks:
+    - fire
+
+poison_pen:
+  enabled: true
+  name: '&2Poison Penetration'
+  format: '&2▸ %name%: &f%value%%condition%'
+  capacity: -1
+  percent-pen: false
+  hooks:
+    - poison
+
+water_pen:
+  enabled: true
+  name: '&bWater Penetration'
+  format: '&b▸ %name%: &f%value%%condition%'
+  capacity: -1
+  percent-pen: false
+  hooks:
+    - water
+
+wind_pen:
+  enabled: true
+  name: '&fWind Penetration'
+  format: '&f▸ %name%: &f%value%%condition%'
+  capacity: -1
+  percent-pen: false
+  hooks:
+    - wind

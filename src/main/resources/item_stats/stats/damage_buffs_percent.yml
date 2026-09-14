@@ -1,0 +1,15 @@
+# Damage Buff % stats — auto-generated from damage.yml on first server start.
+# Each entry buffs the listed damage type(s) by a percentage.
+# You can manually add cross-type buffs by listing multiple IDs under 'hook'.
+#
+# Example:
+# slashing_and_piercing:
+#   enabled: true
+#   name: '&3Slashing & Piercing Buff %'
+#   format: '&3▸ %name%: &f%value%%condition%'
+#   capacity: -1
+#   hook:
+#     - slashing
+#     - piercing
+# PLACEHOLDER: %DAMAGE_BUFF_{ID}%
+

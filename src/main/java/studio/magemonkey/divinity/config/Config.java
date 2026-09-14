@@ -18,6 +18,8 @@ import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.stats.items.attributes.stats.BleedStat;
 import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.DynamicBuffStat;
+import studio.magemonkey.divinity.stats.items.attributes.stats.PenetrationStat;
 import studio.magemonkey.divinity.stats.tiers.Tier;
 import studio.magemonkey.divinity.types.ItemGroup;
 import studio.magemonkey.divinity.types.ItemSubType;
@@ -69,6 +71,9 @@ public class Config extends IConfigTemplate {
         this.setupDamages();
         this.setupDefense();
         this.setupStats();
+        this.setupDamageBuffs();
+        this.setupDefenseBuffs();
+        this.setupPenetrations();
         this.setupHand();
         this.setupAmmo();
         this.setupSockets();
@@ -210,6 +215,7 @@ public class Config extends IConfigTemplate {
         // servers carrying forward a pre-upgrade stats.yml that predates them, so upgrading
         // servers get the new attributes working out of the box rather than silently disabled.
         addMissingVanillaAttributeStatDefaults(cfg);
+        addMissingStatFoundationDefaults(cfg);
 
         for (SimpleStat.Type statType : TypedStat.Type.values()) {
             String path2 = statType.name() + ".";
@@ -275,6 +281,136 @@ public class Config extends IConfigTemplate {
         cfg.addMissing(path + ".name", name);
         cfg.addMissing(path + ".format", format);
         cfg.addMissing(path + ".capacity", capacity);
+    }
+
+    /**
+     * Seeds the stat-foundation entries (mana pool, CC, healing, and the reserved
+     * summon/projectile/bleed/stun placeholders) into general_stats.yml so servers upgrading
+     * with a pre-existing stats file still get them, the same way addMissingVanillaAttributeStatDefaults
+     * backfills the vanilla-attribute stats.
+     */
+    private void addMissingStatFoundationDefaults(@NotNull JYML cfg) {
+        addMissingStatDefault(cfg, "MAX_MANA", "Max Mana", "&9▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "CC_RESISTANCE", "CC Resistance", "&e▸ %name%: &f%value% %condition%", 60.0);
+        addMissingStatDefault(cfg, "CC_DURATION", "CC Duration", "&e▸ %name%: &f%value% %condition%", -1.0);
+        addMissingStatDefault(cfg, "HEALING_CAST", "Healing Cast", "&a▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "HEALING_RECEIVED", "Healing Received", "&a▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "SKILL_EFFECTIVNESS", "Skill Effectivness",
+                "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "SUMMON_POWER", "Summon power", "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "SUMMON_HP", "Summon HP", "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "SUMMON_DURATION", "Summon duration", "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "PROJECTILE_COUNT", "Projectile Count", "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "PROJECTILE_SPEED", "Projectile Speed", "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "BLEED_STACKS", "Bleed Stacks", "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "BLEED_DURATION", "Bleed Duration", "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "BLEED_DAMAGEBUFF", "Bleed base", "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "STUN_STACKS", "Stun Stacks", "&b▸ %name%: &f%value% %condition%", -1);
+        addMissingStatDefault(cfg, "STUN_DURATION", "Stun Duration", "&b▸ %name%: &f%value% %condition%", -1);
+        cfg.saveChanges();
+    }
+
+    private void setupDamageBuffs() {
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/stats/damage_buffs_percent.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load damage_buffs_percent config: Configuration error");
+            e.printStackTrace();
+            return;
+        }
+
+        for (DamageAttribute dmg : ItemStats.getDamages()) {
+            String id   = dmg.getId();
+            String path = id + ".";
+            cfg.addMissing(path + "enabled", true);
+            cfg.addMissing(path + "name", dmg.getName() + " Buff %");
+            cfg.addMissing(path + "format", "&3▸ %name%: &f%value%%condition%");
+            cfg.addMissing(path + "capacity", -1.0);
+            cfg.addMissing(path + "hook", Collections.singletonList(id));
+        }
+        cfg.saveChanges();
+
+        for (String buffId : cfg.getSection("")) {
+            if (!cfg.getBoolean(buffId + ".enabled")) continue;
+            String      name   = StringUT.color(cfg.getString(buffId + ".name", buffId));
+            String      format = StringUT.color(cfg.getString(buffId + ".format", "&3▸ %name%: &f%value%"));
+            double      cap    = cfg.getDouble(buffId + ".capacity", -1D);
+            Set<String> hooks  = new HashSet<>(cfg.getStringList(buffId + ".hook"));
+
+            DynamicBuffStat buff = new DynamicBuffStat(
+                    DynamicBuffStat.BuffTarget.DAMAGE, buffId, name, format, hooks, cap);
+            ItemStats.registerDamageBuff(buff);
+        }
+    }
+
+    private void setupDefenseBuffs() {
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/stats/defense_buffs_percent.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load defense_buffs_percent config: Configuration error");
+            e.printStackTrace();
+            return;
+        }
+
+        for (DefenseAttribute def : ItemStats.getDefenses()) {
+            String id   = def.getId();
+            String path = id + ".";
+            cfg.addMissing(path + "enabled", true);
+            cfg.addMissing(path + "name", def.getName() + " Buff %");
+            cfg.addMissing(path + "format", "&9▸ %name%: &f%value%%condition%");
+            cfg.addMissing(path + "capacity", -1.0);
+            cfg.addMissing(path + "hook", Collections.singletonList(id));
+        }
+        cfg.saveChanges();
+
+        for (String buffId : cfg.getSection("")) {
+            if (!cfg.getBoolean(buffId + ".enabled")) continue;
+            String      name   = StringUT.color(cfg.getString(buffId + ".name", buffId));
+            String      format = StringUT.color(cfg.getString(buffId + ".format", "&9▸ %name%: &f%value%"));
+            double      cap    = cfg.getDouble(buffId + ".capacity", -1D);
+            Set<String> hooks  = new HashSet<>(cfg.getStringList(buffId + ".hook"));
+
+            DynamicBuffStat buff = new DynamicBuffStat(
+                    DynamicBuffStat.BuffTarget.DEFENSE, buffId, name, format, hooks, cap);
+            ItemStats.registerDefenseBuff(buff);
+        }
+    }
+
+    private void setupPenetrations() {
+        JYML cfg;
+        try {
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/stats/penetration.yml");
+        } catch (InvalidConfigurationException e) {
+            this.plugin.error("Failed to load penetration config: Configuration error");
+            e.printStackTrace();
+            return;
+        }
+
+        // Auto-generate a flat-pen entry for every registered damage type (if missing)
+        for (DamageAttribute dmg : ItemStats.getDamages()) {
+            String id   = dmg.getId() + "_pen";
+            String path = id + ".";
+            cfg.addMissing(path + "enabled", true);
+            cfg.addMissing(path + "name", dmg.getName() + " Penetration");
+            cfg.addMissing(path + "format", "&c▸ %name%: &f%value%%condition%");
+            cfg.addMissing(path + "capacity", -1.0);
+            cfg.addMissing(path + "percent-pen", false);
+            cfg.addMissing(path + "hooks", Collections.singletonList(dmg.getId()));
+        }
+        cfg.saveChanges();
+
+        for (String penId : cfg.getSection("")) {
+            if (!cfg.getBoolean(penId + ".enabled")) continue;
+            String      name       = StringUT.color(cfg.getString(penId + ".name", penId));
+            String      format     = StringUT.color(cfg.getString(penId + ".format", "&c▸ %name%: &f%value%"));
+            double      cap        = cfg.getDouble(penId + ".capacity", -1D);
+            boolean     percentPen = cfg.getBoolean(penId + ".percent-pen", false);
+            Set<String> hooks      = new HashSet<>(cfg.getStringList(penId + ".hooks"));
+
+            new PenetrationStat(penId, name, format, hooks, percentPen, cap);
+        }
     }
 
     private void setupHand() {
