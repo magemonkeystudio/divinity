@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.api.events.EnginePlayerPacketEvent;
 import studio.magemonkey.codex.compat.VersionManager;
 import studio.magemonkey.codex.hooks.Hooks;
@@ -222,10 +223,7 @@ public class V26_R1 extends UniversalPacketHandler implements IPacketHandler {
 
     @Override
     protected void manageDamageParticle(@NotNull EnginePlayerPacketEvent event, @NotNull Object packet) {
-        Object particle = Reflex.invokeMethod(
-                Reflex.getMethod(packet.getClass(), "getParticle"),
-                packet
-        );
+        Object particle = this.getParticle(packet);
         if (particle == null) return;
 
         Class<?> particleOptionsClass = Reflex.getClass(NMS_PARTICLES, "ParticleOptions");
@@ -258,15 +256,32 @@ public class V26_R1 extends UniversalPacketHandler implements IPacketHandler {
         );
         boolean isDamageParticle = Objects.equals(path, "damage_indicator");
         if (isDamageParticle) {
-            Integer count = (Integer) Reflex.invokeMethod(
-                    Reflex.getMethod(packet.getClass(), "getCount"),
-                    packet
-            );
+            Integer count = this.getParticleCount(packet);
             if (count == null) return;
             if (count > 20) {
-                Reflex.setFieldValue(packet, FIELD_COUNT, 20);
+                this.setParticleCount(event, packet, 20);
             }
         }
+    }
+
+    @Nullable
+    protected Object getParticle(@NotNull Object packet) {
+        return Reflex.invokeMethod(
+                Reflex.getMethod(packet.getClass(), "getParticle"),
+                packet
+        );
+    }
+
+    @Nullable
+    protected Integer getParticleCount(@NotNull Object packet) {
+        return (Integer) Reflex.invokeMethod(
+                Reflex.getMethod(packet.getClass(), "getCount"),
+                packet
+        );
+    }
+
+    protected void setParticleCount(@NotNull EnginePlayerPacketEvent event, @NotNull Object packet, int count) {
+        Reflex.setFieldValue(packet, FIELD_COUNT, count);
     }
 
     private Object getDedicatedServer() {
