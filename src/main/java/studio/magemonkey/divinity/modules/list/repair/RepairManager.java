@@ -30,6 +30,7 @@ import studio.magemonkey.divinity.modules.EModule;
 import studio.magemonkey.divinity.modules.LimitedItem;
 import studio.magemonkey.divinity.modules.api.QModuleDrop;
 import studio.magemonkey.divinity.modules.list.repair.RepairManager.RepairItem;
+import studio.magemonkey.divinity.modules.list.repair.command.RepairFixCmd;
 import studio.magemonkey.divinity.modules.list.repair.command.RepairOpenCmd;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
@@ -141,6 +142,7 @@ public class RepairManager extends QModuleDrop<RepairItem> {
 
         this.gui = new AnvilGUI(this);
         this.moduleCommand.addSubCommand(new RepairOpenCmd(this));
+        this.moduleCommand.addSubCommand(new RepairFixCmd(this));
 
         CitizensHK citi = plugin.getCitizens();
         if (citi != null) {
@@ -213,6 +215,23 @@ public class RepairManager extends QModuleDrop<RepairItem> {
         this.duraStat.add(result, new double[]{max, max}, -1);
 
         return result;
+    }
+
+    /**
+     * Fully restores the custom durability of the item, free of charge.
+     *
+     * @param item An ItemStack to repair
+     * @return Returns true if the item was damaged and has been repaired.
+     */
+    public boolean repairItem(@NotNull ItemStack item) {
+        if (ItemUT.isAir(item) || !ItemStats.hasStat(item, null, TypedStat.Type.DURABILITY)) return false;
+        if (!this.duraStat.isDamaged(item)) return false;
+
+        double[] arr = this.duraStat.getRaw(item);
+        if (arr == null) return false;
+
+        double max = arr[1];
+        return this.duraStat.add(item, new double[]{max, max}, -1);
     }
 
     @Nullable
