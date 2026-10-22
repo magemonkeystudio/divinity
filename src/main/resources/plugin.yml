@@ -853,6 +853,7 @@ permissions:
     default: op
     children:
       divinity.repair.cmd.open: true
+      divinity.repair.cmd.fix: true
   quantumrpg.repair.cmd:
     description: Access to Repair commands.
     default: op
@@ -867,6 +868,9 @@ permissions:
     default: op
     children:
       divinity.repair.cmd.open: true
+  divinity.repair.cmd.fix:
+    description: Access to /repair fix command.
+    default: op
   divinity.repair.gui:
     description: Access to Repair GUI.
     default: op

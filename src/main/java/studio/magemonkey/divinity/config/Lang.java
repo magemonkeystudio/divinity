@@ -535,6 +535,16 @@ public class Lang extends CoreLang {
             new ILangMsg(this, "[player] [force(true/false)]");
     public ILangMsg Repair_Cmd_Open_Done_Others                       =
             new ILangMsg(this, "Opened Anvil Repair GUI for &a%player%&7.");
+    public ILangMsg Repair_Cmd_Fix_Desc                               =
+            new ILangMsg(this, "Instantly repair the item in hand (or all equipped items) for free.");
+    public ILangMsg Repair_Cmd_Fix_Usage                              =
+            new ILangMsg(this, "[player] [hand/all]");
+    public ILangMsg Repair_Cmd_Fix_Done_All                           =
+            new ILangMsg(this, "&a%amount% &7item(s) have been successfully repaired.");
+    public ILangMsg Repair_Cmd_Fix_Done_Others                        =
+            new ILangMsg(this, "Repaired &a%amount% &7item(s) of &a%player%&7.");
+    public ILangMsg Repair_Cmd_Fix_Error_Nothing                      =
+            new ILangMsg(this, "&cThere is nothing to repair.");
     public ILangMsg Repair_Error_TypeNotSelected                      =
             new ILangMsg(this, "&cPlease, select the repair type!");
     public ILangMsg Repair_Error_NoDurability                         =

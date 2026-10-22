@@ -68,6 +68,7 @@ public class Perms {
     public static final String REFINE_CMD_DOWNGRADE = PREFIX + "refine.cmd.downgrade";
 
     public static final String REPAIR_CMD_OPEN = PREFIX + "repair.cmd.open";
+    public static final String REPAIR_CMD_FIX  = PREFIX + "repair.cmd.fix";
     public static final String REPAIR_GUI      = PREFIX + "repair.gui";
 
     public static final String DISMANTLE_CMD_OPEN = PREFIX + "dismantle.cmd.open";

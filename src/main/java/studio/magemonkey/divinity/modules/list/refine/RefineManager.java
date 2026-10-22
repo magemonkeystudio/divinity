@@ -384,6 +384,8 @@ public class RefineManager extends QModuleDrop<RefineItem> {
 
         // Fix NBT attributes in case if refine modifies them
         this.setRefineLevel(item, stone, refineLvl);
+        // Re-render stat lines now that the new refine level is stored, so they show the new bonuses.
+        this.updateStatLore(item);
         ItemStats.updateVanillaAttributes(item, null);
         ItemUT.addNameTag(item, TAG_REFINE_NAME, preName);
         ItemUT.addLoreTag(item, TAG_REFINE_LORE, loreTag.toString());
@@ -424,7 +426,28 @@ public class RefineManager extends QModuleDrop<RefineItem> {
         meta.setLore(lore);
         item.setItemMeta(meta);
 
+        // Clear the refine level first, so the stat lines below are re-rendered without refine bonuses.
+        this.setRefineLevel(item, stone, 0);
+
         // Remove ALL possible refined stats even if it was removed from RefineStone config
+        this.updateStatLore(item);
+
+        if (fortifyManager != null) {
+            fortifyManager.formatItemName(item);
+        }
+
+        ItemStats.updateVanillaAttributes(item, null);
+        ItemUT.delLoreTag(item, TAG_REFINE_LORE);
+        ItemUT.delNameTag(item, TAG_REFINE_NAME);
+    }
+
+    /**
+     * Re-renders the lore lines of all item stats, damages and defenses,
+     * using the refine level currently stored on the item.
+     *
+     * @param item An ItemStack to update
+     */
+    private void updateStatLore(@NotNull ItemStack item) {
         ItemStats.getStats().forEach((stat) -> {
             if (stat instanceof SimpleStat) {
                 SimpleStat simpleStat = (SimpleStat) stat;
@@ -454,15 +477,6 @@ public class RefineManager extends QModuleDrop<RefineItem> {
                 i++;
             }
         });
-
-        if (fortifyManager != null) {
-            fortifyManager.formatItemName(item);
-        }
-
-        this.setRefineLevel(item, stone, 0);
-        ItemStats.updateVanillaAttributes(item, null);
-        ItemUT.delLoreTag(item, TAG_REFINE_LORE);
-        ItemUT.delNameTag(item, TAG_REFINE_NAME);
     }
 
     @NotNull

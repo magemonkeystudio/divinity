@@ -64,6 +64,24 @@ class PermsAliasTest extends MockedTest {
     }
 
     @Test
+    void repairCmdGrant_impliesRepairFix() {
+        PlayerMock player = grantedOnly("divinity.repair.cmd");
+        assertTrue(player.hasPermission("divinity.repair.cmd.fix"));
+    }
+
+    @Test
+    void legacyRepairCmdGrant_impliesDivinityRepairFix() {
+        PlayerMock player = grantedOnly("quantumrpg.repair.cmd");
+        assertTrue(player.hasPermission("divinity.repair.cmd.fix"));
+    }
+
+    @Test
+    void repairOpenGrant_doesNotImplyRepairFix() {
+        PlayerMock player = grantedOnly("divinity.repair.cmd.open");
+        assertFalse(player.hasPermission("divinity.repair.cmd.fix"));
+    }
+
+    @Test
     void legacyUserGrant_impliesDivinityUser() {
         PlayerMock player = grantedOnly("quantumrpg.user");
         assertTrue(player.hasPermission("divinity.user"));

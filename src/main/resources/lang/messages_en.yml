@@ -380,6 +380,14 @@ Repair:
       Usage: '[player] [force(true/false)]'
       Done:
         Others: Opened Anvil Repair GUI for &a%player%&7.
+    Fix:
+      Desc: Instantly repair the item in hand (or all equipped items) for free.
+      Usage: '[player] [hand/all]'
+      Done:
+        All: '&a%amount% &7item(s) have been successfully repaired.'
+        Others: Repaired &a%amount% &7item(s) of &a%player%&7.
+      Error:
+        Nothing: '&cThere is nothing to repair.'
   Error:
     TypeNotSelected: '&cPlease, select the repair type!'
     NoDurability: '&c%item% &7can not be repaired.'
