@@ -143,7 +143,7 @@
         <dependency>
             <groupId>com.gmail.nossr50.mcMMO</groupId>
             <artifactId>mcMMO</artifactId>
-            <version>2.3.001</version>
+            <version>2.3.002</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
