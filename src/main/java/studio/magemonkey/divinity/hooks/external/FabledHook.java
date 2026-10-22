@@ -245,6 +245,12 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         new BukkitRunnable() {
             @Override
             public void run() {
+                // While Fabled's text casting mode (ACTION_BAR, TITLE, ...) is active, the held slot is
+                // moved to the cast slot and no longer points at the item that grants the skills.
+                // Skip the update so those skills stay castable, they are re-synced when casting ends.
+                PlayerData playerData = Fabled.getData(player);
+                if (playerData != null && playerData.getTextCastingData().isCasting()) return;
+
                 Map<String, Integer> skills    = new HashMap<>();
                 PlayerInventory      inventory = player.getInventory();
                 for (int i : new int[]{inventory.getHeldItemSlot(), 36, 37, 38, 39, 40}) {
