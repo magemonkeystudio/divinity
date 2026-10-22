@@ -1,5 +1,6 @@
 package studio.magemonkey.divinity.testutil;
 
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -88,6 +89,17 @@ public abstract class MockedTest {
         plugin = MockBukkit.load(Divinity.class);
         server.getScheduler().performOneTick();
 //        server.getScheduler().waitAsyncTasksFinished();
+    }
+
+    /**
+     * The default NMS mock returns colors untouched, but a real server normalizes redundant color codes,
+     * and MockBukkit normalizes lore the same way. Tests that rely on Divinity locating its own lore lines
+     * (lore tags must match the lore exactly) should call this so both sides are normalized alike.
+     */
+    protected void useRealisticColorFixing() {
+        LegacyComponentSerializer legacy = LegacyComponentSerializer.legacySection();
+        when(VersionManager.getNms().fixColors(anyString()))
+                .thenAnswer(ans -> legacy.serialize(legacy.deserialize(ans.getArgument(0))));
     }
 
     @AfterAll
