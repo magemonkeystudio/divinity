@@ -13,7 +13,10 @@ public class ItemTags {
     public static final String TAG_ITEM_STAT        = "ITEM_STAT_";
     public static final String TAG_ITEM_DAMAGE      = "ITEM_DAMAGE_";
     public static final String TAG_ITEM_DEFENSE     = "ITEM_DEFENSE_";
-    public static final String TAG_ITEM_FABLED_ATTR = "ITEM_FABLED_ATTR_";
+    public static final String TAG_ITEM_FABLED_ATTR  = "ITEM_FABLED_ATTR_";
+    public static final String TAG_ITEM_DAMAGE_BUFF  = "ITEM_DAMAGE_BUFF_";
+    public static final String TAG_ITEM_DEFENSE_BUFF = "ITEM_DEFENSE_BUFF_";
+    public static final String TAG_ITEM_PENETRATION  = "ITEM_PENETRATION_";
 
 
     public static final String TAG_REQ_USER_LEVEL        = "ITEM_USER_LEVEL";
