@@ -18,6 +18,7 @@ public class ListenerManager implements Loadable {
     private       ItemRequirementListener lisReq;
     private       DynamicStatListener     lisDynamic;
     private       ItemUpdaterListener     updater;
+    private       ItemAutoUpdateListener  autoUpdater;
     private       VanillaWrapperListener  lisQuantum;
     private       HookListener            hookListener;
     private       GrindstoneListener      grindstoneListener;
@@ -53,6 +54,9 @@ public class ListenerManager implements Loadable {
         this.updater = new ItemUpdaterListener(this.plugin);
         this.updater.registerListeners();
 
+        this.autoUpdater = new ItemAutoUpdateListener(this.plugin);
+        this.autoUpdater.registerListeners();
+
         this.hookListener = new HookListener(this.plugin);
         this.hookListener.registerListeners();
 
@@ -75,6 +79,10 @@ public class ListenerManager implements Loadable {
         if (this.lisReq != null) {
             this.lisReq.unregisterListeners();
             this.lisReq = null;
+        }
+        if (this.autoUpdater != null) {
+            this.autoUpdater.unregisterListeners();
+            this.autoUpdater = null;
         }
         if (this.lisQuantum != null) {
             this.lisQuantum.unregisterListeners();
