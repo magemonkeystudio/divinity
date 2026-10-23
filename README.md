@@ -1,4 +1,6 @@
 [![Release](https://img.shields.io/github/v/release/magemonkeystudio/divinity?label=release)](https://github.com/magemonkeystudio/divinity/releases/latest)
+[![Release Build](https://github.com/magemonkeystudio/divinity/actions/workflows/release.yml/badge.svg?branch=dev)](https://github.com/magemonkeystudio/divinity/actions/workflows/release.yml)
+[![Dev](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.travja.dev%2Fsnapshots%2Fstudio%2Fmagemonkey%2Fdivinity%2Fmaven-metadata.xml&strategy=highestVersion&label=dev)](https://repo.travja.dev/#/snapshots/studio/magemonkey/divinity)
 [![Dev Build](https://github.com/magemonkeystudio/divinity/actions/workflows/devbuild.yml/badge.svg?branch=dev)](https://github.com/magemonkeystudio/divinity/actions/workflows/devbuild.yml)
 [![Discord](https://dcbadge.limes.pink/api/server/mQrkW4htUA?style=flat)](https://discord.gg/mQrkW4htUA)
 
