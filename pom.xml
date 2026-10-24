@@ -20,7 +20,7 @@
     <properties>
         <revision>1.0.2</revision>
         <changelist>-SNAPSHOT</changelist>
-        <codex.version>1.2.0-R0.7-SNAPSHOT</codex.version>
+        <codex.version>1.2.0</codex.version>
         <fabled.version>1.0.4-R0.76-SNAPSHOT</fabled.version>
     </properties>
 
