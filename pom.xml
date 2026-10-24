@@ -11,11 +11,15 @@
     </parent>
 
     <artifactId>divinity</artifactId>
-    <version>1.0.2-R0.78-SNAPSHOT</version>
+    <!-- CI sets both properties (-Drevision=X.Y.Z, -Dchangelist=-SNAPSHOT or empty) from the
+         last release tag and PR labels; the values in <properties> are only for local builds. -->
+    <version>${revision}${changelist}</version>
     <name>Divinity</name>
     <description>Custom items, combat, and more!</description>
 
     <properties>
+        <revision>1.0.2</revision>
+        <changelist>-SNAPSHOT</changelist>
         <codex.version>1.2.0</codex.version>
         <fabled.version>1.0.4-R0.76-SNAPSHOT</fabled.version>
     </properties>
@@ -245,6 +249,32 @@
                     </archive>
                     <outputDirectory>${outputDir}</outputDirectory>
                 </configuration>
+            </plugin>
+            <!-- Writes the resolved version into the published pom instead of ${revision}${changelist} -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.7.3</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten-clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
