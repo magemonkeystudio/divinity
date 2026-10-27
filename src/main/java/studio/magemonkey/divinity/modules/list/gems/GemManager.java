@@ -119,6 +119,9 @@ public class GemManager extends ModuleSocket<Gem> {
                 bMap.loadStats(cfg, path + "item-stats");
                 bMap.loadDamages(cfg, path + "damage-types");
                 bMap.loadDefenses(cfg, path + "defense-types");
+                bMap.loadDamageBuffs(cfg, path + "damage-buffs");
+                bMap.loadDefenseBuffs(cfg, path + "defense-buffs");
+                bMap.loadPenetrations(cfg, path + "penetrations");
 
                 this.bonusMap.put(lvl, bMap);
 
