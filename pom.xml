@@ -236,7 +236,8 @@
                 <configuration>
                     <systemPropertyVariables>
                         <CODEX_VERSION>${codex.version}</CODEX_VERSION>
-                        <DIVINITY_VERSION>${project.version}</DIVINITY_VERSION>
+                        <!-- MockBukkit names the data folder after the plugin.yml version, which is display.version -->
+                        <DIVINITY_VERSION>${display.version}</DIVINITY_VERSION>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
