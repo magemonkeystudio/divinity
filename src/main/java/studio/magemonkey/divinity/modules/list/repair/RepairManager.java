@@ -213,6 +213,7 @@ public class RepairManager extends QModuleDrop<RepairItem> {
         double    max    = arr[1];
         ItemStack result = new ItemStack(target);
         this.duraStat.add(result, new double[]{max, max}, -1);
+        this.duraStat.syncVanillaBar(result);
 
         return result;
     }
@@ -401,6 +402,7 @@ public class RepairManager extends QModuleDrop<RepairItem> {
         durNow = (int) Math.min(durMax, durNow + durMax * 1D * (rPerc * 1D / 100D));
 
         this.duraStat.add(target, new double[]{durNow, durMax}, -1);
+        this.duraStat.syncVanillaBar(target);
         e.setCurrentItem(target);
 
         if (lost != null) {
