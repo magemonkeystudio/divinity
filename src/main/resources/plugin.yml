@@ -1,5 +1,5 @@
 main: studio.magemonkey.divinity.Divinity
-version: ${project.version}
+version: ${display.version}
 name: ${project.name}
 authors: [ Travja, Sentropic, goflish ]
 description: The most advanced, customizable and configurable RPG-Core plugin!

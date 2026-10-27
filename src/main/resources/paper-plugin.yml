@@ -1,5 +1,5 @@
 main: studio.magemonkey.divinity.Divinity
-version: ${project.version}
+version: ${display.version}
 name: ${project.name}
 provides:
   - ProRPGItems
