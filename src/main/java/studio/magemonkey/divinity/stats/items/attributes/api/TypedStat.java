@@ -79,6 +79,27 @@ public interface TypedStat {
         THORNMAIL(SimpleStat.ItemType.ARMOR, true, false, true),
         HEALTH_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
         MANA_REGEN(SimpleStat.ItemType.BOTH, true, true, true),
+        // Entity size (maps to generic.scale Bukkit attribute)
+        SCALE(SimpleStat.ItemType.BOTH, false, true, true),
+        // MC 1.21+ vanilla attributes
+        WATER_MOVEMENT_EFFICIENCY(SimpleStat.ItemType.BOTH, true, false, true),
+        MOVEMENT_EFFICIENCY(SimpleStat.ItemType.BOTH, true, false, true),
+        SNEAKING_SPEED(SimpleStat.ItemType.BOTH, true, false, true),
+        // MC 1.20.5+ vanilla attributes
+        BLOCK_BREAK_SPEED(SimpleStat.ItemType.BOTH, true, false, true),
+        BLOCK_INTERACTION_RANGE(SimpleStat.ItemType.BOTH, false, true, true),
+        ENTITY_INTERACTION_RANGE(SimpleStat.ItemType.BOTH, false, true, true),
+        EXPLOSION_KNOCKBACK_RESISTANCE(SimpleStat.ItemType.BOTH, true, false, true),
+        FALL_DAMAGE_MULTIPLIER(SimpleStat.ItemType.BOTH, true, true, true),
+        FLYING_SPEED(SimpleStat.ItemType.BOTH, false, false, true),
+        GRAVITY(SimpleStat.ItemType.BOTH, false, true, true),
+        JUMP_STRENGTH(SimpleStat.ItemType.BOTH, false, false, true),
+        MAX_ABSORPTION(SimpleStat.ItemType.BOTH, false, false, true),
+        MINING_EFFICIENCY(SimpleStat.ItemType.BOTH, false, false, true),
+        OXYGEN_BONUS(SimpleStat.ItemType.BOTH, false, false, true),
+        SAFE_FALL_DISTANCE(SimpleStat.ItemType.BOTH, false, false, true),
+        STEP_HEIGHT(SimpleStat.ItemType.BOTH, false, false, true),
+        SUBMERGED_MINING_SPEED(SimpleStat.ItemType.BOTH, true, false, true),
         ;
 
         private final SimpleStat.ItemType type;
