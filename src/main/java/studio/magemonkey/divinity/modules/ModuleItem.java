@@ -219,6 +219,13 @@ public abstract class ModuleItem extends LoadableItem {
     }
 
     @NotNull
+    public ItemStack update(@NotNull ItemStack item) {
+        ItemStack updated = this.build(item.clone());
+        updated.setAmount(item.getAmount());
+        return updated;
+    }
+
+    @NotNull
     protected ItemStack build() {
         return build(this.getMaterial().create());
     }
@@ -277,6 +284,13 @@ public abstract class ModuleItem extends LoadableItem {
         meta.setUnbreakable(this.isUnbreakable);
         if (this.enchanted) {
             meta.addEnchant(NamespaceResolver.getEnchantment("POWER", "ARROW_DAMAGE"), 1, true); // ARROW_DAMAGE/POWER
+        }
+
+        if (meta.hasAttributeModifiers()) {
+            Set<Attribute> existing = new HashSet<>(meta.getAttributeModifiers().keySet());
+            for (Attribute attr : existing) {
+                meta.removeAttributeModifier(attr);
+            }
         }
 
         for (Map.Entry<Attribute, AttributeModifier> attribute : this.attributes.entrySet()) {
