@@ -20,6 +20,7 @@ import studio.magemonkey.divinity.stats.items.attributes.SocketAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
+import studio.magemonkey.divinity.utils.ItemUtils;
 import studio.magemonkey.divinity.utils.LoreUT;
 
 import java.util.*;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 public class TypedStatGenerator extends AbstractAttributeGenerator {
 
     protected Map<TypedStat, DamageInformation> attributes;
+    private final Map<TypedStat, List<String>> itemGroups;
 
     public TypedStatGenerator(
             @NotNull Divinity plugin,
@@ -45,10 +47,23 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
         this.maxAmount = cfg.getInt(path + "maximum");
         this.loreFormat = StringUT.color(cfg.getStringList(path + "lore-format"));
         this.attributes = new HashMap<>();
+        this.itemGroups = new HashMap<>();
 
         attributesAll.forEach(att -> {
             String  path2    = path + "list." + att.getId() + ".";
             boolean isSocket = att instanceof SocketAttribute;
+            List<String> configuredGroups = cfg.getStringList(path2 + "item-groups");
+            if (!configuredGroups.isEmpty()) {
+                List<String> validGroups = new ArrayList<>();
+                for (String group : configuredGroups) {
+                    if (!ItemUtils.parseItemGroup(group)) {
+                        this.plugin.warn("Invalid item group '" + group + "' at '" + path2 + "item-groups'.");
+                        continue;
+                    }
+                    validGroups.add(group.toLowerCase(Locale.ROOT));
+                }
+                this.itemGroups.put(att, validGroups);
+            }
 
             cfg.addMissing(path2 + "chance", 0D);
             if (!isSocket) {
@@ -96,7 +111,9 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
         boolean isSocket = false;
         boolean isValid  = true;
 
-        Map<TypedStat, DamageInformation> stats = this.getAttributes();
+        Map<TypedStat, DamageInformation> stats = this.getAttributes().entrySet().stream()
+                .filter(entry -> isAllowedByItemGroups(item, this.itemGroups.get(entry.getKey())))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         int generatorPos = lore.indexOf(this.placeholder);
         int min          = this.getMinAmount();
@@ -257,5 +274,10 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
     @NotNull
     public Map<TypedStat, DamageInformation> getAttributes() {
         return attributes;
+    }
+
+    static boolean isAllowedByItemGroups(@NotNull ItemStack item, @Nullable List<String> groups) {
+        return groups == null || (!groups.isEmpty()
+                && ItemUtils.compareItemGroup(item, groups.toArray(new String[0])));
     }
 }
