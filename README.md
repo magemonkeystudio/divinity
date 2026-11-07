@@ -1,3 +1,4 @@
+[![Discord](https://dcbadge.limes.pink/api/server/5fz9wE5?style=flat)](https://discord.gg/5fz9wE5)
 # Divinity — Midmines Fork
 
 This is a personal fork of [Divinity](https://github.com/magemonkeystudio/divinity),
@@ -8,8 +9,9 @@ Divinity changes and are not supported by the upstream maintainers.
 This is my first fork, and I am still learning how GitHub works. The code and
 changes in this fork were created with 100% AI assistance.
 
-This fork is intended for independent use and development. It may differ from
-or lag behind the official project.
+This is a fun, personal-use project focused on having lots of customization
+features. Updates are made in my spare time, so they may be irregular and are
+not guaranteed. This fork may differ from or lag behind the official project.
 
 ## Changes
 
@@ -60,9 +62,12 @@ Build the project and run its tests with:
 mvn test
 ```
 
-## Community
+## Download
 
-Join the [Divinity Discord server](https://discord.gg/mQrkW4htUA).
+The fork's plugin JAR is available at
+[`build/1.1.1 FORK.jar`](./build/1.1.1%20FORK.jar). Back up your server and
+test the JAR before using it on a live server. The filename is a custom fork
+label; the plugin metadata currently identifies this build as `1.0.2-SNAPSHOT`.
 
 ## Links
 
