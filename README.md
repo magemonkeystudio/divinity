@@ -1,24 +1,27 @@
 # Divinity — Midmines Fork
 
-Ini adalah fork pribadi Divinity untuk eksperimen dan pengembangan oleh
-[midmines](https://github.com/midmines). Repository ini berasal dari
-[Divinity resmi](https://github.com/magemonkeystudio/divinity), tetapi perubahan
-di fork ini tidak otomatis menjadi bagian dari proyek resmi dan tidak didukung
-oleh maintainer resmi.
+This is a personal fork of [Divinity](https://github.com/magemonkeystudio/divinity),
+maintained by [midmines](https://github.com/midmines) for independent
+experimentation and development. Changes in this repository are not official
+Divinity changes and are not supported by the upstream maintainers.
 
-Fork ini ditujukan untuk penggunaan dan pengembangan mandiri. Perubahan dapat
-berbeda atau tertinggal dari branch resmi.
+This is my first fork, and I am still learning how GitHub works. The code and
+changes in this fork were created with 100% AI assistance.
 
-## Perbedaan dan perubahan
+This fork is intended for independent use and development. It may differ from
+or lag behind the official project.
 
-### Fitur baru
+## Changes
 
-- **Menu `/stats`** — menampilkan statistik aktif pemain dalam GUI dengan
-  halaman, nilai dasar/bonus/total, dan deskripsi. Pengaturan tersedia di
-  `src/main/resources/stats/settings.yml`; nama, ikon, format, urutan, dan
-  tampilan stat dapat dikustomisasi.
-- **Filter item group per stat generator** — stat item dapat dibatasi ke item
-  group atau subtype tertentu langsung dari YAML generator. Contohnya:
+### New features
+
+- **`/stats` menu** — displays a player's active stats in a paginated GUI,
+  including base, bonus, and total values with descriptions. Configure it in
+  `src/main/resources/stats/settings.yml`; names, icons, formats, ordering,
+  and display options can be customized.
+- **Per-stat item group filters in the item generator** — restrict generated
+  item stats to selected item groups or subtypes directly in the generator
+  YAML. For example:
 
   ```yml
   critical_rate:
@@ -32,37 +35,39 @@ berbeda atau tertinggal dari branch resmi.
     flat-range: false
   ```
 
-  Opsi ini berlaku untuk item stat di bawah
-  `generator.item-stats.list.<stat>`. Hapus `item-groups` jika stat boleh
-  muncul untuk semua item. Nilai group harus sesuai group/subtype yang dikenali
-  konfigurasi Divinity.
-- **Peluang soulbound pada item generator** — opsi `generator.soulbound-chance`
-  mengatur peluang item yang dibuat menjadi soulbound dalam rentang 0–100.
-- **Dukungan DecentHolograms** untuk indikator damage combat log, selain
+  This option is available for item stats under
+  `generator.item-stats.list.<stat>`. Remove `item-groups` to allow a stat on
+  all items. Group names must match groups or subtypes recognized by Divinity.
+- **Configurable soulbound chance for generated items** — use
+  `generator.soulbound-chance` to set the chance from 0 to 100.
+- **DecentHolograms support** for combat-log damage indicators, alongside
   HolographicDisplays.
 
-### Perbaikan dan penyesuaian
+### Fixes and adjustments
 
-- Jarak pencarian target AoE memakai pengaturan combat AoE, bukan jarak tetap.
-- Pembaruan durability dapat menyimpan nilai meskipun lore durability tidak
-  ditampilkan.
-- Pengecekan apakah stat sudah diterapkan juga memeriksa data item, bukan hanya
-  baris lore. Ini mendukung stat yang sengaja disimpan tanpa ditampilkan.
-- Generator tipe hand tidak menambahkan lore hand pada item yang bukan senjata.
+- AoE target search uses the configured combat AoE range instead of a fixed
+  distance.
+- Durability values can be updated even when durability lore is hidden.
+- Stat-applied checks look at item data as well as lore, supporting stats that
+  are stored without being displayed.
+- The hand-type generator no longer adds hand lore to non-weapon items.
 
-## Pengembangan
+## Development
 
-Build dan jalankan tes:
+Build the project and run its tests with:
 
 ```bash
 mvn test
 ```
 
-Fork GitHub: https://github.com/midmines/divinity_midmines_fork
+## Community
 
-## Upstream
+Join the [Divinity Discord server](https://discord.gg/mQrkW4htUA).
 
-Proyek resmi: https://github.com/magemonkeystudio/divinity
+## Links
 
-Untuk isu atau perubahan di fork ini, gunakan repository Midmines Fork; jangan
-menganggap perubahan di sini sebagai rilis atau rekomendasi resmi Divinity.
+- **This fork:** https://github.com/midmines/divinity_midmines_fork
+- **Official upstream project:** https://github.com/magemonkeystudio/divinity
+
+For issues or changes specific to this fork, use this repository. This fork
+should not be treated as an official Divinity release or recommendation.
