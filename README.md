@@ -49,6 +49,9 @@ not guaranteed. This fork may differ from or lag behind the official project.
 
 - AoE target search uses the configured combat AoE range instead of a fixed
   distance.
+- Max-health attribute modifiers use Divinity-specific keys instead of a
+  shared hardcoded identifier. This avoids conflicts with LevelledMobs and
+  allows max-health bonuses from item sets to be applied correctly.
 - Durability values can be updated even when durability lore is hidden.
 - Stat-applied checks look at item data as well as lore, supporting stats that
   are stored without being displayed.
