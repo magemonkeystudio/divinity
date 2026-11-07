@@ -9,6 +9,7 @@ loadafter: [ Magic, Fabled ]
 provides: [ ProRPGItems, QuantumRPG ]
 softdepend:
   - Citizens
+  - DecentHolograms
   - HolographicDisplays
   - LevelledMobs
   - LorinthsRpgMobs

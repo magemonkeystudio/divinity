@@ -2,6 +2,7 @@ package studio.magemonkey.divinity.stats;
 
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Biome;
@@ -508,6 +509,43 @@ public class EntityStats {
      * If the player somehow gets into a glitched state, this method can help clean up their attribute bonuses
      * without needing to delete their player data.
      */
+    @NotNull
+    private NamespacedKey getBonusAttributeKey(@NotNull NBTAttribute att) {
+        return new NamespacedKey(plugin, "entity_bonus_" + att.name().toLowerCase(Locale.ROOT));
+    }
+
+    private boolean isBonusAttributeModifier(@NotNull AttributeModifier modifier, @NotNull NBTAttribute att) {
+        boolean keyMatches = false;
+        try {
+            keyMatches = getBonusAttributeKey(att).toString()
+                    .equals(VersionManager.getCompat().getAttributeKey(modifier));
+        } catch (Exception ignored) {
+        }
+        if (keyMatches) return true;
+
+        try {
+            return Compat.ATTRIBUTE_BONUS_UUID.equals(modifier.getUniqueId());
+        } catch (Exception ignored) {
+            return false;
+        }
+    }
+
+    private AttributeModifier createBonusAttributeModifier(@NotNull NBTAttribute att, double value) {
+        try {
+            Class<?> slotGroupClass = Class.forName("org.bukkit.inventory.EquipmentSlotGroup");
+            Object anySlot = slotGroupClass.getField("ANY").get(null);
+            java.lang.reflect.Constructor<?> constructor = AttributeModifier.class.getConstructor(
+                    NamespacedKey.class,
+                    double.class,
+                    AttributeModifier.Operation.class,
+                    slotGroupClass);
+            return (AttributeModifier) constructor.newInstance(
+                    getBonusAttributeKey(att), value, Operation.ADD_NUMBER, anySlot);
+        } catch (ReflectiveOperationException ignored) {
+            return VersionManager.getCompat().createAttributeModifier(att, value, Operation.ADD_NUMBER);
+        }
+    }
+
     private void purgeAttributeBonuses() {
         for (NBTAttribute nbt : ATTRIBUTE_BONUS_NBT) {
             AttributeInstance attr = entity.getAttribute(nbt.getAttribute());
@@ -516,21 +554,7 @@ public class EntityStats {
 
             attr.getModifiers()
                     .stream()
-                    .filter(mod -> {
-                        UUID uuid;
-                        try {
-                            uuid = mod.getUniqueId();
-                        } catch (Exception e) {
-                            String attKey = VersionManager.getCompat().getAttributeKey(mod);
-                            try {
-                                uuid = UUID.fromString(attKey.replace("minecraft:", ""));
-                            } catch (Exception ignored) {
-                                return false;
-                            }
-                        }
-
-                        return uuid.equals(Compat.ATTRIBUTE_BONUS_UUID);
-                    })
+                    .filter(mod -> isBonusAttributeModifier(mod, nbt))
                     .collect(Collectors.toList())
                     .forEach(attr::removeModifier);
         }
@@ -591,15 +615,7 @@ public class EntityStats {
         // Remove this bonus only if same UUID and different value
         // Do not modify if value is the same
         for (AttributeModifier attMod : new HashSet<>(attInst.getModifiers())) {
-            UUID uuid = null;
-            try {
-                uuid = attMod.getUniqueId();
-            } catch (Exception ignored) {
-            }
-
-            String attKey    = VersionManager.getCompat().getAttributeKey(attMod);
-            String targetKey = VersionManager.getCompat().getAttributeKey(att);
-            if (Compat.ATTRIBUTE_BONUS_UUID.equals(uuid) || targetKey.equals(attKey)) {
+            if (isBonusAttributeModifier(attMod, att)) {
                 if (attMod.getAmount() == value) {
                     return;
                 }
@@ -610,7 +626,7 @@ public class EntityStats {
 
         if (value == 0D) return;
 
-        AttributeModifier am = VersionManager.getCompat().createAttributeModifier(att, value, Operation.ADD_NUMBER);
+        AttributeModifier am = createBonusAttributeModifier(att, value);
         attInst.addModifier(am);
     }
 

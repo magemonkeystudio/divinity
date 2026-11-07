@@ -13,6 +13,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TypedStatGeneratorTest extends MockedTest {
 
     @Test
+    void aoeDamageIsAllowedOnlyForConfiguredWeaponTypes() {
+        assertTrue(TypedStatGenerator.isAoeDamageAllowed(Material.NETHERITE_SWORD));
+        assertTrue(TypedStatGenerator.isAoeDamageAllowed(Material.FISHING_ROD));
+        assertTrue(TypedStatGenerator.isAoeDamageAllowed(Material.TRIDENT));
+        assertTrue(TypedStatGenerator.isAoeDamageAllowed(Material.DIAMOND_HOE));
+
+        assertFalse(TypedStatGenerator.isAoeDamageAllowed(Material.IRON_AXE));
+        assertFalse(TypedStatGenerator.isAoeDamageAllowed(Material.BOW));
+        assertFalse(TypedStatGenerator.isAoeDamageAllowed(Material.IRON_CHESTPLATE));
+    }
+
+    @Test
     void itemGroupsRestrictGeneratedStatsToConfiguredItems() {
         List<String> groups = List.of("sword", "axe");
 

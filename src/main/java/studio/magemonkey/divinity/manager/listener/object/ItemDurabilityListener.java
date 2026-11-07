@@ -144,7 +144,7 @@ public class ItemDurabilityListener extends IListener<Divinity> {
 
         newValue = Math.round(newValue * 100.0) / 100.0;
 
-        duraStat.add(item, new double[]{newValue, max}, -1);
+        duraStat.updateValue(item, new double[]{newValue, max});
         duraStat.syncVanillaBar(item, newValue, max);
 
         e.setCancelled(true);
@@ -153,7 +153,7 @@ public class ItemDurabilityListener extends IListener<Divinity> {
         if (damageable != null) {
             int vanillaDamage = damageable.getDamage();
             if (vanillaDamage == 0) {
-                duraStat.add(item, new double[]{max, max}, -1);
+                duraStat.updateValue(item, new double[]{max, max});
                 duraStat.syncVanillaBar(item, max, max);
                 e.setCancelled(true);
             }

@@ -180,6 +180,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
         private double prefixChance;
         @Getter
         private double suffixChance;
+        @Getter
+        private double soulboundChance;
 
         private boolean       materialsWhitelist;
         private Set<ItemType> materialsList;
@@ -218,6 +220,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             String path = "generator.";
             this.prefixChance = cfg.getDouble(path + "prefix-chance");
             this.suffixChance = cfg.getDouble(path + "suffix-chance");
+                this.soulboundChance = Math.max(0.0, Math.min(100.0,
+                    cfg.getDouble(path + "soulbound-chance", 100.0)));
 
             // Pre-cache available materials for Generator.
             this.materialsWhitelist = cfg.getBoolean(path + "materials.reverse");
@@ -983,7 +987,11 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             // Replace %SOULBOUND% placeholder.
             SoulboundRequirement reqSoul = ItemRequirements.getUserRequirement(SoulboundRequirement.class);
             if (reqSoul != null && reqSoul.hasPlaceholder(item)) {
-                reqSoul.add(item, -1);
+                if (Rnd.chance(this.soulboundChance)) {
+                    reqSoul.add(item, -1);
+                } else {
+                    LoreUT.replacePlaceholder(item, ItemTags.PLACEHOLDER_REQ_USER_SOUL, null);
+                }
             }
 
             // Replace %SET% placeholder.

@@ -1,7 +1,5 @@
 package studio.magemonkey.divinity.modules.list.loot;
 
-import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
-import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -23,6 +21,7 @@ import studio.magemonkey.codex.modules.IModuleExecutor;
 import studio.magemonkey.codex.util.*;
 import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.hooks.HologramSupport;
 import studio.magemonkey.divinity.modules.list.party.PartyManager;
 import studio.magemonkey.divinity.modules.list.party.PartyManager.Party;
 import studio.magemonkey.divinity.modules.list.party.PartyManager.PartyDropMode;
@@ -470,30 +469,30 @@ public class LootHolder extends IListener<Divinity> implements InventoryHolder {
 
     class HologramExpansion {
 
-        private Hologram holo;
+        private Object holo;
 
         public HologramExpansion() {
-            this.holo =
-                    HolographicDisplaysAPI.get(plugin).createHologram(LocUT.getCenter(boxLoc.clone()).add(0, 1.25, 0));
+            this.holo = HologramSupport.create(LocUT.getCenter(boxLoc.clone()).add(0, 1.25, 0), new ArrayList<>());
             this.update();
         }
 
         public void update() {
             if (this.holo == null) return;
 
-            this.holo.getLines().clear();
+            List<String> text = new ArrayList<>();
             for (String s : manager.getHoloText()) {
-                this.holo.getLines().appendText(s
+                text.add(s
                         .replace("%entity%", title)
                         .replace("%owner%", ownerName)
                         .replace("%time%", TimeUT.formatTimeLeft(LootHolder.this.despawnTime)));
             }
+            HologramSupport.setLines(this.holo, text);
         }
 
         public void remove() {
             if (this.holo == null) return;
 
-            this.holo.delete();
+            HologramSupport.delete(this.holo);
             this.holo = null;
         }
     }

@@ -1,0 +1,111 @@
+# Divinity /stats display configuration.
+# Every Minecraft, Divinity, and Fabled attribute discovered at startup is
+# added under attributes below. Existing values are preserved on reload.
+enabled: true
+
+# Dynamic entries with an absolute bonus at or below this value are omitted.
+dynamic-zero-threshold: 0.0001
+
+ui:
+  title: '&8Combat Stats'
+  size: 54
+  # Dynamic entries are placed in this order after static entries reserve slots.
+  dynamic-slots:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+  - 18
+  - 19
+  - 20
+  - 21
+  - 22
+  - 23
+  - 24
+  - 25
+  - 26
+  - 27
+  - 28
+  - 29
+  - 30
+  - 31
+  - 32
+  - 33
+  - 34
+  - 35
+  - 36
+  - 37
+  - 38
+  - 39
+  - 40
+  - 41
+  - 42
+  - 43
+  - 44
+  previous-slot: 45
+  close-slot: 49
+  next-slot: 53
+  labels:
+    base: '&7Base'
+    bonus: '&7Bonus'
+    total: '&7Total'
+    current: '&7Current value'
+    previous: '&ePrevious page'
+    close: '&cClose'
+    next: '&eNext page'
+  # Lore templates: each list item becomes one lore line. Use & color codes.
+  # Placeholders: {name}, {category}, {description}, {base}, {bonus}, {total}, {value},
+  # {bonus_sign}, {bonus_color}, {note}, {label_base}, {label_bonus},
+  # {label_total}, {label_current}. Descriptions wrap at 30 characters;
+  # empty {note} and {description} lines are omitted.
+  lore:
+    standard:
+    - '&8{category}'
+    - '&7{label_base}: &f{base}'
+    - '&7{label_bonus}: {bonus_color}{bonus_sign}{bonus}'
+    - '&7{label_total}: &e{total}'
+    - ''
+    - '&7{description}'
+    total-only:
+    - '&8{category}'
+    - '&7{label_current}: &f{total}'
+    - '{note}'
+    - ''
+    - '&7{description}'
+
+# Per-entry options are added automatically:
+#   enabled: true | false; false completely omits the attribute from /stats
+#   Settings are reloaded each time /stats is opened, so changes apply immediately.
+#   priority: integer; lower values appear first among dynamic entries
+#   mode: dynamic | static | hidden
+#   slot: inventory slot, used by static entries
+#   name: visible item name; new stat names default to red (&c)
+#   icon: Bukkit material name
+#   format: number | percent | multiplier
+#   description: English explanation shown in the item's lore
+# Descriptions are added to existing settings automatically without replacing custom values.
+# Default icons are selected by each stat instead of using placeholder paper icons.
+# Item-local Divinity stats (for example DURABILITY and SALE_PRICE) are hidden by
+# default because they do not have one meaningful aggregate player total.
+attributes:
+  minecraft: {}
+  divinity:
+    item-stats: {}
+    damage-types: {}
+    defense-types: {}
+    class-attributes: {}
+  fabled: {}

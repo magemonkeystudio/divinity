@@ -1,5 +1,6 @@
 package studio.magemonkey.divinity.modules.list.itemgenerator.generators;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -76,11 +77,6 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
                 }
             }
 
-            if (!this.loreFormat.contains(att.getPlaceholder())) {
-                this.loreFormat.add(att.getPlaceholder());
-                cfg.set(path + "lore-format", this.loreFormat);
-            }
-
             double chance = cfg.getDouble(path2 + "chance");
             //if (chance <= 0) return; Removed so that Bonuses can be applied
 
@@ -111,8 +107,12 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
         boolean isSocket = false;
         boolean isValid  = true;
 
-        Map<TypedStat, DamageInformation> stats = this.getAttributes().entrySet().stream()
+        Map<TypedStat, DamageInformation> stats = this.getAttributes();
+        stats = stats.entrySet().stream()
+                .filter(entry -> entry.getValue().getChance() > 0D)
                 .filter(entry -> isAllowedByItemGroups(item, this.itemGroups.get(entry.getKey())))
+                .filter(entry -> isAoeDamageAllowed(item.getType())
+                        || entry.getKey().getType() != TypedStat.Type.AOE_DAMAGE)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         int generatorPos = lore.indexOf(this.placeholder);
@@ -214,57 +214,66 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
                 noStats = false;
             }
 
-            if (stat.hasPlaceholder(item)) {
-                BiFunction<Boolean, Double, Double> vMod =
-                        generatorItem.getMaterialModifiers(item, (ItemLoreStat<?>) stat);
+            boolean showLore = this.loreFormat.contains(stat.getPlaceholder());
+            BiFunction<Boolean, Double, Double> vMod =
+                    generatorItem.getMaterialModifiers(item, (ItemLoreStat<?>) stat);
 
-                double vScale = generatorItem.getScaleOfLevel(values.getScaleByLevel(), itemLevel);
-                double vMin   = BonusCalculator.SIMPLE_FULL.apply(values.getMin(), Arrays.asList(vMod)) * vScale;
-                //(values[1]) * vScale * (1D + vMod[1] / 100D);
-                double vMax = BonusCalculator.SIMPLE_FULL.apply(values.getMax(), Arrays.asList(vMod)) * vScale;
-                // (values[2]) * vScale * (1D + vMod[1] / 100D);
+            double vScale = generatorItem.getScaleOfLevel(values.getScaleByLevel(), itemLevel);
+            double vMin   = BonusCalculator.SIMPLE_FULL.apply(values.getMin(), Arrays.asList(vMod)) * vScale;
+            //(values[1]) * vScale * (1D + vMod[1] / 100D);
+            double vMax = BonusCalculator.SIMPLE_FULL.apply(values.getMax(), Arrays.asList(vMod)) * vScale;
+            // (values[2]) * vScale * (1D + vMod[1] / 100D);
 
 
-                double vFin = NumberUT.round(Rnd.getDouble(vMin, vMax));
-                if (values.isRound()) {
-                    vFin = Math.round(vFin);
-                }
+            double vFin = NumberUT.round(Rnd.getDouble(vMin, vMax));
+            if (values.isRound()) {
+                vFin = Math.round(vFin);
+            }
 
-                if (vFin != 0) {
-                    if (stat instanceof SimpleStat) {
-                        SimpleStat rStat = (SimpleStat) stat;
-                        rStat.add(item, new StatBonus(new double[]{vFin}, false, null), -1);
+            if (vFin != 0) {
+                if (stat instanceof SimpleStat) {
+                    SimpleStat rStat = (SimpleStat) stat;
+                    StatBonus baseBonus = new StatBonus(new double[]{vFin}, false, null);
+                    if (showLore) rStat.add(item, baseBonus, -1);
+                    else rStat.addWithoutLore(item, baseBonus);
 
-                        // Add depending stats.
-                        SimpleStat.Type depend = rStat.getDependStat();
-                        if (depend != null && rStat.isMainItem(item)) {
-                            @SuppressWarnings("unchecked")
-                            TypedStat dStat = ItemStats.getStat(depend);
-                            if (dStat != null && !dStat.isApplied(item)) {
-                                mapChance.put(dStat, 100D);
-                                // Make depend stat to be 100% rolled.
-                                count--;
-                            }
+                    // Add depending stats.
+                    SimpleStat.Type depend = rStat.getDependStat();
+                    if (depend != null && rStat.isMainItem(item)) {
+                        @SuppressWarnings("unchecked")
+                        TypedStat dStat = ItemStats.getStat(depend);
+                        if (dStat != null && !dStat.isApplied(item)) {
+                            mapChance.put(dStat, 100D);
+                            // Make depend stat to be 100% rolled.
+                            count--;
                         }
-                    } else if (stat instanceof DurabilityStat) {
-                        DurabilityStat rStat = (DurabilityStat) stat;
-                        rStat.add(item, new double[]{vFin, vFin}, -1);
                     }
-                }
-
-                for (StatBonus statBonus : generatorItem.getClassBonuses((ItemLoreStat<?>) stat)) {
-                    ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
-                }
-
-                for (StatBonus statBonus : generatorItem.getRarityBonuses((ItemLoreStat<?>) stat)) {
-                    ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
-                }
-
-                for (StatBonus statBonus : generatorItem.getMaterialBonuses(item, (ItemLoreStat<?>) stat)) {
-                    ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
+                } else if (stat instanceof DurabilityStat) {
+                    DurabilityStat rStat = (DurabilityStat) stat;
+                    double[] durability = new double[]{vFin, vFin};
+                    if (showLore) rStat.add(item, durability, -1);
+                    else rStat.addWithoutLore(item, durability);
                 }
             }
+
+            for (StatBonus statBonus : generatorItem.getClassBonuses((ItemLoreStat<?>) stat)) {
+                if (showLore) ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
+                else ((ItemLoreStat<StatBonus>) stat).addWithoutLore(item, statBonus);
+            }
+
+            for (StatBonus statBonus : generatorItem.getRarityBonuses((ItemLoreStat<?>) stat)) {
+                if (showLore) ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
+                else ((ItemLoreStat<StatBonus>) stat).addWithoutLore(item, statBonus);
+            }
+
+            for (StatBonus statBonus : generatorItem.getMaterialBonuses(item, (ItemLoreStat<?>) stat)) {
+                if (showLore) ((ItemLoreStat<StatBonus>) stat).add(item, statBonus, -1);
+                else ((ItemLoreStat<StatBonus>) stat).addWithoutLore(item, statBonus);
+            }
             mapChance.remove(stat);
+        }
+        for (TypedStat stat : this.attributes.keySet()) {
+            LoreUT.replacePlaceholder(item, stat.getPlaceholder(), null);
         }
         if (noStats) {
             LoreUT.replacePlaceholder(item, this.placeholder, null);
@@ -279,5 +288,13 @@ public class TypedStatGenerator extends AbstractAttributeGenerator {
     static boolean isAllowedByItemGroups(@NotNull ItemStack item, @Nullable List<String> groups) {
         return groups == null || (!groups.isEmpty()
                 && ItemUtils.compareItemGroup(item, groups.toArray(new String[0])));
+    }
+
+    static boolean isAoeDamageAllowed(@NotNull Material material) {
+        String materialName = material.name();
+        return materialName.endsWith("_SWORD")
+                || material == Material.FISHING_ROD
+                || material == Material.TRIDENT
+                || materialName.endsWith("_HOE");
     }
 }

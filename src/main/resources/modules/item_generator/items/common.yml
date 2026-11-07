@@ -32,6 +32,7 @@ level:
 generator:
   prefix-chance: 100.0
   suffix-chance: 100.0
+  soulbound-chance: 100.0
   materials:
     reverse: false
     black-list:
@@ -132,6 +133,7 @@ generator:
   item-stats:
     minimum: 1
     maximum: 4
+    # Only stats listed here are shown in lore. Omitted stats are still generated and applied.
     lore-format:
       - '%ITEM_STAT_AOE_DAMAGE%'
       - '%ITEM_STAT_CRITICAL_RATE%'
@@ -165,19 +167,12 @@ generator:
     list:
       critical_rate:
         chance: 20.0
-        # Optional: restrict this stat to matching item groups/sub-types.
-        item-groups:
-          - sword
-          - axe
         scale-by-level: 1.025
         min: 3.0
         max: 6.25
         flat-range: false
       critical_damage:
         chance: 20.0
-        item-groups:
-          - sword
-          - axe
         scale-by-level: 1.025
         min: 1.1
         max: 1.25

@@ -194,6 +194,32 @@ public abstract class ItemLoreStat<Z> {
         return !isEmpty;
     }
 
+    public boolean addWithoutLore(@NotNull ItemStack item, @NotNull Z value) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        for (NamespacedKey key : this.keys) {
+            container.remove(key);
+        }
+        container.set(this.getKey(), this.dataType, value);
+
+        List<String> lore = meta.getLore();
+        if (lore != null) {
+            lore.removeIf(this.placeholder::equals);
+            meta.setLore(lore);
+        }
+        item.setItemMeta(meta);
+
+        for (NamespacedKey key : this.keys) {
+            ItemUT.delLoreTag(item, key.getKey());
+        }
+        if (this instanceof TypedStat) {
+            ItemStats.updateVanillaAttributes(item, null);
+        }
+        return true;
+    }
+
     public final void remove(@NotNull ItemStack item) {
         this.validateMethod();
 
@@ -277,12 +303,18 @@ public abstract class ItemLoreStat<Z> {
         return -1;
     }
 
-    /**
-     * @param item Item to check.
-     * @return true if stat is present in item lore (position >= 0).
-     * Does not check for item meta.
-     */
     public final boolean isApplied(@NotNull ItemStack item) {
+        if (this instanceof DuplicableItemLoreStat) {
+            if (((DuplicableItemLoreStat<?>) this).getAmount(item) > 0) return true;
+        } else {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                PersistentDataContainer container = meta.getPersistentDataContainer();
+                for (NamespacedKey key : this.keys) {
+                    if (container.has(key, this.dataType)) return true;
+                }
+            }
+        }
         return this.getLoreIndex(item) >= 0;
     }
 

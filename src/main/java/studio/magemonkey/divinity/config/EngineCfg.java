@@ -58,6 +58,7 @@ public class EngineCfg {
     public static int     COMBAT_SHIELD_BLOCK_COOLDOWN;
     public static boolean LEGACY_COMBAT;
     public static boolean COMBAT_DISABLE_VANILLA_SWEEP;
+    public static double  COMBAT_AOE_DAMAGE_RANGE;
     public static boolean COMBAT_REDUCE_PLAYER_HEALTH_BAR;
     public static boolean COMBAT_FISHING_HOOK_DO_DAMAGE;
     public static boolean COMBAT_BOWS_DO_FULL_MELEE_DAMAGE;
@@ -217,6 +218,8 @@ public class EngineCfg {
         path = "combat.";
         EngineCfg.LEGACY_COMBAT = cfg.getBoolean(path + "legacy-combat", false);
         EngineCfg.COMBAT_DISABLE_VANILLA_SWEEP = cfg.getBoolean(path + "disable-vanilla-sweep-attack");
+        cfg.addMissing(path + "aoe-damage-range", 2D);
+        EngineCfg.COMBAT_AOE_DAMAGE_RANGE = cfg.getDouble(path + "aoe-damage-range");
         EngineCfg.COMBAT_REDUCE_PLAYER_HEALTH_BAR = cfg.getBoolean(path + "compress-player-health-bar");
         EngineCfg.COMBAT_FISHING_HOOK_DO_DAMAGE = cfg.getBoolean(path + "fishing-hook-do-damage");
         EngineCfg.COMBAT_BOWS_DO_FULL_MELEE_DAMAGE = cfg.getBoolean(path + "bows-do-full-melee-damage");

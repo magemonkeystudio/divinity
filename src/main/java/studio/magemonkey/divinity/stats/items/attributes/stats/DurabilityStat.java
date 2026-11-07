@@ -150,7 +150,7 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
             }
         }
 
-        boolean result = this.add(item, new double[]{lose, max}, -1);
+        boolean result = this.updateValue(item, new double[]{lose, max});
 
         if (result) {
             syncVanillaBar(item, lose, max);
@@ -158,6 +158,12 @@ public class DurabilityStat extends ItemLoreStat<double[]> implements TypedStat 
 
         return result;
 
+    }
+
+    public boolean updateValue(@NotNull ItemStack item, @NotNull double[] value) {
+        return this.getLoreIndex(item) >= 0
+                ? this.add(item, value, -1)
+                : this.addWithoutLore(item, value);
     }
 
     @Override

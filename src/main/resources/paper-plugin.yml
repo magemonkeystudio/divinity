@@ -27,6 +27,9 @@ dependencies:
     Citizens:
       load: BEFORE
       required: false
+    DecentHolograms:
+      load: BEFORE
+      required: false
     HolographicDisplays:
       load: BEFORE
       required: false

@@ -10,7 +10,9 @@ import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager.GeneratorItem;
 import studio.magemonkey.divinity.modules.list.itemgenerator.api.AbstractAttributeGenerator;
 import studio.magemonkey.divinity.stats.bonus.BonusCalculator;
+import studio.magemonkey.divinity.stats.items.ItemTags;
 import studio.magemonkey.divinity.stats.items.api.ItemLoreStat;
+import studio.magemonkey.divinity.utils.ItemUtils;
 import studio.magemonkey.divinity.utils.LoreUT;
 
 import java.util.Collection;
@@ -49,6 +51,11 @@ public class SingleAttributeGenerator<A extends ItemLoreStat<String>> extends Ab
         if (meta == null) return;
         List<String> lore = meta.getLore();
         if (lore == null) return;
+
+        if (this.placeholder.equals(ItemTags.PLACEHOLDER_ITEM_HAND) && !ItemUtils.isWeapon(item)) {
+            LoreUT.replacePlaceholder(item, this.placeholder, null);
+            return;
+        }
 
         if (this.attributes.isEmpty()) {
             LoreUT.replacePlaceholder(item, this.placeholder, null);

@@ -81,6 +81,9 @@ combat:
   # Disables vanilla sweep attack. Can be useful when AOE_DAMAGE stat is enabled to prevent extra damage.
   # Setting this on 'true' will make it so swords will damage only ONE entity.
   disable-vanilla-sweep-attack: true
+  # Range used to find AoE damage targets from the attacker on each axis (X, Y, Z).
+  # This is an axis-aligned box range, not a circular radius or cone. Default: 2.0.
+  aoe-damage-range: 2.0
   # When enabled, reduces the amount of player's hearts in health bar to 10 hearts.
   # This setting DOES NOT AFFECT THE REAL PLAYER'S HEALTH!
   # This only reduces the VISUAL HEART DISPLAY to save the screen's space.

@@ -116,6 +116,43 @@ public abstract class DuplicableItemLoreStat<Z> extends ItemLoreStat<Z> {
         return !format.isEmpty();
     }
 
+    @Override
+    public boolean addWithoutLore(@NotNull ItemStack item, @NotNull Z value) {
+        int index = -1;
+        if (value instanceof StatBonus) {
+            StatBonus statBonus = (StatBonus) value;
+            for (int i = 0, size = this.getAmount(item); i < size; i++) {
+                StatBonus existing = (StatBonus) this.getRaw(item, i);
+                if (existing != null && Objects.equals(existing.getCondition(), statBonus.getCondition())) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        if (index < 0) index = this.getAmount(item);
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        for (NamespacedKey key : this.getKeys(index)) {
+            container.remove(key);
+        }
+        container.set(this.getKey(index), this.dataType, value);
+
+        List<String> lore = meta.getLore();
+        if (lore != null) {
+            lore.removeIf(this.placeholder::equals);
+            meta.setLore(lore);
+        }
+        item.setItemMeta(meta);
+        for (NamespacedKey key : this.getKeys(index)) {
+            ItemUT.delLoreTag(item, key.getKey());
+        }
+        ItemStats.updateVanillaAttributes(item, null);
+        return true;
+    }
+
     @NotNull
     public final ItemStack remove(@NotNull ItemStack item, int index, boolean onlyTag) {
         if (index < 0) index = this.getAmount(item) - 1;

@@ -23,8 +23,8 @@
         <!-- Version plugin.yml shows. CI sets it to the build's name (X.Y.Z-dev.N for a dev
              build, X.Y.Z for a release) so users can tell exactly which build they run. -->
         <display.version>${project.version}</display.version>
-        <codex.version>1.2.1</codex.version>
-        <fabled.version>1.1.0</fabled.version>
+        <codex.version>1.2.0</codex.version>
+        <fabled.version>1.0.4</fabled.version>
     </properties>
 
     <repositories>

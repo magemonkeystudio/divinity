@@ -449,7 +449,8 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                 statsVictim.setIgnoreAOE(false);
             } else {
                 plugin.getServer().getScheduler().runTask(plugin, () -> {
-                    Set<LivingEntity> targets = DamageManager.getTargetsByRange(damager, 2D);
+                    Set<LivingEntity> targets =
+                            DamageManager.getTargetsByRange(damager, EngineCfg.COMBAT_AOE_DAMAGE_RANGE);
                     targets.remove(victim);
                     targets.remove(damager);
                     DoubleUnaryOperator operator = (dmg) -> dmg * (aoe / 100D);

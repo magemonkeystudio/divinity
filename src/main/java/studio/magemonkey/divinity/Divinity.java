@@ -31,6 +31,7 @@ import studio.magemonkey.divinity.manager.damage.DamageManager;
 import studio.magemonkey.divinity.manager.interactions.InteractionManager;
 import studio.magemonkey.divinity.manager.listener.ListenerManager;
 import studio.magemonkey.divinity.manager.profile.ProfileManager;
+import studio.magemonkey.divinity.manager.stats.StatsCommand;
 import studio.magemonkey.divinity.manager.worth.WorthManager;
 import studio.magemonkey.divinity.modules.ModuleCache;
 import studio.magemonkey.divinity.nms.engine.PMSManager;
@@ -73,6 +74,7 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
     private EntityManager      entityManager;
     private ListenerManager    listenerManager;
     private ProfileManager     profileManager;
+    private StatsCommand       statsCommand;
     private ModuleCache        moduleCache;
 
     private PMSManager pms;
@@ -147,6 +149,9 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
         this.moduleCache = new ModuleCache(this);
         this.moduleCache.initialize();
 
+        this.statsCommand = new StatsCommand(this);
+        this.getCommandManager().registerCommand(this.statsCommand);
+
         this.worthManager = new WorthManager(this);
         this.worthManager.setup();
 
@@ -159,6 +164,11 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
     @Override
     public void disable() {
         DamageRegistry.unregisterProvider(DamageManager.class);
+        if (this.statsCommand != null) {
+            this.getCommandManager().unregisterCommand(this.statsCommand);
+            this.statsCommand.shutdown();
+            this.statsCommand = null;
+        }
         if (this.interactionManager != null) {
             this.interactionManager.shutdown();
             this.interactionManager = null;

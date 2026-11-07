@@ -2,8 +2,6 @@ package studio.magemonkey.divinity.modules.list.combatlog;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.filoghost.holographicdisplays.api.HolographicDisplaysAPI;
-import me.filoghost.holographicdisplays.api.hologram.Hologram;
 import org.bukkit.Keyed;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,6 +23,7 @@ import studio.magemonkey.codex.util.*;
 import studio.magemonkey.codex.util.constants.JStrings;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.hooks.EHook;
+import studio.magemonkey.divinity.hooks.HologramSupport;
 import studio.magemonkey.divinity.hooks.external.FabledHook;
 import studio.magemonkey.divinity.manager.damage.DamageMeta;
 import studio.magemonkey.divinity.modules.EModule;
@@ -134,7 +133,8 @@ public class CombatLogManager extends QModule {
         }
 
         path = "indicators.";
-        if (cfg.getBoolean(path + "enabled") && Hooks.hasPlugin(EHook.HOLOGRAPHIC_DISPLAYS)) {
+        if (cfg.getBoolean(path + "enabled")
+                && (Hooks.hasPlugin(EHook.HOLOGRAPHIC_DISPLAYS) || Hooks.hasPlugin(EHook.DECENT_HOLOGRAMS))) {
             this.indicatorOrder = cfg.getStringList(path + "format.order");
 
             this.indicatorDamageTypes = new HashMap<>();
@@ -480,8 +480,8 @@ public class CombatLogManager extends QModule {
 
     class IndicatorExpansion {
 
-        private Map<Hologram, Integer> map;
-        private UpTask                 taskUp;
+        private Map<Object, Integer> map;
+        private UpTask               taskUp;
 
         public void setup() {
             this.map = new HashMap<>();
@@ -495,8 +495,8 @@ public class CombatLogManager extends QModule {
                 this.taskUp = null;
             }
             if (this.map != null) {
-                for (Hologram hologram : this.map.keySet()) {
-                    hologram.delete();
+                for (Object hologram : this.map.keySet()) {
+                    HologramSupport.delete(hologram);
                 }
                 this.map.clear();
                 this.map = null;
@@ -536,11 +536,10 @@ public class CombatLogManager extends QModule {
             if (list.isEmpty()) return;
 
             plugin.getServer().getScheduler().runTask(plugin, () -> {
-                Hologram holo = HolographicDisplaysAPI.get(plugin).createHologram(loc);
-                for (String line : list) {
-                    holo.getLines().appendText(line);
+                Object holo = HologramSupport.create(loc, list);
+                if (holo != null) {
+                    map.put(holo, 1);
                 }
-                map.put(holo, 1);
             });
         }
 
@@ -552,14 +551,21 @@ public class CombatLogManager extends QModule {
 
             @Override
             public void action() {
-                for (Map.Entry<Hologram, Integer> e : new HashMap<>(map).entrySet()) {
-                    Hologram holo   = e.getKey();
-                    int      yStack = e.getValue();
+                for (Map.Entry<Object, Integer> e : new HashMap<>(map).entrySet()) {
+                    Object holo   = e.getKey();
+                    int    yStack = e.getValue();
 
-                    holo.setPosition(holo.getPosition().add(0, 0.11, 0));
+                    Location pos = HologramSupport.getPosition(holo);
+                    if (pos == null) {
+                        map.remove(holo);
+                        HologramSupport.delete(holo);
+                        continue;
+                    }
+
+                    HologramSupport.move(holo, pos.clone().add(0, 0.11, 0));
                     if (yStack++ >= 20) {
                         map.remove(holo);
-                        holo.delete();
+                        HologramSupport.delete(holo);
                     } else {
                         map.put(holo, yStack);
                     }
