@@ -17,6 +17,26 @@ public class BonusCalculator {
                 return value * (1D + percent / 100D);
             };
 
+    /**
+     * Sums the flat and percent channels directly instead of treating percent as a
+     * multiplier on the flat channel. Use this for stats whose "percent" bonuses are
+     * themselves the stat's value (e.g. a percent-based buff/penetration amount) rather
+     * than a modifier applied to some other base value — otherwise a percent-only bonus
+     * on a zero base would always evaluate to zero.
+     */
+    public static final BiFunction<Double, List<BiFunction<Boolean, Double, Double>>, Double> SIMPLE_ADDITIVE =
+            (input, bonuses) -> {
+                double value   = input;
+                double percent = 0D;
+
+                for (BiFunction<Boolean, Double, Double> bif : bonuses) {
+                    value = bif.apply(false, value);
+                    percent = bif.apply(true, percent);
+                }
+
+                return value + percent;
+            };
+
     public static final BiFunction<Double, List<BiFunction<Boolean, Double, Double>>, Double> SIMPLE_BONUS =
             (input, bonuses) -> {
                 double value   = 0D;
