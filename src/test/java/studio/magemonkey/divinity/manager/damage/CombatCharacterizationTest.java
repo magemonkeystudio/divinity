@@ -742,12 +742,16 @@ class CombatCharacterizationTest extends MockedTest {
 
         assertEquals(List.of(
                 "buff DIVINITY_damage_physical-damage Attacker",
+                "buff DIVINITY_damage_physical Attacker",
                 "attribute physical-damage Attacker",
                 "buff DIVINITY_damage_melee-damage Attacker",
                 "attribute melee-damage Attacker",
                 "damage-for-defense physical-damage Victim",
-                // Same swap as for custom types below: the buff gets the bare key, the attribute the prefixed one
+                "damage-for-defense DIVINITY_physical Victim",
+                // The first buff key and the attribute key are the wrong way round compared with the damage
+                // side. They are kept for servers that rely on them; the documented buff key follows.
                 "buff physical-defense Victim",
+                "buff DIVINITY_defense_physical Victim",
                 "attribute DIVINITY_defense_physical-defense Victim",
                 "buff DIVINITY_defense_melee-defense Victim",
                 "attribute melee-defense Victim"), calls);
@@ -765,9 +769,9 @@ class CombatCharacterizationTest extends MockedTest {
                 "buff DIVINITY_damage_melee-damage Attacker",
                 "attribute melee-damage Attacker",
                 "damage-for-defense rpgdefense-fire Victim",
-                // Known bug, confirmed here and fixed in #367: the two defense keys are the wrong way round
-                // compared with the damage side, so a "DIVINITY_defense_fire" buff is never asked for
+                "damage-for-defense DIVINITY_fire Victim",
                 "buff rpgdefense-fire Victim",
+                "buff DIVINITY_defense_fire Victim",
                 "attribute DIVINITY_defense_fire Victim",
                 "buff DIVINITY_defense_melee-defense Victim",
                 "attribute melee-defense Victim"), calls);
@@ -785,18 +789,21 @@ class CombatCharacterizationTest extends MockedTest {
 
         assertEquals(List.of(
                 "buff DIVINITY_damage_physical-damage Attacker",
+                "buff DIVINITY_damage_physical Attacker",
                 "attribute physical-damage Attacker",
                 "buff DIVINITY_damage_projectile-damage Attacker",
                 "attribute projectile-damage Attacker",
                 "damage-for-defense physical-damage Victim",
+                "damage-for-defense DIVINITY_physical Victim",
                 "buff physical-defense Victim",
+                "buff DIVINITY_defense_physical Victim",
                 "attribute DIVINITY_defense_physical-defense Victim",
                 "buff DIVINITY_defense_projectile-defense Victim",
                 "attribute projectile-defense Victim"), calls);
     }
 
     @Test
-    void codexScaling_mobAttacker_onlyTheDefendingPlayerIsScaled() {
+    void codexScaling_mobAttacker_onlyShieldsAndTheDefendingPlayerAreAsked() {
         ZombieMock zombie = new ZombieMock(server, UUID.randomUUID());
         victim.getInventory().setChestplate(armor(Map.of("physical", 10D)));
 
@@ -807,7 +814,10 @@ class CombatCharacterizationTest extends MockedTest {
         });
 
         assertEquals(List.of(
+                "damage-for-defense physical-damage Victim",
+                "damage-for-defense DIVINITY_physical Victim",
                 "buff physical-defense Victim",
+                "buff DIVINITY_defense_physical Victim",
                 "attribute DIVINITY_defense_physical-defense Victim",
                 "buff DIVINITY_defense_melee-defense Victim",
                 "attribute melee-defense Victim"), calls);
@@ -828,10 +838,101 @@ class CombatCharacterizationTest extends MockedTest {
         }
 
         assertEquals(List.of(
+                "damage-for-defense physical-damage Victim",
+                "damage-for-defense DIVINITY_physical Victim",
                 "buff physical-defense Victim",
+                "buff DIVINITY_defense_physical Victim",
                 "attribute DIVINITY_defense_physical-defense Victim",
                 "buff DIVINITY_defense_melee-defense Victim",
                 "attribute melee-defense Victim"), calls);
+    }
+
+    @Test
+    void codexScaling_documentedDefenseBuffKey_raisesThatDefense() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("fire", 20D)));
+        victim.getInventory().setChestplate(armor(Map.of("fire", 10D)));
+
+        // Fire defense 10 against 20: 1 - max(10 / 5, 10 - 4 * 20 / 8) * 0.8 * 0.05 = 0.92
+        assertEquals(18.4D, melee(VANILLA_SWORD_DAMAGE).damage("fire"), DELTA);
+
+        // What a Fabled Buff mechanic of type "DIVINITY_defense_fire" with a x2 multiplier does
+        BuffProvider doubleFireDefense = (name, entity, value) ->
+                name.equals("DIVINITY_defense_fire") ? value * 2 : value;
+        BuffRegistry.registerProvider(doubleFireDefense);
+        try {
+            // Fire defense 20 against 20: 1 - max(20 / 5, 20 - 10) * 0.8 * 0.05 = 0.6
+            assertEquals(12D, melee(VANILLA_SWORD_DAMAGE).damage("fire"), DELTA);
+        } finally {
+            BuffRegistry.unregisterProvider(doubleFireDefense);
+        }
+    }
+
+    @Test
+    void codexScaling_documentedPhysicalDamageBuffKey_scalesPhysicalDamage() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        BuffProvider doublePhysical = (name, entity, value) ->
+                name.equals("DIVINITY_damage_physical") ? value * 2 : value;
+        BuffRegistry.registerProvider(doublePhysical);
+        try {
+            assertEquals(40D, melee(VANILLA_SWORD_DAMAGE).damage("physical"), DELTA);
+        } finally {
+            BuffRegistry.unregisterProvider(doublePhysical);
+        }
+    }
+
+    @Test
+    void codexScaling_documentedShieldClassifier_absorbsThatDamageType() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("fire", 20D)));
+        // What a Fabled Shield mechanic with classifier "DIVINITY_fire" and 5 left to absorb does
+        BuffProvider fireShield = new BuffProvider() {
+            @Override
+            public double scaleValue(String name, @NotNull LivingEntity entity, double value) {
+                return value;
+            }
+
+            @Override
+            public double scaleDamageForDefense(String name, @NotNull LivingEntity entity, double damage) {
+                return name.equals("DIVINITY_fire") ? Math.max(0, damage - 5) : damage;
+            }
+        };
+        BuffRegistry.registerProvider(fireShield);
+        try {
+            assertEquals(15D, melee(VANILLA_SWORD_DAMAGE).damage("fire"), DELTA);
+        } finally {
+            BuffRegistry.unregisterProvider(fireShield);
+        }
+    }
+
+    @Test
+    void codexScaling_shieldAbsorbsAMobsHit() {
+        ZombieMock zombie = new ZombieMock(server, UUID.randomUUID());
+        BuffProvider physicalShield = new BuffProvider() {
+            @Override
+            public double scaleValue(String name, @NotNull LivingEntity entity, double value) {
+                return value;
+            }
+
+            @Override
+            public double scaleDamageForDefense(String name, @NotNull LivingEntity entity, double damage) {
+                return name.equals("DIVINITY_physical") ? Math.max(0, damage - 3) : damage;
+            }
+        };
+        BuffRegistry.registerProvider(physicalShield);
+        try {
+            refresh(victim);
+            server.getPluginManager().callEvent(meleeEvent(zombie, victim, 8));
+
+            assertEquals(Map.of("physical", 5D), damagesOf(victim));
+        } finally {
+            BuffRegistry.unregisterProvider(physicalShield);
+        }
+    }
+
+    @Test
+    void codexScaling_shieldsAreNotAskedAboutEnvironmentalDamage() {
+        List<String> calls = recordScaling(() -> hit(environmentEvent(DamageCause.FIRE, 4), victim));
+
+        assertFalse(calls.stream().anyMatch(call -> call.startsWith("damage-for-defense")), calls.toString());
     }
 
     @Test
