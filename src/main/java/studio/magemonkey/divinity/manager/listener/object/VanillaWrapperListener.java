@@ -478,8 +478,20 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                     damage = AttributeRegistry.scaleAttribute(AttributeRegistry.MELEE_DAMAGE, damager, damage);
                 }
 
-                // Allow Fabled's ShieldMechanic to reduce damage done directly without applying it to defenses
-                damage = BuffRegistry.scaleDamageForDefense(id.replace("rpgdamage", "rpgdefense"), victim, damage);
+                damages.put(dmgAtt, damage);
+            });
+        }
+
+        // Allow Fabled's ShieldMechanic to reduce damage done directly without applying it to defenses.
+        // This applies whoever the attacker is, so a shield absorbs a mob's hit as well as a player's.
+        if (damager != null) {
+            damages.forEach((dmgAtt, value) -> {
+                if (dmgAtt == null) return;
+
+                String type = dmgAtt.getId();
+                String id   = type.equals("physical") ? AttributeRegistry.PHYSICAL_DAMAGE : "rpgdefense-" + type;
+
+                double damage = BuffRegistry.scaleDamageForDefense(id, victim, value);
                 // ...and the documented shield classifier, DIVINITY_<type>, which was never asked for
                 damage = BuffRegistry.scaleDamageForDefense("DIVINITY_" + type, victim, damage);
 

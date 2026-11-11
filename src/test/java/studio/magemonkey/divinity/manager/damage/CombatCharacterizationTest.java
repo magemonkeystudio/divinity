@@ -803,7 +803,7 @@ class CombatCharacterizationTest extends MockedTest {
     }
 
     @Test
-    void codexScaling_mobAttacker_onlyTheDefendingPlayerIsScaled() {
+    void codexScaling_mobAttacker_onlyShieldsAndTheDefendingPlayerAreAsked() {
         ZombieMock zombie = new ZombieMock(server, UUID.randomUUID());
         victim.getInventory().setChestplate(armor(Map.of("physical", 10D)));
 
@@ -814,6 +814,8 @@ class CombatCharacterizationTest extends MockedTest {
         });
 
         assertEquals(List.of(
+                "damage-for-defense physical-damage Victim",
+                "damage-for-defense DIVINITY_physical Victim",
                 "buff physical-defense Victim",
                 "buff DIVINITY_defense_physical Victim",
                 "attribute DIVINITY_defense_physical-defense Victim",
@@ -836,6 +838,8 @@ class CombatCharacterizationTest extends MockedTest {
         }
 
         assertEquals(List.of(
+                "damage-for-defense physical-damage Victim",
+                "damage-for-defense DIVINITY_physical Victim",
                 "buff physical-defense Victim",
                 "buff DIVINITY_defense_physical Victim",
                 "attribute DIVINITY_defense_physical-defense Victim",
@@ -897,6 +901,38 @@ class CombatCharacterizationTest extends MockedTest {
         } finally {
             BuffRegistry.unregisterProvider(fireShield);
         }
+    }
+
+    @Test
+    void codexScaling_shieldAbsorbsAMobsHit() {
+        ZombieMock zombie = new ZombieMock(server, UUID.randomUUID());
+        BuffProvider physicalShield = new BuffProvider() {
+            @Override
+            public double scaleValue(String name, @NotNull LivingEntity entity, double value) {
+                return value;
+            }
+
+            @Override
+            public double scaleDamageForDefense(String name, @NotNull LivingEntity entity, double damage) {
+                return name.equals("DIVINITY_physical") ? Math.max(0, damage - 3) : damage;
+            }
+        };
+        BuffRegistry.registerProvider(physicalShield);
+        try {
+            refresh(victim);
+            server.getPluginManager().callEvent(meleeEvent(zombie, victim, 8));
+
+            assertEquals(Map.of("physical", 5D), damagesOf(victim));
+        } finally {
+            BuffRegistry.unregisterProvider(physicalShield);
+        }
+    }
+
+    @Test
+    void codexScaling_shieldsAreNotAskedAboutEnvironmentalDamage() {
+        List<String> calls = recordScaling(() -> hit(environmentEvent(DamageCause.FIRE, 4), victim));
+
+        assertFalse(calls.stream().anyMatch(call -> call.startsWith("damage-for-defense")), calls.toString());
     }
 
     @Test

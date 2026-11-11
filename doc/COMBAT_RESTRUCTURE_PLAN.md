@@ -67,14 +67,17 @@ classifier. `scaleValuesWithCore` did not ask for the defense buff key or the sh
 and for physical damage asked for `DIVINITY_damage_physical-damage` instead. The documented keys are now
 asked for in addition to the ones used before, which are all kept.
 
+Shields were also only consulted when the attacker was a player, because the lookup sat inside the
+damager-side block. They now absorb a mob's hit too (fixed in the same pull request).
+
 Left for the shared contract in Phase 2, because changing them alters live behaviour:
 
 - The attribute keys on the defense side stay as they are (`DIVINITY_defense_<type>`). Fabled's own
   `*-defense` attribute stats describe damage taken, so pointing them at Divinity's defense *value* would
   lower defense where a server expects it to rise. `melee-defense` and `projectile-defense` are already
   applied that way today.
-- Shields are only consulted when the attacker is a player, because the lookup sits inside the
-  damager-side block. A mob's hit is not offered to a shield with a Divinity classifier.
+- Shields are not consulted for environmental damage (fire, fall and so on), only for hits that have an
+  attacker.
 
 Not a bug after all: `DivinityDamageEvent.Exit` does not fire for `ignore-divinity` skill damage. Firing
 it would make those hits start costing weapon and armor durability, which is a behaviour change. It is
