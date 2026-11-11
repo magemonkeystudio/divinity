@@ -1,6 +1,7 @@
 # Combat Restructure Plan
 
-Status: **proposal, awaiting review**. Nothing described here is implemented yet.
+Status: **in progress**. Phase 0 is done. Practical notes for doing the work are in
+[`COMBAT_RESTRUCTURE_NOTES.md`](COMBAT_RESTRUCTURE_NOTES.md).
 
 This plan spans three repositories: Codex, Divinity and Fabled (including Fabled's `editor` branch).
 Divinity owns the document because Divinity owns the damage pipeline.
