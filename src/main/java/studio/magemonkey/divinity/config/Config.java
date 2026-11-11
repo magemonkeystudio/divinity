@@ -1,7 +1,9 @@
 package studio.magemonkey.divinity.config;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,6 +14,7 @@ import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.codex.util.actions.ActionManipulator;
 import studio.magemonkey.codex.util.constants.JStrings;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.stats.VanillaAttributeStat;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.attributes.*;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
@@ -22,6 +25,10 @@ import studio.magemonkey.divinity.stats.tiers.Tier;
 import studio.magemonkey.divinity.types.ItemGroup;
 import studio.magemonkey.divinity.types.ItemSubType;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Config extends IConfigTemplate {
@@ -206,10 +213,7 @@ public class Config extends IConfigTemplate {
             return;
         }
 
-        // Seed the new MC 1.20.5+/1.21+ vanilla-attribute stats with their shipped defaults for
-        // servers carrying forward a pre-upgrade stats.yml that predates them, so upgrading
-        // servers get the new attributes working out of the box rather than silently disabled.
-        addMissingVanillaAttributeStatDefaults(cfg);
+        this.addMissingStatDefaults(cfg);
 
         for (SimpleStat.Type statType : TypedStat.Type.values()) {
             String path2 = statType.name() + ".";
@@ -237,44 +241,42 @@ public class Config extends IConfigTemplate {
         }
     }
 
-    private void addMissingVanillaAttributeStatDefaults(@NotNull JYML cfg) {
-        addMissingStatDefault(cfg, "SCALE", "Scale", "&b▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "WATER_MOVEMENT_EFFICIENCY", "Water Movement Efficiency",
-                "&3▸ %name%: &f%value% %condition%", 100.0);
-        addMissingStatDefault(cfg, "MOVEMENT_EFFICIENCY", "Movement Efficiency",
-                "&3▸ %name%: &f%value% %condition%", 100.0);
-        addMissingStatDefault(cfg, "SNEAKING_SPEED", "Sneaking Speed", "&3▸ %name%: &f%value% %condition%", 70.0);
-        addMissingStatDefault(cfg, "BLOCK_BREAK_SPEED", "Block Break Speed",
-                "&3▸ %name%: &f%value% %condition%", 200.0);
-        addMissingStatDefault(cfg, "BLOCK_INTERACTION_RANGE", "Block Reach",
-                "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "ENTITY_INTERACTION_RANGE", "Entity Reach",
-                "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "EXPLOSION_KNOCKBACK_RESISTANCE", "Explosion KB Resistance",
-                "&3▸ %name%: &f%value% %condition%", 100.0);
-        addMissingStatDefault(cfg, "FALL_DAMAGE_MULTIPLIER", "Fall Damage Modifier",
-                "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "FLYING_SPEED", "Flying Speed", "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "GRAVITY", "Gravity", "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "JUMP_STRENGTH", "Jump Strength", "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "MAX_ABSORPTION", "Max Absorption", "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "MINING_EFFICIENCY", "Mining Efficiency",
-                "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "OXYGEN_BONUS", "Oxygen Bonus", "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "SAFE_FALL_DISTANCE", "Safe Fall Distance",
-                "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "STEP_HEIGHT", "Step Height", "&3▸ %name%: &f%value% %condition%", -1);
-        addMissingStatDefault(cfg, "SUBMERGED_MINING_SPEED", "Submerged Mining Speed",
-                "&3▸ %name%: &f%value% %condition%", 100.0);
-        cfg.saveChanges();
-    }
+    /**
+     * Copies any missing keys for stats added after servers already had a stats file from the bundled
+     * general_stats.yml, so a carried-forward file gets them enabled with their shipped defaults instead of
+     * silently disabled by an absent section. The bundled file stays the single source of those defaults.
+     * <p>
+     * Limited to these stats on purpose: for older stats a missing section may be an admin's deliberate removal.
+     */
+    private void addMissingStatDefaults(@NotNull JYML cfg) {
+        YamlConfiguration defaults;
+        try (InputStream in = plugin.getResource("item_stats/stats/general_stats.yml")) {
+            if (in == null) {
+                this.plugin.error("Bundled item_stats/stats/general_stats.yml is missing; cannot add new stat defaults");
+                return;
+            }
+            defaults = YamlConfiguration.loadConfiguration(new InputStreamReader(in, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            this.plugin.error("Failed to read bundled item_stats/stats/general_stats.yml: " + e.getMessage());
+            return;
+        }
 
-    private void addMissingStatDefault(
-            @NotNull JYML cfg, @NotNull String path, @NotNull String name, @NotNull String format, double capacity) {
-        cfg.addMissing(path + ".enabled", true);
-        cfg.addMissing(path + ".name", name);
-        cfg.addMissing(path + ".format", format);
-        cfg.addMissing(path + ".capacity", capacity);
+        List<String> stats = new ArrayList<>();
+        stats.add(TypedStat.Type.ARMOR_TOUGHNESS.name());
+        for (VanillaAttributeStat stat : VanillaAttributeStat.values()) {
+            stats.add(stat.getStatType().name());
+        }
+
+        for (String stat : stats) {
+            ConfigurationSection section = defaults.getConfigurationSection(stat);
+            if (section == null) continue;
+            for (String key : section.getKeys(true)) {
+                if (!section.isConfigurationSection(key)) {
+                    cfg.addMissing(stat + "." + key, section.get(key));
+                }
+            }
+        }
+        cfg.saveChanges();
     }
 
     private void setupHand() {

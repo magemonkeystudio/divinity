@@ -58,6 +58,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.DoubleUnaryOperator;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static org.bukkit.attribute.AttributeModifier.Operation;
@@ -577,170 +578,108 @@ public class EntityStats {
             this.applyBonusAttribute(nbt, value);
         }
 
-        // MC 1.21+ vanilla attributes — handled separately, not in NBTAttribute enum
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("SCALE");
-            if (attr != null) this.applyScaleAttribute(attr, calcVanillaStatValue(TypedStat.Type.SCALE));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("WATER_MOVEMENT_EFFICIENCY");
-            if (attr != null) applyVanillaAttributeModifier(attr, WATER_MOV_EFF_MODIFIER_UUID,
-                    "divinity.water_movement_efficiency", calcVanillaStatValue(TypedStat.Type.WATER_MOVEMENT_EFFICIENCY));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("MOVEMENT_EFFICIENCY");
-            if (attr != null) applyVanillaAttributeModifier(attr, MOV_EFF_MODIFIER_UUID,
-                    "divinity.movement_efficiency", calcVanillaStatValue(TypedStat.Type.MOVEMENT_EFFICIENCY));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("SNEAKING_SPEED");
-            if (attr != null) applyVanillaAttributeModifier(attr, SNEAK_SPEED_MODIFIER_UUID,
-                    "divinity.sneaking_speed", calcVanillaStatValue(TypedStat.Type.SNEAKING_SPEED));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("BLOCK_BREAK_SPEED");
-            if (attr != null) applyVanillaAttributeModifier(attr, BLOCK_BREAK_SPEED_UUID,
-                    "divinity.block_break_speed", calcVanillaStatValue(TypedStat.Type.BLOCK_BREAK_SPEED));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("BLOCK_INTERACTION_RANGE");
-            if (attr != null) applyVanillaAttributeModifier(attr, BLOCK_INTERACT_RANGE_UUID,
-                    "divinity.block_interaction_range", calcVanillaStatValue(TypedStat.Type.BLOCK_INTERACTION_RANGE));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("ENTITY_INTERACTION_RANGE");
-            if (attr != null) applyVanillaAttributeModifier(attr, ENTITY_INTERACT_RANGE_UUID,
-                    "divinity.entity_interaction_range", calcVanillaStatValue(TypedStat.Type.ENTITY_INTERACTION_RANGE));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("EXPLOSION_KNOCKBACK_RESISTANCE");
-            if (attr != null) applyVanillaAttributeModifier(attr, EXPLOSION_KB_RES_UUID,
-                    "divinity.explosion_knockback_resistance", calcVanillaStatValue(TypedStat.Type.EXPLOSION_KNOCKBACK_RESISTANCE));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("FALL_DAMAGE_MULTIPLIER");
-            if (attr != null) applyVanillaAttributeModifier(attr, FALL_DAMAGE_MULT_UUID,
-                    "divinity.fall_damage_multiplier", calcVanillaStatValue(TypedStat.Type.FALL_DAMAGE_MULTIPLIER));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("FLYING_SPEED");
-            if (attr != null) applyVanillaAttributeModifier(attr, FLYING_SPEED_UUID,
-                    "divinity.flying_speed", calcVanillaStatValue(TypedStat.Type.FLYING_SPEED));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("GRAVITY");
-            if (attr != null) applyVanillaAttributeModifier(attr, GRAVITY_UUID,
-                    "divinity.gravity", calcVanillaStatValue(TypedStat.Type.GRAVITY));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("JUMP_STRENGTH");
-            if (attr != null) applyVanillaAttributeModifier(attr, JUMP_STRENGTH_UUID,
-                    "divinity.jump_strength", calcVanillaStatValue(TypedStat.Type.JUMP_STRENGTH));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("MAX_ABSORPTION");
-            if (attr != null) applyVanillaAttributeModifier(attr, MAX_ABSORPTION_UUID,
-                    "divinity.max_absorption", calcVanillaStatValue(TypedStat.Type.MAX_ABSORPTION));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("MINING_EFFICIENCY");
-            if (attr != null) applyVanillaAttributeModifier(attr, MINING_EFFICIENCY_UUID,
-                    "divinity.mining_efficiency", calcVanillaStatValue(TypedStat.Type.MINING_EFFICIENCY));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("OXYGEN_BONUS");
-            if (attr != null) applyVanillaAttributeModifier(attr, OXYGEN_BONUS_UUID,
-                    "divinity.oxygen_bonus", calcVanillaStatValue(TypedStat.Type.OXYGEN_BONUS));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("SAFE_FALL_DISTANCE");
-            if (attr != null) applyVanillaAttributeModifier(attr, SAFE_FALL_DISTANCE_UUID,
-                    "divinity.safe_fall_distance", calcVanillaStatValue(TypedStat.Type.SAFE_FALL_DISTANCE));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("STEP_HEIGHT");
-            if (attr != null) applyVanillaAttributeModifier(attr, STEP_HEIGHT_UUID,
-                    "divinity.step_height", calcVanillaStatValue(TypedStat.Type.STEP_HEIGHT));
-        } catch (Exception ignored) {}
-
-        try {
-            Attribute attr = (Attribute) VersionManager.getNms().getAttribute("SUBMERGED_MINING_SPEED");
-            if (attr != null) applyVanillaAttributeModifier(attr, SUBMERGED_MINING_SPEED_UUID,
-                    "divinity.submerged_mining_speed", calcVanillaStatValue(TypedStat.Type.SUBMERGED_MINING_SPEED));
-        } catch (Exception ignored) {}
+        this.updateVanillaAttributes();
     }
 
-    private static final UUID SCALE_MODIFIER_UUID              = UUID.fromString("d141e000-5ca1-4000-0000-000000000001");
-    private static final UUID WATER_MOV_EFF_MODIFIER_UUID      = UUID.fromString("d141e000-5ca1-4000-0000-000000000002");
-    private static final UUID MOV_EFF_MODIFIER_UUID            = UUID.fromString("d141e000-5ca1-4000-0000-000000000003");
-    private static final UUID SNEAK_SPEED_MODIFIER_UUID        = UUID.fromString("d141e000-5ca1-4000-0000-000000000004");
-    private static final UUID BLOCK_BREAK_SPEED_UUID           = UUID.fromString("d141e000-5ca1-4000-0000-000000000005");
-    private static final UUID BLOCK_INTERACT_RANGE_UUID        = UUID.fromString("d141e000-5ca1-4000-0000-000000000006");
-    private static final UUID ENTITY_INTERACT_RANGE_UUID       = UUID.fromString("d141e000-5ca1-4000-0000-000000000007");
-    private static final UUID EXPLOSION_KB_RES_UUID            = UUID.fromString("d141e000-5ca1-4000-0000-000000000008");
-    private static final UUID FALL_DAMAGE_MULT_UUID            = UUID.fromString("d141e000-5ca1-4000-0000-000000000009");
-    private static final UUID FLYING_SPEED_UUID                = UUID.fromString("d141e000-5ca1-4000-0000-00000000000a");
-    private static final UUID GRAVITY_UUID                     = UUID.fromString("d141e000-5ca1-4000-0000-00000000000b");
-    private static final UUID JUMP_STRENGTH_UUID               = UUID.fromString("d141e000-5ca1-4000-0000-00000000000c");
-    private static final UUID MAX_ABSORPTION_UUID              = UUID.fromString("d141e000-5ca1-4000-0000-00000000000d");
-    private static final UUID MINING_EFFICIENCY_UUID           = UUID.fromString("d141e000-5ca1-4000-0000-00000000000e");
-    private static final UUID OXYGEN_BONUS_UUID                = UUID.fromString("d141e000-5ca1-4000-0000-00000000000f");
-    private static final UUID SAFE_FALL_DISTANCE_UUID          = UUID.fromString("d141e000-5ca1-4000-0000-000000000010");
-    private static final UUID STEP_HEIGHT_UUID                 = UUID.fromString("d141e000-5ca1-4000-0000-000000000011");
-    private static final UUID SUBMERGED_MINING_SPEED_UUID      = UUID.fromString("d141e000-5ca1-4000-0000-000000000012");
+    /**
+     * The {@link VanillaAttributeStat}s that exist on this server version, resolved once on first use.
+     * Resolution is the only place a missing attribute is expected, so the per-update path needs no
+     * version handling.
+     */
+    private static volatile Map<VanillaAttributeStat, Attribute> availableVanillaAttributes;
+    /** Stats that have already logged an apply failure, so a persistent error doesn't flood the log. */
+    private static final Set<VanillaAttributeStat>               WARNED_VANILLA_ATTRIBUTES =
+            Collections.synchronizedSet(EnumSet.noneOf(VanillaAttributeStat.class));
 
-    @SuppressWarnings("deprecation")
-    private void applyVanillaAttributeModifier(@NotNull Attribute attr, @NotNull UUID modUuid, @NotNull String modName, double value) {
-        AttributeInstance attInst = this.entity.getAttribute(attr);
-        if (attInst == null) return;
-        for (AttributeModifier mod : new HashSet<>(attInst.getModifiers())) {
+    @NotNull
+    private static Map<VanillaAttributeStat, Attribute> getAvailableVanillaAttributes() {
+        Map<VanillaAttributeStat, Attribute> available = availableVanillaAttributes;
+        if (available != null) return available;
+
+        available = new EnumMap<>(VanillaAttributeStat.class);
+        List<String> unsupported = new ArrayList<>();
+        for (VanillaAttributeStat stat : VanillaAttributeStat.values()) {
+            Attribute attr = null;
             try {
-                if (modUuid.equals(mod.getUniqueId())) {
-                    if (mod.getAmount() == value) return;
-                    attInst.removeModifier(mod);
-                    break;
+                attr = VersionManager.getNms().getAttribute(stat.getAttributeName());
+            } catch (IllegalArgumentException ignored) {
+                // Thrown by NMS#getAttribute when this server version doesn't have the attribute
+            } catch (RuntimeException | LinkageError e) {
+                Divinity.getInstance().getLogger().log(Level.WARNING,
+                        "Could not resolve vanilla attribute " + stat.getAttributeName() + "; its stat will be ignored",
+                        e);
+            }
+
+            if (attr != null) {
+                available.put(stat, attr);
+            } else {
+                unsupported.add(stat.getAttributeName());
+            }
+        }
+        if (!unsupported.isEmpty()) {
+            Divinity.getInstance().info("Vanilla attributes not available on this server version, "
+                    + "their stats will have no effect: " + String.join(", ", unsupported));
+        }
+
+        available = Collections.unmodifiableMap(available);
+        availableVanillaAttributes = available;
+        return available;
+    }
+
+    private void updateVanillaAttributes() {
+        for (Map.Entry<VanillaAttributeStat, Attribute> entry : getAvailableVanillaAttributes().entrySet()) {
+            VanillaAttributeStat stat = entry.getKey();
+            try {
+                double amount = stat.toAttributeAmount(this.getVanillaStatValue(stat.getStatType()));
+                this.applyVanillaAttributeModifier(entry.getValue(), stat, amount);
+            } catch (RuntimeException e) {
+                // Keep one broken attribute from blocking the rest; log once per stat rather than every update
+                if (WARNED_VANILLA_ATTRIBUTES.add(stat)) {
+                    plugin.getLogger().log(Level.WARNING,
+                            "Failed to apply " + stat.getAttributeName() + " to " + this.entity.getName()
+                                    + " (further failures for this attribute won't be logged)", e);
                 }
-            } catch (Exception ignored) {}
+            }
         }
-        if (value == 0D) return;
-        attInst.addModifier(new AttributeModifier(modUuid, modName, value, Operation.ADD_NUMBER));
     }
 
+    /**
+     * Same total the item stats report, with negatives floored for stats that can't be negative
+     * (matching what the item lore displays).
+     */
+    private double getVanillaStatValue(@NotNull TypedStat.Type type) {
+        double value = this.getItemStat(type, false);
+        return value < 0D && !type.canBeNegative() ? 0D : value;
+    }
+
+    @SuppressWarnings("deprecation") // UUID-based modifiers are the only form every supported version accepts
+    private void applyVanillaAttributeModifier(@NotNull Attribute attr,
+                                               @NotNull VanillaAttributeStat stat,
+                                               double amount) {
+        AttributeInstance attInst = this.entity.getAttribute(attr);
+        if (attInst == null) return; // This entity type doesn't have the attribute (e.g. flying speed on players)
+
+        for (AttributeModifier mod : attInst.getModifiers()) {
+            if (!stat.getModifierId().equals(getModifierId(mod))) continue;
+            if (mod.getAmount() == amount) return;
+            attInst.removeModifier(mod);
+            break;
+        }
+
+        if (amount == 0D) return;
+        attInst.addModifier(new AttributeModifier(stat.getModifierId(), stat.getModifierName(), amount,
+                Operation.ADD_NUMBER));
+    }
+
+    @Nullable
     @SuppressWarnings("deprecation")
-    private void applyScaleAttribute(@NotNull Attribute scaleAttr, double value) {
-        applyVanillaAttributeModifier(scaleAttr, SCALE_MODIFIER_UUID, "divinity.scale", value);
-    }
-
-    private double calcVanillaStatValue(@NotNull TypedStat.Type type) {
-        TypedStat typedStat = ItemStats.getStat(type);
-        if (!(typedStat instanceof SimpleStat)) return 0D;
-        SimpleStat ss = (SimpleStat) typedStat;
-        List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
-        for (ItemStack item : this.getEquipment()) {
-            if (item == null || item.getType().isAir()) continue;
-            bonuses.addAll(ss.get(item, player));
+    private static UUID getModifierId(@NotNull AttributeModifier mod) {
+        try {
+            return mod.getUniqueId();
+        } catch (IllegalArgumentException e) {
+            // Early 1.21 builds throw for modifiers whose key isn't a UUID (e.g. vanilla's own modifiers)
+            return null;
         }
-        bonuses.addAll(this.getBonuses(ss));
-        double value = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
-        value = this.getEffectBonus(ss, false).applyAsDouble(value);
-        if (ss.getCapability() >= 0 && value > ss.getCapability()) value = ss.getCapability();
-        return value / 100D;
     }
 
     private void applyBonusAttribute(@NotNull NBTAttribute att, double value) {

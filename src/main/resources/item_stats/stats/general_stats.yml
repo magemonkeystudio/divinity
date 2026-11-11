@@ -46,6 +46,12 @@ MAX_HEALTH:
   name: Max Health
   format: '&c▸ %name%: &f%value% %condition%'
   capacity: -1
+
+# MC 1.20.5+/1.21+ attribute stats (no effect on older server versions).
+# Values are added on top of the vanilla base. Stats shown with a % are entered in percent
+# (50 = +0.5 to the attribute); the rest are in the attribute's own units, e.g. blocks for reach,
+# step height and safe fall distance, health points for max absorption.
+# Capacity -1 means no Divinity limit; the server still clamps each attribute to its vanilla range.
 BLOCK_BREAK_SPEED:
   enabled: true
   name: Block Break Speed
