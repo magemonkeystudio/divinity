@@ -274,8 +274,10 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
             }
         }
 
+        VanillaDamageBridge vanilla = new VanillaDamageBridge(orig);
+
         double modifiedDamage   = meta.getTotalDamage();
-        double invulnerableProt = new VanillaDamageBridge(e.getOriginalEvent()).getInvulnerabilityReduction();
+        double invulnerableProt = vanilla.getInvulnerabilityReduction();
 
         // Compare modified damage and invulnerable prot. If they're within 0.0001 of each other, set the damage to 0.
         // and cancel the event
@@ -291,7 +293,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         double dmgTotal = meta.getTotalDamage();
 //        Divinity.getInstance().getLogger().info("Damage total: " + dmgTotal);
 //        Divinity.getInstance().getLogger().info("Defended: " + meta.getDefendedDamage());
-        new VanillaDamageBridge(orig).setBaseDamage(dmgTotal);
+        vanilla.setBaseDamage(dmgTotal);
 
         // We want to terminate early since the post-effects could introduce RPGItems effects not intended for skills
         if (e.isExempt()) return;
@@ -317,6 +319,8 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
             @NotNull EntityDamageEvent e,
             @NotNull DamageMeta meta
     ) {
+
+        VanillaDamageBridge vanilla = new VanillaDamageBridge(e);
 
         double dodgeRate = statsVictim.getItemStat(TypedStat.Type.DODGE_RATE, false);
         if (dodgeRate > 0D) {
@@ -370,7 +374,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         boolean isVanillaBlocked = false;
         if (player != null && player.isBlocking() && player.getCooldown(Material.SHIELD) <= 0) {
             // Damage in face = Block
-            if (new VanillaDamageBridge(e).getBlockingDamage() < 0) {
+            if (vanilla.getBlockingDamage() < 0) {
                 isVanillaBlocked = true;
                 blockRate += EngineCfg.COMBAT_SHIELD_BLOCK_BONUS_RATE;
                 blockModifier += EngineCfg.COMBAT_SHIELD_BLOCK_BONUS_DAMAGE_MOD;
@@ -387,7 +391,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                     }
                 }
                 // Fix/Disable vanilla shield block
-                new VanillaDamageBridge(e).overrideBlocking(vanillaBlockModifier);
+                vanilla.overrideBlocking(vanillaBlockModifier);
             }
         }
 
