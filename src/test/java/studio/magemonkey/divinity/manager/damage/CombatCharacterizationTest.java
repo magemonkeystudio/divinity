@@ -4,6 +4,8 @@ import com.google.common.base.Function;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -26,7 +28,12 @@ import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.mockbukkit.mockbukkit.entity.ZombieMock;
 import studio.magemonkey.codex.compat.VersionManager;
 import studio.magemonkey.codex.hooks.NHook;
+import studio.magemonkey.codex.registry.AttributeRegistry;
+import studio.magemonkey.codex.registry.BuffRegistry;
 import studio.magemonkey.codex.registry.DamageRegistry;
+import studio.magemonkey.codex.registry.provider.AttributeProvider;
+import studio.magemonkey.codex.registry.provider.BuffProvider;
+import studio.magemonkey.codex.util.EnumUT;
 import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.EHook;
@@ -35,6 +42,7 @@ import studio.magemonkey.divinity.stats.EntityStats;
 import studio.magemonkey.divinity.stats.ProjectileStats;
 import studio.magemonkey.divinity.stats.bonus.StatBonus;
 import studio.magemonkey.divinity.stats.items.ItemStats;
+import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.testutil.MockedTest;
@@ -224,7 +232,7 @@ class CombatCharacterizationTest extends MockedTest {
     }
 
     @Test
-    void vanillaArmorModifier_isDiscarded() {
+    void vanillaArmorModifier_isDiscardedBeforeDivinityEventsFire() {
         attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
         Map<DamageModifier, Double> modifiers = modifiers(VANILLA_SWORD_DAMAGE);
         modifiers.put(DamageModifier.ARMOR, -3D);
@@ -237,6 +245,72 @@ class CombatCharacterizationTest extends MockedTest {
 
         assertEquals(0D, hit.event().getDamage(DamageModifier.ARMOR), DELTA);
         assertEquals(20D, hit.finalDamage(), DELTA);
+        // Listeners on Divinity's own events already see the vanilla event without its armor reduction
+        assertEquals(0D, recorder.armorSeenAtBeforeScale, DELTA);
+        assertEquals(20D, recorder.finalDamageSeenAtExit, DELTA);
+    }
+
+    @Test
+    void vanillaModifiers_onlyResistanceSurvives() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        Map<DamageModifier, Double> modifiers = modifiers(VANILLA_SWORD_DAMAGE);
+        modifiers.put(DamageModifier.ARMOR, -3D);
+        modifiers.put(DamageModifier.MAGIC, -2D);
+        modifiers.put(DamageModifier.RESISTANCE, -4D);
+
+        Hit hit = hit(new EntityDamageByEntityEvent(attacker,
+                victim,
+                DamageCause.ENTITY_ATTACK,
+                modifiers,
+                functions(modifiers)), victim);
+
+        assertEquals(20D, hit.event().getDamage(DamageModifier.BASE), DELTA);
+        assertEquals(0D, hit.event().getDamage(DamageModifier.ARMOR), DELTA);
+        assertEquals(0D, hit.event().getDamage(DamageModifier.MAGIC), DELTA, "Vanilla enchantment protection");
+        assertEquals(-4D, hit.event().getDamage(DamageModifier.RESISTANCE), DELTA);
+        assertEquals(16D, hit.finalDamage(), DELTA);
+    }
+
+    @Test
+    void armorToughness_weakensDefenseLessAgainstBigHits() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        ItemStack chestplate = armor(Map.of("physical", 20D));
+        victim.getInventory().setChestplate(chestplate);
+
+        // No toughness: 1 - max(20 / 5, 20 - 4 * 20 / 8) * 0.8 * 0.05 = 0.6
+        assertEquals(12D, melee(VANILLA_SWORD_DAMAGE).damage("physical"), DELTA);
+
+        stat(chestplate, TypedStat.Type.ARMOR_TOUGHNESS, 8);
+        victim.getInventory().setChestplate(chestplate);
+
+        // Toughness 8: 1 - max(20 / 5, 20 - 4 * 20 / 16) * 0.8 * 0.05 = 0.4
+        assertEquals(8D, melee(VANILLA_SWORD_DAMAGE).damage("physical"), DELTA);
+    }
+
+    @Test
+    void enchantProtection_reducesDamageByFourPercentPerLevel() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
+        chestplate.addUnsafeEnchantment(Enchantment.PROTECTION, 4);
+        victim.getInventory().setChestplate(chestplate);
+
+        Hit hit = melee(VANILLA_SWORD_DAMAGE);
+
+        // Protection IV is 4 points, each worth 1/25
+        assertEquals(16.8D, hit.damage("physical"), DELTA);
+        assertEquals(0.84D, hit.meta().getEnchantProtectionModifier(), DELTA);
+    }
+
+    @Test
+    void enchantProtection_specialisedEnchantsCountDoubleForTheirCause() {
+        ItemStack chestplate = new ItemStack(Material.IRON_CHESTPLATE);
+        chestplate.addUnsafeEnchantment(Enchantment.FIRE_PROTECTION, 4);
+        victim.getInventory().setChestplate(chestplate);
+
+        // Fire Protection IV is 8 points against fire: 10 * (1 - 8 / 25)
+        assertEquals(6.8D, hit(environmentEvent(DamageCause.FIRE, 10), victim).damage("fire"), DELTA);
+        // ...and nothing against anything else
+        assertEquals(10D, hit(environmentEvent(DamageCause.FALL, 10), victim).damage("physical"), DELTA);
     }
 
     @Test
@@ -539,6 +613,207 @@ class CombatCharacterizationTest extends MockedTest {
     }
 
     // ------------------------------------------------------------------ //
+    // Modifiers configured per damage type
+    // ------------------------------------------------------------------ //
+
+    @Test
+    void entityTypeModifier_scalesDamageAgainstThatEntityType() throws Exception {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        ZombieMock          zombie    = new ZombieMock(server, UUID.randomUUID());
+        Map<String, Double> modifiers = entityTypeModifiers("physical");
+        Double              previous  = modifiers.put("ZOMBIE", 1.5D);
+        try {
+            assertEquals(30D,
+                    hit(meleeEvent(attacker, zombie, VANILLA_SWORD_DAMAGE), zombie).damage("physical"),
+                    DELTA);
+            assertEquals(20D, melee(VANILLA_SWORD_DAMAGE).damage("physical"), DELTA, "Players are not zombies");
+        } finally {
+            restore(modifiers, "ZOMBIE", previous);
+        }
+    }
+
+    @Test
+    void biomeModifier_scalesDamageDealtInThatBiome() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        String              biome     = EnumUT.getName(attacker.getLocation().getBlock().getBiome());
+        Map<String, Double> modifiers = ItemStats.getDamageById("physical").getBiomeDamageModifiers();
+        Double              previous  = modifiers.put(biome, 1.5D);
+        try {
+            assertEquals(30D, melee(VANILLA_SWORD_DAMAGE).damage("physical"), DELTA);
+        } finally {
+            restore(modifiers, biome, previous);
+        }
+    }
+
+    // ------------------------------------------------------------------ //
+    // Attack cooldown, generated items and damage ranges
+    // ------------------------------------------------------------------ //
+
+    @Test
+    void attackCooldown_scalesMeleeDamageByAttackPower() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        refresh(attacker);
+        refresh(victim);
+        // What EntityStatsTask records from Player#getAttackCooldown for a half-charged swing
+        EntityStats.get(attacker).setAttackPower(0.5D);
+
+        Hit hit = hitWithoutRefresh(meleeEvent(attacker, victim, VANILLA_SWORD_DAMAGE), victim);
+
+        assertEquals(10D, hit.damage("physical"), DELTA);
+    }
+
+    @Test
+    void attackCooldown_configuredModifierReplacesAttackPower() {
+        double original = EngineCfg.COMBAT_DAMAGE_MODIFIER_FOR_COOLDOWN;
+        EngineCfg.COMBAT_DAMAGE_MODIFIER_FOR_COOLDOWN = 0.2D;
+        try {
+            attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+            refresh(attacker);
+            refresh(victim);
+            EntityStats.get(attacker).setAttackPower(0.5D);
+
+            Hit hit = hitWithoutRefresh(meleeEvent(attacker, victim, VANILLA_SWORD_DAMAGE), victim);
+
+            // Any swing that is not fully charged uses the configured modifier, however charged it is
+            assertEquals(4D, hit.damage("physical"), DELTA);
+        } finally {
+            EngineCfg.COMBAT_DAMAGE_MODIFIER_FOR_COOLDOWN = original;
+        }
+    }
+
+    @Test
+    void generatedItem_alsoDeductsTheAttackersBaseAttackDamageFromExtraDamage() {
+        ItemStack sword = weapon(Map.of("physical", 20D));
+        ItemStats.setModule(sword, plugin.getModuleCache().getTierManager().getId());
+        attacker.getInventory().setItemInMainHand(sword);
+        setBaseAttackDamage(attacker, 2D);
+
+        // Event 9, of which 6 is the sword and 2 the attacker's own base attack damage: 1 is "extra"
+        assertEquals(Map.of("physical", 21D), melee(VANILLA_SWORD_DAMAGE + 3).damages());
+    }
+
+    @Test
+    void handBuiltItem_doesNotDeductTheAttackersBaseAttackDamage() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        setBaseAttackDamage(attacker, 2D);
+
+        assertEquals(Map.of("physical", 23D), melee(VANILLA_SWORD_DAMAGE + 3).damages());
+    }
+
+    @Test
+    void damageRange_rollsBetweenMinimumAndMaximum() {
+        ItemStack sword = new ItemStack(Material.IRON_SWORD);
+        Objects.requireNonNull(ItemStats.getDamageById("physical"))
+                .add(sword, new StatBonus(new double[]{10D, 20D}, false, null), -1);
+        attacker.getInventory().setItemInMainHand(sword);
+
+        Set<Double> rolls = new HashSet<>();
+        for (int i = 0; i < 50; i++) {
+            double damage = melee(VANILLA_SWORD_DAMAGE).damage("physical");
+            assertTrue(damage >= 10D && damage <= 20D, "Rolled outside the range: " + damage);
+            rolls.add(damage);
+        }
+        assertTrue(rolls.size() > 1, "A range should not always roll the same value");
+    }
+
+    // ------------------------------------------------------------------ //
+    // Scaling through Codex's attribute and buff registries (how Fabled feeds in)
+    // ------------------------------------------------------------------ //
+
+    @Test
+    void codexScaling_physicalMelee_asksForTheseKeysInThisOrder() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        victim.getInventory().setChestplate(armor(Map.of("physical", 10D)));
+
+        List<String> calls = recordScaling(() -> melee(VANILLA_SWORD_DAMAGE));
+
+        assertEquals(List.of(
+                "buff DIVINITY_damage_physical-damage Attacker",
+                "attribute physical-damage Attacker",
+                "buff DIVINITY_damage_melee-damage Attacker",
+                "attribute melee-damage Attacker",
+                "damage-for-defense physical-damage Victim",
+                // Same swap as for custom types below: the buff gets the bare key, the attribute the prefixed one
+                "buff physical-defense Victim",
+                "attribute DIVINITY_defense_physical-defense Victim",
+                "buff DIVINITY_defense_melee-defense Victim",
+                "attribute melee-defense Victim"), calls);
+    }
+
+    @Test
+    void codexScaling_customDamageType_asksForTheseKeysInThisOrder() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("fire", 10D)));
+
+        List<String> calls = recordScaling(() -> melee(VANILLA_SWORD_DAMAGE));
+
+        assertEquals(List.of(
+                "buff DIVINITY_damage_fire Attacker",
+                "attribute rpgdamage-fire Attacker",
+                "buff DIVINITY_damage_melee-damage Attacker",
+                "attribute melee-damage Attacker",
+                "damage-for-defense rpgdefense-fire Victim",
+                // Known bug, confirmed here and fixed in #367: the two defense keys are the wrong way round
+                // compared with the damage side, so a "DIVINITY_defense_fire" buff is never asked for
+                "buff rpgdefense-fire Victim",
+                "attribute DIVINITY_defense_fire Victim",
+                "buff DIVINITY_defense_melee-defense Victim",
+                "attribute melee-defense Victim"), calls);
+    }
+
+    @Test
+    void codexScaling_projectile_usesProjectileKeysInsteadOfMelee() {
+        Arrow arrow = arrowFrom(bow(15D), 1D);
+
+        List<String> calls = recordScaling(() -> hit(new EntityDamageByEntityEvent(arrow,
+                victim,
+                DamageCause.PROJECTILE,
+                modifiers(4),
+                functions(modifiers(4))), victim));
+
+        assertEquals(List.of(
+                "buff DIVINITY_damage_physical-damage Attacker",
+                "attribute physical-damage Attacker",
+                "buff DIVINITY_damage_projectile-damage Attacker",
+                "attribute projectile-damage Attacker",
+                "damage-for-defense physical-damage Victim",
+                "buff physical-defense Victim",
+                "attribute DIVINITY_defense_physical-defense Victim",
+                "buff DIVINITY_defense_projectile-defense Victim",
+                "attribute projectile-defense Victim"), calls);
+    }
+
+    @Test
+    void codexScaling_mobAttacker_onlyTheDefendingPlayerIsScaled() {
+        ZombieMock zombie = new ZombieMock(server, UUID.randomUUID());
+        victim.getInventory().setChestplate(armor(Map.of("physical", 10D)));
+
+        List<String> calls = recordScaling(() -> {
+            refresh(victim);
+            firedEvents.clear();
+            server.getPluginManager().callEvent(meleeEvent(zombie, victim, 4));
+        });
+
+        assertEquals(List.of(
+                "buff physical-defense Victim",
+                "attribute DIVINITY_defense_physical-defense Victim",
+                "buff DIVINITY_defense_melee-defense Victim",
+                "attribute melee-defense Victim"), calls);
+    }
+
+    @Test
+    void codexScaling_resultsFeedIntoTheCalculation() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        AttributeProvider doubleMelee = (name, entity, value) ->
+                name.equals(AttributeRegistry.MELEE_DAMAGE) ? value * 2 : value;
+        AttributeRegistry.registerProvider(doubleMelee);
+        try {
+            assertEquals(40D, melee(VANILLA_SWORD_DAMAGE).damage("physical"), DELTA);
+        } finally {
+            AttributeRegistry.unregisterProvider(doubleMelee);
+        }
+    }
+
+    // ------------------------------------------------------------------ //
     // Helpers
     // ------------------------------------------------------------------ //
 
@@ -577,6 +852,68 @@ class CombatCharacterizationTest extends MockedTest {
         firedEvents.clear();
         server.getPluginManager().callEvent(event);
         return new Hit(event, List.copyOf(firedEvents), EntityStats.get(target).getLastDamageMeta());
+    }
+
+    private Hit hitWithoutRefresh(EntityDamageEvent event, LivingEntity target) {
+        firedEvents.clear();
+        server.getPluginManager().callEvent(event);
+        return new Hit(event, List.copyOf(firedEvents), EntityStats.get(target).getLastDamageMeta());
+    }
+
+    /**
+     * Runs the action with providers registered on Codex's registries that change nothing but note every
+     * key they are asked to scale, in order.
+     */
+    private List<String> recordScaling(Runnable action) {
+        List<String> calls = new ArrayList<>();
+        AttributeProvider attributes = (name, entity, value) -> {
+            calls.add("attribute " + name + " " + entity.getName());
+            return value;
+        };
+        BuffProvider buffs = new BuffProvider() {
+            @Override
+            public double scaleValue(String name, @NotNull LivingEntity entity, double value) {
+                calls.add("buff " + name + " " + entity.getName());
+                return value;
+            }
+
+            @Override
+            public double scaleDamageForDefense(String name, @NotNull LivingEntity entity, double damage) {
+                calls.add("damage-for-defense " + name + " " + entity.getName());
+                return damage;
+            }
+        };
+        AttributeRegistry.registerProvider(attributes);
+        BuffRegistry.registerProvider(buffs);
+        try {
+            action.run();
+        } finally {
+            AttributeRegistry.unregisterProvider(attributes);
+            BuffRegistry.unregisterProvider(buffs);
+        }
+        return calls;
+    }
+
+    /**
+     * The per-entity-type damage modifiers of a damage type. They are only loaded from config and have no
+     * accessor, so the test reaches the map directly.
+     */
+    @SuppressWarnings("unchecked")
+    private Map<String, Double> entityTypeModifiers(String damageType) throws Exception {
+        Field field = DamageAttribute.class.getDeclaredField("entityTypeModifier");
+        field.setAccessible(true);
+        return (Map<String, Double>) field.get(ItemStats.getDamageById(damageType));
+    }
+
+    private void setBaseAttackDamage(PlayerMock player, double value) {
+        // MockBukkit players start without this attribute
+        if (player.getAttribute(Attribute.ATTACK_DAMAGE) == null) player.registerAttribute(Attribute.ATTACK_DAMAGE);
+        Objects.requireNonNull(player.getAttribute(Attribute.ATTACK_DAMAGE)).setBaseValue(value);
+    }
+
+    private static void restore(Map<String, Double> map, String key, @Nullable Double previous) {
+        if (previous == null) map.remove(key);
+        else map.put(key, previous);
     }
 
     /**
@@ -750,9 +1087,16 @@ class CombatCharacterizationTest extends MockedTest {
      * sees each event as it is fired, before Divinity's own handlers nest further events inside it.
      */
     public class Recorder implements Listener {
+        private double armorSeenAtBeforeScale = Double.NaN;
+        private double finalDamageSeenAtExit  = Double.NaN;
+
         @EventHandler(priority = EventPriority.LOWEST)
         public void on(DivinityDamageEvent.BeforeScale event) {
             firedEvents.add("BeforeScale");
+            EntityDamageEvent original = event.getOriginalEvent();
+            if (original.isApplicable(DamageModifier.ARMOR)) {
+                armorSeenAtBeforeScale = original.getDamage(DamageModifier.ARMOR);
+            }
         }
 
         @EventHandler(priority = EventPriority.LOWEST)
@@ -773,6 +1117,7 @@ class CombatCharacterizationTest extends MockedTest {
         @EventHandler(priority = EventPriority.LOWEST)
         public void on(DivinityDamageEvent.Exit event) {
             firedEvents.add("Exit");
+            finalDamageSeenAtExit = event.getOriginalEvent().getFinalDamage();
         }
     }
 }
