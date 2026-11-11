@@ -10,7 +10,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.player.PlayerFishEvent;
@@ -276,12 +275,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         }
 
         double modifiedDamage   = meta.getTotalDamage();
-        double invulnerableProt = 0;
-        try {
-            invulnerableProt = e.getOriginalEvent()
-                    .getDamage(EntityDamageEvent.DamageModifier.valueOf("INVULNERABILITY_REDUCTION"));
-        } catch (Exception ignored) {
-        }
+        double invulnerableProt = new VanillaDamageBridge(e.getOriginalEvent()).getInvulnerabilityReduction();
 
         // Compare modified damage and invulnerable prot. If they're within 0.0001 of each other, set the damage to 0.
         // and cancel the event
@@ -297,7 +291,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         double dmgTotal = meta.getTotalDamage();
 //        Divinity.getInstance().getLogger().info("Damage total: " + dmgTotal);
 //        Divinity.getInstance().getLogger().info("Defended: " + meta.getDefendedDamage());
-        orig.setDamage(DamageModifier.BASE, dmgTotal);
+        new VanillaDamageBridge(orig).setBaseDamage(dmgTotal);
 
         // We want to terminate early since the post-effects could introduce RPGItems effects not intended for skills
         if (e.isExempt()) return;
@@ -376,7 +370,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         boolean isVanillaBlocked = false;
         if (player != null && player.isBlocking() && player.getCooldown(Material.SHIELD) <= 0) {
             // Damage in face = Block
-            if (e.getDamage(DamageModifier.BLOCKING) < 0) {
+            if (new VanillaDamageBridge(e).getBlockingDamage() < 0) {
                 isVanillaBlocked = true;
                 blockRate += EngineCfg.COMBAT_SHIELD_BLOCK_BONUS_RATE;
                 blockModifier += EngineCfg.COMBAT_SHIELD_BLOCK_BONUS_DAMAGE_MOD;
@@ -393,9 +387,7 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                     }
                 }
                 // Fix/Disable vanilla shield block
-                if (e.isApplicable(DamageModifier.BLOCKING)) {
-                    e.setDamage(DamageModifier.BLOCKING, vanillaBlockModifier);
-                }
+                new VanillaDamageBridge(e).overrideBlocking(vanillaBlockModifier);
             }
         }
 

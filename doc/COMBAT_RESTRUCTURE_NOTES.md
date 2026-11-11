@@ -19,8 +19,10 @@ Update this file in the same pull request whenever something here stops being tr
 | Phase | State |
 |---|---|
 | 0. Safety net and bug fixes | Done |
-| 1. Extract the calculator (1.1, 1.2) | Next |
-| 2 to 5 | Not started |
+| 1.1 Extract the calculator | Done |
+| 1.2 Vanilla modifier bridge | This pull request |
+| 2. The shared contract | Next |
+| 3 to 5 | Not started |
 
 ## Rules for every pull request
 
@@ -115,6 +117,20 @@ lift the cap in the test and restore it.
 - **Fabled's `*-defense` attribute stats describe damage taken,** not a defense value. Applying one to
   Divinity's defense value lowers defense where a server expects it to rise. `melee-defense` and
   `projectile-defense` are already applied that way; do not extend the pattern without a decision.
+
+- **`VanillaDamageBridge` owns every `DamageModifier` call.** It only wraps access; callers decide when to
+  call it, and the order relative to event firing is unchanged. Plain `getDamage()` and `setDamage(double)`
+  (which are BASE, and which Bukkit may scale other modifiers for) are not modifier calls and were left
+  at their call sites: the dodge in `handleDamageModifiers` and the reads in `onVanillaDamage`.
+  `getFinalDamage()` is only read inside the bridge. Add any new modifier access to the bridge, not to
+  callers. `VanillaDamageBridgeTest` builds events by hand; it does not fire them.
+- **Two blocks in `DamageManager` behave nearly alike but are not the same.** Blocking is written with an
+  `isApplicable` guard but read without one; invulnerability reduction is read without a guard inside
+  `try`/`catch`. Both are kept as they were.
+
+- **The end-to-end tests do not guard three bridge details:** the value written to BLOCKING when a shield
+  roll fails or succeeds, the invulnerability reduction read, and resistance counting toward the absorption
+  cap. Only `VanillaDamageBridgeTest` catches them, so keep that test when the bridge changes.
 
 ## Still open
 
