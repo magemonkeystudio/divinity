@@ -61,9 +61,20 @@ the ability to edit the formulas themselves.
 | The Citizens NPC check compares a fully qualified class name against `"PlayerNPC"` and never matches | `VanillaWrapperListener.scaleValuesWithCore` |
 | `BuffRegistry.scaleDamageForDefense` passes the original value to each provider, so only the last one counts | Codex |
 
-Confirmed by the characterization tests and fixed in its own pull request: the buff and attribute keys
-on the defense side of `scaleValuesWithCore` are the wrong way round relative to the damage side, so a
-`DIVINITY_defense_<type>` buff is never asked for. The fix must keep the keys used today working.
+Documented keys that were never asked for (fixed in its own pull request). The Fabled editor documents
+`DIVINITY_damage_<type>` and `DIVINITY_defense_<type>` as buff types and `DIVINITY_<type>` as a shield
+classifier. `scaleValuesWithCore` did not ask for the defense buff key or the shield classifier at all,
+and for physical damage asked for `DIVINITY_damage_physical-damage` instead. The documented keys are now
+asked for in addition to the ones used before, which are all kept.
+
+Left for the shared contract in Phase 2, because changing them alters live behaviour:
+
+- The attribute keys on the defense side stay as they are (`DIVINITY_defense_<type>`). Fabled's own
+  `*-defense` attribute stats describe damage taken, so pointing them at Divinity's defense *value* would
+  lower defense where a server expects it to rise. `melee-defense` and `projectile-defense` are already
+  applied that way today.
+- Shields are only consulted when the attacker is a player, because the lookup sits inside the
+  damager-side block. A mob's hit is not offered to a shield with a Divinity classifier.
 
 Not a bug after all: `DivinityDamageEvent.Exit` does not fire for `ignore-divinity` skill damage. Firing
 it would make those hits start costing weapon and armor durability, which is a behaviour change. It is

@@ -445,13 +445,22 @@ public class VanillaWrapperListener extends IListener<Divinity> {
             damages.forEach((dmgAtt, value) -> {
                 if (dmgAtt == null) return;
 
-                String id = dmgAtt.getId();
+                String type = dmgAtt.getId();
+                String id   = type;
                 if (id.equals("physical")) id = AttributeRegistry.PHYSICAL_DAMAGE;
                 else id = "rpgdamage-" + id;
 
                 double damage = value;
 
-                damage = BuffRegistry.scaleValue("DIVINITY_damage_" + id.replace("rpgdamage-", ""), damager, damage);
+                // The documented buff key is DIVINITY_damage_<type>. For physical damage the key built here
+                // has always been "DIVINITY_damage_physical-damage" instead, so that one is kept and the
+                // documented one is asked for as well.
+                String buffKey = "DIVINITY_damage_" + id.replace("rpgdamage-", "");
+                damage = BuffRegistry.scaleValue(buffKey, damager, damage);
+                String documentedBuffKey = "DIVINITY_damage_" + type;
+                if (!documentedBuffKey.equals(buffKey)) {
+                    damage = BuffRegistry.scaleValue(documentedBuffKey, damager, damage);
+                }
 
                 damage = AttributeRegistry.scaleAttribute(id, damager, damage);
 
@@ -471,6 +480,8 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
                 // Allow Fabled's ShieldMechanic to reduce damage done directly without applying it to defenses
                 damage = BuffRegistry.scaleDamageForDefense(id.replace("rpgdamage", "rpgdefense"), victim, damage);
+                // ...and the documented shield classifier, DIVINITY_<type>, which was never asked for
+                damage = BuffRegistry.scaleDamageForDefense("DIVINITY_" + type, victim, damage);
 
                 damages.put(dmgAtt, damage);
             });
@@ -481,13 +492,19 @@ public class VanillaWrapperListener extends IListener<Divinity> {
             defenses.forEach((defAtt, value) -> {
                 if (defAtt == null) return;
 
-                String id = defAtt.getId();
+                String type = defAtt.getId();
+                String id   = type;
                 if (id.equals("physical")) id = AttributeRegistry.PHYSICAL_DEFENSE;
                 else id = "rpgdefense-" + id;
 
                 double defense = value;
 
+                // The buff and attribute keys below are the wrong way round compared with the damage side:
+                // the buff gets the bare id and the attribute gets the DIVINITY_defense_ key. Both are kept
+                // because servers may rely on them. The documented buff key, DIVINITY_defense_<type>, was
+                // never asked for, so it is added.
                 defense = BuffRegistry.scaleValue(id, victim, defense);
+                defense = BuffRegistry.scaleValue("DIVINITY_defense_" + type, victim, defense);
 
                 defense = AttributeRegistry.scaleAttribute("DIVINITY_defense_" + id.replace("rpgdefense-", ""),
                         victim,
