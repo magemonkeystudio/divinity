@@ -224,56 +224,50 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
             powerMod = 1;
         }
 
-        double directMod        = meta.getDirectModifier();
-        double critMod          = meta.getCriticalModifier();
-        double blockMod         = meta.getBlockModifier();
-        double penetrateMod     = meta.getPenetrateModifier();
-        double pveDamageMod     = meta.getPvEDamageModifier();
-        double pveDefenseMod    = meta.getPvEDefenseModifier();
         double enchantFactorMod = this.getEnchantModifier(victim, e.getCause());
-        double toughness        = e.getVictimStats().getItemStat(TypedStat.Type.ARMOR_TOUGHNESS, false);
         meta.setEnchantProtectionModifier(enchantFactorMod);
+
+        DamageCalculator calculator = new DamageCalculator(new DamageCalculator.Modifiers(
+                meta.getPvEDamageModifier(),
+                meta.getCriticalModifier(),
+                enchantFactorMod,
+                !e.isExempt(),
+                powerMod,
+                meta.getBlockModifier(),
+                meta.getDirectModifier(),
+                meta.getPvEDefenseModifier(),
+                meta.getPenetrateModifier(),
+                e.getVictimStats().getItemStat(TypedStat.Type.ARMOR_TOUGHNESS, false),
+                EngineCfg.LEGACY_COMBAT));
 
         Map<DefenseAttribute, Double> defenses = e.getDefenseMap();
 
         for (Map.Entry<DamageAttribute, Double> en : e.getDamageMap().entrySet()) {
-            DamageAttribute dmgAtt  = en.getKey();
-            double          dmgType = en.getValue();
-//            Divinity.getInstance().getLogger().info("*" + dmgAtt.getName() + ": " + dmgType);
+            DamageAttribute dmgAtt = en.getKey();
+//            Divinity.getInstance().getLogger().info("*" + dmgAtt.getName() + ": " + en.getValue());
 
-            dmgType *= pveDamageMod;
-            dmgType *= critMod;
+            double entityTypeMod = 1D;
+            double factionMod    = 1D;
             if (dmgAtt != null) {
-                dmgType *= dmgAtt.getDamageModifierByEntityType(victim);
-                dmgType *= dmgAtt.getDamageModifierByMythicFaction(mythicFaction);
+                entityTypeMod = dmgAtt.getDamageModifierByEntityType(victim);
+                factionMod = dmgAtt.getDamageModifierByMythicFaction(mythicFaction);
             }
-            dmgType *= enchantFactorMod;
-            if (!e.isExempt())
-                dmgType *= powerMod;
-            dmgType *= blockMod;
-            double directType = dmgType * directMod; // Get direct value for this Damage Attribute
-            dmgType = Math.max(0, dmgType - directType); // Deduct this value from damage
 
-            if (dmgType > 0) {
-                DefenseAttribute defAtt = dmgAtt != null ? dmgAtt.getAttachedDefense() : null;
-                if (defAtt != null && defenses.containsKey(defAtt)) {
-                    double def = Math.max(0, defenses.get(defAtt) * pveDefenseMod * penetrateMod);
+            DefenseAttribute defAtt = dmgAtt != null ? dmgAtt.getAttachedDefense() : null;
+            Double defense = defAtt != null && defenses.containsKey(defAtt) ? defenses.get(defAtt) : null;
 
-                    double defCalced;
-                    if (EngineCfg.LEGACY_COMBAT) {
-                        defCalced = Math.max(0, dmgType * (1 - (def * defAtt.getProtectionFactor() * 0.01)));
-                    } else {
-                        defCalced = Math.max(0,
-                                dmgType * (1 - Math.max(def / 5, def - 4 * dmgType / Math.max(1, toughness + 8))
-                                        * defAtt.getProtectionFactor() * 0.05));
-                    }
-                    meta.setDefendedDamage(defAtt, dmgType - defCalced);
-                    dmgType = defCalced;
-                }
+            DamageCalculator.Result result = calculator.calculate(en.getValue(),
+                    entityTypeMod,
+                    factionMod,
+                    defense,
+                    defense != null ? defAtt.getProtectionFactor() : 0D);
+
+            if (result.isDefenseApplied()) {
+                meta.setDefendedDamage(defAtt, result.getDefended());
             }
             //Should we reactivate direct damage, remove directType here and deal the damage straight.
-            meta.setDamage(dmgAtt, dmgType + directType);
-//            Divinity.getInstance().getLogger().info(dmgAtt.getName() + ": " + meta.getDamage(dmgAtt) + " (" + directType + ")");
+            meta.setDamage(dmgAtt, result.getDamage());
+//            Divinity.getInstance().getLogger().info(dmgAtt.getName() + ": " + meta.getDamage(dmgAtt));
 
             // Actions Executor
             if (damager != null && dmgAtt != null) {
