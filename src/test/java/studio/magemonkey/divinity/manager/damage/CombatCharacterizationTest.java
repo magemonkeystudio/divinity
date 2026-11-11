@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.ServerMock;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.mockbukkit.mockbukkit.entity.ZombieMock;
+import org.mockito.MockedStatic;
 import studio.magemonkey.codex.compat.VersionManager;
 import studio.magemonkey.codex.hooks.NHook;
 import studio.magemonkey.codex.registry.AttributeRegistry;
@@ -38,6 +39,7 @@ import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.EHook;
 import studio.magemonkey.divinity.hooks.external.FabledHook;
+import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import studio.magemonkey.divinity.stats.EntityStats;
 import studio.magemonkey.divinity.stats.ProjectileStats;
 import studio.magemonkey.divinity.stats.bonus.StatBonus;
@@ -54,6 +56,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mockStatic;
 
 /**
  * Characterization tests for the damage pipeline (issue #366).
@@ -684,12 +687,21 @@ class CombatCharacterizationTest extends MockedTest {
     @Test
     void generatedItem_alsoDeductsTheAttackersBaseAttackDamageFromExtraDamage() {
         ItemStack sword = weapon(Map.of("physical", 20D));
-        ItemStats.setModule(sword, plugin.getModuleCache().getTierManager().getId());
         attacker.getInventory().setItemInMainHand(sword);
         setBaseAttackDamage(attacker, 2D);
 
-        // Event 9, of which 6 is the sword and 2 the attacker's own base attack damage: 1 is "extra"
-        assertEquals(Map.of("physical", 21D), melee(VANILLA_SWORD_DAMAGE + 3).damages());
+        // ItemStats resolves an item's module through a plugin instance it captured when the class was
+        // first loaded. With several test classes in one JVM that instance is a previous, disabled plugin,
+        // so the real lookup cannot recognise an ItemGenerator item here. Answer that one lookup directly;
+        // what is being pinned is what the damage listener does once an item is recognised.
+        ItemGeneratorManager generator = plugin.getModuleCache().getTierManager();
+        try (MockedStatic<ItemStats> ignored = mockStatic(ItemStats.class, invocation ->
+                invocation.getMethod().getName().equals("getModule")
+                        ? (sword.isSimilar(invocation.getArgument(0)) ? generator : null)
+                        : invocation.callRealMethod())) {
+            // Event 9, of which 6 is the sword and 2 the attacker's own base attack damage: 1 is "extra"
+            assertEquals(Map.of("physical", 21D), melee(VANILLA_SWORD_DAMAGE + 3).damages());
+        }
     }
 
     @Test
