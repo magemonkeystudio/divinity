@@ -9,7 +9,6 @@ import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -34,6 +33,7 @@ import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.EHook;
 import studio.magemonkey.divinity.hooks.external.FabledHook;
 import studio.magemonkey.divinity.manager.damage.DamageMeta;
+import studio.magemonkey.divinity.manager.damage.VanillaDamageBridge;
 import studio.magemonkey.divinity.modules.list.arrows.ArrowManager;
 import studio.magemonkey.divinity.modules.list.arrows.ArrowManager.QArrow;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
@@ -154,9 +154,8 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         if (!(eVictim instanceof LivingEntity)) return;
 
         // Disable vanilla armor effect.
-        if (e.isApplicable(DamageModifier.ARMOR)) {
-            e.setDamage(DamageModifier.ARMOR, 0D);
-        }
+        VanillaDamageBridge vanilla = new VanillaDamageBridge(e);
+        vanilla.disableVanillaArmor();
 
         double damageStart = e.getDamage();
 
@@ -379,28 +378,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         // | Fix final damage value of the vanilla damage event.|
         // +----------------------------------------------------+
 //        Divinity.getInstance().info("Damage Final Check: " + e.getFinalDamage() + "/" + e.getDamage());
-        if (e.getFinalDamage() != e.getDamage()) {
-            double damageBeforeAbsorption = e.getDamage();
-            if (e.isApplicable(DamageModifier.RESISTANCE)) {
-                damageBeforeAbsorption += e.getDamage(DamageModifier.RESISTANCE);
-            }
-            double absorption = Math.min(Math.max(0D, damageBeforeAbsorption), victim.getAbsorptionAmount());
-            for (DamageModifier dmgModifier : DamageModifier.values()) {
-                if (e.isApplicable(dmgModifier)) {
-                    if (dmgModifier == DamageModifier.BASE) {
-//                        Divinity.getInstance().info("FINAL - " + dmgModifier.name() + ": " + e.getDamage());
-                        e.setDamage(dmgModifier, e.getDamage());
-                    } else if (dmgModifier == DamageModifier.ABSORPTION) {
-                        // Bukkit represents absorption as a negative damage modifier.
-                        // Keep it in the final damage calculation instead of subtracting
-                        // it from BASE (which caused the absorption modifier to be applied
-                        // twice or not at all depending on the damage source).
-                        e.setDamage(dmgModifier, -absorption);
-                    } else if (!dmgModifier.name().equals("INVULNERABILITY_REDUCTION") && !dmgModifier.name().equals("RESISTANCE"))
-                        e.setDamage(dmgModifier, 0); // Fix
-                }
-            }
-        }
+        vanilla.settleFinalDamage(victim);
 
 //        Divinity.getInstance().info("event took: " + (System.currentTimeMillis() - l1) + " millis");
     }
