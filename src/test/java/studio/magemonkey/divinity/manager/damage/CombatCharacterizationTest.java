@@ -28,6 +28,7 @@ import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.mockbukkit.mockbukkit.entity.ZombieMock;
 import org.mockito.MockedStatic;
 import studio.magemonkey.codex.compat.VersionManager;
+import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.hooks.NHook;
 import studio.magemonkey.codex.registry.AttributeRegistry;
 import studio.magemonkey.codex.registry.BuffRegistry;
@@ -608,7 +609,7 @@ class CombatCharacterizationTest extends MockedTest {
             assertEquals(19.32D, hit.damage("physical"), DELTA);
             assertTrue(hit.meta().isCritical());
             assertEquals(List.of("BeforeScale", "Start", "Pre"), hit.events(),
-                    "Known bug, fixed in #367: Exit is not fired for ignore-divinity damage");
+                    "Exit is not fired for ignore-divinity damage, so the hit costs no item durability");
         } finally {
             hook.ignoreDivinity(attacker, false);
             plugin.getHooks().getHooks(plugin).remove(hook);
@@ -804,6 +805,27 @@ class CombatCharacterizationTest extends MockedTest {
             firedEvents.clear();
             server.getPluginManager().callEvent(meleeEvent(zombie, victim, 4));
         });
+
+        assertEquals(List.of(
+                "buff physical-defense Victim",
+                "attribute DIVINITY_defense_physical-defense Victim",
+                "buff DIVINITY_defense_melee-defense Victim",
+                "attribute melee-defense Victim"), calls);
+    }
+
+    @Test
+    void codexScaling_citizensNpcAttacker_isNotScaled() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        victim.getInventory().setChestplate(armor(Map.of("physical", 10D)));
+
+        // Citizens is not installed here, so answer "is this a Citizens NPC?" for the attacker by hand
+        List<String> calls;
+        try (MockedStatic<Hooks> ignored = mockStatic(Hooks.class, invocation ->
+                invocation.getMethod().getName().equals("isNPC")
+                        ? attacker.equals(invocation.getArgument(0))
+                        : invocation.callRealMethod())) {
+            calls = recordScaling(() -> melee(VANILLA_SWORD_DAMAGE));
+        }
 
         assertEquals(List.of(
                 "buff physical-defense Victim",

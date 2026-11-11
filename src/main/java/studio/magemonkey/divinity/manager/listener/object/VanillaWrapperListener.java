@@ -19,6 +19,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.compat.VersionManager;
 import studio.magemonkey.codex.core.Version;
 import studio.magemonkey.codex.hooks.Hooks;
@@ -348,6 +349,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                 skillShouldIgnore);
         plugin.getPluginManager().callEvent(beforeScale);
         if (beforeScale.isCancelled()) {
+            clearArrowBonus(statsDamager, statsVictim);
             return;
         }
 
@@ -365,13 +367,13 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         plugin.getPluginManager().callEvent(eventStart);
         if (eventStart.isCancelled()) {
 //            Divinity.getInstance().info("Damage event was cancelled.");
+            clearArrowBonus(statsDamager, statsVictim);
             return;
         }
 
         // Remove arrow bonus added above after we got all the stats.
         // We're doing it here to allow arrow bonus affect victim's stats.
-        if (statsDamager != null) statsDamager.setArrowBonus(null, 0);
-        statsVictim.setArrowBonus(null, 0);
+        clearArrowBonus(statsDamager, statsVictim);
 
         // +----------------------------------------------------+
         // | Fix final damage value of the vanilla damage event.|
@@ -404,6 +406,16 @@ public class VanillaWrapperListener extends IListener<Divinity> {
     }
 
     /**
+     * Removes the custom arrow bonus applied for the duration of one hit. This has to happen on every
+     * way out of the damage handler, including a cancelled hit such as a dodge, or the bonus would keep
+     * affecting the shooter's and the victim's stats until another custom arrow lands.
+     */
+    private static void clearArrowBonus(@Nullable EntityStats statsDamager, @NotNull EntityStats statsVictim) {
+        if (statsDamager != null) statsDamager.setArrowBonus(null, 0);
+        statsVictim.setArrowBonus(null, 0);
+    }
+
+    /**
      * <p>Scale damage and defense values with Codex attributes.</p>
      *
      * <p>Without external plugins, this will do nothing, but does allow for other plugins
@@ -428,7 +440,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                                             LivingEntity victim) {
         // If they're a player, but not a CitizensNPC, then we'll
         // apply attributes registered with Codex
-        if (damager instanceof Player && !damager.getClass().getName().equals("PlayerNPC")) {
+        if (damager instanceof Player && !Hooks.isNPC(damager)) {
             // Scale damages
             damages.forEach((dmgAtt, value) -> {
                 if (dmgAtt == null) return;
@@ -464,7 +476,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
             });
         }
 
-        if (victim instanceof Player && !victim.getClass().getName().equals("PlayerNPC")) {
+        if (victim instanceof Player && !Hooks.isNPC(victim)) {
             // Scale defenses
             defenses.forEach((defAtt, value) -> {
                 if (defAtt == null) return;

@@ -59,11 +59,15 @@ the ability to edit the formulas themselves.
 | Arrow bonus is never cleared when `BeforeScale` or `Start` is cancelled, which includes every dodge | `VanillaWrapperListener` |
 | A cancelled skill hit leaves the damager in `divinityIgnored`, so their next melee swing skips Divinity | `FabledHook` |
 | The Citizens NPC check compares a fully qualified class name against `"PlayerNPC"` and never matches | `VanillaWrapperListener.scaleValuesWithCore` |
-| `DivinityDamageEvent.Exit` never fires for exempt skill damage, so durability and stat refresh skip it | `DamageManager` |
 | `BuffRegistry.scaleDamageForDefense` passes the original value to each provider, so only the last one counts | Codex |
 
-To confirm before fixing: the buff and attribute key prefixes on the defense side of
-`scaleValuesWithCore` look swapped relative to the damage side.
+Confirmed by the characterization tests and fixed in its own pull request: the buff and attribute keys
+on the defense side of `scaleValuesWithCore` are the wrong way round relative to the damage side, so a
+`DIVINITY_defense_<type>` buff is never asked for. The fix must keep the keys used today working.
+
+Not a bug after all: `DivinityDamageEvent.Exit` does not fire for `ignore-divinity` skill damage. Firing
+it would make those hits start costing weapon and armor durability, which is a behaviour change. It is
+left as it is and revisited with the new event surface in Phase 4.
 
 ## Target design
 
@@ -226,6 +230,5 @@ Remove the shims and dead paths after a release or two. Publish documentation fo
 
 - That Fabled's `PhysicalDamageEvent` really runs before Divinity's calculation in practice. This is
   inferred from the plugin load order and is checked by the Phase 0 tests.
-- The defense key prefixes noted under Known bugs.
 - The exact 1.20.4+ API for damage sources.
 - Whether GitHub sub-issues can link across the three repositories.

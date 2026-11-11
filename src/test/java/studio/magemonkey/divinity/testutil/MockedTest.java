@@ -2,6 +2,8 @@ package studio.magemonkey.divinity.testutil;
 
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.apache.commons.io.FileUtils;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Inventory;
@@ -100,6 +102,15 @@ public abstract class MockedTest {
         LegacyComponentSerializer legacy = LegacyComponentSerializer.legacySection();
         when(VersionManager.getNms().fixColors(anyString()))
                 .thenAnswer(ans -> legacy.serialize(legacy.deserialize(ans.getArgument(0))));
+    }
+
+    /**
+     * The default NMS mock has no attributes, so an entity's max health reads as 0 and refreshing its
+     * stats kills it. Tests that refresh {@code EntityStats} should call this first.
+     */
+    protected void useRealAttributes() {
+        doAnswer(ans -> Registry.ATTRIBUTE.get(NamespacedKey.minecraft(((String) ans.getArgument(0)).toLowerCase(
+                Locale.US)))).when(VersionManager.getNms()).getAttribute(anyString());
     }
 
     @AfterAll

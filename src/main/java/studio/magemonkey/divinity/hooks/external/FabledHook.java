@@ -133,9 +133,9 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
         data.setMana(Math.max(0, cur - amount));
     }
 
-    private final List<UUID> divinityIgnored = new ArrayList<>();
+    private final Set<UUID> divinityIgnored = new HashSet<>();
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void skillDamage(SkillDamageEvent event) {
         LivingEntity player = event.getDamager();
 
@@ -143,10 +143,15 @@ public class FabledHook extends NHook<Divinity> implements HookLevel, HookClass 
             divinityIgnored.add(player.getUniqueId());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    // Cancelled hits are handled too: the mark is for one hit only, and must not carry over to the
+    // damager's next attack when the hit it was meant for never lands.
+    @EventHandler(priority = EventPriority.MONITOR)
     public void damage(EntityDamageByEntityEvent event) {
         if (!(event.getDamager() instanceof LivingEntity))
             return;
+        // Fabled fires throwaway events to ask other plugins whether an attack is allowed, and can do so
+        // from inside the real hit. Those are not the hit the mark is waiting for.
+        if (isFakeDamage(event)) return;
 
         divinityIgnored.remove(event.getDamager().getUniqueId());
     }
