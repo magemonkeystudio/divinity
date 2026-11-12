@@ -9,13 +9,13 @@ import studio.magemonkey.codex.util.actions.actions.IActionExecutor;
 import studio.magemonkey.codex.util.actions.params.IParamResult;
 import studio.magemonkey.codex.util.actions.params.IParamType;
 import studio.magemonkey.divinity.Divinity;
-import studio.magemonkey.divinity.manager.effects.main.AdjustStatEffect;
-import studio.magemonkey.divinity.stats.items.ItemStats;
+import studio.magemonkey.codex.api.damage.DamageOrigin;
+import studio.magemonkey.codex.api.damage.DamageRequest;
+import studio.magemonkey.divinity.manager.damage.DamageManager;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.function.DoubleUnaryOperator;
 
 public class ActionDamage extends IActionExecutor {
 
@@ -50,20 +50,21 @@ public class ActionDamage extends IActionExecutor {
             }
         }
 
-        LivingEntity        damager  = eDamager instanceof LivingEntity ? (LivingEntity) eDamager : null;
-        DoubleUnaryOperator operator = (d) -> d == 0D ? d : ((perc) ? d * (dmgAdd / 100D) : d + dmgAdd);
+        LivingEntity damager = eDamager instanceof LivingEntity ? (LivingEntity) eDamager : null;
+
+        // A weapon swing with every damage type of the weapon changed by the action's amount
+        DamageRequest.Builder request = DamageRequest.builder().origin(DamageOrigin.EFFECT).source(damager);
+        if (perc) {
+            request.weaponScale(dmgAdd / 100D);
+        } else {
+            request.weaponBonus(dmgAdd);
+        }
 
         for (Entity eTarget : targets) {
             if (!(eTarget instanceof LivingEntity)) continue;
             LivingEntity victim = (LivingEntity) eTarget;
 
-            if (damager != null) {
-                AdjustStatEffect adjust = new AdjustStatEffect.Builder(-1)
-                        .withCharges(1).withAdjust(ItemStats.getDamages(), operator).build();
-                adjust.applyTo(damager);
-            }
-
-            victim.damage(1D, eDamager);
+            DamageManager.deal(victim, 1D, eDamager, request.build());
         }
     }
 

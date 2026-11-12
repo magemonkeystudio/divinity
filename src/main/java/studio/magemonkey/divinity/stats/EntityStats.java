@@ -248,10 +248,18 @@ public class EntityStats {
         }
     }
 
+    /**
+     * @deprecated Divinity no longer uses this flag. Area damage hits are recognised by their damage request.
+     */
+    @Deprecated
     public boolean isIgnoreAOE() {
         return this.aoeIgnore;
     }
 
+    /**
+     * @deprecated Divinity no longer uses this flag. Area damage hits are recognised by their damage request.
+     */
+    @Deprecated
     public void setIgnoreAOE(boolean aoeIgnore) {
         this.aoeIgnore = aoeIgnore;
     }

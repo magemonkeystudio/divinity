@@ -20,7 +20,7 @@ Update this file in the same pull request whenever something here stops being tr
 |---|---|
 | 0. Safety net and bug fixes | Done |
 | 1. Extract the calculator (1.1) and the vanilla modifier bridge (1.2) | Done |
-| 2. The shared contract | In progress: 2.1 and 2.1b are merged in Codex. 2.2 is next and needs a Codex build that contains them |
+| 2. The shared contract | In progress: 2.1, 2.1b and 2.1c are merged in Codex, 2.2 is this pull request, 2.2c is next |
 | 3 to 5 | Not started |
 
 ## Rules for every pull request
@@ -123,6 +123,12 @@ lift the cap in the test and restore it.
 - **The keys Divinity asks Codex's registries for are a compatibility surface.** Servers have them saved
   in skill files. Add keys, never rename or remove them. The exact keys and their order are pinned by
   the `codexScaling_*` tests.
+- **Divinity's own dealers describe their hits with a Codex `DamageRequest`** and deal them through
+  `DamageManager.deal`. The listener reads the request with `DamageContexts.claim` and keeps it on the
+  `DamageMeta`. A new dealer should do the same, not invent a flag or a temporary stat change. The old
+  one-charge `AdjustStatEffect` trick could outlive its hit and change the attacker's next swing.
+- **In `ADD` mode the request's typed amounts are ignored.** The amount is the Bukkit damage call's. See
+  the plan for why.
 - **Fabled's `*-defense` attribute stats describe damage taken,** not a defense value. Applying one to
   Divinity's defense value lowers defense where a server expects it to rise. `melee-defense` and
   `projectile-defense` are already applied that way; do not extend the pattern without a decision.
@@ -148,9 +154,7 @@ lift the cap in the test and restore it.
 - The exact Bukkit API for damage sources on 1.20.4 and newer has not been checked against a server jar.
 - Burn and disarm are not covered by the characterization tests. Neither deals damage through the
   pipeline, so they are not in the way of Phase 2.
-- The one-charge stat adjustment that area damage and the damage action use is only used up when the
-  hit it was meant for reads the attacker's weapon damage. If that hit never gets that far (the target is
-  protected, or the attacker holds a bow, whose damage is not used in melee by default), the adjustment
-  stays and changes the attacker's next real swing. Moving these dealers onto a damage request in 2.2
-  removes the adjustment altogether.
+- Whether a hit is one of Fabled's throwaway events is only checked when the Fabled plugin is enabled,
+  which it never is in the tests. So "a throwaway event does not take a damage request away from the
+  real hit" is true by the order of the code in `VanillaWrapperListener`, not by a test.
 - Environmental damage is not offered to Fabled shields.

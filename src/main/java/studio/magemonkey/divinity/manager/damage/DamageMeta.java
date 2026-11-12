@@ -7,6 +7,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.api.damage.DamageRequest;
 import studio.magemonkey.divinity.modules.list.arrows.ArrowManager.QArrow;
 import studio.magemonkey.divinity.stats.EntityStats;
 import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
@@ -36,6 +37,11 @@ public class DamageMeta {
     @Getter
     @Setter
     private       double                        invulnerableProtection    = 0D;
+    /** How the dealer described this hit through Codex, or null if it did not. */
+    @Getter
+    @Setter
+    @Nullable
+    private       DamageRequest                 request;
     private       String                        entityName;
     private       String                        damagerName;
 

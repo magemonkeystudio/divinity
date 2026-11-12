@@ -1,5 +1,8 @@
 package studio.magemonkey.divinity.manager.effects.main;
 
+import studio.magemonkey.codex.api.damage.DamageOrigin;
+import studio.magemonkey.codex.api.damage.DamageRequest;
+import studio.magemonkey.divinity.manager.damage.DamageManager;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
@@ -28,7 +31,7 @@ public class BleedEffect extends IPeriodicEffect {
     @Override
     public boolean onTrigger(boolean force) {
         double damage = this.damageFunction.apply(this.target);
-        this.target.damage(damage);
+        DamageManager.deal(this.target, damage, null, DamageRequest.builder().origin(DamageOrigin.EFFECT).build());
         EffectUT.playEffect(this.target.getEyeLocation(), this.blood, 0.2f, 0.2f, 0.2f, 0.1f, 20);
 
         return true;
