@@ -80,6 +80,11 @@ Left for the shared contract in Phase 2, because changing them alters live behav
 - Shields are not consulted for environmental damage (fire, fall and so on), only for hits that have an
   attacker.
 
+Found later and deliberately left for Phase 4, because fixing it changes live numbers: a hit from the
+vanilla Thorns enchantment is treated as a full weapon swing by the armour's wearer. The wrapper uses the
+attacker's weapon damage for any hit with a living attacker and does not look at the cause. Divinity's own
+Thornmail stat is not affected; it deals damage with no attacker.
+
 Not a bug after all: `DivinityDamageEvent.Exit` does not fire for `ignore-divinity` skill damage. Firing
 it would make those hits start costing weapon and armor durability, which is a behaviour change. It is
 left as it is and revisited with the new event surface in Phase 4.
@@ -235,6 +240,7 @@ Rules for every pull request:
 |---|---|---|---|
 | 4.1 | Divinity | Formulas move to `combat.yml` | Config layout |
 | 4.2 | Divinity | Stat snapshots | Projectile timing |
+| 4.2b | Divinity | Stop treating hits that are not swings as swings: vanilla Thorns first (cause `THORNS` on every version, the damage type on 1.20.4+). Uses the origin from the damage request where there is one | Thorns damage |
 | 4.3 | Divinity and Fabled | New event and API surface. Fabled stops mutating `BASE` when Divinity is present. The Physical Damage trigger and immediate buffs act on Divinity's final numbers | Yes |
 
 ### Phase 5: clean-up
@@ -245,5 +251,9 @@ Remove the shims and dead paths after a release or two. Publish documentation fo
 
 - That Fabled's `PhysicalDamageEvent` really runs before Divinity's calculation in practice. This is
   inferred from the plugin load order and is checked by the Phase 0 tests.
-- The exact 1.20.4+ API for damage sources.
+- The exact 1.20.4+ API for damage sources. Checked against the 1.21.11 API so far:
+  `Damageable.damage(double, DamageSource)`, `DamageSource.builder(DamageType)` with `withCausingEntity`,
+  `withDirectEntity` and `withDamageLocation`, and `EntityDamageEvent.getDamageSource()` all exist. The
+  version each one first appeared in is still to be confirmed. Codex's API module compiles against 1.16.5,
+  so the adapter cannot reference these classes directly.
 - Whether GitHub sub-issues can link across the three repositories.
