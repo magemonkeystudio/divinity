@@ -8,6 +8,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.FishHook;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +18,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDamageEvent.DamageModifier;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +37,12 @@ import studio.magemonkey.codex.registry.BuffRegistry;
 import studio.magemonkey.codex.registry.DamageRegistry;
 import studio.magemonkey.codex.registry.provider.AttributeProvider;
 import studio.magemonkey.codex.registry.provider.BuffProvider;
+import studio.magemonkey.codex.util.EffectUT;
 import studio.magemonkey.codex.util.EnumUT;
+import studio.magemonkey.codex.util.actions.params.IParamResult;
+import studio.magemonkey.codex.util.actions.params.IParamType;
+import studio.magemonkey.codex.util.actions.params.IParamValue;
+import studio.magemonkey.divinity.utils.actions.executors.ActionDamage;
 import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.EHook;
@@ -51,13 +58,17 @@ import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.testutil.MockedTest;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
 
 /**
  * Characterization tests for the damage pipeline (issue #366).
@@ -86,7 +97,9 @@ class CombatCharacterizationTest extends MockedTest {
 
     @BeforeEach
     void setup() {
-        attacker = genPlayer("Attacker");
+        attacker = new TickSafePlayer(server, "Attacker");
+        server.addPlayer(attacker);
+        players.add(attacker);
         victim = new FiringPlayer(server, "Victim");
         server.addPlayer(victim);
         players.add(victim);
@@ -116,6 +129,7 @@ class CombatCharacterizationTest extends MockedTest {
     @AfterEach
     void tearDown() {
         HandlerList.unregisterAll(recorder);
+        leaveNothingBehind();
         EngineCfg.LEGACY_COMBAT = false;
         EngineCfg.VANILLA_ONLY_ITEM_STATS = false;
         originalCaps.forEach((type, cap) -> ItemStats.getStat(type).setCapability(cap));
@@ -477,6 +491,227 @@ class CombatCharacterizationTest extends MockedTest {
         melee(VANILLA_SWORD_DAMAGE);
 
         assertEquals(15D, attacker.getHealth(), DELTA);
+    }
+
+    // ------------------------------------------------------------------ //
+    // Divinity's own damage dealers
+    // ------------------------------------------------------------------ //
+
+    @Test
+    void aoe_hitsBystandersWithAShareOfEveryWeaponDamageType() {
+        attacker.getInventory().setItemInMainHand(aoeSword(50));
+        FiringPlayer bystander = bystander();
+
+        Hit main = melee(VANILLA_SWORD_DAMAGE);
+        assertEquals(Map.of("physical", 20D, "fire", 10D), main.damages(), "The main hit is not reduced");
+        assertTrue(bystander.events.isEmpty(), "The area damage is dealt on the next tick, not inside the hit");
+
+        firedEvents.clear();
+        server.getScheduler().performOneTick();
+
+        assertEquals(1, bystander.events.size());
+        assertSame(attacker, ((EntityDamageByEntityEvent) bystander.lastEvent).getDamager());
+        assertEquals(Map.of("physical", 10D, "fire", 5D), damagesOf(bystander));
+        assertEquals(15D, bystander.lastEvent.getFinalDamage(), DELTA);
+        assertEquals(FULL_PIPELINE, firedEvents, "The area hit runs the whole pipeline");
+        assertTrue(victim.events.isEmpty(), "The original victim is not hit again");
+    }
+
+    @Test
+    void aoe_hitOnABystanderDoesNotSpreadFurther() {
+        attacker.getInventory().setItemInMainHand(aoeSword(50));
+        FiringPlayer bystander = bystander();
+
+        melee(VANILLA_SWORD_DAMAGE);
+        server.getScheduler().performTicks(3);
+
+        assertEquals(1, bystander.events.size(), "The bystander is hit once");
+        assertTrue(victim.events.isEmpty(), "The area hit on the bystander must not bounce back to the victim");
+    }
+
+    @Test
+    void aoe_leavesTheNextSwingAtFullDamage() {
+        attacker.getInventory().setItemInMainHand(aoeSword(50));
+        bystander();
+
+        melee(VANILLA_SWORD_DAMAGE);
+        server.getScheduler().performOneTick();
+        Hit next = hitWithoutRefresh(meleeEvent(attacker, victim, VANILLA_SWORD_DAMAGE), victim);
+
+        assertEquals(Map.of("physical", 20D, "fire", 10D), next.damages());
+    }
+
+    @Test
+    void aoe_withNobodyInRange_dealsNothingExtra() {
+        attacker.getInventory().setItemInMainHand(aoeSword(50));
+        FiringPlayer bystander = bystander();
+        bystander.teleport(bystander.getLocation().add(10, 0, 0));
+
+        melee(VANILLA_SWORD_DAMAGE);
+        server.getScheduler().performOneTick();
+        Hit next = hitWithoutRefresh(meleeEvent(attacker, victim, VANILLA_SWORD_DAMAGE), victim);
+
+        assertTrue(bystander.events.isEmpty());
+        assertEquals(Map.of("physical", 20D, "fire", 10D), next.damages());
+    }
+
+    @Test
+    void damageAction_flatAmount_isAddedToEveryWeaponDamageType() throws Exception {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D, "fire", 10D)));
+        refresh(attacker);
+        refresh(victim);
+        firedEvents.clear();
+
+        runDamageAction(attacker, victim, 5, false);
+
+        assertEquals(1, victim.events.size());
+        assertSame(attacker, ((EntityDamageByEntityEvent) victim.lastEvent).getDamager());
+        assertEquals(Map.of("physical", 25D, "fire", 15D), damagesOf(victim));
+        assertEquals(40D, victim.lastEvent.getFinalDamage(), DELTA);
+        assertEquals(FULL_PIPELINE, firedEvents);
+    }
+
+    @Test
+    void damageAction_negativeFlatAmount_isTakenFromEveryWeaponDamageType() throws Exception {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D, "fire", 10D)));
+        refresh(attacker);
+        refresh(victim);
+
+        runDamageAction(attacker, victim, -5, false);
+
+        assertEquals(Map.of("physical", 15D, "fire", 5D), damagesOf(victim));
+    }
+
+    @Test
+    void damageAction_percentAmount_scalesEveryWeaponDamageType() throws Exception {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D, "fire", 10D)));
+        refresh(attacker);
+        refresh(victim);
+
+        runDamageAction(attacker, victim, 50, true);
+
+        assertEquals(Map.of("physical", 10D, "fire", 5D), damagesOf(victim));
+        assertEquals(15D, victim.lastEvent.getFinalDamage(), DELTA);
+    }
+
+    @Test
+    void damageAction_leavesTheNextSwingAtFullDamage() throws Exception {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D, "fire", 10D)));
+        refresh(attacker);
+        refresh(victim);
+
+        runDamageAction(attacker, victim, 50, true);
+        Hit next = hitWithoutRefresh(meleeEvent(attacker, victim, VANILLA_SWORD_DAMAGE), victim);
+
+        assertEquals(Map.of("physical", 20D, "fire", 10D), next.damages());
+    }
+
+    @Test
+    void damageAction_zeroAmount_dealsNoDamageAtAll() throws Exception {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        refresh(attacker);
+        refresh(victim);
+
+        runDamageAction(attacker, victim, 0, false);
+
+        assertTrue(victim.events.isEmpty());
+    }
+
+    @Test
+    void damageAction_runByAProjectile_isAMeleeHitFromItsShooter() throws Exception {
+        ItemStack bow = bow(20);
+        Arrow arrow = arrowFrom(bow, 1);
+        refresh(attacker);
+        refresh(victim);
+
+        runDamageAction(arrow, victim, 5, false);
+
+        assertSame(attacker, ((EntityDamageByEntityEvent) victim.lastEvent).getDamager());
+        // The shooter holds a bow, and a bow in hand does not deal its damage in melee by default. So the hit
+        // is the 1 damage the action asks for, and the action's amount is not applied to it.
+        assertEquals(Map.of("physical", 1D), damagesOf(victim));
+    }
+
+    @Test
+    void bleed_ticksForAShareOfTheHitAsUnattributedDamage() {
+        ItemStack sword = weapon(Map.of("physical", 20D));
+        stat(sword, TypedStat.Type.BLEED_RATE, 100);
+        attacker.getInventory().setItemInMainHand(sword);
+        liftCap(TypedStat.Type.BLEED_RATE);
+
+        melee(VANILLA_SWORD_DAMAGE);
+        assertTrue(victim.events.isEmpty(), "Bleeding starts on a later tick, not inside the hit");
+
+        firedEvents.clear();
+        // The bleed plays particles, which MockBukkit does not implement
+        try (MockedStatic<EffectUT> ignored = mockStatic(EffectUT.class)) {
+            server.getScheduler().performOneTick();
+        }
+
+        // The default formula is half of the hit's damage per tick
+        assertEquals(1, victim.events.size());
+        assertFalse(victim.lastEvent instanceof EntityDamageByEntityEvent, "Bleeding has no attacker");
+        assertEquals(DamageCause.CUSTOM, victim.lastEvent.getCause());
+        assertEquals(Map.of("physical", 10D), damagesOf(victim));
+        assertEquals(10D, victim.lastEvent.getFinalDamage(), DELTA);
+        assertEquals(FULL_PIPELINE, firedEvents, "A bleed tick runs the whole pipeline as environmental damage");
+    }
+
+    @Test
+    void bleed_tickIsReducedByTheVictimsDefense() {
+        ItemStack sword = weapon(Map.of("physical", 20D));
+        stat(sword, TypedStat.Type.BLEED_RATE, 100);
+        attacker.getInventory().setItemInMainHand(sword);
+        liftCap(TypedStat.Type.BLEED_RATE);
+
+        melee(VANILLA_SWORD_DAMAGE);
+        // Put the armor on after the hit, so the bleed is still sized by an undefended 20
+        victim.getInventory().setChestplate(armor(Map.of("physical", 10D)));
+        // Not refresh(): that would drop the victim's stats, and the bleed with them
+        EntityStats.get(victim).updateAll();
+        try (MockedStatic<EffectUT> ignored = mockStatic(EffectUT.class)) {
+            server.getScheduler().performOneTick();
+        }
+
+        // 10 bleed against 10 defense, current formula with the default protection factor of 0.8:
+        // 10 * (1 - max(10 / 5, 10 - 4 * 10 / 8) * 0.8 * 0.05) = 8
+        assertEquals(8D, victim.lastEvent.getFinalDamage(), DELTA);
+    }
+
+    @Test
+    void fishingHook_dealsAOneDamageHitFromThePlayer_managedLikeAWeaponSwing() {
+        ItemStack rod = new ItemStack(Material.FISHING_ROD);
+        Objects.requireNonNull(ItemStats.getDamageById("physical"))
+                .add(rod, new StatBonus(new double[]{20}, false, null), -1);
+        attacker.getInventory().setItemInMainHand(rod);
+        refresh(attacker);
+        refresh(victim);
+        assertTrue(EngineCfg.COMBAT_FISHING_HOOK_DO_DAMAGE, "Test setup: the default config enables hook damage");
+
+        server.getPluginManager().callEvent(new PlayerFishEvent(attacker,
+                victim,
+                mock(FishHook.class),
+                PlayerFishEvent.State.CAUGHT_ENTITY));
+
+        assertEquals(1, victim.events.size());
+        assertSame(attacker, ((EntityDamageByEntityEvent) victim.lastEvent).getDamager());
+        // The rod's 20, plus the 1 the hook asks for (a rod has no vanilla damage to deduct)
+        assertEquals(Map.of("physical", 21D), damagesOf(victim));
+    }
+
+    @Test
+    void fishingHook_doesNothingWhenDisabled() {
+        EngineCfg.COMBAT_FISHING_HOOK_DO_DAMAGE = false;
+        try {
+            server.getPluginManager().callEvent(new PlayerFishEvent(attacker,
+                    victim,
+                    mock(FishHook.class),
+                    PlayerFishEvent.State.CAUGHT_ENTITY));
+
+            assertTrue(victim.events.isEmpty());
+        } finally {
+            EngineCfg.COMBAT_FISHING_HOOK_DO_DAMAGE = true;
+        }
     }
 
     // ------------------------------------------------------------------ //
@@ -956,6 +1191,57 @@ class CombatCharacterizationTest extends MockedTest {
         return item != null && item.getType() == Material.IRON_SWORD;
     }
 
+    /**
+     * The server and its world are shared by every test in this class, and entity stats are static. Without
+     * this, a later test would find this test's players standing next to its own, their bleeds still
+     * ticking, and any hit this test scheduled for the next tick still waiting to land.
+     */
+    private void leaveNothingBehind() {
+        int offset = 0;
+        for (PlayerMock player : players) {
+            // Far from the spawn and from each other, so nothing still queued can reach anyone
+            player.teleport(player.getLocation().add(10_000 + 100 * offset++, 0, 0));
+        }
+        try (MockedStatic<EffectUT> ignored = mockStatic(EffectUT.class)) {
+            server.getScheduler().performOneTick();
+        }
+        players.forEach(EntityStats::purge);
+    }
+
+    private ItemStack aoeSword(double aoePercent) {
+        ItemStack sword = weapon(Map.of("physical", 20D, "fire", 10D));
+        stat(sword, TypedStat.Type.AOE_DAMAGE, aoePercent);
+        return sword;
+    }
+
+    /**
+     * A second player standing where the attacker stands, in reach of area damage.
+     */
+    private FiringPlayer bystander() {
+        FiringPlayer bystander = new FiringPlayer(server, "Bystander");
+        server.addPlayer(bystander);
+        players.add(bystander);
+        bystander.teleport(attacker.getLocation());
+        refresh(bystander);
+        return bystander;
+    }
+
+    /**
+     * Runs Divinity's DAMAGE action the way the actions engine would.
+     */
+    private void runDamageAction(Entity executor, Entity target, double amount, boolean percent) throws Exception {
+        IParamValue value = mock(IParamValue.class);
+        when(value.getDouble(anyDouble())).thenReturn(amount);
+        when(value.getBoolean()).thenReturn(percent);
+        IParamResult result = mock(IParamResult.class);
+        when(result.getParamValue(IParamType.AMOUNT)).thenReturn(value);
+
+        Method execute =
+                ActionDamage.class.getDeclaredMethod("execute", Entity.class, Set.class, IParamResult.class);
+        execute.setAccessible(true);
+        execute.invoke(new ActionDamage(plugin), executor, new HashSet<>(Set.of(target)), result);
+    }
+
     private void raiseShield(PlayerMock player) {
         player.getInventory().setItemInOffHand(new ItemStack(Material.SHIELD));
         player.setBlocking(true);
@@ -1179,21 +1465,42 @@ class CombatCharacterizationTest extends MockedTest {
     }
 
     /**
+     * Ticking the scheduler runs Divinity's stats task, which reads every tracked player's attack cooldown.
+     * MockBukkit does not implement that, and an unimplemented call makes a test report as skipped.
+     */
+    private static class TickSafePlayer extends PlayerMock {
+        TickSafePlayer(@NotNull ServerMock server, @NotNull String name) {
+            super(server, name, UUID.randomUUID());
+        }
+
+        @Override
+        public float getAttackCooldown() {
+            return 1F;
+        }
+    }
+
+    /**
      * MockBukkit's {@code damage(amount, source)} changes health without firing a damage event, so nothing
      * a plugin listens for would run. This player fires the event a real server would, and remembers it.
      */
-    private static class FiringPlayer extends PlayerMock {
+    private static class FiringPlayer extends TickSafePlayer {
         private final Map<Material, Integer> cooldowns = new EnumMap<>(Material.class);
+        private final List<EntityDamageEvent> events    = new ArrayList<>();
         private       EntityDamageEvent      lastEvent;
 
         FiringPlayer(@NotNull ServerMock server, @NotNull String name) {
-            super(server, name, UUID.randomUUID());
+            super(server, name);
         }
 
         @Override
         public void damage(double amount, @Nullable Entity source) {
             if (source == null) {
-                super.damage(amount, (Entity) null);
+                lastEvent = new EntityDamageEvent(this,
+                        DamageCause.CUSTOM,
+                        modifiers(amount),
+                        functions(modifiers(amount)));
+                events.add(lastEvent);
+                server.getPluginManager().callEvent(lastEvent);
                 return;
             }
             lastEvent = new EntityDamageByEntityEvent(source,
@@ -1201,7 +1508,13 @@ class CombatCharacterizationTest extends MockedTest {
                     DamageCause.ENTITY_ATTACK,
                     modifiers(amount),
                     functions(modifiers(amount)));
+            events.add(lastEvent);
             server.getPluginManager().callEvent(lastEvent);
+        }
+
+        @Override
+        public void damage(double amount) {
+            damage(amount, (Entity) null);
         }
 
         // MockBukkit does not implement item cooldowns, which the shield block check reads and sets
