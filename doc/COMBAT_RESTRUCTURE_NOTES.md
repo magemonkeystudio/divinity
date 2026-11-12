@@ -19,9 +19,8 @@ Update this file in the same pull request whenever something here stops being tr
 | Phase | State |
 |---|---|
 | 0. Safety net and bug fixes | Done |
-| 1.1 Extract the calculator | Done |
-| 1.2 Vanilla modifier bridge | This pull request |
-| 2. The shared contract | Next |
+| 1. Extract the calculator (1.1) and the vanilla modifier bridge (1.2) | Done |
+| 2. The shared contract | In progress: 2.1 is in review in Codex |
 | 3 to 5 | Not started |
 
 ## Rules for every pull request
