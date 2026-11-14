@@ -34,6 +34,7 @@ import studio.magemonkey.divinity.hooks.EHook;
 import studio.magemonkey.divinity.hooks.external.FabledHook;
 import studio.magemonkey.codex.api.damage.DamageContexts;
 import studio.magemonkey.codex.api.damage.DamageRequest;
+import studio.magemonkey.codex.api.damage.DamageSources;
 import studio.magemonkey.codex.api.damage.WeaponStatsMode;
 import studio.magemonkey.codex.api.items.PrefixHelper;
 import studio.magemonkey.divinity.manager.damage.DamageMeta;
@@ -311,7 +312,14 @@ public class VanillaWrapperListener extends IListener<Divinity> {
             }
         }
         if (damages.isEmpty()) {
-            DamageAttribute dmgCause = ItemStats.getDamageByCause(cause);
+            // The vanilla damage type is finer than the cause, where the server has one (1.20.4 and newer)
+            // and the config attaches it to a damage type
+            DamageAttribute dmgCause = null;
+            if (ItemStats.getDamages().stream().anyMatch(dmg -> !dmg.getAttachedDamageTypes().isEmpty())) {
+                String vanillaType = DamageSources.get().getDamageType(e);
+                if (vanillaType != null) dmgCause = ItemStats.getDamageByVanillaType(vanillaType);
+            }
+            if (dmgCause == null) dmgCause = ItemStats.getDamageByCause(cause);
             if (dmgCause == null) dmgCause = ItemStats.getDamageByDefault();
             damages.put(dmgCause, damageStart);
             damageStart = 0;

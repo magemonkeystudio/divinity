@@ -170,7 +170,7 @@ Behind one Codex interface that does nothing on older versions:
 | Improvement | Gain |
 |---|---|
 | Deal skill damage with a real damage source | Correct cause and death message without reflection |
-| Map vanilla damage types to Divinity damage types | Finer than `attached-damage-causes`; a new optional key beside it |
+| Map vanilla damage types to Divinity damage types | Finer than `attached-damage-causes`; the optional key `attached-damage-types` beside it |
 | Use the event's direct and causing entities | Replaces manual projectile and shooter lookups |
 
 The exact API calls are to be confirmed in the Codex PR. As far as we know, a damage source does not

@@ -128,6 +128,9 @@ public class Config extends IConfigTemplate {
                     mythicFactionMod
             );
 
+            // Optional, and only used on Minecraft 1.20.4 and newer
+            damageAttribute.setAttachedDamageTypes(cfg.getStringList(path + "attached-damage-types"));
+
             ItemStats.registerDamage(damageAttribute);
         }
     }

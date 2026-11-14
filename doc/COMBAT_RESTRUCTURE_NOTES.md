@@ -20,8 +20,9 @@ Update this file in the same pull request whenever something here stops being tr
 |---|---|
 | 0. Safety net and bug fixes | Done |
 | 1. Extract the calculator (1.1) and the vanilla modifier bridge (1.2) | Done |
-| 2. The shared contract | In progress: 2.1, 2.1b and 2.1c are merged in Codex, 2.2 is this pull request, 2.2c is next |
-| 3 to 5 | Not started |
+| 2. The shared contract | Done with 2.2c, which adds the `attached-damage-types` key |
+| 3. Fabled migration | Next |
+| 4 and 5 | Not started |
 
 ## Rules for every pull request
 
