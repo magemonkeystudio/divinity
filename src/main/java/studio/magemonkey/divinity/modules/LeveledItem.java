@@ -132,6 +132,14 @@ public abstract class LeveledItem extends ModuleItem implements Tiered {
         return this.create(-1);
     }
 
+    @NotNull
+    @Override
+    public ItemStack update(@NotNull ItemStack item) {
+        ItemStack updated = this.build(item.clone(), ItemStats.getLevel(item));
+        updated.setAmount(item.getAmount());
+        return updated;
+    }
+
     private void updateConfig(@NotNull JYML cfg) {
         cfg.addMissing("tier", JStrings.DEFAULT);
 
