@@ -65,4 +65,15 @@ class DependencyRequirementTest {
         assertFalse(meetsVersion("1.0.0", ""));
         assertFalse(meetsVersion("1.0.0", null));
     }
+
+    @Test
+    void minimumCodexVersion_isTheFirstBuildWithDamageRequests() {
+        String min = DependencyRequirement.MIN_CORE_VERSION;
+        assertTrue(meetsVersion(min, "1.3.0-dev.1"));
+        assertTrue(meetsVersion(min, "1.3.0-dev.2"));
+        assertTrue(meetsVersion(min, "1.3.0"));
+        assertTrue(meetsVersion(min, "1.3.1-dev.1"));
+        assertFalse(meetsVersion(min, "1.2.1"), "The last release without damage requests");
+        assertFalse(meetsVersion(min, "1.2.2-dev.5"));
+    }
 }

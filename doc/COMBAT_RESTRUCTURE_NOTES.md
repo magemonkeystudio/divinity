@@ -35,6 +35,11 @@ Update this file in the same pull request whenever something here stops being tr
 - If something in the sub-issue turns out to be wrong or riskier than described, leave it out, say so in
   the description, and update the plan. Two items were dropped from Phase 0 this way.
 
+- When a pull request starts using something new from Codex, raise two things together: `codex.version`
+  in `pom.xml`, which is what Divinity compiles against, and `DependencyRequirement.MIN_CORE_VERSION`,
+  which is what Divinity refuses to start below. A dev build reports itself as `X.Y.Z-dev.N` at runtime
+  even though Maven calls it `X.Y.Z-SNAPSHOT`.
+
 ## Building and testing
 
 | Repository | Command | Notes |
