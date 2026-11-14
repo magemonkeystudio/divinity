@@ -1,7 +1,8 @@
 # Each damage type can also list 'attached-damage-types': keys of vanilla damage types, such as
-# 'freeze' or 'minecraft:sonic_boom'. Damage of such a type with no attacker's weapon behind it
-# becomes this damage type. It is checked before 'attached-damage-causes', is finer than a cause,
-# and only works on Minecraft 1.20.4 and newer. On older versions it is ignored.
+# 'freeze' or 'minecraft:sonic_boom'. Whenever a hit has no weapon damage for Divinity to use, damage
+# of such a vanilla type becomes this damage type. That covers the environment, and also a bare-handed
+# hit or a mob without weapon stats. It is checked before 'attached-damage-causes', is finer than a
+# cause, and only works on Minecraft 1.20.4 and newer. On older versions it is ignored.
 
 _vanilla_generic:
   priority: 50

@@ -934,6 +934,46 @@ class CombatCharacterizationTest extends MockedTest {
     }
 
     @Test
+    void environment_eventWithoutAVanillaDamageTypeOfItsOwn_stillGoesByTheCause() {
+        // The key is set, but this event was built without a damage source, as on a server older than
+        // 1.20.4. Whatever the adapter makes of it, it is not freeze.
+        DamageAttribute fire = Objects.requireNonNull(ItemStats.getDamageById("fire"));
+        fire.setAttachedDamageTypes(List.of("freeze"));
+        try {
+            String byCause = Objects.requireNonNullElse(ItemStats.getDamageByCause(DamageCause.FREEZE),
+                    ItemStats.getDamageByDefault()).getId();
+
+            Hit hit = hit(environmentEvent(DamageCause.FREEZE, 6), victim);
+
+            assertEquals(Map.of(byCause, 6D), hit.damages());
+        } finally {
+            fire.setAttachedDamageTypes(List.of());
+        }
+    }
+
+    @Test
+    void bareHandedHit_withItsVanillaDamageTypeAttached_becomesThatDamageType() {
+        // The key applies whenever there is no weapon damage to use, not only to the environment
+        DamageAttribute fire = Objects.requireNonNull(ItemStats.getDamageById("fire"));
+        fire.setAttachedDamageTypes(List.of("player_attack"));
+        try {
+            EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(attacker,
+                    victim,
+                    DamageCause.ENTITY_ATTACK,
+                    DamageSource.builder(DamageType.PLAYER_ATTACK).withCausingEntity(attacker).build(),
+                    modifiers(5),
+                    functions(modifiers(5)));
+
+            Hit hit = hit(event, victim);
+
+            // Without the key this is bareHand_usesEventDamageAsDefaultType: physical 5
+            assertEquals(Map.of("fire", 5D), hit.damages());
+        } finally {
+            fire.setAttachedDamageTypes(List.of());
+        }
+    }
+
+    @Test
     void attachedDamageTypes_areReadWithOrWithoutTheMinecraftNamespace_inAnyCase() {
         DamageAttribute fire = Objects.requireNonNull(ItemStats.getDamageById("fire"));
         fire.setAttachedDamageTypes(List.of("Freeze", "minecraft:SONIC_BOOM", "myplugin:acid"));
