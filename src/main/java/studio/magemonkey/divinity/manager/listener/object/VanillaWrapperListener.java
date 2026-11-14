@@ -228,6 +228,13 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                 return;
             }
 
+            // Vanilla Thorns reports its wearer as the damager, but it is not a swing: it takes the path
+            // environmental damage takes, with no weapon damage, crit or on-hit effects from the wearer. A hit
+            // that has a request is left to its origin, as every request-carrying hit is.
+            if (request == null && isThornsHit(ede)) {
+                break labelFullDamage;
+            }
+
             if (edeDamager instanceof LivingEntity) {
                 if (cause == DamageCause.ENTITY_SWEEP_ATTACK && EngineCfg.COMBAT_DISABLE_VANILLA_SWEEP) {
                     ede.setCancelled(true);
@@ -438,6 +445,19 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         vanilla.settleFinalDamage(victim);
 
 //        Divinity.getInstance().info("event took: " + (System.currentTimeMillis() - l1) + " millis");
+    }
+
+    /**
+     * Whether this is the damage vanilla Thorns deals back to an attacker: cause {@code THORNS} on every
+     * version, or, where the server has vanilla damage types (1.20.4 and newer), the type
+     * {@code minecraft:thorns}.
+     */
+    private static boolean isThornsHit(@NotNull EntityDamageEvent e) {
+        if (e.getCause() == DamageCause.THORNS) return true;
+
+        String vanillaType = DamageSources.get().getDamageType(e);
+        return vanillaType != null && ("minecraft:thorns".equalsIgnoreCase(vanillaType)
+                || "thorns".equalsIgnoreCase(vanillaType));
     }
 
     /**
