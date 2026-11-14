@@ -36,6 +36,10 @@ public class EntityStatsTask extends ITask<Divinity> {
             stats.triggerEffects();
         }
 
+        if (this.count % 100 == 0) {
+            ProjectileStats.sweep();
+        }
+
         if (this.count++ >= 100) {
             this.count = 1;
         }

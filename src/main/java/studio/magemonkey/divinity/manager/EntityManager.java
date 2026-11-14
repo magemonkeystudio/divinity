@@ -147,17 +147,34 @@ public class EntityManager extends IListener<Divinity> {
     }
 
     private final void pushToUpdate(@NotNull LivingEntity entity, double time) {
+        this.pushToUpdate(entity, time, true);
+    }
+
+    /**
+     * @param changed whether something is known to have changed, as it has when equipment or the held item
+     *                did. After a hit nothing is known: the entity's stats are read again and its snapshot is
+     *                kept unless the equipment turns out to be different.
+     */
+    private final void pushToUpdate(@NotNull LivingEntity entity, double time, boolean changed) {
         if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         EntityEquipment equip = new EntityEquipmentSnapshot(entity);
         previousEquipment.put(entity.getUniqueId(), equip);
+        Runnable refresh = () -> {
+            EntityStats stats = EntityStats.get(entity);
+            if (changed) {
+                stats.updateAll();
+            } else {
+                stats.refreshAfterHit();
+            }
+        };
         if (time <= 0D) {
-            plugin.getServer().getScheduler().runTask(plugin, () -> EntityStats.get(entity).updateAll());
+            plugin.getServer().getScheduler().runTask(plugin, refresh);
             return;
         }
         new BukkitRunnable() {
             @Override
             public void run() {
-                EntityStats.get(entity).updateAll();
+                refresh.run();
             }
         }.runTask(Divinity.getInstance());
     }
@@ -195,12 +212,12 @@ public class EntityManager extends IListener<Divinity> {
     public void onStatsDamagePacketDuplicator(DivinityDamageEvent.Exit e) {
         LivingEntity victim = e.getVictim();
         this.addDuplicatorFixer(victim);
-        this.pushToUpdate(victim, 1.5D);
+        this.pushToUpdate(victim, 1.5D, false);
 
         LivingEntity damager = e.getDamager();
         if (damager != null) {
             this.addDuplicatorFixer(damager);
-            this.pushToUpdate(damager, 1.5D);
+            this.pushToUpdate(damager, 1.5D, false);
         }
     }
 

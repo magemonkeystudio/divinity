@@ -136,6 +136,7 @@ public class BuffCommand extends ISubCommand<Divinity> {
         if (replace) userBuffs.removeIf(buff -> buff.getStatId().equals(statId));
         SavedBuff buff = new SavedBuff(stat, amount, isModifier, seconds);
         userBuffs.add(buff);
+        user.getActiveProfile().markBuffsChanged();
 
         plugin.lang().Command_Buff_Done
                 .replace("%time%", TimeUT.formatTime(seconds * 1000L))
