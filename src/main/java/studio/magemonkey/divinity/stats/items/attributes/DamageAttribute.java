@@ -38,6 +38,7 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
 
     private final ActionManipulator   actionEngine;
     private final Set<String>         attachedDamageCauses;
+    private final Set<String>         attachedDamageTypes = new HashSet<>();
     private final Map<String, Double> biomeModifier;
     private final Map<String, Double> entityTypeModifier;
     private final Map<String, Double> mythicFactionModifier;
@@ -87,6 +88,34 @@ public class DamageAttribute extends DuplicableItemLoreStat<StatBonus> implement
     public boolean isAttached(@NotNull DamageCause cause) {
         return this.attachedDamageCauses.contains(cause.name())
                 || this.attachedDamageCauses.contains(JStrings.MASK_ANY);
+    }
+
+    /**
+     * Whether damage of this vanilla damage type is damage of this attribute. Vanilla damage types only exist
+     * on Minecraft 1.20.4 and newer, and are finer than damage causes.
+     *
+     * @param damageType the key of the vanilla damage type, such as {@code minecraft:freeze}
+     */
+    public boolean isAttachedToDamageType(@NotNull String damageType) {
+        return this.attachedDamageTypes.contains(normalizeDamageType(damageType));
+    }
+
+    /**
+     * @param damageTypes keys of vanilla damage types, with or without the {@code minecraft:} namespace
+     */
+    public void setAttachedDamageTypes(@NotNull Collection<String> damageTypes) {
+        this.attachedDamageTypes.clear();
+        damageTypes.forEach(type -> this.attachedDamageTypes.add(normalizeDamageType(type)));
+    }
+
+    @NotNull
+    public Set<String> getAttachedDamageTypes() {
+        return Collections.unmodifiableSet(this.attachedDamageTypes);
+    }
+
+    private static String normalizeDamageType(@NotNull String damageType) {
+        String key = damageType.trim().toLowerCase(Locale.ROOT);
+        return key.indexOf(':') < 0 ? "minecraft:" + key : key;
     }
 
     public boolean isAttached(@NotNull DefenseAttribute def) {

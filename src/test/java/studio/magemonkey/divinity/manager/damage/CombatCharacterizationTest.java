@@ -5,6 +5,8 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -887,6 +889,127 @@ class CombatCharacterizationTest extends MockedTest {
 
         assertEquals(Map.of("fire", 4D), fire.damages());
         assertEquals(FULL_PIPELINE, fire.events());
+    }
+
+    @Test
+    void environment_vanillaDamageTypeAttachedToADamageType_winsOverTheCause() {
+        DamageAttribute fire = Objects.requireNonNull(ItemStats.getDamageById("fire"));
+        fire.setAttachedDamageTypes(List.of("freeze"));
+        try {
+            // FREEZE as a cause is not attached to fire; the vanilla type minecraft:freeze now is
+            EntityDamageEvent event = new EntityDamageEvent(victim,
+                    DamageCause.FREEZE,
+                    DamageSource.builder(DamageType.FREEZE).build(),
+                    modifiers(6),
+                    functions(modifiers(6)));
+
+            Hit hit = hit(event, victim);
+
+            assertEquals(Map.of("fire", 6D), hit.damages());
+        } finally {
+            fire.setAttachedDamageTypes(List.of());
+        }
+    }
+
+    @Test
+    void environment_vanillaDamageTypeNotAttachedToAnything_stillGoesByTheCause() {
+        DamageAttribute fire = Objects.requireNonNull(ItemStats.getDamageById("fire"));
+        fire.setAttachedDamageTypes(List.of("minecraft:sonic_boom"));
+        try {
+            EntityDamageEvent event = new EntityDamageEvent(victim,
+                    DamageCause.FREEZE,
+                    DamageSource.builder(DamageType.FREEZE).build(),
+                    modifiers(6),
+                    functions(modifiers(6)));
+            String byCause = Objects.requireNonNullElse(ItemStats.getDamageByCause(DamageCause.FREEZE),
+                    ItemStats.getDamageByDefault()).getId();
+
+            Hit hit = hit(event, victim);
+
+            assertEquals(Map.of(byCause, 6D), hit.damages());
+            assertNotEquals("fire", byCause, "Test setup: the cause must lead somewhere other than fire");
+        } finally {
+            fire.setAttachedDamageTypes(List.of());
+        }
+    }
+
+    @Test
+    void environment_eventWithoutAVanillaDamageTypeOfItsOwn_stillGoesByTheCause() {
+        // The key is set, but this event was built without a damage source, as on a server older than
+        // 1.20.4. Whatever the adapter makes of it, it is not freeze.
+        DamageAttribute fire = Objects.requireNonNull(ItemStats.getDamageById("fire"));
+        fire.setAttachedDamageTypes(List.of("freeze"));
+        try {
+            String byCause = Objects.requireNonNullElse(ItemStats.getDamageByCause(DamageCause.FREEZE),
+                    ItemStats.getDamageByDefault()).getId();
+
+            Hit hit = hit(environmentEvent(DamageCause.FREEZE, 6), victim);
+
+            assertEquals(Map.of(byCause, 6D), hit.damages());
+        } finally {
+            fire.setAttachedDamageTypes(List.of());
+        }
+    }
+
+    @Test
+    void bareHandedHit_withItsVanillaDamageTypeAttached_becomesThatDamageType() {
+        // The key applies whenever there is no weapon damage to use, not only to the environment
+        DamageAttribute fire = Objects.requireNonNull(ItemStats.getDamageById("fire"));
+        fire.setAttachedDamageTypes(List.of("player_attack"));
+        try {
+            EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(attacker,
+                    victim,
+                    DamageCause.ENTITY_ATTACK,
+                    DamageSource.builder(DamageType.PLAYER_ATTACK).withCausingEntity(attacker).build(),
+                    modifiers(5),
+                    functions(modifiers(5)));
+
+            Hit hit = hit(event, victim);
+
+            // Without the key this is bareHand_usesEventDamageAsDefaultType: physical 5
+            assertEquals(Map.of("fire", 5D), hit.damages());
+        } finally {
+            fire.setAttachedDamageTypes(List.of());
+        }
+    }
+
+    @Test
+    void attachedDamageTypes_areReadWithOrWithoutTheMinecraftNamespace_inAnyCase() {
+        DamageAttribute fire = Objects.requireNonNull(ItemStats.getDamageById("fire"));
+        fire.setAttachedDamageTypes(List.of("Freeze", "minecraft:SONIC_BOOM", "myplugin:acid"));
+        try {
+            assertTrue(fire.isAttachedToDamageType("minecraft:freeze"));
+            assertTrue(fire.isAttachedToDamageType("sonic_boom"));
+            assertTrue(fire.isAttachedToDamageType("myplugin:acid"));
+            assertFalse(fire.isAttachedToDamageType("minecraft:acid"));
+            assertSame(fire, ItemStats.getDamageByVanillaType("minecraft:freeze"));
+            assertNull(ItemStats.getDamageByVanillaType("minecraft:lava"));
+        } finally {
+            fire.setAttachedDamageTypes(List.of());
+        }
+    }
+
+    @Test
+    void attachedDamageTypes_onSeveralDamageTypes_theHighestPriorityWins() {
+        DamageAttribute fire     = Objects.requireNonNull(ItemStats.getDamageById("fire"));
+        DamageAttribute physical = Objects.requireNonNull(ItemStats.getDamageById("physical"));
+        assertNotEquals(fire.getPriority(), physical.getPriority(), "Test setup: priorities must differ");
+        fire.setAttachedDamageTypes(List.of("freeze"));
+        physical.setAttachedDamageTypes(List.of("freeze"));
+        try {
+            DamageAttribute expected = fire.getPriority() > physical.getPriority() ? fire : physical;
+
+            assertSame(expected, ItemStats.getDamageByVanillaType("minecraft:freeze"));
+        } finally {
+            fire.setAttachedDamageTypes(List.of());
+            physical.setAttachedDamageTypes(List.of());
+        }
+    }
+
+    @Test
+    void attachedDamageTypes_areEmptyInTheDefaultConfig() {
+        ItemStats.getDamages().forEach(dmg ->
+                assertTrue(dmg.getAttachedDamageTypes().isEmpty(), dmg.getId() + " should attach no vanilla type"));
     }
 
     @Test

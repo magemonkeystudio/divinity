@@ -178,6 +178,19 @@ public class ItemStats {
         return opt.isPresent() ? opt.get() : null;
     }
 
+    /**
+     * @param damageType the key of a vanilla damage type, such as {@code minecraft:freeze}
+     * @return the damage attribute with the highest priority that this vanilla damage type is attached to, or
+     * null if none is
+     */
+    @Nullable
+    public static DamageAttribute getDamageByVanillaType(@NotNull String damageType) {
+        return ItemStats.getDamages().stream()
+                .filter(dmg -> dmg.isAttachedToDamageType(damageType))
+                .min((dmg1, dmg2) -> dmg2.getPriority() - dmg1.getPriority())
+                .orElse(null);
+    }
+
     @NotNull
     public static DamageAttribute getDamageByDefault() {
         return DAMAGE_DEFAULT;
