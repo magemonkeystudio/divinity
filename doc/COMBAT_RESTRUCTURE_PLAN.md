@@ -80,10 +80,15 @@ Left for the shared contract in Phase 2, because changing them alters live behav
 - Shields are not consulted for environmental damage (fire, fall and so on), only for hits that have an
   attacker.
 
-Found later and deliberately left for Phase 4, because fixing it changes live numbers: a hit from the
-vanilla Thorns enchantment is treated as a full weapon swing by the armour's wearer. The wrapper uses the
-attacker's weapon damage for any hit with a living attacker and does not look at the cause. Divinity's own
-Thornmail stat is not affected; it deals damage with no attacker.
+Found later and fixed in 4.2b (Phase 4, because it changes live numbers): a hit from the vanilla Thorns
+enchantment used to be treated as a full weapon swing by the armour's wearer, because the wrapper used the
+attacker's weapon damage for any hit with a living attacker and did not look at the cause. Now a hit with no
+damage request whose cause is `THORNS` (any version), or whose vanilla damage type is `thorns` (1.20.4 and
+newer), takes the non-swing path environmental damage takes: the event's own damage, typed by
+`attached-damage-types`, `attached-damage-causes` or the default type, with the defender's defenses applied.
+A hit that carries a request is decided by the request's origin, as before. Divinity's own Thornmail stat is
+not affected; it deals damage through a request with no attacker. Other causes that may be non-swings are
+still treated as swings and are left for a follow-up.
 
 Not a bug after all: `DivinityDamageEvent.Exit` does not fire for `ignore-divinity` skill damage. Firing
 it would make those hits start costing weapon and armor durability, which is a behaviour change. It is

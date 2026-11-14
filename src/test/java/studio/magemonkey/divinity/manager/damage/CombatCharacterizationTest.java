@@ -1030,9 +1030,9 @@ class CombatCharacterizationTest extends MockedTest {
     // ------------------------------------------------------------------ //
 
     /**
-     * Combat 4.2b changed this test. Before, a Thorns hit was a full weapon swing by the wearer: with this
-     * weapon it was physical 60 (20 tripled by a certain critical hit), the wearer was the hit's damager
-     * and the hit counted as critical. Now it is the event's own damage, typed by the cause and not critical.
+     * Combat 4.2b: a Thorns hit is not a weapon swing. Before, it was one: with this weapon it was physical 60
+     * (20 tripled by a certain critical hit), the wearer was the hit's damager and the hit counted as
+     * critical. Now it is the event's own damage, typed by the cause and not critical.
      */
     @Test
     void thorns_reflectedHit_isNotAWeaponSwing_onADefaultInstall() {

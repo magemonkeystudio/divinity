@@ -214,6 +214,11 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
         boolean isFullDamage = false;
 
+        // The vanilla damage type, read at most once per event. It is read for the Thorns check on a hit with
+        // no request, and reused by the attached-damage-types fallback below.
+        String  vanillaType      = null;
+        boolean vanillaTypeKnown = false;
+
         FabledHook skillApi = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
         // Here only check for damager
         // to be sure to use his stats or not.
@@ -231,8 +236,15 @@ public class VanillaWrapperListener extends IListener<Divinity> {
             // Vanilla Thorns reports its wearer as the damager, but it is not a swing: it takes the path
             // environmental damage takes, with no weapon damage, crit or on-hit effects from the wearer. A hit
             // that has a request is left to its origin, as every request-carrying hit is.
-            if (request == null && isThornsHit(ede)) {
-                break labelFullDamage;
+            if (request == null) {
+                // The cause decides on every version, so the damage type is only read where it is still needed
+                if (cause != DamageCause.THORNS) {
+                    vanillaType = DamageSources.get().getDamageType(e);
+                    vanillaTypeKnown = true;
+                }
+                if (isThornsHit(cause, vanillaType)) {
+                    break labelFullDamage;
+                }
             }
 
             if (edeDamager instanceof LivingEntity) {
@@ -323,7 +335,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
             // and the config attaches it to a damage type
             DamageAttribute dmgCause = null;
             if (ItemStats.getDamages().stream().anyMatch(dmg -> !dmg.getAttachedDamageTypes().isEmpty())) {
-                String vanillaType = DamageSources.get().getDamageType(e);
+                if (!vanillaTypeKnown) vanillaType = DamageSources.get().getDamageType(e);
                 if (vanillaType != null) dmgCause = ItemStats.getDamageByVanillaType(vanillaType);
             }
             if (dmgCause == null) dmgCause = ItemStats.getDamageByCause(cause);
@@ -452,10 +464,9 @@ public class VanillaWrapperListener extends IListener<Divinity> {
      * version, or, where the server has vanilla damage types (1.20.4 and newer), the type
      * {@code minecraft:thorns}.
      */
-    private static boolean isThornsHit(@NotNull EntityDamageEvent e) {
-        if (e.getCause() == DamageCause.THORNS) return true;
+    private static boolean isThornsHit(@NotNull DamageCause cause, @Nullable String vanillaType) {
+        if (cause == DamageCause.THORNS) return true;
 
-        String vanillaType = DamageSources.get().getDamageType(e);
         return vanillaType != null && ("minecraft:thorns".equalsIgnoreCase(vanillaType)
                 || "thorns".equalsIgnoreCase(vanillaType));
     }
