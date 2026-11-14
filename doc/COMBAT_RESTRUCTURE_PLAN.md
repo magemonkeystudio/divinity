@@ -225,6 +225,7 @@ Rules for every pull request:
 |---|---|---|---|
 | 2.1 | Codex | Add the damage request and scoped context. Additive; `dealDamage` delegates | None |
 | 2.1b | Codex | Damage source adapter for 1.20.4+, with a no-op fallback | None |
+| 2.2a | Divinity | Characterization tests for Divinity's own damage dealers: area damage, the damage action, bleed and the fishing hook | None |
 | 2.2 | Divinity | Consume the context. Move `ActionDamage`, AoE, thorns, bleed, the fishing hook and `dealDamage` onto it. Add the optional damage-type mapping key | None |
 
 ### Phase 3: Fabled migration

@@ -20,7 +20,7 @@ Update this file in the same pull request whenever something here stops being tr
 |---|---|
 | 0. Safety net and bug fixes | Done |
 | 1. Extract the calculator (1.1) and the vanilla modifier bridge (1.2) | Done |
-| 2. The shared contract | In progress: 2.1 is in review in Codex |
+| 2. The shared contract | In progress: 2.1 and 2.1b are merged in Codex. 2.2 is next and needs a Codex build that contains them |
 | 3 to 5 | Not started |
 
 ## Rules for every pull request
@@ -93,6 +93,16 @@ differently from a real server:
 - **`ItemStats` keeps the plugin instance it saw at class load.** With several test classes in one JVM
   that is a previous, disabled plugin, so module lookups such as "is this an ItemGenerator item" fail in
   a full run while passing alone. Always run the whole suite, not just the new class.
+- **The server and its world are shared by every test in a class,** and `EntityStats` is static. Players
+  from earlier tests are still standing at the spawn, their bleeds still tick, and a hit scheduled for
+  the next tick lands in whichever test ticks next. A test class that ticks the scheduler has to clean up
+  after each test; see `leaveNothingBehind` in `CombatCharacterizationTest`.
+- **Ticking the scheduler runs the stats task,** which reads every tracked player's attack cooldown.
+  MockBukkit does not implement it, so the test is reported as skipped. Use a player that overrides
+  `getAttackCooldown` (`TickSafePlayer`).
+- **Particles are not implemented.** A bleed tick plays them; mock `EffectUT` around the tick.
+- **Effects live on the `EntityStats` object.** `EntityStats.purge` drops them, so refreshing an entity
+  that way mid-test ends its bleed. Call `updateAll()` without purging.
 - **Fabled, MythicMobs and Citizens are not loaded.** Fabled's classes are on the test classpath, so its
   events can be constructed and its statics mocked, but its listeners do not run.
 
@@ -136,6 +146,11 @@ lift the cap in the test and restore it.
 - Whether Fabled's `PhysicalDamageEvent` runs before Divinity's calculation is inferred from plugin load
   order and has not been tested. It needs the real Fabled plugin loaded alongside Divinity.
 - The exact Bukkit API for damage sources on 1.20.4 and newer has not been checked against a server jar.
-- AoE, bleed, burn and disarm are not covered by the characterization tests. They are to be covered when
-  their damage dealers move in Phase 2.
+- Burn and disarm are not covered by the characterization tests. Neither deals damage through the
+  pipeline, so they are not in the way of Phase 2.
+- The one-charge stat adjustment that area damage and the damage action use is only used up when the
+  hit it was meant for reads the attacker's weapon damage. If that hit never gets that far (the target is
+  protected, or the attacker holds a bow, whose damage is not used in melee by default), the adjustment
+  stays and changes the attacker's next real swing. Moving these dealers onto a damage request in 2.2
+  removes the adjustment altogether.
 - Environmental damage is not offered to Fabled shields.
