@@ -32,6 +32,10 @@ import studio.magemonkey.divinity.api.event.DivinityProjectileLaunchEvent;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.EHook;
 import studio.magemonkey.divinity.hooks.external.FabledHook;
+import studio.magemonkey.codex.api.damage.DamageContexts;
+import studio.magemonkey.codex.api.damage.DamageRequest;
+import studio.magemonkey.codex.api.damage.WeaponStatsMode;
+import studio.magemonkey.codex.api.items.PrefixHelper;
 import studio.magemonkey.divinity.manager.damage.DamageMeta;
 import studio.magemonkey.divinity.manager.damage.VanillaDamageBridge;
 import studio.magemonkey.divinity.modules.list.arrows.ArrowManager;
@@ -47,6 +51,7 @@ import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -138,6 +143,34 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         }
     }
 
+    /**
+     * Applies a request's scale and bonus to the damage of the attacker's weapon. A type that ends at 0 or
+     * below is dropped, as a weapon damage type of 0 always is.
+     */
+    private static void adjustWeaponDamage(Map<DamageAttribute, Double> damages, DamageRequest request) {
+        damages.replaceAll((dmgAtt, value) -> request.adjustWeaponDamage(dmgAtt.getId(), value));
+        damages.values().removeIf(value -> !(value > 0D));
+    }
+
+    /**
+     * Makes the damage of the hit exactly what the request names. An amount whose type is not one of
+     * Divinity's damage types is left out.
+     */
+    private void replaceDamage(Map<DamageAttribute, Double> damages,
+                               Map<DefenseAttribute, Double> defenses,
+                               DamageRequest request) {
+        String namespace = plugin.getName().toUpperCase(Locale.US);
+        damages.clear();
+        request.getAmounts().forEach((type, amount) -> {
+            DamageAttribute dmgAtt = ItemStats.getDamageById(PrefixHelper.stripPrefix(namespace, type));
+            if (dmgAtt == null) return;
+            damages.merge(dmgAtt, amount, Double::sum);
+
+            DefenseAttribute defAtt = dmgAtt.getAttachedDefense();
+            if (defAtt != null) defenses.putIfAbsent(defAtt, 0D);
+        });
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onVanillaDamage(EntityDamageEvent e) {
         if (EngineCfg.VANILLA_ONLY_DAMAGE_HANDLING) return;
@@ -152,6 +185,11 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
         Entity eVictim = e.getEntity();
         if (!(eVictim instanceof LivingEntity)) return;
+
+        // How the dealer described this hit, if it did. Fabled's throwaway events never get this far, so
+        // they cannot take a request away from the real hit.
+        DamageRequest request = DamageContexts.claim(e);
+        if (request != null && request.getWeaponStats() == WeaponStatsMode.RAW) return;
 
         // Disable vanilla armor effect.
         VanillaDamageBridge vanilla = new VanillaDamageBridge(e);
@@ -170,6 +208,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         EntityStats statsVictim  = EntityStats.get(victim);
 
         DamageMeta meta = new DamageMeta(victim, damager, weapon, cause);
+        meta.setRequest(request);
         statsVictim.setLastDamageMeta(meta);
 
         boolean isFullDamage = false;
@@ -249,6 +288,9 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         meta.setWeapon(weapon);
 
         boolean skillShouldIgnore = skillApi != null && damager != null && skillApi.ignoreDivinity(damager);
+        if (request != null && request.getWeaponStats() == WeaponStatsMode.IGNORE && damager != null) {
+            skillShouldIgnore = true;
+        }
 
         // +----------------------------------------------------+
         // | Get all DamageAttribute values of the damager.     |
@@ -264,6 +306,9 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         if (statsDamager != null && !skillShouldIgnore && isFullDamage) {
             ItemStack statWeapon = projectile != null ? weapon : null;
             damages.putAll(statsDamager.getDamageTypes(false, statWeapon));
+            if (request != null && request.adjustsWeaponDamage()) {
+                adjustWeaponDamage(damages, request);
+            }
         }
         if (damages.isEmpty()) {
             DamageAttribute dmgCause = ItemStats.getDamageByCause(cause);
@@ -336,6 +381,10 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         damages.keySet()
                 .forEach((dmgAtt) -> damages.compute(dmgAtt,
                         (dmgKey, dmgVal) -> (dmgVal != null ? dmgVal : 0) + damageStart2));
+
+        if (request != null && request.getWeaponStats() == WeaponStatsMode.REPLACE) {
+            replaceDamage(damages, defenses, request);
+        }
 
         DivinityDamageEvent.BeforeScale beforeScale = new DivinityDamageEvent.BeforeScale(victim,
                 damager,

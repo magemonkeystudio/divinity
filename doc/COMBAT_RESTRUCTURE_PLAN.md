@@ -133,10 +133,15 @@ Rules:
 | Situation | Divinity's behaviour |
 |---|---|
 | No context (vanilla swing, third-party plugin) | Managed exactly as today |
-| `ADD` | Weapon damage types plus the requested amount. Today's default for Fabled skills |
+| `ADD` | Managed as today: weapon damage types, plus whatever the event's damage exceeds the weapon's vanilla damage by. The request's weapon scale and bonus are applied to the weapon damage types. Today's default for Fabled skills |
 | `REPLACE` | Only the typed amounts in the request. Today's `DIVINITY_<type>` classification |
 | `IGNORE` | Today's `ignore-divinity`: no weapon damage and no on-hit effects, but dodge, crit, block, defenses, PvP/PvE modifiers and enchant protection still apply |
 | `RAW` | New, opt-in. Divinity does not touch the event |
+
+In `ADD` mode the amount still travels in the Bukkit damage call, not in the request's typed amounts,
+which Divinity ignores in that mode. Reading both would count the damage twice, and the rule that turns the
+event's damage into a bonus is what Fabled skills are balanced against today. Typed amounts are what
+`REPLACE` is for.
 
 ### 3. Calculator and vanilla bridge (Divinity)
 
@@ -226,7 +231,9 @@ Rules for every pull request:
 | 2.1 | Codex | Add the damage request and scoped context. Additive; `dealDamage` delegates | None |
 | 2.1b | Codex | Damage source adapter for 1.20.4+, with a no-op fallback | None |
 | 2.2a | Divinity | Characterization tests for Divinity's own damage dealers: area damage, the damage action, bleed and the fishing hook | None |
-| 2.2 | Divinity | Consume the context. Move `ActionDamage`, AoE, thorns, bleed, the fishing hook and `dealDamage` onto it. Add the optional damage-type mapping key | None |
+| 2.1c | Codex | Let a request scale or add to the weapon's damage, for every type or for one | None |
+| 2.2 | Divinity | Consume the context. Move `ActionDamage`, AoE, thorns, bleed, the fishing hook and `dealDamage` onto it | None |
+| 2.2c | Divinity | Add the optional damage-type mapping key beside `attached-damage-causes` | None |
 
 ### Phase 3: Fabled migration
 

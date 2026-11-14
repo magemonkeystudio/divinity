@@ -6,8 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
@@ -21,6 +19,11 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.api.damage.DamageContexts;
+import studio.magemonkey.codex.api.damage.DamageOrigin;
+import studio.magemonkey.codex.api.damage.DamageRequest;
+import studio.magemonkey.codex.api.damage.DamageScope;
+import studio.magemonkey.codex.api.damage.WeaponStatsMode;
 import studio.magemonkey.codex.api.items.PrefixHelper;
 import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.manager.IListener;
@@ -35,7 +38,6 @@ import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.EHook;
 import studio.magemonkey.divinity.hooks.external.FabledHook;
 import studio.magemonkey.divinity.hooks.external.mythicmobs.AbstractMythicMobsHK;
-import studio.magemonkey.divinity.manager.effects.main.AdjustStatEffect;
 import studio.magemonkey.divinity.manager.effects.main.DisarmEffect;
 import studio.magemonkey.divinity.modules.list.party.PartyManager.Party;
 import studio.magemonkey.divinity.stats.EntityStats;
@@ -47,12 +49,13 @@ import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.stats.items.attributes.stats.BleedStat;
 
 import java.util.*;
-import java.util.function.DoubleUnaryOperator;
 
 @SuppressWarnings("deprecation")
 public class DamageManager extends IListener<Divinity> implements DamageTypeProvider {
     //private CrackShotHK csHook;
 
+    /** The requests of area damage hits that are being dealt right now, by identity. */
+    private final Set<DamageRequest> areaRequests = Collections.newSetFromMap(new IdentityHashMap<>());
     private AbstractMythicMobsHK mmHook;
 
     public DamageManager(Divinity plugin) {
@@ -182,7 +185,25 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         Player       player = e.getPlayer();
         LivingEntity target = (LivingEntity) caught;
 
-        target.damage(1D, player);
+        deal(target, 1D, player, DamageRequest.builder().origin(DamageOrigin.EFFECT).source(player).build());
+    }
+
+    /**
+     * Deals damage through Bukkit with the hit described to the damage listener by a request.
+     *
+     * @param attacker the entity the damage is attributed to in the Bukkit call, or null for none
+     */
+    public static void deal(@NotNull LivingEntity target,
+                            double amount,
+                            @Nullable Entity attacker,
+                            @NotNull DamageRequest request) {
+        try (DamageScope ignored = DamageContexts.open(target, request)) {
+            if (attacker != null) {
+                target.damage(amount, attacker);
+            } else {
+                target.damage(amount);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -435,22 +456,24 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
 
         final double aoe = event.getDamagerItemStat(TypedStat.Type.AOE_DAMAGE);
         if (aoe > 0D && e.getCause() != DamageCause.ENTITY_SWEEP_ATTACK) {
-            if (statsVictim.isIgnoreAOE()) {
-                statsVictim.setIgnoreAOE(false);
-            } else {
+            // A hit that is itself area damage does not spread further
+            if (!this.areaRequests.contains(meta.getRequest())) {
                 plugin.getServer().getScheduler().runTask(plugin, () -> {
                     Set<LivingEntity> targets = DamageManager.getTargetsByRange(damager, 2D);
                     targets.remove(victim);
                     targets.remove(damager);
-                    DoubleUnaryOperator operator = (dmg) -> dmg * (aoe / 100D);
-
                     for (LivingEntity targetAoe : targets) {
-                        AdjustStatEffect aoeReducer = new AdjustStatEffect.Builder(-1)
-                                .withCharges(1).withAdjust(ItemStats.getDamages(), operator).build();
-                        aoeReducer.applyTo(damager);
-
-                        EntityStats.get(targetAoe).setIgnoreAOE(true);
-                        targetAoe.damage(1D, damager);
+                        DamageRequest request = DamageRequest.builder()
+                                .origin(DamageOrigin.EFFECT)
+                                .source(damager)
+                                .weaponScale(aoe / 100D)
+                                .build();
+                        this.areaRequests.add(request);
+                        try {
+                            deal(targetAoe, 1D, damager, request);
+                        } finally {
+                            this.areaRequests.remove(request);
+                        }
                     }
                 });
             }
@@ -484,7 +507,9 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         }
 
         double thorn = statsVictim.getItemStat(TypedStat.Type.THORNMAIL, false) / 100D;
-        if (thorn > 0D) damager.damage(dmgTotal * thorn);
+        if (thorn > 0D) {
+            deal(damager, dmgTotal * thorn, null, DamageRequest.builder().origin(DamageOrigin.EFFECT).build());
+        }
 
         return true;
     }
@@ -539,26 +564,18 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         DamageAttribute damageAttribute =
                 ItemStats.getDamageById(PrefixHelper.stripPrefix(getNamespace(), damageType));
         if (damageAttribute == null) return false;
-        final boolean[] success = {false};
-        Listener listener = new Listener() {
-            @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-            public void onDamage(DivinityDamageEvent.BeforeScale event) {
-                if (event.getOriginalEvent().getEntity() != entity) return;
-                Map<DamageAttribute, Double> damageMap = event.getDamageMap();
-                damageMap.clear();
-                damageMap.put(damageAttribute, amount);
-
-                event.getDefenseMap().putIfAbsent(damageAttribute.getAttachedDefense(), 0D);
-
-                success[0] = true;
-            }
-        };
-        try {
-            Bukkit.getPluginManager().registerEvents(listener, Divinity.getInstance());
+        // The request cannot carry a negative amount or one that is not a number. The Bukkit call below still
+        // gets the amount as it was given.
+        double requested = Double.isNaN(amount) ? 0D : Math.max(0D, amount);
+        DamageRequest request = DamageRequest.builder()
+                .origin(DamageOrigin.EXTERNAL)
+                .source(damager)
+                .amount(damageType, requested)
+                .weaponStats(WeaponStatsMode.REPLACE)
+                .build();
+        try (DamageScope scope = DamageContexts.open(entity, request)) {
             entity.damage(amount, damager);
-        } finally {
-            HandlerList.unregisterAll(listener);
+            return scope.isClaimed();
         }
-        return success[0];
     }
 }

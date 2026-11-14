@@ -29,6 +29,11 @@ import org.mockbukkit.mockbukkit.ServerMock;
 import org.mockbukkit.mockbukkit.entity.PlayerMock;
 import org.mockbukkit.mockbukkit.entity.ZombieMock;
 import org.mockito.MockedStatic;
+import studio.magemonkey.codex.api.damage.DamageContexts;
+import studio.magemonkey.codex.api.damage.DamageOrigin;
+import studio.magemonkey.codex.api.damage.DamageRequest;
+import studio.magemonkey.codex.api.damage.DamageScope;
+import studio.magemonkey.codex.api.damage.WeaponStatsMode;
 import studio.magemonkey.codex.compat.VersionManager;
 import studio.magemonkey.codex.hooks.Hooks;
 import studio.magemonkey.codex.hooks.NHook;
@@ -715,6 +720,164 @@ class CombatCharacterizationTest extends MockedTest {
     }
 
     // ------------------------------------------------------------------ //
+    // Hits described by a Codex damage request
+    // ------------------------------------------------------------------ //
+
+    @Test
+    void request_add_withNothingElseSet_isManagedExactlyLikeUndescribedDamage() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        refresh(attacker);
+        refresh(victim);
+        DamageRequest request = DamageRequest.builder().origin(DamageOrigin.SKILL).source(attacker).build();
+
+        try (DamageScope scope = DamageContexts.open(victim, request)) {
+            victim.damage(7, attacker);
+            assertTrue(scope.isClaimed());
+        }
+
+        // Same as pluginDamageAttributedToAPlayer_isManagedLikeAWeaponSwing
+        assertEquals(Map.of("physical", 21D), damagesOf(victim));
+        assertSame(request, EntityStats.get(victim).getLastDamageMeta().getRequest());
+    }
+
+    @Test
+    void request_weaponScale_scalesTheWeaponDamageButNotTheExtraDamage() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D, "fire", 10D)));
+        refresh(attacker);
+        refresh(victim);
+
+        dealDescribed(8, DamageRequest.builder().source(attacker).weaponScale(0.5).weaponScale("fire", 2).build());
+
+        // physical 20 * 0.5, fire 10 * 2, and the 2 above the sword's vanilla damage split over both types
+        assertEquals(Map.of("physical", 11D, "fire", 21D), damagesOf(victim));
+    }
+
+    @Test
+    void request_weaponBonus_thatTakesATypeToZeroOrBelow_dropsThatType() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D, "fire", 3D)));
+        refresh(attacker);
+        refresh(victim);
+
+        dealDescribed(1, DamageRequest.builder().source(attacker).weaponBonus(-5).build());
+
+        assertEquals(Map.of("physical", 15D), damagesOf(victim));
+    }
+
+    @Test
+    void request_isUsedByItsOwnHitOnly() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        refresh(attacker);
+        refresh(victim);
+        DamageRequest request = DamageRequest.builder().source(attacker).weaponScale(0.5).build();
+
+        try (DamageScope ignored = DamageContexts.open(victim, request)) {
+            victim.damage(1, attacker);
+            assertEquals(Map.of("physical", 10D), damagesOf(victim));
+
+            // A second hit on the same target while the first is still open, as a hit action would deal
+            victim.damage(1, attacker);
+            assertEquals(Map.of("physical", 20D), damagesOf(victim));
+            assertNull(EntityStats.get(victim).getLastDamageMeta().getRequest());
+        }
+
+        victim.damage(1, attacker);
+        assertEquals(Map.of("physical", 20D), damagesOf(victim));
+    }
+
+    @Test
+    void request_replace_usesOnlyTheNamedAmounts() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        victim.getInventory().setChestplate(armor(Map.of("fire", 10D)));
+        refresh(attacker);
+        refresh(victim);
+        firedEvents.clear();
+
+        dealDescribed(11, DamageRequest.builder()
+                .source(attacker)
+                .weaponStats(WeaponStatsMode.REPLACE)
+                .amount("DIVINITY_fire", 4)
+                .amount("physical", 3)
+                .amount("not_a_type", 4)
+                .build());
+
+        // Fire as in damageRegistry_divinityType_isReducedByMatchingDefense; an id needs no namespace; an
+        // unknown type is left out; the weapon's 20 and the event's 11 are not used
+        assertEquals(Map.of("fire", 2.72D, "physical", 3D), rounded(damagesOf(victim)));
+        assertEquals(5.72D, victim.lastEvent.getFinalDamage(), DELTA);
+        assertEquals(FULL_PIPELINE, firedEvents);
+    }
+
+    @Test
+    void request_replace_offersTheTypesDefenseToCodexEvenWhenTheVictimHasNone() {
+        refresh(attacker);
+        refresh(victim);
+
+        List<String> calls = recordScaling(() -> DamageRegistry.dealDamage(victim, 7, "DIVINITY_fire", attacker));
+
+        // A buff can only raise a defense that is in the defense map, so a replaced type brings its defense
+        // along at 0
+        assertTrue(calls.contains("buff DIVINITY_defense_fire Victim"), calls.toString());
+    }
+
+    @Test
+    void request_ignore_skipsWeaponDamageLikeFabledsIgnoreDivinity() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        victim.getInventory().setChestplate(armor(Map.of("physical", 10D)));
+        refresh(attacker);
+        refresh(victim);
+        firedEvents.clear();
+
+        dealDescribed(10, DamageRequest.builder()
+                .origin(DamageOrigin.SKILL)
+                .source(attacker)
+                .weaponStats(WeaponStatsMode.IGNORE)
+                .build());
+
+        // The event's 10 as the default type, still reduced by defense:
+        // 10 * (1 - max(10 / 5, 10 - 4 * 10 / 8) * 0.8 * 0.05) = 8
+        assertEquals(Map.of("physical", 8D), damagesOf(victim));
+        // No Exit, as for ignore-divinity: such a hit costs no durability
+        assertEquals(List.of("BeforeScale", "Start", "Pre"), firedEvents);
+    }
+
+    @Test
+    void request_raw_leavesTheEventAlone() {
+        attacker.getInventory().setItemInMainHand(weapon(Map.of("physical", 20D)));
+        refresh(attacker);
+        refresh(victim);
+        Map<DamageModifier, Double> modifiers = modifiers(7);
+        modifiers.put(DamageModifier.ARMOR, -3D);
+        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(attacker,
+                victim,
+                DamageCause.ENTITY_ATTACK,
+                modifiers,
+                functions(modifiers));
+        firedEvents.clear();
+
+        try (DamageScope ignored = DamageContexts.open(victim,
+                DamageRequest.builder().source(attacker).weaponStats(WeaponStatsMode.RAW).build())) {
+            server.getPluginManager().callEvent(event);
+        }
+
+        assertEquals(List.of(), firedEvents, "None of Divinity's damage events fire");
+        assertEquals(7D, event.getDamage(), DELTA);
+        assertEquals(-3D, event.getDamage(DamageModifier.ARMOR), DELTA, "Vanilla armor is left in place");
+        assertEquals(4D, event.getFinalDamage(), DELTA);
+    }
+
+    @Test
+    void damageRegistry_negativeAmount_isDealtAsNothingInsteadOfFailing() {
+        refresh(attacker);
+        refresh(victim);
+
+        boolean handled = DamageRegistry.dealDamage(victim, -3, "DIVINITY_fire", attacker);
+
+        assertTrue(handled);
+        assertEquals(1, victim.events.size());
+        assertEquals(0D, damagesOf(victim).getOrDefault("fire", 0D), DELTA);
+    }
+
+    // ------------------------------------------------------------------ //
     // Environmental damage
     // ------------------------------------------------------------------ //
 
@@ -1206,6 +1369,21 @@ class CombatCharacterizationTest extends MockedTest {
             server.getScheduler().performOneTick();
         }
         players.forEach(EntityStats::purge);
+    }
+
+    /**
+     * Deals damage from the attacker to the victim the way a plugin using Codex's damage requests does.
+     */
+    private void dealDescribed(double amount, DamageRequest request) {
+        try (DamageScope ignored = DamageContexts.open(victim, request)) {
+            victim.damage(amount, attacker);
+        }
+    }
+
+    private static Map<String, Double> rounded(Map<String, Double> values) {
+        Map<String, Double> rounded = new HashMap<>();
+        values.forEach((key, value) -> rounded.put(key, Math.round(value * 1e6) / 1e6));
+        return rounded;
     }
 
     private ItemStack aoeSword(double aoePercent) {
