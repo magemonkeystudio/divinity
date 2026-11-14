@@ -2,6 +2,7 @@ package studio.magemonkey.divinity.stats;
 
 import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Biome;
@@ -57,6 +58,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.DoubleUnaryOperator;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import static org.bukkit.attribute.AttributeModifier.Operation;
@@ -575,6 +577,109 @@ public class EntityStats {
             value = this.getEffectBonus(stat, false).applyAsDouble(value);
 
             this.applyBonusAttribute(nbt, value);
+        }
+
+        this.updateVanillaAttributes();
+    }
+
+    /**
+     * The {@link VanillaAttributeStat}s that exist on this server version, resolved once on first use.
+     * Resolution is the only place a missing attribute is expected, so the per-update path needs no
+     * version handling.
+     */
+    private static volatile Map<VanillaAttributeStat, Attribute> availableVanillaAttributes;
+    /** Stats that have already logged an apply failure, so a persistent error doesn't flood the log. */
+    private static final Set<VanillaAttributeStat>               WARNED_VANILLA_ATTRIBUTES =
+            Collections.synchronizedSet(EnumSet.noneOf(VanillaAttributeStat.class));
+
+    @NotNull
+    private static Map<VanillaAttributeStat, Attribute> getAvailableVanillaAttributes() {
+        Map<VanillaAttributeStat, Attribute> available = availableVanillaAttributes;
+        if (available != null) return available;
+
+        available = new EnumMap<>(VanillaAttributeStat.class);
+        List<String> unsupported = new ArrayList<>();
+        for (VanillaAttributeStat stat : VanillaAttributeStat.values()) {
+            Attribute attr = null;
+            try {
+                attr = VersionManager.getNms().getAttribute(stat.getAttributeName());
+            } catch (IllegalArgumentException ignored) {
+                // Thrown by NMS#getAttribute when this server version doesn't have the attribute
+            } catch (RuntimeException | LinkageError e) {
+                Divinity.getInstance().getLogger().log(Level.WARNING,
+                        "Could not resolve vanilla attribute " + stat.getAttributeName() + "; its stat will be ignored",
+                        e);
+            }
+
+            if (attr != null) {
+                available.put(stat, attr);
+            } else {
+                unsupported.add(stat.getAttributeName());
+            }
+        }
+        if (!unsupported.isEmpty()) {
+            Divinity.getInstance().info("Vanilla attributes not available on this server version, "
+                    + "their stats will have no effect: " + String.join(", ", unsupported));
+        }
+
+        available = Collections.unmodifiableMap(available);
+        availableVanillaAttributes = available;
+        return available;
+    }
+
+    private void updateVanillaAttributes() {
+        for (Map.Entry<VanillaAttributeStat, Attribute> entry : getAvailableVanillaAttributes().entrySet()) {
+            VanillaAttributeStat stat = entry.getKey();
+            try {
+                double amount = stat.toAttributeAmount(this.getVanillaStatValue(stat.getStatType()));
+                this.applyVanillaAttributeModifier(entry.getValue(), stat, amount);
+            } catch (RuntimeException e) {
+                // Keep one broken attribute from blocking the rest; log once per stat rather than every update
+                if (WARNED_VANILLA_ATTRIBUTES.add(stat)) {
+                    plugin.getLogger().log(Level.WARNING,
+                            "Failed to apply " + stat.getAttributeName() + " to " + this.entity.getName()
+                                    + " (further failures for this attribute won't be logged)", e);
+                }
+            }
+        }
+    }
+
+    /**
+     * Same total the item stats report, with negatives floored for stats that can't be negative
+     * (matching what the item lore displays).
+     */
+    private double getVanillaStatValue(@NotNull TypedStat.Type type) {
+        double value = this.getItemStat(type, false);
+        return value < 0D && !type.canBeNegative() ? 0D : value;
+    }
+
+    @SuppressWarnings("deprecation") // UUID-based modifiers are the only form every supported version accepts
+    private void applyVanillaAttributeModifier(@NotNull Attribute attr,
+                                               @NotNull VanillaAttributeStat stat,
+                                               double amount) {
+        AttributeInstance attInst = this.entity.getAttribute(attr);
+        if (attInst == null) return; // This entity type doesn't have the attribute (e.g. flying speed on players)
+
+        for (AttributeModifier mod : attInst.getModifiers()) {
+            if (!stat.getModifierId().equals(getModifierId(mod))) continue;
+            if (mod.getAmount() == amount) return;
+            attInst.removeModifier(mod);
+            break;
+        }
+
+        if (amount == 0D) return;
+        attInst.addModifier(new AttributeModifier(stat.getModifierId(), stat.getModifierName(), amount,
+                Operation.ADD_NUMBER));
+    }
+
+    @Nullable
+    @SuppressWarnings("deprecation")
+    private static UUID getModifierId(@NotNull AttributeModifier mod) {
+        try {
+            return mod.getUniqueId();
+        } catch (IllegalArgumentException e) {
+            // Early 1.21 builds throw for modifiers whose key isn't a UUID (e.g. vanilla's own modifiers)
+            return null;
         }
     }
 

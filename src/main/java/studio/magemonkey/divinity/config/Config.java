@@ -1,7 +1,9 @@
 package studio.magemonkey.divinity.config;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,6 +14,7 @@ import studio.magemonkey.codex.util.StringUT;
 import studio.magemonkey.codex.util.actions.ActionManipulator;
 import studio.magemonkey.codex.util.constants.JStrings;
 import studio.magemonkey.divinity.Divinity;
+import studio.magemonkey.divinity.stats.VanillaAttributeStat;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.attributes.*;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
@@ -22,6 +25,10 @@ import studio.magemonkey.divinity.stats.tiers.Tier;
 import studio.magemonkey.divinity.types.ItemGroup;
 import studio.magemonkey.divinity.types.ItemSubType;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Config extends IConfigTemplate {
@@ -171,22 +178,42 @@ public class Config extends IConfigTemplate {
         }
     }
 
+    /**
+     * item_stats/stats.yml was relocated to item_stats/stats/general_stats.yml. Servers upgrading
+     * with an already-customized stats.yml would otherwise have it orphaned and silently replaced
+     * by a fresh, default-only general_stats.yml. If the old file is still present and the new one
+     * hasn't been created yet, carry the old file's content forward so existing customizations
+     * (names, formats, capacities, enabled/disabled toggles) survive the upgrade.
+     */
+    private void migrateLegacyStatsFile() {
+        java.io.File oldFile = new java.io.File(plugin.getDataFolder(), "item_stats/stats.yml");
+        java.io.File newFile = new java.io.File(plugin.getDataFolder(), "item_stats/stats/general_stats.yml");
+        if (!oldFile.exists() || newFile.exists()) return;
+
+        try {
+            newFile.getParentFile().mkdirs();
+            java.nio.file.Files.copy(oldFile.toPath(), newFile.toPath());
+            this.plugin.info("Migrated item_stats/stats.yml to item_stats/stats/general_stats.yml");
+        } catch (java.io.IOException e) {
+            this.plugin.error("Failed to migrate item_stats/stats.yml to the new "
+                    + "item_stats/stats/general_stats.yml location: " + e.getMessage());
+        }
+    }
+
     private void setupStats() {
+        this.migrateLegacyStatsFile();
+
         JYML cfg;
         try {
-            cfg = JYML.loadOrExtract(plugin, "/item_stats/stats.yml");
+            cfg = JYML.loadOrExtract(plugin, "/item_stats/stats/general_stats.yml");
         } catch (InvalidConfigurationException e) {
             this.plugin.error("Failed to load stats config (" + this.plugin.getName()
-                    + "/item_stats/stats.yml): Configuration error");
+                    + "/item_stats/stats/general_stats.yml): Configuration error");
             e.printStackTrace();
             return;
         }
 
-        cfg.addMissing("ARMOR_TOUGHNESS.enabled", true);
-        cfg.addMissing("ARMOR_TOUGHNESS.name", "Armor Toughness");
-        cfg.addMissing("ARMOR_TOUGHNESS.format", "&9▸ %name%: &f%value% %condition%");
-        cfg.addMissing("ARMOR_TOUGHNESS.capacity", 100.0);
-        cfg.save();
+        this.addMissingStatDefaults(cfg);
 
         for (SimpleStat.Type statType : TypedStat.Type.values()) {
             String path2 = statType.name() + ".";
@@ -212,6 +239,44 @@ public class Config extends IConfigTemplate {
 
             ItemStats.registerStat(stat);
         }
+    }
+
+    /**
+     * Copies any missing keys for stats added after servers already had a stats file from the bundled
+     * general_stats.yml, so a carried-forward file gets them enabled with their shipped defaults instead of
+     * silently disabled by an absent section. The bundled file stays the single source of those defaults.
+     * <p>
+     * Limited to these stats on purpose: for older stats a missing section may be an admin's deliberate removal.
+     */
+    private void addMissingStatDefaults(@NotNull JYML cfg) {
+        YamlConfiguration defaults;
+        try (InputStream in = plugin.getResource("item_stats/stats/general_stats.yml")) {
+            if (in == null) {
+                this.plugin.error("Bundled item_stats/stats/general_stats.yml is missing; cannot add new stat defaults");
+                return;
+            }
+            defaults = YamlConfiguration.loadConfiguration(new InputStreamReader(in, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            this.plugin.error("Failed to read bundled item_stats/stats/general_stats.yml: " + e.getMessage());
+            return;
+        }
+
+        List<String> stats = new ArrayList<>();
+        stats.add(TypedStat.Type.ARMOR_TOUGHNESS.name());
+        for (VanillaAttributeStat stat : VanillaAttributeStat.values()) {
+            stats.add(stat.getStatType().name());
+        }
+
+        for (String stat : stats) {
+            ConfigurationSection section = defaults.getConfigurationSection(stat);
+            if (section == null) continue;
+            for (String key : section.getKeys(true)) {
+                if (!section.isConfigurationSection(key)) {
+                    cfg.addMissing(stat + "." + key, section.get(key));
+                }
+            }
+        }
+        cfg.saveChanges();
     }
 
     private void setupHand() {
