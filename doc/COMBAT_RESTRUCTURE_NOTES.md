@@ -22,7 +22,8 @@ Update this file in the same pull request whenever something here stops being tr
 | 1. Extract the calculator (1.1) and the vanilla modifier bridge (1.2) | Done |
 | 2. The shared contract | Done with 2.2c, which adds the `attached-damage-types` key |
 | 3. Fabled migration | Next |
-| 4 and 5 | Not started |
+| 4.2 Stat snapshots | Done, in this pull request (#372). 4.1 and 4.3 are not started; 4.2b is next after them |
+| 4 (rest) and 5 | Not started |
 
 ## Rules for every pull request
 
@@ -153,6 +154,60 @@ lift the cap in the test and restore it.
   roll fails or succeeds, the invulnerability reduction read, and resistance counting toward the absorption
   cap. Only `VanillaDamageBridgeTest` catches them, so keep that test when the bridge changes.
 
+## Stat snapshots (4.2)
+
+Read this before you touch `EntityStats`, `StatSnapshot`, `ProjectileStats` or the equipment handlers in
+`EntityManager`.
+
+- **What is cached and what is not.** `EntityStats` always cached the equipment list (`inventory`) and the set
+  and class bonus functions (`bonuses`), and refreshed both in `updateAll()`. A `StatSnapshot` sits on top of
+  those and is filled in on demand: each damage type's minimum and maximum, each defense, each item stat, each
+  enchantment protection factor. It stores the value *before* the things that belong to the moment of the hit,
+  which are applied on every read: the roll (`Rnd.getDouble(min, max)`), the biome, active effects
+  (`AdjustStatEffect`, which has charges and runs out by itself), and an item stat's cap. The Codex registries
+  (`scaleValuesWithCore`), attack power, the `custom-cooldown` metadata and the attacker's `ATTACK_DAMAGE`
+  attribute are read at the hit too. Do not move any of these into the snapshot: effects and rolls would then
+  need invalidation that cannot be done reliably.
+- **Ranges are summed over items, then rolled once.** `RANGE_FULL` adds every item's minimum and maximum before
+  anything is rolled, so a snapshot holding `{min, max}` per type gives exactly the old distribution. The same
+  seed gives the same rolls (`EntityStatSnapshotTest#rolls_*`).
+- **Anything new that stats read needs an invalidation or a check.** If you add an input to what
+  `DamageAttribute.get`, `DefenseAttribute.get`, `SimpleStat.get` or `getBonuses` read, either make the code that
+  changes it call `EntityStats.invalidateSnapshot()` / `updateAll()`, or compare it on each read the way the
+  vanilla armor and toughness attributes are (`EntityStats#getDefenseValues`, `#getItemStatValue`). The table of
+  triggers is in the description of the pull request that introduced this.
+- **`updateAll()` forces, `refreshAfterHit()` compares.** Every completed hit asks for both fighters' stats to be
+  read again on the next tick (`EntityManager#onStatsDamagePacketDuplicator`). If that dropped the snapshot, it
+  would never survive until the next hit. `refreshAfterHit()` drops it only when the equipment or the bonus maps
+  differ from what the snapshot was built from; wear (vanilla damage and Divinity's durability) does not count.
+  Callers that change something that is not equipment (a class, a profile, a set) call `updateAll()`.
+- **A snapshot copies the items it was built from,** so a stack changed in place is still seen as a change.
+- **Profile buffs.** `UserProfile` counts every change to its buffs (`getBuffRevision`) and the snapshot compares
+  it. The buff sets are handed out for editing: code that edits them directly must call `markBuffsChanged()`,
+  as `BuffCommand` does.
+- **Projectiles.** `VanillaWrapperListener#onProjectileLaunchSnapshot` runs last (MONITOR) on
+  `DivinityProjectileLaunchEvent` and stores a frozen snapshot with the weapon in place of the main hand, the
+  custom arrow's bonus, the active effects and the biome. Effect charges are used up at launch, not at impact.
+  It is kept in `ProjectileStats` by projectile UUID, not as entity metadata: metadata is only cleared when
+  someone removes it. `EntityStatsTask` sweeps entries of projectiles that are gone every 100 ticks. A
+  projectile with no snapshot (not launched through Divinity's event, or its entry was swept after it left the
+  world) is read at impact, as before.
+- **Config.** `performance.entity-stats.snapshot-max-age` (ticks, default 20) bounds how long a snapshot is
+  reused when nothing announced a change. 0 turns the cache off, which is the quickest way to tell whether a
+  stat bug is the cache.
+- **Benchmark.** `CombatBenchmark` is off unless asked for:
+  `mvn -Dtest=CombatBenchmark -Dcombat.benchmark=true -Dcombat.benchmark.out=<file> test`. MockBukkit parses items
+  slowly, so a run takes about eleven minutes without the cache. To get "before" numbers for a change, check out
+  the base commit in a worktree and copy the benchmark in.
+- **Testing traps found on the way.**
+  - Joining a player queues a forced refresh for the next tick. In a test that ticks the scheduler, that refresh
+    drops the snapshot you are looking at. Tick once in `@BeforeEach`, after adding the players.
+  - `DivinityProjectileLaunchEvent` cannot be constructed under MockBukkit: its constructor calls
+    `Projectile#setBounce`, which MockBukkit refuses. Build it with Mockito (`CALLS_REAL_METHODS` and stubs for
+    the getters) and set the weapon and power on the projectile by hand, as the constructor would.
+  - `PlayerMock` has no armor or toughness attribute until you call `registerAttribute`.
+  - A seeded test needs `Rnd.rnd.setSeed(...)`. `Rnd` has one shared generator, so re-seed before each sequence.
+
 ## Still open
 
 - Whether Fabled's `PhysicalDamageEvent` runs before Divinity's calculation is inferred from plugin load
@@ -164,3 +219,7 @@ lift the cap in the test and restore it.
   which it never is in the tests. So "a throwaway event does not take a damage request away from the
   real hit" is true by the order of the code in `VanillaWrapperListener`, not by a test.
 - Environmental damage is not offered to Fabled shields.
+- Level changes made by another plugin (Fabled, for example) have no event. An item's level requirement is
+  decided when the equipment list is rebuilt, as it was before snapshots, so such an item starts counting at the
+  next refresh. Nothing about that changed in 4.2.
+- Effect charges on a projectile's shooter are used up at launch. A shot that misses has still used its charge.

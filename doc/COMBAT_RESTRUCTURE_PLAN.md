@@ -163,6 +163,11 @@ migrated automatically.
 Cache each entity's minimum and maximum per damage type, invalidate on equipment or effect change, and
 roll at hit time. Projectiles snapshot the shooter's stats at launch.
 
+As built in 4.2: the snapshot is the part of a stat that gear, sets, classes and profile buffs decide. The roll,
+the biome and active effects are applied at the hit and are not cached, because effects carry charges and run
+out on their own. A snapshot is dropped by the existing refresh paths, compared after a hit, and bounded by
+a maximum age for changes nothing announces. See the notes file for the rules.
+
 ### 6. Improvements on Minecraft 1.20.4 and newer (Codex)
 
 Behind one Codex interface that does nothing on older versions:
@@ -248,7 +253,7 @@ Rules for every pull request:
 | PR | Repo | Scope | Breaking |
 |---|---|---|---|
 | 4.1 | Divinity | Formulas move to `combat.yml` | Config layout |
-| 4.2 | Divinity | Stat snapshots | Projectile timing |
+| 4.2 | Divinity | Stat snapshots. Done | Projectile timing |
 | 4.2b | Divinity | Stop treating hits that are not swings as swings: vanilla Thorns first (cause `THORNS` on every version, the damage type on 1.20.4+). Uses the origin from the damage request where there is one | Thorns damage |
 | 4.3 | Divinity and Fabled | New event and API surface. Fabled stops mutating `BASE` when Divinity is present. The Physical Damage trigger and immediate buffs act on Divinity's final numbers | Yes |
 
