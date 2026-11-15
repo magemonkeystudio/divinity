@@ -186,15 +186,19 @@ Read this before you touch `EntityStats`, `StatSnapshot`, `ProjectileStats` or t
   it. The buff sets are handed out for editing: code that edits them directly must call `markBuffsChanged()`,
   as `BuffCommand` does.
 - **Projectiles.** `VanillaWrapperListener#onProjectileLaunchSnapshot` runs last (MONITOR) on
-  `DivinityProjectileLaunchEvent` and stores a frozen snapshot with the weapon in place of the main hand, the
-  custom arrow's bonus, the active effects and the biome. Effect charges are used up at launch, not at impact.
-  It is kept in `ProjectileStats` by projectile UUID, not as entity metadata: metadata is only cleared when
-  someone removes it. `EntityStatsTask` sweeps entries of projectiles that are gone every 100 ticks. A
-  projectile with no snapshot (not launched through Divinity's event, or its entry was swept after it left the
-  world) is read at impact, as before.
+  `DivinityProjectileLaunchEvent`. For a projectile that can deal damage (`ProjectileStats#canDealDamage`:
+  `AbstractArrow` plus the damaging kinds in `AmmoAttribute.Type`) it stores a frozen snapshot with the weapon in
+  place of the main hand, the custom arrow's bonus, the active effects, the shooter's biome and the shooter's
+  UUID. At impact it is ignored if the projectile's shooter is someone else. Effects are captured *without*
+  using their charges; the hit that lands uses them (`StatSnapshot#rollDamage`, `#itemStats`), so a miss spends
+  none. The snapshots are kept in `ProjectileStats` by projectile UUID, not as entity metadata: metadata is only
+  cleared when someone removes it. `EntityStatsTask` sweeps every 100 ticks: an entry goes when the projectile is
+  dead or cannot be found in a chunk that is loaded, never because its chunk is unloaded, and in any case ten
+  minutes after launch. A plugin reload clears them (`Divinity#disable`). A projectile with no snapshot is read
+  at impact, as before.
 - **Config.** `performance.entity-stats.snapshot-max-age` (ticks, default 20) bounds how long a snapshot is
-  reused when nothing announced a change. 0 turns the cache off, which is the quickest way to tell whether a
-  stat bug is the cache.
+  reused when nothing announced a change. 0 turns the cache off (nothing is kept and no items are copied), which
+  is the quickest way to tell whether a stat bug is the cache.
 - **Benchmark.** `CombatBenchmark` is off unless asked for:
   `mvn -Dtest=CombatBenchmark -Dcombat.benchmark=true -Dcombat.benchmark.out=<file> test`. MockBukkit parses items
   slowly, so a run takes about eleven minutes without the cache. To get "before" numbers for a change, check out
@@ -222,4 +226,5 @@ Read this before you touch `EntityStats`, `StatSnapshot`, `ProjectileStats` or t
 - Level changes made by another plugin (Fabled, for example) have no event. An item's level requirement is
   decided when the equipment list is rebuilt, as it was before snapshots, so such an item starts counting at the
   next refresh. Nothing about that changed in 4.2.
-- Effect charges on a projectile's shooter are used up at launch. A shot that misses has still used its charge.
+- A projectile hit uses the charges of effects the shooter had at launch, if the effect still exists. An effect
+  that has gone by impact still adjusts the hit (it was fired with it) and is not charged.
