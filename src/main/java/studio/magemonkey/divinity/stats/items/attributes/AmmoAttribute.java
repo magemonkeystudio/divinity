@@ -42,24 +42,39 @@ public class AmmoAttribute extends ItemLoreStat<String> {
 
     public static enum Type {
 
-        ARROW(Arrow.class, EntityType.ARROW),
-        SNOWBALL(Snowball.class, EntityType.SNOWBALL),
-        EGG(Egg.class, EntityType.EGG),
-        FIREBALL(Fireball.class, EntityType.FIREBALL),
-        WITHER_SKULL(WitherSkull.class, EntityType.WITHER_SKULL),
-        SHULKER_BULLET(ShulkerBullet.class, EntityType.SHULKER_BULLET),
-        LLAMA_SPIT(LlamaSpit.class, EntityType.LLAMA_SPIT),
-        ENDER_PEARL(EnderPearl.class, EntityType.ENDER_PEARL),
+        ARROW(Arrow.class, EntityType.ARROW, true),
+        SNOWBALL(Snowball.class, EntityType.SNOWBALL, false),
+        EGG(Egg.class, EntityType.EGG, false),
+        FIREBALL(Fireball.class, EntityType.FIREBALL, true),
+        WITHER_SKULL(WitherSkull.class, EntityType.WITHER_SKULL, true),
+        SHULKER_BULLET(ShulkerBullet.class, EntityType.SHULKER_BULLET, true),
+        LLAMA_SPIT(LlamaSpit.class, EntityType.LLAMA_SPIT, true),
+        ENDER_PEARL(EnderPearl.class, EntityType.ENDER_PEARL, false),
         EXP_POTION(ThrownExpBottle.class,
-                EntityType.fromName("experience_bottle")), // THROWN_EXP_BOTTLE/EXPERIENCE_BOTTLE
+                EntityType.fromName("experience_bottle"), false), // THROWN_EXP_BOTTLE/EXPERIENCE_BOTTLE
         ;
 
         private Class<? extends Projectile> clazz;
         private EntityType                  eType;
+        private boolean                     dealsDamage;
 
-        private Type(@NotNull Class<? extends Projectile> clazz, @NotNull EntityType eType) {
+        private Type(@NotNull Class<? extends Projectile> clazz, @NotNull EntityType eType, boolean dealsDamage) {
             this.clazz = clazz;
             this.eType = eType;
+            this.dealsDamage = dealsDamage;
+        }
+
+        /**
+         * Whether this kind of projectile hurts what it hits. Pearls, snowballs, eggs and bottles are thrown
+         * for their other effects, and the damage they cause on impact is not what the ammo's stats are for.
+         */
+        public boolean dealsDamage() {
+            return this.dealsDamage;
+        }
+
+        @NotNull
+        public Class<? extends Projectile> getProjectileClass() {
+            return this.clazz;
         }
     }
 

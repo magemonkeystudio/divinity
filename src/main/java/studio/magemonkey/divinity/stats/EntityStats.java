@@ -985,8 +985,8 @@ public class EntityStats {
     /**
      * Takes what a projectile fired now would carry, so that the stats it hits with are the stats it was fired
      * with. Damage ranges and item stats are taken with the weapon in place of the main hand, as they are for
-     * any projectile hit, and with the custom arrow's bonus. The active effects are taken as well, and the
-     * charges they have are used up now rather than at impact.
+     * any projectile hit, and with the custom arrow's bonus. The active effects are taken as well. Their
+     * charges are not used now: the hit that lands uses them, and a projectile that misses spends none.
      *
      * @return null if the entity has no stats from items to take
      */
@@ -995,12 +995,14 @@ public class EntityStats {
         if (!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer()) return null;
 
         Map<ItemLoreStat<?>, DoubleUnaryOperator> effects = new HashMap<>();
-        StatSnapshot frozen = new StatSnapshot(this.entity.getLocation().getBlock().getBiome(), effects);
+        StatSnapshot frozen = new StatSnapshot(this.entity.getUniqueId(),
+                this.entity.getLocation().getBlock().getBiome(),
+                effects);
 
         Map<DamageAttribute, double[]> ranges = this.buildDamageRanges(weapon, arrow, arrowLevel);
         frozen.setDamageRanges(ranges);
         for (DamageAttribute dmgAtt : ranges.keySet()) {
-            effects.put(dmgAtt, this.getEffectBonus(dmgAtt, false));
+            this.captureEffects(frozen, effects, dmgAtt, true);
         }
 
         for (SimpleStat.Type type : TypedStat.Type.values()) {
@@ -1009,9 +1011,25 @@ public class EntityStats {
             if (stat == null) continue;
 
             frozen.itemStats.put(type, this.buildItemStat(type, stat, weapon, arrow, arrowLevel));
-            effects.put(stat, this.getEffectBonus(stat, false));
+            this.captureEffects(frozen, effects, stat, false);
         }
         return frozen;
+    }
+
+    /**
+     * Takes the adjustment the active effects make to a stat without using up any charge, and notes which
+     * effects the hit that lands will have to charge.
+     */
+    private synchronized void captureEffects(@NotNull StatSnapshot frozen,
+                                             @NotNull Map<ItemLoreStat<?>, DoubleUnaryOperator> effects,
+                                             @NotNull ItemLoreStat<?> stat,
+                                             boolean damage) {
+        effects.put(stat, this.getEffectBonus(stat, true));
+        for (IEffect effect : this.getActiveEffects(false)) {
+            if (effect instanceof AdjustStatEffect && ((AdjustStatEffect) effect).isAdjusted(stat)) {
+                frozen.addCharge((AdjustStatEffect) effect, stat, damage);
+            }
+        }
     }
 
     /**
@@ -1039,14 +1057,17 @@ public class EntityStats {
             revision = profile.getBuffRevision();
         }
 
+        if (maxAge <= 0) {
+            // Off: nothing is kept, so there is nothing to compare against later and nothing to copy now
+            return new StatSnapshot(validUntil, profile, revision, List.of(), List.of());
+        }
+
         StatSnapshot created = new StatSnapshot(validUntil,
                 profile,
                 revision,
                 StatSnapshot.copyOf(this.inventory),
                 new ArrayList<>(this.bonusMaps));
-        if (maxAge > 0) {
-            this.snapshot = created;
-        }
+        this.snapshot = created;
         return created;
     }
 

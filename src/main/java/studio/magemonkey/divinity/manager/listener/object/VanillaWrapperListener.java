@@ -159,6 +159,8 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         if (!(e.getProjectile() instanceof Projectile)) return;
 
         Projectile pj = (Projectile) e.getProjectile();
+        // A pearl, a snowball or a fishing hook is not fired for its damage: leave it to be read as it always was
+        if (!ProjectileStats.canDealDamage(pj)) return;
 
         QArrow       arrow = null;
         int          level = 0;
@@ -295,6 +297,10 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                 statsDamager.setLastDamageMeta(meta);
                 weapon = ProjectileStats.getSrcWeapon(projectile);
                 launched = ProjectileStats.getSnapshot(projectile);
+                // A projectile that has changed hands since it was launched is not the shooter's snapshot's
+                if (launched != null && !launched.isShooter(damager.getUniqueId())) {
+                    launched = null;
+                }
 
                 // Applying custom arrow object to damage meta,
                 // if it's present, to use additional stats from it.

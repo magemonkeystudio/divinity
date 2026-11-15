@@ -228,10 +228,15 @@ public class UserProfile {
      */
     public long getNextBuffExpiry() {
         long next = Long.MAX_VALUE;
-        for (Set<SavedBuff> buffs : List.of(this.getDamageBuffs(), this.getDefenseBuffs(), this.getItemStatBuffs())) {
-            for (SavedBuff buff : buffs) {
-                next = Math.min(next, buff.getExpireTime());
+        try {
+            for (Set<SavedBuff> buffs : List.of(this.getDamageBuffs(), this.getDefenseBuffs(), this.getItemStatBuffs())) {
+                for (SavedBuff buff : buffs) {
+                    next = Math.min(next, buff.getExpireTime());
+                }
             }
+        } catch (java.util.ConcurrentModificationException e) {
+            // Edited on another thread while we looked: say it expires now, so nothing is cached from it
+            return Long.MIN_VALUE;
         }
         return next;
     }

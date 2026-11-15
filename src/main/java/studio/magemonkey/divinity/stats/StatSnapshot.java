@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.data.api.UserProfile;
+import studio.magemonkey.divinity.manager.effects.main.AdjustStatEffect;
 import studio.magemonkey.divinity.stats.bonus.BonusMap;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.api.ItemLoreStat;
@@ -19,6 +20,7 @@ import studio.magemonkey.divinity.stats.items.attributes.api.TypedStat;
 import studio.magemonkey.divinity.stats.items.attributes.stats.DurabilityStat;
 
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -68,6 +70,11 @@ public final class StatSnapshot {
     private Map<ItemLoreStat<?>, DoubleUnaryOperator> frozenEffects;
     @Nullable
     private Biome                                     frozenBiome;
+    @Nullable
+    private UUID                                      shooter;
+    /** The effects whose charges a hit uses, for damage types and for item stats. */
+    private final List<ChargeUse>                     damageCharges = new ArrayList<>();
+    private final List<ChargeUse>                     statCharges   = new ArrayList<>();
 
     /** A live snapshot. */
     StatSnapshot(long validUntil,
@@ -84,7 +91,10 @@ public final class StatSnapshot {
     }
 
     /** A frozen snapshot, for a projectile. */
-    StatSnapshot(@Nullable Biome biome, @NotNull Map<ItemLoreStat<?>, DoubleUnaryOperator> effects) {
+    StatSnapshot(@NotNull UUID shooter,
+                 @Nullable Biome biome,
+                 @NotNull Map<ItemLoreStat<?>, DoubleUnaryOperator> effects) {
+        this.shooter = shooter;
         this.validUntil = Long.MAX_VALUE;
         this.profile = null;
         this.profileRevision = 0;
@@ -97,6 +107,41 @@ public final class StatSnapshot {
 
     public boolean isFrozen() {
         return this.frozen;
+    }
+
+    /**
+     * Whether this launch snapshot is of the given shooter. A projectile that has changed hands since it was
+     * launched (reflected, re-owned by a plugin) is not the shooter's any more.
+     */
+    public boolean isShooter(@Nullable UUID entity) {
+        return this.shooter != null && this.shooter.equals(entity);
+    }
+
+    /** Records that a hit using this snapshot spends a charge of the effect on the stat, if it still has one. */
+    void addCharge(@NotNull AdjustStatEffect effect, @NotNull ItemLoreStat<?> stat, boolean damage) {
+        (damage ? this.damageCharges : this.statCharges).add(new ChargeUse(effect, stat));
+    }
+
+    /**
+     * Effects were captured at launch without using their charges. A hit that lands uses them, once per
+     * effect and stat, as a hit read at impact always did. An effect that is gone or has no charge for the
+     * stat any more is left alone; the hit still has the adjustment it was fired with.
+     */
+    private static void spend(@NotNull List<ChargeUse> uses) {
+        for (ChargeUse use : uses) {
+            if (use.effect.isExpired() || !use.effect.isAdjusted(use.stat)) continue;
+            use.effect.getAdjust(use.stat, false);
+        }
+    }
+
+    private static final class ChargeUse {
+        private final AdjustStatEffect effect;
+        private final ItemLoreStat<?>  stat;
+
+        private ChargeUse(AdjustStatEffect effect, ItemLoreStat<?> stat) {
+            this.effect = effect;
+            this.stat = stat;
+        }
     }
 
     /**
@@ -225,9 +270,11 @@ public final class StatSnapshot {
             throw new IllegalStateException("Only a frozen snapshot holds a launch's damage");
         }
         Map<ItemLoreStat<?>, DoubleUnaryOperator> effects = this.frozenEffects;
-        return roll(this.damageRanges, this.frozenBiome, stat -> effects == null ? IDENTITY : effects.getOrDefault(
-                stat,
-                IDENTITY));
+        Map<DamageAttribute, Double> rolled = roll(this.damageRanges,
+                this.frozenBiome,
+                stat -> effects == null ? IDENTITY : effects.getOrDefault(stat, IDENTITY));
+        spend(this.damageCharges);
+        return rolled;
     }
 
     /**
@@ -251,6 +298,7 @@ public final class StatSnapshot {
                 map.put(type, value);
             }
         }
+        spend(this.statCharges);
         return map;
     }
 

@@ -745,6 +745,8 @@ class EntityStatSnapshotTest extends MockedTest {
         int before = ProjectileStats.snapshotCount();
 
         arrow.remove();
+        // Where it was is loaded, and it is not there any more: gone. (Were the chunk unloaded it would be kept.)
+        victim.getWorld().loadChunk(arrow.getLocation().getBlockX() >> 4, arrow.getLocation().getBlockZ() >> 4);
         ProjectileStats.sweep();
 
         assertNull(ProjectileStats.getSnapshot(arrow));

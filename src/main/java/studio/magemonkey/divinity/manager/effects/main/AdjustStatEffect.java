@@ -26,6 +26,7 @@ public class AdjustStatEffect extends IExpirableEffect {
 
     @Nullable
     public DoubleUnaryOperator getAdjust(@NotNull ItemLoreStat<?> stat, boolean safe) {
+        if (this.functions == null) return null; // Cleared
         DoubleUnaryOperator operator = this.functions.get(stat);
         if (operator == null) return null;
 
@@ -49,7 +50,7 @@ public class AdjustStatEffect extends IExpirableEffect {
     }
 
     public boolean isAdjusted(@NotNull ItemLoreStat<?> stat) {
-        return this.functions.containsKey(stat);
+        return this.functions != null && this.functions.containsKey(stat);
     }
 
     @Override
