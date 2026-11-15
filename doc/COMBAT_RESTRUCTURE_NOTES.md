@@ -22,7 +22,8 @@ Update this file in the same pull request whenever something here stops being tr
 | 1. Extract the calculator (1.1) and the vanilla modifier bridge (1.2) | Done |
 | 2. The shared contract | Done with 2.2c, which adds the `attached-damage-types` key |
 | 3. Fabled migration | Next |
-| 4 and 5 | Not started |
+| 4.1 Formulas in `combat.yml` | In progress. Built and tested on a temporary evaluator, waiting for Codex's `Evaluator.compile` (see below) |
+| 4.2 onwards and 5 | Not started |
 
 ## Rules for every pull request
 
@@ -152,6 +153,35 @@ lift the cap in the test and restore it.
 - **The end-to-end tests do not guard three bridge details:** the value written to BLOCKING when a shield
   roll fails or succeeds, the invulnerability reduction read, and resistance counting toward the absorption
   cap. Only `VanillaDamageBridgeTest` catches them, so keep that test when the bridge changes.
+
+## Formulas in `combat.yml` (4.1)
+
+- **Where things are.** `config/CombatCfg` loads and migrates the file and holds what is in force.
+  `manager/damage/formula/` holds `CombatExpression` (the four expressions, their variables and their default
+  text), `CombatPreset`, `CombatFormulas` (compiled set plus overrides) and `Formulas`.
+  `DamageCalculator` keeps the stage order and the bookkeeping between stages; the numbers come from the expressions.
+- **Codex has no compile step.** `Evaluator.eval(String, int)` takes no variables, and the Javaluator classes
+  under it tokenize and parse on every call (about 4 microseconds per formula, roughly 100 times the hardcoded
+  one). `Formulas` is the only class that depends on that and is marked temporary: it is replaced by
+  `Evaluator.compile(expression, variableNames)` once Codex publishes it. Do not add anything else that knows how
+  `Formulas` works.
+- **Adding or changing an expression** means changing three places together: `CombatExpression` (variables, sample
+  values, default text), `combat.yml` (the documentation comment and the default beside it) and the call in
+  `DamageCalculator`. `CombatFormulasTest.shippedFile_documentsEveryExpressionItsVariablesAndItsDefault` fails if
+  the file and the code disagree. The order of the variables is the order values are passed in.
+- **`ReferenceDamageCalculator` (test sources) is the formula as it was written in Java.** The equivalence test
+  compares bit for bit against it for both presets. Never edit its arithmetic to make a test pass.
+- **`EngineCfg.LEGACY_COMBAT` is a deprecated override and nothing sets it.** `CombatCharacterizationTest` and
+  `DamageCalculatorTest` still set it (or `Modifiers.legacyCombat`) to run the legacy preset, which is why the
+  field and `Modifiers.legacyCombat` still exist. The old `engine.yml` key is read into
+  `EngineCfg.LEGACY_COMBAT_OLD_KEY` only so migration can pick a preset, and is ignored once `combat.yml` exists.
+  Do not make production code write `LEGACY_COMBAT` again: a stale `legacy-combat: true` in an old `engine.yml`
+  would then override the preset in `combat.yml`.
+- **Variable names use underscores** (`pve_damage`), because a hyphen is the minus operator.
+- **Presets that give NaN or infinity keep doing so.** Only a formula the config overrides is replaced by the
+  preset's result at hit time; a preset's own non-finite result is passed on as the Java formula always did.
+- **Benchmark.** `DamageCalculatorBenchmark` (test sources, not a test, has a `main`) compares the replaced Java
+  formulas with the configured ones on the same inputs. Run it after changing the evaluator.
 
 ## Still open
 
