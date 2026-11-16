@@ -15,8 +15,9 @@
 #
 # Syntax: numbers, variables, + - * / % ^, unary minus, brackets, and the functions min, max, abs, sqrt, sum, avg,
 # floor, ceil, round, sin, cos, tan, ln, log, plus the constants pi and e. Notes: '^' is left associative
-# (2^3^2 is (2^3)^2), and a negative exponent has to be bracketed ('2^(-1)'; '2^-1' is rejected). Variable names are
-# written exactly as listed below (lowercase, with underscores).
+# (2^3^2 is (2^3)^2), and a negative exponent has to be bracketed: write '2^(-1)', never '2^-1', which is rejected on
+# its own and can give a wrong number inside a longer expression. Variable names are written exactly as listed below
+# (lowercase, with underscores).
 
 # Which set of default expressions to start from.
 #   default - the combat of current versions.
