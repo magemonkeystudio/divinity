@@ -15,10 +15,10 @@ public enum CombatExpression {
 
     /** The damage of one type after every multiplier. */
     DAMAGE_SCALING("damage-scaling",
-            new String[]{"damage", "pve_damage", "critical", "entity_type", "faction", "enchant_protection",
+            new String[]{"damage", "pvp_pve_damage", "critical", "entity_type", "faction", "enchant_protection",
                     "attack_power", "block"},
             new double[]{10D, 1.2D, 1.5D, 0.9D, 1.1D, 0.8D, 1D, 0.7D},
-            "damage * pve_damage * critical * entity_type * faction * enchant_protection * attack_power * block",
+            "damage * pvp_pve_damage * critical * entity_type * faction * enchant_protection * attack_power * block",
             null),
 
     /** The part of the scaled damage that skips the defense. */
@@ -30,9 +30,9 @@ public enum CombatExpression {
 
     /** The victim's defense value, before the mitigation formula uses it. */
     DEFENSE_VALUE("defense-value",
-            new String[]{"defense", "pve_defense", "penetration"},
+            new String[]{"defense", "pvp_pve_defense", "penetration"},
             new double[]{30D, 1.1D, 0.9D},
-            "max(0, defense * pve_defense * penetration)",
+            "max(0, defense * pvp_pve_defense * penetration)",
             null),
 
     /** The damage left after the defense. */

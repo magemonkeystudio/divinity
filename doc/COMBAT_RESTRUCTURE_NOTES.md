@@ -163,9 +163,10 @@ lift the cap in the test and restore it.
 - **Expressions are compiled once with Codex's `Evaluator.compile`** (needs Codex `1.3.0-dev.2`, which is why
   `MIN_CORE_VERSION` was raised). A `CompiledExpression` is immutable and safe from any thread, binds variables by
   position and returns NaN and infinity as they are, so `CombatFormulas` checks every expression against the sample
-  values in `CombatExpression` at load. Syntax follows Javaluator: `^` is left associative and a bare `2^-1` is
-  rejected, so write `2^(-1)`. **Known Codex bug in `1.3.0-dev.2`:** `x * 2^-1` compiles and gives a wrong number
-  instead of being rejected. Do not rely on a negative exponent without brackets.
+  values in `CombatExpression` at load. Syntax follows Javaluator: `^` is left associative. **Javaluator, which
+  Codex bundles, computes `x * 2^-1` wrongly without complaining** (the old string evaluator does too), so
+  `CombatFormulas` rejects any override with `^` followed by a minus and tells the admin to write `2^(-1)`. Remove
+  that check only once Codex has fixed the parser.
 - **`DamageCalculator` reuses its argument arrays** (one per expression) so a hit allocates nothing per
   evaluation. That makes a calculator single-threaded and single-hit; `DamageManager` builds one per hit. The
   reuse test varies the per-call inputs, because only those can go stale.
@@ -181,7 +182,13 @@ lift the cap in the test and restore it.
   `EngineCfg.LEGACY_COMBAT_OLD_KEY` only so migration can pick a preset, and is ignored once `combat.yml` exists.
   Do not make production code write `LEGACY_COMBAT` again: a stale `legacy-combat: true` in an old `engine.yml`
   would then override the preset in `combat.yml`.
-- **Variable names use underscores** (`pve_damage`), because a hyphen is the minus operator.
+- **Reload.** `Divinity#reload` (Codex's `CodexPlugin#reload`, what a config reload runs) goes through
+  `ConfigManager.setup`, which calls `Divinity#setConfig`; `CombatCfg.load` runs there after `EngineCfg`, and the
+  order matters because migration reads the old `legacy-combat` key `EngineCfg` has just read. `CombatReloadTest`
+  uses the real `plugin.reload()` under MockBukkit and fails if the order changes or `CombatCfg.load` leaves
+  that path.
+- **Variable names use underscores** (`pvp_pve_damage`), because a hyphen is the minus operator. `pvp_pve_damage` and
+  `pvp_pve_defense` are the PvP values when both sides are players, which is why the names say so.
 - **Presets that give NaN or infinity keep doing so.** Only a formula the config overrides is replaced by the
   preset's result at hit time; a preset's own non-finite result is passed on as the Java formula always did.
 - **Benchmark.** `DamageCalculatorBenchmark` (test sources, not a test, has a `main`) compares the replaced Java

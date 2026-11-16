@@ -240,15 +240,30 @@ class CombatFormulasTest {
     }
 
     @Test
-    void brokenFormula_negativeExponentWithoutBrackets() {
-        // Codex rejects a bare '2^-1'; combat.yml tells admins to write '2^(-1)'.
-        // (Codex 1.3.0-dev.2 accepts 'defense * 2^-1' and evaluates it wrongly, so that form is not tested here.)
-        assertFallsBack("defense-value", "2^-1", "malformed");
+    void brokenFormula_negativeExponentWithoutBrackets_isRejected() {
+        // Codex 1.3.0-dev.2 computes 'x * 2^-1' wrongly without complaining (-900 for x = 30, not 15), so any
+        // '^' followed by a minus is refused at load, with or without spaces
+        assertFallsBack("defense-value", "2^-1", "bracketed");
+        assertFallsBack("defense-value", "defense * 2^-1", "bracketed");
+        assertFallsBack("defense-value", "defense * 2 ^ -1", "bracketed");
+        assertFallsBack("defense-value", "defense * 2 ^\t- 1", "bracketed");
+        assertFallsBack("defense-value", "defense * (2 ^ -defense)", "bracketed");
+    }
+
+    @Test
+    void negativeExponentWithBrackets_isAccepted() {
         List<String> warnings = new ArrayList<>();
         CombatFormulas ok = CombatFormulas.build(CombatPreset.DEFAULT, Map.of("defense-value", "defense * 2^(-1)"),
                 warnings::add);
         assertTrue(warnings.isEmpty(), warnings.toString());
+        assertTrue(ok.isOverridden(CombatExpression.DEFENSE_VALUE));
         assertEquals(15D, ok.eval(CombatExpression.DEFENSE_VALUE, 30D, 1D, 1D), DELTA);
+
+        // A minus that is not an exponent's sign is fine
+        CombatFormulas minus = CombatFormulas.build(CombatPreset.DEFAULT,
+                Map.of("defense-value", "max(0, defense - 2^2)"), warnings::add);
+        assertTrue(warnings.isEmpty(), warnings.toString());
+        assertEquals(26D, minus.eval(CombatExpression.DEFENSE_VALUE, 30D, 1D, 1D), DELTA);
     }
 
     @Test

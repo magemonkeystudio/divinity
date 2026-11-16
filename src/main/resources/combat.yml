@@ -15,9 +15,9 @@
 #
 # Syntax: numbers, variables, + - * / % ^, unary minus, brackets, and the functions min, max, abs, sqrt, sum, avg,
 # floor, ceil, round, sin, cos, tan, ln, log, plus the constants pi and e. Notes: '^' is left associative
-# (2^3^2 is (2^3)^2), and a negative exponent has to be bracketed: write '2^(-1)', never '2^-1', which is rejected on
-# its own and can give a wrong number inside a longer expression. Variable names are written exactly as listed below
-# (lowercase, with underscores).
+# (2^3^2 is (2^3)^2). A '^' followed by a minus is rejected: write '2^(-1)', not '2^-1', because Codex's parser can
+# compute the second form wrongly without complaint. Variable names are written exactly as listed below (lowercase,
+# with underscores).
 
 # Which set of default expressions to start from.
 #   default - the combat of current versions.
@@ -33,14 +33,14 @@ preset: default
 expressions:
   # damage-scaling: the damage of one damage type after every multiplier.
   #   damage             the damage of this type before any modifier
-  #   pve_damage         1 + the attacker's PvE or PvP damage stat / 100 (PvP when both sides are players)
+  #   pvp_pve_damage     1 + the attacker's PvE or PvP damage stat / 100 (PvP when both sides are players)
   #   critical           1, or the attacker's critical damage when the critical roll succeeded
   #   entity_type        the damage type's modifier for the victim's entity type (1 if none)
   #   faction            the damage type's modifier for the victim's MythicMobs faction (1 if none)
   #   enchant_protection the victim's enchantment protection factor against this cause of damage
   #   attack_power       the attacker's attack cooldown modifier (always 1 for hits that are exempt from it)
   #   block              1, or 1 - the victim's block damage stat / 100 when the block roll succeeded
-  # damage-scaling: "damage * pve_damage * critical * entity_type * faction * enchant_protection * attack_power * block"
+  # damage-scaling: "damage * pvp_pve_damage * critical * entity_type * faction * enchant_protection * attack_power * block"
 
   # direct-damage: the part of the scaled damage that skips the defense. The calculator itself takes it out of the
   # damage (never below 0) and adds it back after the defense; that bookkeeping is not configurable.
@@ -51,9 +51,9 @@ expressions:
   # defense-value: the victim's defense value for the damage type, before it is used by defense-mitigation.
   # Only evaluated when the damage type has a defense and there is damage left after the direct part.
   #   defense            the victim's value of the defense attached to this damage type
-  #   pve_defense        1 + the victim's PvE or PvP defense stat / 100 (PvP when both sides are players)
+  #   pvp_pve_defense    1 + the victim's PvE or PvP defense stat / 100 (PvP when both sides are players)
   #   penetration        1 - the attacker's penetration stat / 100
-  # defense-value: "max(0, defense * pve_defense * penetration)"
+  # defense-value: "max(0, defense * pvp_pve_defense * penetration)"
 
   # defense-mitigation: the damage left after the defense. The calculator reports damage minus this as 'defended'.
   #   damage             the damage after the direct part was taken out
