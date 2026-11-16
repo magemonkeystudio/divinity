@@ -116,6 +116,27 @@ class CombatFormulasTest {
         }
     }
 
+    @Test
+    void oneCalculatorForSeveralDamageTypes_doesNotLeakArgumentsBetweenCalls() {
+        // A calculator reuses its argument arrays, so a call must not see what the one before it left behind
+        Random random = new Random(4_1);
+        for (CombatPreset preset : CombatPreset.values()) {
+            Modifiers m = new Modifiers(1.1, 1.5, 0.9, true, 0.8, 0.7, 0.1, 1.2, 0.9, 6, preset == CombatPreset.LEGACY);
+            DamageCalculator          shared    = new DamageCalculator(m, CombatFormulas.of(preset));
+            ReferenceDamageCalculator reference = new ReferenceDamageCalculator(m);
+            for (int i = 0; i < 5_000; i++) {
+                double damage  = random.nextDouble() * 100;
+                Double defense = random.nextBoolean() ? null : random.nextDouble() * 100;
+                double protect = random.nextDouble() * 2;
+                double entity   = 0.5 + random.nextDouble();
+                double faction  = 0.5 + random.nextDouble();
+                Result expected = reference.calculate(damage, entity, faction, defense, protect);
+                Result actual   = shared.calculate(damage, entity, faction, defense, protect);
+                assertEquals(expected, actual, preset + ", call " + i);
+            }
+        }
+    }
+
     // ------------------------------------------------------------------ //
     // Each expression, overridden, changes the result as expected
     // ------------------------------------------------------------------ //
@@ -211,6 +232,23 @@ class CombatFormulasTest {
     @Test
     void brokenFormula_unknownVariable() {
         assertFallsBack("defense-value", "defense * armour", "armour");
+    }
+
+    @Test
+    void brokenFormula_unknownFunction() {
+        assertFallsBack("defense-value", "cbrt(defense)", "cbrt");
+    }
+
+    @Test
+    void brokenFormula_negativeExponentWithoutBrackets() {
+        // Codex rejects a bare '2^-1'; combat.yml tells admins to write '2^(-1)'.
+        // (Codex 1.3.0-dev.2 accepts 'defense * 2^-1' and evaluates it wrongly, so that form is not tested here.)
+        assertFallsBack("defense-value", "2^-1", "malformed");
+        List<String> warnings = new ArrayList<>();
+        CombatFormulas ok = CombatFormulas.build(CombatPreset.DEFAULT, Map.of("defense-value", "defense * 2^(-1)"),
+                warnings::add);
+        assertTrue(warnings.isEmpty(), warnings.toString());
+        assertEquals(15D, ok.eval(CombatExpression.DEFENSE_VALUE, 30D, 1D, 1D), DELTA);
     }
 
     @Test

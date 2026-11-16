@@ -2,6 +2,8 @@ package studio.magemonkey.divinity.manager.damage.formula;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.util.eval.CompiledExpression;
+import studio.magemonkey.codex.util.eval.Evaluator;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -9,7 +11,7 @@ import java.util.function.Consumer;
 
 /**
  * The compiled expressions of one preset plus the overrides from {@code combat.yml}. Immutable once built, and
- * safe to use from any thread.
+ * safe to use from any thread (Codex's {@code CompiledExpression} is).
  * <p>
  * An expression that cannot be used is replaced by the preset's own when this is built, and a result that is NaN
  * or infinite at hit time is replaced by the preset's result for that hit. {@link #eval} never throws.
@@ -20,15 +22,15 @@ public final class CombatFormulas {
     };
 
     private final CombatPreset     preset;
-    private final Formula[]        active;
-    private final Formula[]        fallback;
+    private final CompiledExpression[] active;
+    private final CompiledExpression[] fallback;
     private final boolean[]        overridden;
     private final AtomicBoolean[]  warned;
     private final Consumer<String> warn;
 
     private CombatFormulas(@NotNull CombatPreset preset,
-                           @NotNull Formula[] active,
-                           @NotNull Formula[] fallback,
+                           @NotNull CompiledExpression[] active,
+                           @NotNull CompiledExpression[] fallback,
                            @NotNull boolean[] overridden,
                            @NotNull Consumer<String> warn) {
         this.preset = preset;
@@ -63,8 +65,8 @@ public final class CombatFormulas {
                                        @Nullable Consumer<String> warn) {
         Consumer<String> sink = warn == null ? SILENT : warn;
         CombatExpression[] all = CombatExpression.values();
-        Formula[] active     = new Formula[all.length];
-        Formula[] fallback   = new Formula[all.length];
+        CompiledExpression[] active     = new CompiledExpression[all.length];
+        CompiledExpression[] fallback   = new CompiledExpression[all.length];
         boolean[] overridden = new boolean[all.length];
 
         for (CombatExpression expression : all) {
@@ -101,9 +103,12 @@ public final class CombatFormulas {
      * @throws IllegalArgumentException with the reason when it cannot be used
      */
     @NotNull
-    private static Formula compile(@NotNull CombatExpression expression, @NotNull String text) {
-        Formula formula = Formulas.compile(text, expression.variables());
-        double  result;
+    private static CompiledExpression compile(@NotNull CombatExpression expression, @NotNull String text) {
+        if (text.isEmpty()) {
+            throw new IllegalArgumentException("the expression is empty");
+        }
+        CompiledExpression formula = Evaluator.compile(text, expression.variables());
+        double             result;
         try {
             result = formula.eval(expression.sample());
         } catch (RuntimeException e) {
@@ -132,7 +137,8 @@ public final class CombatFormulas {
      * Evaluates one expression. Never throws. If the expression gives NaN or infinity, the preset's expression
      * answers instead.
      *
-     * @param values the variables, in the order {@link CombatExpression#variables()} lists them
+     * @param values the variables, in the order {@link CombatExpression#variables()} lists them. Passing an
+     *               array that the caller reuses avoids an allocation per call; it is not kept.
      */
     public double eval(@NotNull CombatExpression expression, double... values) {
         int    i = expression.ordinal();

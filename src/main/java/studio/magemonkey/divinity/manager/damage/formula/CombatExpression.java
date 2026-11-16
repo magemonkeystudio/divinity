@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Nullable;
  * given and the default expression of each preset. {@code combat.yml} documents the same variables; keep the two
  * in step ({@code CombatFormulasTest} checks the defaults and the variables against the shipped file).
  * <p>
- * The order of the variables is part of the contract with {@link Formula}: the calculator passes values by
- * position.
+ * The order of the variables is part of the contract with the compiled expression: the calculator passes values
+ * by position.
  */
 public enum CombatExpression {
 

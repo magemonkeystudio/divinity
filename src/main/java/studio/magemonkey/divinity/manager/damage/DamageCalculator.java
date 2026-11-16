@@ -11,13 +11,20 @@ import studio.magemonkey.divinity.manager.damage.formula.CombatFormulas;
  * <p>
  * {@link DamageManager} does the lookups (stats, attributes, hooks, enchantments) and passes the results in.
  * The numbers come from the expressions in {@code combat.yml} ({@link CombatExpression}); what stays here is the
- * order of the stages and the bookkeeping between them. With the shipped default the results are bit for bit what
+ * order of the stages and the bookkeeping between them. A calculator is not thread-safe: it reuses argument arrays. With the shipped default the results are bit for bit what
  * the formulas gave when they were written in Java, and the same holds for the legacy preset.
  */
 public final class DamageCalculator {
 
     private final Modifiers       modifiers;
     private final CombatFormulas  formulas;
+
+    // One argument array per expression, reused for every damage type, so that a hit allocates none per evaluation.
+    // This is why a calculator is for one thread and one hit (DamageManager makes one per hit).
+    private final double[] scalingArgs    = new double[CombatExpression.DAMAGE_SCALING.variables().length];
+    private final double[] directArgs     = new double[CombatExpression.DIRECT_DAMAGE.variables().length];
+    private final double[] defenseArgs    = new double[CombatExpression.DEFENSE_VALUE.variables().length];
+    private final double[] mitigationArgs = new double[CombatExpression.DEFENSE_MITIGATION.variables().length];
 
     /** Uses the formulas of {@code combat.yml} (or the legacy preset's when {@link Modifiers#legacyCombat}). */
     public DamageCalculator(Modifiers modifiers) {
@@ -43,27 +50,40 @@ public final class DamageCalculator {
                             double factionModifier,
                             @Nullable Double defense,
                             double protectionFactor) {
+        // The arrays are filled in the order CombatExpression lists the variables
+        double[] scaling = scalingArgs;
+        scaling[0] = damage;
+        scaling[1] = modifiers.pveDamage;
+        scaling[2] = modifiers.critical;
+        scaling[3] = entityTypeModifier;
+        scaling[4] = factionModifier;
+        scaling[5] = modifiers.enchantProtection;
         // Attack power is not applied to exempt events; 1 is the neutral value of the product
-        double dmgType = formulas.eval(CombatExpression.DAMAGE_SCALING,
-                damage,
-                modifiers.pveDamage,
-                modifiers.critical,
-                entityTypeModifier,
-                factionModifier,
-                modifiers.enchantProtection,
-                modifiers.applyAttackPower ? modifiers.attackPower : 1D,
-                modifiers.block);
-        double directType = formulas.eval(CombatExpression.DIRECT_DAMAGE, dmgType, modifiers.direct);
+        scaling[6] = modifiers.applyAttackPower ? modifiers.attackPower : 1D;
+        scaling[7] = modifiers.block;
+        double dmgType = formulas.eval(CombatExpression.DAMAGE_SCALING, scaling);
+
+        double[] direct = directArgs;
+        direct[0] = dmgType;
+        direct[1] = modifiers.direct;
+        double directType = formulas.eval(CombatExpression.DIRECT_DAMAGE, direct);
         dmgType = Math.max(0, dmgType - directType); // Deduct this value from damage
 
         boolean defenseApplied = false;
         double  defended       = 0;
         if (dmgType > 0 && defense != null) {
-            double def = formulas.eval(CombatExpression.DEFENSE_VALUE,
-                    defense, modifiers.pveDefense, modifiers.penetrate);
+            double[] defenseValue = defenseArgs;
+            defenseValue[0] = defense;
+            defenseValue[1] = modifiers.pveDefense;
+            defenseValue[2] = modifiers.penetrate;
+            double def = formulas.eval(CombatExpression.DEFENSE_VALUE, defenseValue);
 
-            double defCalced = formulas.eval(CombatExpression.DEFENSE_MITIGATION,
-                    dmgType, def, protectionFactor, modifiers.toughness);
+            double[] mitigation = mitigationArgs;
+            mitigation[0] = dmgType;
+            mitigation[1] = def;
+            mitigation[2] = protectionFactor;
+            mitigation[3] = modifiers.toughness;
+            double defCalced = formulas.eval(CombatExpression.DEFENSE_MITIGATION, mitigation);
             defenseApplied = true;
             defended = dmgType - defCalced;
             dmgType = defCalced;

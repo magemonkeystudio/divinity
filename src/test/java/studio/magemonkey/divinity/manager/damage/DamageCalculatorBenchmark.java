@@ -84,7 +84,7 @@ public final class DamageCalculatorBenchmark {
 
         int    rounds = args.length > 0 ? Integer.parseInt(args[0]) : 200_000;
         double before = measure(DamageCalculatorBenchmark::reference, rounds);
-        double after  = measure(i -> configured(i, formulas), Math.max(1, rounds / 20));
+        double after  = measure(i -> configured(i, formulas), rounds);
 
         System.out.printf("before (Java formulas):        %,14.0f hits/s%n", before);
         System.out.printf("after  (combat.yml formulas):  %,14.0f hits/s%n", after);

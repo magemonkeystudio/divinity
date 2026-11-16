@@ -3,10 +3,11 @@ package studio.magemonkey.divinity;
 public class DependencyRequirement {
 
     /**
-     * The first Codex build with damage requests, which the damage listener and Divinity's own damage dealers
-     * use. It is a dev build; the 1.3.0 release and anything later meet it too.
+     * The first Codex build with damage requests (which the damage listener and Divinity's own damage dealers
+     * use) and with {@code Evaluator.compile} (which the formulas in combat.yml use). It is a dev build; the 1.3.0
+     * release and anything later meet it too.
      */
-    public static final String MIN_CORE_VERSION = "1.3.0-dev.1";
+    public static final String MIN_CORE_VERSION = "1.3.0-dev.2";
 
     /**
      * Whether providedVersion is at least requiredVersion, see {@link #compareVersions}.

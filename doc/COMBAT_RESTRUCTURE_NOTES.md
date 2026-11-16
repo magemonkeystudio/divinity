@@ -22,7 +22,7 @@ Update this file in the same pull request whenever something here stops being tr
 | 1. Extract the calculator (1.1) and the vanilla modifier bridge (1.2) | Done |
 | 2. The shared contract | Done with 2.2c, which adds the `attached-damage-types` key |
 | 3. Fabled migration | Next |
-| 4.1 Formulas in `combat.yml` | In progress. Built and tested on a temporary evaluator, waiting for Codex's `Evaluator.compile` (see below) |
+| 4.1 Formulas in `combat.yml` | Done (draft PR) |
 | 4.2 onwards and 5 | Not started |
 
 ## Rules for every pull request
@@ -160,11 +160,15 @@ lift the cap in the test and restore it.
   `manager/damage/formula/` holds `CombatExpression` (the four expressions, their variables and their default
   text), `CombatPreset`, `CombatFormulas` (compiled set plus overrides) and `Formulas`.
   `DamageCalculator` keeps the stage order and the bookkeeping between stages; the numbers come from the expressions.
-- **Codex has no compile step.** `Evaluator.eval(String, int)` takes no variables, and the Javaluator classes
-  under it tokenize and parse on every call (about 4 microseconds per formula, roughly 100 times the hardcoded
-  one). `Formulas` is the only class that depends on that and is marked temporary: it is replaced by
-  `Evaluator.compile(expression, variableNames)` once Codex publishes it. Do not add anything else that knows how
-  `Formulas` works.
+- **Expressions are compiled once with Codex's `Evaluator.compile`** (needs Codex `1.3.0-dev.2`, which is why
+  `MIN_CORE_VERSION` was raised). A `CompiledExpression` is immutable and safe from any thread, binds variables by
+  position and returns NaN and infinity as they are, so `CombatFormulas` checks every expression against the sample
+  values in `CombatExpression` at load. Syntax follows Javaluator: `^` is left associative and a bare `2^-1` is
+  rejected, so write `2^(-1)`. **Known Codex bug in `1.3.0-dev.2`:** `x * 2^-1` compiles and gives a wrong number
+  instead of being rejected. Do not rely on a negative exponent without brackets.
+- **`DamageCalculator` reuses its argument arrays** (one per expression) so a hit allocates nothing per
+  evaluation. That makes a calculator single-threaded and single-hit; `DamageManager` builds one per hit. The
+  reuse test varies the per-call inputs, because only those can go stale.
 - **Adding or changing an expression** means changing three places together: `CombatExpression` (variables, sample
   values, default text), `combat.yml` (the documentation comment and the default beside it) and the call in
   `DamageCalculator`. `CombatFormulasTest.shippedFile_documentsEveryExpressionItsVariablesAndItsDefault` fails if
@@ -181,7 +185,10 @@ lift the cap in the test and restore it.
 - **Presets that give NaN or infinity keep doing so.** Only a formula the config overrides is replaced by the
   preset's result at hit time; a preset's own non-finite result is passed on as the Java formula always did.
 - **Benchmark.** `DamageCalculatorBenchmark` (test sources, not a test, has a `main`) compares the replaced Java
-  formulas with the configured ones on the same inputs. Run it after changing the evaluator.
+  formulas with the configured ones on the same inputs. Run it after changing the evaluator. With Codex
+  `1.3.0-dev.2` the configured formulas are about 15 times slower on this calculator-only benchmark (roughly 400 ns
+  against 27 ns per hit, ten evaluations at about 35 ns); that is over the 1.5x the pull request aimed for and is
+  discussed in its description.
 
 ## Still open
 
