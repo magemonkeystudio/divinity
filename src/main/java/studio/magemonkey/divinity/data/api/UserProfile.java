@@ -26,6 +26,8 @@ public class UserProfile {
     private final Set<SavedBuff> buffDamage;
     private final Set<SavedBuff> buffDefense;
     private final Set<SavedBuff> buffStats;
+    /** Counts every change to the buffs, so a cached stat can tell its buffs are no longer the current ones. */
+    private volatile int buffRevision;
 
     private UserEntityNamesMode namesMode;
     @Setter
@@ -192,16 +194,51 @@ public class UserProfile {
     }
 
     private void validateBuffs(@NotNull Set<SavedBuff> list) {
-        list.removeIf(buff -> buff.isExpired());
+        if (list.removeIf(buff -> buff.isExpired())) this.markBuffsChanged();
     }
 
     private void addBuff(@NotNull SavedBuff buff, @NotNull Set<SavedBuff> to) {
         this.removeBuff(buff.getStatId(), to);
         to.add(buff);
+        this.markBuffsChanged();
     }
 
     private void removeBuff(@NotNull String statId, @NotNull Set<SavedBuff> from) {
-        from.removeIf(buff -> buff.getStatId().equalsIgnoreCase(statId));
+        if (from.removeIf(buff -> buff.getStatId().equalsIgnoreCase(statId))) this.markBuffsChanged();
+    }
+
+    /**
+     * A number that is different every time buffs are added, replaced or removed, expired ones included.
+     */
+    public int getBuffRevision() {
+        return this.buffRevision;
+    }
+
+    /**
+     * Tells whoever caches stats that the buffs changed. The buff sets are handed out for editing, so code
+     * that edits them directly has to call this.
+     */
+    public void markBuffsChanged() {
+        this.buffRevision++;
+    }
+
+    /**
+     * When the first of the buffs that are active now runs out, in epoch milliseconds, or
+     * {@link Long#MAX_VALUE} if none does.
+     */
+    public long getNextBuffExpiry() {
+        long next = Long.MAX_VALUE;
+        try {
+            for (Set<SavedBuff> buffs : List.of(this.getDamageBuffs(), this.getDefenseBuffs(), this.getItemStatBuffs())) {
+                for (SavedBuff buff : buffs) {
+                    next = Math.min(next, buff.getExpireTime());
+                }
+            }
+        } catch (java.util.ConcurrentModificationException e) {
+            // Edited on another thread while we looked: say it expires now, so nothing is cached from it
+            return Long.MIN_VALUE;
+        }
+        return next;
     }
 
     public void setClassData(@Nullable UserClassData cData) {

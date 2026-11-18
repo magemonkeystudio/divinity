@@ -35,6 +35,7 @@ import studio.magemonkey.divinity.manager.worth.WorthManager;
 import studio.magemonkey.divinity.modules.ModuleCache;
 import studio.magemonkey.divinity.nms.engine.PMSManager;
 import studio.magemonkey.divinity.stats.EntityStats;
+import studio.magemonkey.divinity.stats.ProjectileStats;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.requirements.ItemRequirements;
 import studio.magemonkey.divinity.utils.DivinityProvider;
@@ -181,6 +182,8 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
         this.pms.shutdown();
 
         ItemStats.clear();
+        // Projectiles in flight hold stats keyed by the stat objects that are being thrown away
+        ProjectileStats.clear();
         ItemRequirements.clear();
         List<EntityStats> toRemove = new ArrayList<>(EntityStats.getAll());
         toRemove.forEach(EntityStats::purge);

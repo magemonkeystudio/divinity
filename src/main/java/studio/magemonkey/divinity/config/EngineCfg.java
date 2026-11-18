@@ -57,6 +57,8 @@ public class EngineCfg {
     public static double  COMBAT_SHIELD_BLOCK_BONUS_DAMAGE_MOD;
     public static int     COMBAT_SHIELD_BLOCK_COOLDOWN;
     public static boolean LEGACY_COMBAT;
+    /** Longest time, in ticks, that what was worked out from an entity's gear is reused. 0 turns the cache off. */
+    public static int     PERFORMANCE_STAT_SNAPSHOT_MAX_AGE = 20;
     public static boolean COMBAT_DISABLE_VANILLA_SWEEP;
     public static boolean COMBAT_REDUCE_PLAYER_HEALTH_BAR;
     public static boolean COMBAT_FISHING_HOOK_DO_DAMAGE;
@@ -177,6 +179,8 @@ public class EngineCfg {
         path = "performance.";
 
         path = "performance.entity-stats.";
+        cfg.addMissing(path + "snapshot-max-age", 20);
+        EngineCfg.PERFORMANCE_STAT_SNAPSHOT_MAX_AGE = cfg.getInt(path + "snapshot-max-age", 20);
 
         // A T T R I B U T E S //
         path = "attributes.";

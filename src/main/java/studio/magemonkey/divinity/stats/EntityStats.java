@@ -57,6 +57,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.BiFunction;
 import java.util.function.DoubleUnaryOperator;
+import java.util.function.LongSupplier;
 import java.util.stream.Collectors;
 
 import static org.bukkit.attribute.AttributeModifier.Operation;
@@ -66,6 +67,18 @@ public class EntityStats {
     private static final SimpleStat.Type[]        ATTRIBUTE_BONUS_STATS;
     private static final NBTAttribute[]           ATTRIBUTE_BONUS_NBT;
     private static final double                   DEFAULT_ATTACK_POWER = 1D;
+    private static final long                     MILLIS_PER_TICK      = 50L;
+
+    /** Where snapshots read the time from. Tests replace it. */
+    private static volatile LongSupplier clock = System::currentTimeMillis;
+
+    static void setClock(@NotNull LongSupplier supplier) {
+        clock = supplier;
+    }
+
+    static void resetClock() {
+        clock = System::currentTimeMillis;
+    }
 
     static {
         STATS = Collections.synchronizedMap(new HashMap<>());
@@ -96,6 +109,14 @@ public class EntityStats {
 
     private QArrow arrowBonus;
     private int    arrowLevel;
+
+    /**
+     * What was worked out from this entity's gear, or null when nothing is cached. Everything that can change
+     * it ends up in {@link #invalidateSnapshot()}, or is checked each time it is used; see {@link StatSnapshot}.
+     */
+    private volatile StatSnapshot snapshot;
+    /** The bonus maps (sets, classes) behind {@link #bonuses}, so a refresh can tell whether they changed. */
+    private final    List<BonusMap> bonusMaps = new ArrayList<>();
 
     private double  atkPower;
     private boolean aoeIgnore;
@@ -132,6 +153,25 @@ public class EntityStats {
     public static void purge(@NotNull LivingEntity entity) {
         String uuid = entity.getUniqueId().toString();
         STATS.remove(uuid);
+    }
+
+    /**
+     * Whether stats are being kept for the entity. Stats, and the snapshot on them, are released when a
+     * player quits, when an entity dies and when an entity is no longer valid (see {@link #getAll()}).
+     */
+    public static boolean isTracked(@NotNull LivingEntity entity) {
+        return STATS.containsKey(entity.getUniqueId().toString());
+    }
+
+    /**
+     * Drops every entity's snapshot. For changes that affect everyone, such as a reload of the stat config.
+     */
+    public static void invalidateAllSnapshots() {
+        List<EntityStats> all;
+        synchronized (STATS) {
+            all = new ArrayList<>(STATS.values());
+        }
+        all.forEach(EntityStats::invalidateSnapshot);
     }
 
     @NotNull
@@ -190,10 +230,13 @@ public class EntityStats {
             this.inventory.clear();
             this.permaEffects.clear();
             this.bonuses.clear();
+            this.bonusMaps.clear();
             this.damageMeta = null;
             this.aoeIgnore = false;
+            this.invalidateSnapshot();
             this.updateBonusAttributes();
         } else {
+            this.invalidateSnapshot();
             this.purge();
         }
     }
@@ -445,7 +488,13 @@ public class EntityStats {
         }
     }
 
+    /**
+     * Reads the entity's equipment and bonuses again, and drops the snapshot of its stats whether or not anything
+     * looks different. This is what to call when something that is not equipment may have changed: a class,
+     * a profile, a set.
+     */
     public void updateAll() {
+        this.invalidateSnapshot();
         if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
         if (!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer()) {
             return;
@@ -455,28 +504,67 @@ public class EntityStats {
         this.updateBonus();
     }
 
+    /**
+     * Reads the entity's equipment and bonuses again after a hit, and keeps the snapshot if they are what it
+     * was built from. A hit wears gear down and changes nothing else, and it asks for this on the next tick for
+     * both fighters, so dropping the snapshot here every time would leave it never used between two hits.
+     * <p>
+     * A change that has no event of its own, such as a plugin setting a piece of armor, is still seen here:
+     * the equipment is compared with the copies the snapshot was built from.
+     */
+    public void refreshAfterHit() {
+        if(EngineCfg.VANILLA_ONLY_ENTITY_STATS) return;
+        if (!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer()) {
+            return;
+        }
+
+        this.updateInventory();
+        this.updateBonus();
+
+        StatSnapshot current = this.snapshot;
+        if (current != null && !current.matches(this.inventory, this.bonusMaps)) {
+            this.snapshot = null;
+        }
+    }
+
+    /**
+     * Forgets what was worked out from this entity's gear, so the next read does it again.
+     */
+    public void invalidateSnapshot() {
+        this.snapshot = null;
+    }
+
+    boolean hasSnapshot() {
+        return this.snapshot != null;
+    }
+
     private void addBonus(@NotNull BonusMap bMap) {
+        this.bonusMaps.add(bMap);
         bMap.getBonuses()
                 .forEach((stat, func) -> this.bonuses.computeIfAbsent(stat, list -> new ArrayList<>()).add(func));
     }
 
     @NotNull
     public List<BiFunction<Boolean, Double, Double>> getBonuses(@NotNull ItemLoreStat<?> stat) {
+        return this.getBonuses(stat, this.arrowBonus, this.arrowLevel);
+    }
+
+    @NotNull
+    private List<BiFunction<Boolean, Double, Double>> getBonuses(@NotNull ItemLoreStat<?> stat,
+                                                                 @Nullable QArrow arrow,
+                                                                 int arrowLevel) {
         List<BiFunction<Boolean, Double, Double>> bonuses =
                 new ArrayList<>(this.bonuses.computeIfAbsent(stat, list -> new ArrayList<>()));
 
-        BonusMap arrowBonus = this.arrowBonus != null ? this.arrowBonus.getBonusMap(this.arrowLevel) : null;
+        BonusMap arrowBonus = arrow != null ? arrow.getBonusMap(arrowLevel) : null;
         if (arrowBonus != null) {
             BiFunction<Boolean, Double, Double> arrowBif = arrowBonus.getBonus(stat);
             if (arrowBif != null) bonuses.add(arrowBif);
         }
 
-        if (this.isPlayer() && !this.isNPC()) {
-            DivinityUser user = plugin.getUserManager().getOrLoadUser(this.player);
-            if (user != null) {
-                UserProfile prof = user.getActiveProfile();
-                bonuses.add(prof.getBuff(stat));
-            }
+        UserProfile prof = this.getActiveProfile();
+        if (prof != null) {
+            bonuses.add(prof.getBuff(stat));
         }
 
         return bonuses;
@@ -484,6 +572,7 @@ public class EntityStats {
 
     private void updateBonus() {
         this.bonuses.clear();
+        this.bonusMaps.clear();
 
         // Update sets bonuses
         SetManager set = plugin.getModuleCache().getSetManager();
@@ -656,7 +745,8 @@ public class EntityStats {
         return this.getDefenseTypes(true).getOrDefault(type, 0D);
     }
 
-    // Damage not cached due to broke of range values
+    // What is cached is each damage type's minimum and maximum. The roll is made on every call, so ranges
+    // keep their distribution.
     @NotNull
     public Map<DamageAttribute, Double> getDamageTypes(boolean safe) {
         return this.getDamageTypes(safe, null);
@@ -668,9 +758,38 @@ public class EntityStats {
             return Collections.emptyMap();
         }
 
-        Map<DamageAttribute, Double> map   = new HashMap<>();
-        Biome                        bio   = this.entity.getLocation().getBlock().getBiome();
-        List<ItemStack>              equip = this.getEquipmentForStats(mainHandOverride);
+        Biome bio = this.entity.getLocation().getBlock().getBiome();
+        return StatSnapshot.roll(this.getDamageRanges(mainHandOverride), bio, stat -> this.getEffectBonus(stat, safe));
+    }
+
+    /**
+     * Each damage type's minimum and maximum, summed over the equipment. Those are what the gear, sets,
+     * classes and profile buffs decide; the roll, the biome and the effects come after.
+     * <p>
+     * Read from the snapshot, except when the answer depends on something that belongs to one hit: a different
+     * main hand (a projectile's weapon) or a custom arrow's bonus.
+     */
+    @NotNull
+    private Map<DamageAttribute, double[]> getDamageRanges(@Nullable ItemStack mainHandOverride) {
+        if (mainHandOverride != null || this.arrowBonus != null) {
+            return this.buildDamageRanges(mainHandOverride, this.arrowBonus, this.arrowLevel);
+        }
+
+        StatSnapshot current = this.snapshot();
+        synchronized (current) {
+            if (current.damageRanges == null) {
+                current.damageRanges = this.buildDamageRanges(null, null, 0);
+            }
+            return current.damageRanges;
+        }
+    }
+
+    @NotNull
+    private Map<DamageAttribute, double[]> buildDamageRanges(@Nullable ItemStack mainHandOverride,
+                                                             @Nullable QArrow arrow,
+                                                             int arrowLevel) {
+        Map<DamageAttribute, double[]> ranges = StatSnapshot.newRanges();
+        List<ItemStack>                equip  = this.getEquipmentForStats(mainHandOverride);
 
         for (DamageAttribute dmgAtt : ItemStats.getDamages()) {
             List<BiFunction<Boolean, double[], double[]>> bonuses = new ArrayList<>();
@@ -685,7 +804,7 @@ public class EntityStats {
             //    value = 1D; // Default hand damage for default damage type.
             //}
 
-            for (BiFunction<Boolean, Double, Double> bonus : this.getBonuses(dmgAtt)) {
+            for (BiFunction<Boolean, Double, Double> bonus : this.getBonuses(dmgAtt, arrow, arrowLevel)) {
                 bonuses.add((isPercent, input) -> input.length == 2
                         ? new double[]{
                         bonus.apply(isPercent, input[0]),
@@ -693,17 +812,9 @@ public class EntityStats {
                         : new double[]{
                                 bonus.apply(isPercent, input[0])});
             }
-            double[] range = BonusCalculator.RANGE_FULL.apply(new double[]{0, 0}, bonuses);
-            double   value = Rnd.getDouble(range[0], range[1]);
-            value *= dmgAtt.getDamageModifierByBiome(bio); // Multiply by Biome
-            value = this.getEffectBonus(dmgAtt, safe).applyAsDouble(value);
-
-            if (value > 0D) {
-                map.put(dmgAtt, value);
-            }
+            ranges.put(dmgAtt, BonusCalculator.RANGE_FULL.apply(new double[]{0, 0}, bonuses));
         }
-
-        return map;
+        return ranges;
     }
 
     @NotNull
@@ -712,15 +823,50 @@ public class EntityStats {
             return Collections.emptyMap();
         }
 
+        Map<DefenseAttribute, Double> map = new HashMap<>();
+        for (Map.Entry<DefenseAttribute, Double> entry : this.getDefenseValues().entrySet()) {
+            DefenseAttribute dt    = entry.getKey();
+            double           value = this.getEffectBonus(dt, safe).applyAsDouble(entry.getValue());
+            if (value > 0D) {
+                map.put(dt, value);
+            }
+        }
+
+        return map;
+    }
+
+    /**
+     * Each defense type's value from gear, sets, classes and profile buffs, before the active effects.
+     */
+    @NotNull
+    private Map<DefenseAttribute, Double> getDefenseValues() {
+        if (this.arrowBonus != null) {
+            return this.buildDefenseValues(this.arrowBonus, this.arrowLevel);
+        }
+
+        StatSnapshot current = this.snapshot();
+        synchronized (current) {
+            // The vanilla armor attribute is added to the default defense and has no event of its own
+            double armor = this.attributeValue("ARMOR", true);
+            if (current.defenses == null || Double.compare(current.armorKey, armor) != 0) {
+                current.armorKey = armor;
+                current.defenses = this.buildDefenseValues(null, 0);
+            }
+            return current.defenses;
+        }
+    }
+
+    @NotNull
+    private Map<DefenseAttribute, Double> buildDefenseValues(@Nullable QArrow arrow, int arrowLevel) {
         List<ItemStack>               equip = this.getEquipment();
-        Map<DefenseAttribute, Double> map   = new HashMap<>();
+        Map<DefenseAttribute, Double> map   = new LinkedHashMap<>();
 
         for (DefenseAttribute dt : ItemStats.getDefenses()) {
             List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
             for (ItemStack item : equip) {
                 bonuses.addAll(dt.get(item, player));
             }
-            bonuses.addAll(this.getBonuses(dt));
+            bonuses.addAll(this.getBonuses(dt, arrow, arrowLevel));
             if (dt.isDefault()) {
                 AttributeInstance attribute = entity.getAttribute(VersionManager.getNms().getAttribute("ARMOR"));
                 if (attribute != null) {
@@ -728,13 +874,8 @@ public class EntityStats {
                 }
             }
 
-            double value = BonusCalculator.SIMPLE_FULL.apply(0D, bonuses);
-            value = this.getEffectBonus(dt, safe).applyAsDouble(value);
-            if (value > 0D) {
-                map.put(dt, value);
-            }
+            map.put(dt, BonusCalculator.SIMPLE_FULL.apply(0D, bonuses));
         }
-
         return map;
     }
 
@@ -772,6 +913,42 @@ public class EntityStats {
         SimpleStat stat = (SimpleStat) ItemStats.getStat(type);
         if (stat == null) return 0D;
 
+        double value = mainHandOverride != null || this.arrowBonus != null
+                ? this.buildItemStat(type, stat, mainHandOverride, this.arrowBonus, this.arrowLevel)
+                : this.getItemStatValue(type, stat);
+
+        return StatSnapshot.finish(stat, value, this.getEffectBonus(stat, safe));
+    }
+
+    /**
+     * An item stat's value from gear, sets, classes and profile buffs, before the active effects and the cap.
+     */
+    private double getItemStatValue(@NotNull SimpleStat.Type type, @NotNull SimpleStat stat) {
+        StatSnapshot current = this.snapshot();
+        synchronized (current) {
+            // The vanilla toughness attribute is added to this stat and has no event of its own
+            double toughness = type == TypedStat.Type.ARMOR_TOUGHNESS
+                    ? this.attributeValue("ARMOR_TOUGHNESS", false)
+                    : Double.NaN;
+            Double cached = current.itemStats.get(type);
+            if (cached != null && type == TypedStat.Type.ARMOR_TOUGHNESS
+                    && Double.compare(current.toughnessKey, toughness) != 0) {
+                cached = null;
+            }
+            if (cached == null) {
+                current.toughnessKey = type == TypedStat.Type.ARMOR_TOUGHNESS ? toughness : current.toughnessKey;
+                cached = this.buildItemStat(type, stat, null, null, 0);
+                current.itemStats.put(type, cached);
+            }
+            return cached;
+        }
+    }
+
+    private double buildItemStat(@NotNull SimpleStat.Type type,
+                                 @NotNull SimpleStat stat,
+                                 @Nullable ItemStack mainHandOverride,
+                                 @Nullable QArrow arrow,
+                                 int arrowLevel) {
         List<ItemStack>                           equip   = this.getEquipmentForStats(mainHandOverride);
         List<BiFunction<Boolean, Double, Double>> bonuses = new ArrayList<>();
 
@@ -780,7 +957,7 @@ public class EntityStats {
             bonuses.addAll(stat.get(item, player));
         }
 
-        bonuses.addAll(this.getBonuses(stat));
+        bonuses.addAll(this.getBonuses(stat, arrow, arrowLevel));
 
         if (type == TypedStat.Type.ARMOR_TOUGHNESS) {
             AttributeInstance attribute =
@@ -791,16 +968,114 @@ public class EntityStats {
         }
 
         // Get Sets bonuses
-        double value = BonusCalculator.SIMPLE_FULL.apply(type == TypedStat.Type.CRITICAL_DAMAGE ? 1D : 0D, bonuses);
-        value = this.getEffectBonus(stat, safe).applyAsDouble(value);
+        return BonusCalculator.SIMPLE_FULL.apply(type == TypedStat.Type.CRITICAL_DAMAGE ? 1D : 0D, bonuses);
+    }
 
-        if (stat.getCapability() >= 0) {
-            if (value > stat.getCapability()) {
-                value = stat.getCapability();
-            }
+    /**
+     * The value of a vanilla attribute that a cached stat adds in, or NaN if the entity has none. It is
+     * compared with the value a snapshot was built with, because plugins and potions change attributes
+     * without telling anyone.
+     */
+    private double attributeValue(@NotNull String name, boolean base) {
+        AttributeInstance attribute = entity.getAttribute(VersionManager.getNms().getAttribute(name));
+        if (attribute == null) return Double.NaN;
+        return base ? attribute.getBaseValue() : attribute.getValue();
+    }
+
+    /**
+     * Takes what a projectile fired now would carry, so that the stats it hits with are the stats it was fired
+     * with. Damage ranges and item stats are taken with the weapon in place of the main hand, as they are for
+     * any projectile hit, and with the custom arrow's bonus. The active effects are taken as well. Their
+     * charges are not used now: the hit that lands uses them, and a projectile that misses spends none.
+     *
+     * @return null if the entity has no stats from items to take
+     */
+    @Nullable
+    public StatSnapshot snapshotForLaunch(@Nullable ItemStack weapon, @Nullable QArrow arrow, int arrowLevel) {
+        if (!EngineCfg.ATTRIBUTES_EFFECTIVE_FOR_MOBS && !this.isPlayer()) return null;
+
+        Map<ItemLoreStat<?>, DoubleUnaryOperator> effects = new HashMap<>();
+        StatSnapshot frozen = new StatSnapshot(this.entity.getUniqueId(),
+                this.entity.getLocation().getBlock().getBiome(),
+                effects);
+
+        Map<DamageAttribute, double[]> ranges = this.buildDamageRanges(weapon, arrow, arrowLevel);
+        frozen.setDamageRanges(ranges);
+        for (DamageAttribute dmgAtt : ranges.keySet()) {
+            this.captureEffects(frozen, effects, dmgAtt, true);
         }
 
-        return value;
+        for (SimpleStat.Type type : TypedStat.Type.values()) {
+            if (!type.isGlobal()) continue;
+            SimpleStat stat = (SimpleStat) ItemStats.getStat(type);
+            if (stat == null) continue;
+
+            frozen.itemStats.put(type, this.buildItemStat(type, stat, weapon, arrow, arrowLevel));
+            this.captureEffects(frozen, effects, stat, false);
+        }
+        return frozen;
+    }
+
+    /**
+     * Takes the adjustment the active effects make to a stat without using up any charge, and notes which
+     * effects the hit that lands will have to charge.
+     */
+    private synchronized void captureEffects(@NotNull StatSnapshot frozen,
+                                             @NotNull Map<ItemLoreStat<?>, DoubleUnaryOperator> effects,
+                                             @NotNull ItemLoreStat<?> stat,
+                                             boolean damage) {
+        effects.put(stat, this.getEffectBonus(stat, true));
+        for (IEffect effect : this.getActiveEffects(false)) {
+            if (effect instanceof AdjustStatEffect && ((AdjustStatEffect) effect).isAdjusted(stat)) {
+                frozen.addCharge((AdjustStatEffect) effect, stat, damage);
+            }
+        }
+    }
+
+    /**
+     * The current snapshot, or a new one if there is none or it is out of date. A snapshot is out of date when
+     * it is older than {@code performance.entity-stats.snapshot-max-age}, when a profile buff it includes has run
+     * out, or when the player's profile or its buffs are not what it was built with. A maximum age of 0 turns
+     * the cache off: every call then works from a snapshot that is thrown away.
+     */
+    @NotNull
+    private StatSnapshot snapshot() {
+        long        now     = clock.getAsLong();
+        UserProfile profile = this.getActiveProfile();
+
+        StatSnapshot current = this.snapshot;
+        if (current != null && current.isCurrent(now, profile)) {
+            return current;
+        }
+
+        long maxAge     = Math.max(0, EngineCfg.PERFORMANCE_STAT_SNAPSHOT_MAX_AGE) * MILLIS_PER_TICK;
+        long validUntil = now + maxAge;
+        int  revision   = 0;
+        if (profile != null) {
+            // Asking for the next expiry also drops buffs that have already run out
+            validUntil = Math.min(validUntil, profile.getNextBuffExpiry());
+            revision = profile.getBuffRevision();
+        }
+
+        if (maxAge <= 0) {
+            // Off: nothing is kept, so there is nothing to compare against later and nothing to copy now
+            return new StatSnapshot(validUntil, profile, revision, List.of(), List.of());
+        }
+
+        StatSnapshot created = new StatSnapshot(validUntil,
+                profile,
+                revision,
+                StatSnapshot.copyOf(this.inventory),
+                new ArrayList<>(this.bonusMaps));
+        this.snapshot = created;
+        return created;
+    }
+
+    @Nullable
+    private UserProfile getActiveProfile() {
+        if (!this.isPlayer() || this.isNPC()) return null;
+        DivinityUser user = plugin.getUserManager().getOrLoadUser(this.player);
+        return user == null ? null : user.getActiveProfile();
     }
 
     @NotNull
@@ -826,6 +1101,13 @@ public class EntityStats {
     }
 
     public double getEnchantProtectFactor(@NotNull Enchantment en) {
+        StatSnapshot current = this.snapshot();
+        synchronized (current) {
+            return current.enchantFactors.computeIfAbsent(en, this::computeEnchantProtectFactor);
+        }
+    }
+
+    private double computeEnchantProtectFactor(@NotNull Enchantment en) {
         int epfPer = 1; // EPF Per each enchantment level
         if (en == NamespaceResolver.getEnchantment("FIRE_PROTECTION", "PROTECTION_FIRE")
                 || en == NamespaceResolver.getEnchantment("BLAST_PROTECTION", "PROTECTION_EXPLOSION")
