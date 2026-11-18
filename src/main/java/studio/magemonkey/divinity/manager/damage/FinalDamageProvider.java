@@ -5,7 +5,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.jetbrains.annotations.NotNull;
+import studio.magemonkey.codex.api.damage.DamageContexts;
+import studio.magemonkey.codex.api.damage.DamageRequest;
 import studio.magemonkey.codex.api.damage.FinalDamageEvent;
+import studio.magemonkey.codex.api.damage.WeaponStatsMode;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.api.event.DivinityHitEvent;
 import studio.magemonkey.divinity.config.EngineCfg;
@@ -37,13 +40,15 @@ public final class FinalDamageProvider {
     /**
      * Whether Divinity's damage handler will reach {@link DivinityHitEvent.Result}, and so fire a
      * {@link FinalDamageEvent}, for this hit, should nothing cancel it first. It changes nothing and claims no
-     * damage request, so it may be asked from any damage listener, before or after Divinity's.
+     * damage request (it peeks), so it may be asked from any damage listener, before or after Divinity's.
      * <p>
      * False when:
      * <ul>
      *     <li>Divinity is set to vanilla-only damage handling;</li>
      *     <li>the target is not a living entity;</li>
      *     <li>the event is one of Fabled's throwaway events that ask whether an attack is allowed;</li>
+     *     <li>the hit is described by a request with {@link WeaponStatsMode#RAW}, read with
+     *     {@link DamageContexts#peek(EntityDamageEvent)}, which does not claim it;</li>
      *     <li>it is a vanilla sweep attack and vanilla sweeping is disabled (Divinity cancels it).</li>
      * </ul>
      * True otherwise, including for some hits that then fire no event, because what decides them is not
@@ -55,11 +60,6 @@ public final class FinalDamageProvider {
      *     cancels. That check asks WorldGuard and Citizens, so it is not repeated here;</li>
      *     <li>a hit cancelled by a listener of one of Divinity's own events before {@code Result}.</li>
      * </ul>
-     * <b>Known gap:</b> a hit described by a request with {@code WeaponStatsMode.RAW} also gets true, although
-     * Divinity leaves it alone and fires nothing, and it is <em>not</em> cancelled. Codex 1.3.0-dev.3 cannot read
-     * a request's mode without claiming it ({@code DamageContexts.isAnnounced} only says one is open), and the
-     * predicate must not claim. A plugin that skips its own changes because of the answer therefore skips them
-     * for a RAW hit. This is fixed once Codex offers a read that does not claim.
      */
     public static boolean willFire(@NotNull EntityDamageEvent event) {
         if (EngineCfg.VANILLA_ONLY_DAMAGE_HANDLING) return false;
@@ -68,10 +68,15 @@ public final class FinalDamageProvider {
         if (event instanceof EntityDamageByEntityEvent) {
             EntityDamageByEntityEvent ede = (EntityDamageByEntityEvent) event;
             if (isFabledFakeDamage(ede)) return false;
-            if (event.getCause() == DamageCause.ENTITY_SWEEP_ATTACK
-                    && EngineCfg.COMBAT_DISABLE_VANILLA_SWEEP
-                    && ede.getDamager() instanceof LivingEntity) return false;
         }
+
+        DamageRequest request = DamageContexts.peek(event);
+        if (request != null && request.getWeaponStats() == WeaponStatsMode.RAW) return false;
+
+        if (event instanceof EntityDamageByEntityEvent
+                && event.getCause() == DamageCause.ENTITY_SWEEP_ATTACK
+                && EngineCfg.COMBAT_DISABLE_VANILLA_SWEEP
+                && ((EntityDamageByEntityEvent) event).getDamager() instanceof LivingEntity) return false;
 
         return true;
     }

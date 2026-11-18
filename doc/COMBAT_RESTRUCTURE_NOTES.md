@@ -221,17 +221,12 @@ lift the cap in the test and restore it.
 - **Cancelling** a `Result` through either class cancels the Bukkit event, as it did.
 - **Provider.** `FinalDamageProvider` registers in `Divinity#enable` and unregisters in `Divinity#disable` (a reload
   does both). Its predicate mirrors the early returns of `VanillaWrapperListener#onVanillaDamage` that come before
-  any event: vanilla-only handling, a target that is not living, Fabled's throwaway events, and a disabled vanilla
-  sweep. Keep the two in step; `FinalDamageProviderTest` fires each case and checks the predicate against the
+  any event: vanilla-only handling, a target that is not living, Fabled's throwaway events, a `RAW` request, and a
+  disabled vanilla sweep. The request is read with `DamageContexts.peek` (Codex `1.3.0-dev.4`), which does not claim
+  it; never use `claim` there. Keep the two in step; `FinalDamageProviderTest` fires each case and checks the predicate against the
   handler. It does not repeat Codex's `canFights` (WorldGuard and Citizens), and it cannot know the dodge roll or
   what Divinity's own event listeners will do: those hits get `true` and no event, but each of them ends cancelled.
   **A dodged hit fires no `FinalDamageEvent`.**
-- **Known gap: RAW requests.** The predicate also answers true for a hit with a `RAW` request, which Divinity leaves
-  alone and does not cancel. Codex `1.3.0-dev.3` cannot read an open request without claiming it, and the predicate
-  must not claim. Fabled's physical path already skips skill damage, so today this only affects RAW requests from
-  third parties, and none are known. A read-only `DamageContexts.peek(EntityDamageEvent)` is being added to Codex;
-  once it is out, raise `MIN_CORE_VERSION`, return false for `RAW`, and enable
-  `FinalDamageProviderTest#rawRequest_willNotFire` (and drop `rawRequest_willFireForNow_*`).
 - **Hit actions run before `Result`.** Each damage type's `getHitActions().process(damager)` runs inside the
   per-type loop, so a cancelled `Result` does not stop them. The `Result` Javadoc used to say nothing post-hit runs
   after a cancel; it now says this. They were not moved after `Result`: that would change what runs when a

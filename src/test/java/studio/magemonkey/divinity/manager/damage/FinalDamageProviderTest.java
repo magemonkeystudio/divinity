@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockbukkit.mockbukkit.MockBukkit;
 import studio.magemonkey.codex.api.damage.DamageContexts;
@@ -146,11 +145,15 @@ class FinalDamageProviderTest extends CombatTestBase {
     }
 
     @Test
-    @Disabled("Needs DamageContexts.peek from Codex: a RAW request cannot be read without claiming it in 1.3.0-dev.3")
     void rawRequest_willNotFire() {
         try (DamageScope ignored = DamageContexts.open(victim,
                 DamageRequest.builder().source(attacker).weaponStats(WeaponStatsMode.RAW).build())) {
-            assertFalse(askThenFire(meleeEvent(attacker, victim, 7)));
+            EntityDamageByEntityEvent event = meleeEvent(attacker, victim, 7);
+            assertFalse(FinalDamageEvent.willFire(event));
+            assertTrue(DamageContexts.isAnnounced(victim), "The predicate must not claim the request");
+            server.getPluginManager().callEvent(event);
+            assertFalse(event.isCancelled());
+            assertEquals(7D, event.getDamage(), DELTA, "Divinity leaves a RAW hit alone");
         }
         assertEquals(List.of(), fired);
     }
@@ -204,22 +207,6 @@ class FinalDamageProviderTest extends CombatTestBase {
         assertTrue(askThenFire(event));
         assertEquals(List.of(), fired);
         assertTrue(event.isCancelled());
-    }
-
-    /**
-     * Today's answer for a RAW request, pinned until Codex can read a request without claiming it: true, and the
-     * handler then leaves the hit alone. Replace this with {@link #rawRequest_willNotFire} then.
-     */
-    @Test
-    void rawRequest_willFireForNow_butDivinityLeavesTheHitAlone() {
-        try (DamageScope ignored = DamageContexts.open(victim,
-                DamageRequest.builder().source(attacker).weaponStats(WeaponStatsMode.RAW).build())) {
-            EntityDamageByEntityEvent event = meleeEvent(attacker, victim, 7);
-            assertTrue(askThenFire(event));
-            assertFalse(event.isCancelled());
-            assertEquals(7D, event.getDamage(), DELTA);
-        }
-        assertEquals(List.of(), fired);
     }
 
     @Test
