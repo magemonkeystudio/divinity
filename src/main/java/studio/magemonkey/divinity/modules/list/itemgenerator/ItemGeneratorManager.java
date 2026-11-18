@@ -10,6 +10,7 @@ import org.bukkit.block.banner.PatternType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BlockStateMeta;
@@ -211,6 +212,8 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
         private Set<IAttributeGenerator> attributeGenerators;
         private AbilityGenerator         abilityGenerator;
+        @Getter
+        private Set<String>              usableSlots;
 
         public GeneratorItem(@NotNull Divinity plugin, @NotNull JYML cfg) {
             super(plugin, cfg, ItemGeneratorManager.this);
@@ -590,6 +593,25 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
 
             this.attributeGenerators = new HashSet<>();
 
+            // Load Usable Slots (supports EquipmentSlot names and numeric inventory slot indices)
+            this.usableSlots = new HashSet<>();
+            for (String slotName : cfg.getStringList("generator.usable-slots")) {
+                String trimmed = slotName.trim();
+                try {
+                    int index = Integer.parseInt(trimmed);
+                    this.usableSlots.add(String.valueOf(index));
+                } catch (NumberFormatException ignored) {
+                    try {
+                        EquipmentSlot slot = EquipmentSlot.valueOf(trimmed.toUpperCase());
+                        this.usableSlots.add(slot.name());
+                    } catch (IllegalArgumentException e) {
+                        this.error("Invalid slot '" + trimmed + "' in 'generator.usable-slots'. " +
+                                "Use an EquipmentSlot name (e.g. CHEST) or an inventory slot index. File: "
+                                + cfg.getFile().getName());
+                    }
+                }
+            }
+
             // Pre-cache Ammo Attributes
             this.addAttributeGenerator(new SingleAttributeGenerator<>(this.plugin,
                     this,
@@ -952,6 +974,9 @@ public class ItemGeneratorManager extends QModuleDrop<GeneratorItem> {
             }
 
             ItemUT.addSkullTexture(item, this.hash, this.getId());
+            if (!this.usableSlots.isEmpty()) {
+                ItemStats.setUsableSlots(item, this.usableSlots);
+            }
             this.getAttributeGenerators().forEach(generator -> generator.generate(item, itemLvl));
 
             LoreUT.replacePlaceholder(item, PLACE_GEN_DAMAGE, null);

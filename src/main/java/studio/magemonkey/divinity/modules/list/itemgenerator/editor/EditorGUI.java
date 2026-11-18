@@ -22,7 +22,6 @@ import studio.magemonkey.divinity.modules.list.itemgenerator.editor.skills.MainS
 import studio.magemonkey.divinity.modules.list.itemgenerator.editor.sockets.MainSocketsGUI;
 import studio.magemonkey.divinity.modules.list.itemgenerator.editor.stats.MainStatsGUI;
 import studio.magemonkey.divinity.modules.list.itemgenerator.editor.trimmings.TrimmingListGUI;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -519,6 +518,27 @@ public class EditorGUI extends AbstractEditorGUI {
                 openSubMenu(new HandTypesGUI(player, itemGenerator));
             }
         });
+        lore = new ArrayList<>();
+        for (String slot : this.itemGenerator.getConfig().getStringList(ItemType.USABLE_SLOTS.getPath())) {
+            lore.add("&a " + slot);
+        }
+        setSlot(25, new Slot(createItem(Material.COMPASS,
+                "&eUsable Slots", StringUT.replace(CURRENT_PLACEHOLDER, lore,
+                        "&bCurrent:",
+                        "%current%",
+                        "&6Left-Click: &eModify",
+                        "&6Right-Click: &eSet to default value"))) {
+            @Override
+            public void onLeftClick() {
+                openSubMenu(new UsableSlotsGUI(player, itemGenerator));
+            }
+
+            @Override
+            public void onRightClick() {
+                setDefault(ItemType.USABLE_SLOTS.getPath());
+                saveAndReopen();
+            }
+        });
         setSlot(27, new Slot(createItem(Material.IRON_SWORD,
                 "&eDamage Types",
                 "&6Left-Click: &eModify")) {
@@ -626,6 +646,7 @@ public class EditorGUI extends AbstractEditorGUI {
         TIER("tier"),
         AMMO_TYPES("generator.ammo-types"),
         HAND_TYPES("generator.hand-types"),
+        USABLE_SLOTS("generator.usable-slots"),
         DAMAGE_TYPES("generator.damage-types"),
         DEFENSE_TYPES("generator.defense-types"),
         ITEM_STATS("generator.item-stats"),
