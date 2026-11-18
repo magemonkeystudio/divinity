@@ -141,9 +141,9 @@ equipment changes by other plugins (Fabled levels have no event: they count from
 3. **Legacy preset.** Set `preset: legacy`, reload. **Expected:** the old defense formula's numbers.
 4. **An override.** Uncomment `damage-scaling` and remove `critical` from it; reload. **Expected:** critical hits
    no longer multiply, nothing else changes.
-5. **A broken override.** Write an expression with an unknown variable, one with a syntax error, one with
-   `2^-1`, and one that divides by zero on some hit. **Expected:** one console message at load for each of the first three, and that expression falls back to the
-   preset's. The division by zero cannot be seen at load: on the hit where it happens the preset's result is used.
+5. **A broken override.** Write an expression with an unknown variable, one with a syntax error, and one that
+   divides by zero on some hit. **Expected:** one console message at load for each of the first two, and that
+   expression falls back to the preset's. An expression with `2^-1` is not broken: it halves, as `2^(-1)` does. The division by zero cannot be seen at load: on the hit where it happens the preset's result is used.
    Combat never stops.
 6. **Reload.** Edit the file and run Divinity's reload (not a restart); then break the file and reload.
    **Expected:** edits apply at once; a broken file never leaves combat without formulas.

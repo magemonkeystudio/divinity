@@ -281,14 +281,17 @@ class CombatFormulasTest {
     }
 
     @Test
-    void brokenFormula_negativeExponentWithoutBrackets_isRejected() {
-        // Codex 1.3.0-dev.2 computes 'x * 2^-1' wrongly without complaining (-900 for x = 30, not 15), so any
-        // '^' followed by a minus is refused at load, with or without spaces
-        assertFallsBack("defense-value", "2^-1", "bracketed");
-        assertFallsBack("defense-value", "defense * 2^-1", "bracketed");
-        assertFallsBack("defense-value", "defense * 2 ^ -1", "bracketed");
-        assertFallsBack("defense-value", "defense * 2 ^\t- 1", "bracketed");
-        assertFallsBack("defense-value", "defense * (2 ^ -defense)", "bracketed");
+    void negativeExponentWithoutBrackets_isComputedCorrectly() {
+        // Codex 1.3.0-dev.2 gave -900 for 'x * 2^-1' with x = 30, so Divinity used to refuse it; Codex's parser was
+        // fixed in 1.3.0-dev.3 (codex#198) and the expression is now accepted and halves
+        List<String> warnings = new ArrayList<>();
+        CombatFormulas formulas = CombatFormulas.build(CombatPreset.DEFAULT,
+                Map.of("damage-scaling", "damage * 2^-1", "defense-value", "defense * 2 ^ -1"), warnings::add);
+
+        assertTrue(warnings.isEmpty(), warnings.toString());
+        assertTrue(formulas.isOverridden(CombatExpression.DAMAGE_SCALING));
+        assertEquals(15D, formulas.eval(CombatExpression.DAMAGE_SCALING, 30D, 1D, 1D, 1D, 1D, 1D, 1D, 1D), DELTA);
+        assertEquals(15D, formulas.eval(CombatExpression.DEFENSE_VALUE, 30D, 1D, 1D), DELTA);
     }
 
     @Test

@@ -15,9 +15,7 @@
 #
 # Syntax: numbers, variables, + - * / % ^, unary minus, brackets, and the functions min, max, abs, sqrt, sum, avg,
 # floor, ceil, round, sin, cos, tan, ln, log, plus the constants pi and e. Notes: '^' is left associative
-# (2^3^2 is (2^3)^2). A '^' followed by a minus is rejected: write '2^(-1)', not '2^-1', because Codex's parser can
-# compute the second form wrongly without complaint. Variable names are written exactly as listed below (lowercase,
-# with underscores).
+# (2^3^2 is (2^3)^2). Variable names are written exactly as listed below (lowercase, with underscores).
 
 # Which set of default expressions to start from.
 #   default - the combat of current versions.

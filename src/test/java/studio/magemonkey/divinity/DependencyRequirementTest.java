@@ -67,10 +67,12 @@ class DependencyRequirementTest {
     }
 
     @Test
-    void minimumCodexVersion_isTheFirstBuildWithCompiledExpressions() {
+    void minimumCodexVersion_isTheFirstBuildWithDamageContextsPeek() {
         String min = DependencyRequirement.MIN_CORE_VERSION;
         assertFalse(meetsVersion(min, "1.3.0-dev.1"), "Has damage requests but no Evaluator.compile");
-        assertTrue(meetsVersion(min, "1.3.0-dev.2"));
+        assertFalse(meetsVersion(min, "1.3.0-dev.2"), "Has Evaluator.compile but no FinalDamageEvent");
+        assertFalse(meetsVersion(min, "1.3.0-dev.3"), "Has FinalDamageEvent but no DamageContexts.peek");
+        assertTrue(meetsVersion(min, "1.3.0-dev.4"));
         assertTrue(meetsVersion(min, "1.3.0"));
         assertTrue(meetsVersion(min, "1.3.1-dev.1"));
         assertFalse(meetsVersion(min, "1.2.1"), "The last release without damage requests");

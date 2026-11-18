@@ -7,7 +7,6 @@ import studio.magemonkey.codex.util.eval.Evaluator;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Pattern;
 import java.util.function.Consumer;
 
 /**
@@ -18,12 +17,6 @@ import java.util.function.Consumer;
  * or infinite at hit time is replaced by the preset's result for that hit. {@link #eval} never throws.
  */
 public final class CombatFormulas {
-
-    /**
-     * A '^' followed by a unary minus. Codex's parser (Javaluator) can compute such an expression wrongly without
-     * complaining ('x * 2^-1' gives a wrong number), so it is not accepted until that is fixed in Codex.
-     */
-    private static final Pattern NEGATIVE_EXPONENT = Pattern.compile("\\^\\s*-");
 
     private static final Consumer<String> SILENT = message -> {
     };
@@ -113,10 +106,6 @@ public final class CombatFormulas {
     private static CompiledExpression compile(@NotNull CombatExpression expression, @NotNull String text) {
         if (text.isEmpty()) {
             throw new IllegalArgumentException("the expression is empty");
-        }
-        if (NEGATIVE_EXPONENT.matcher(text).find()) {
-            throw new IllegalArgumentException(
-                    "a negative exponent has to be bracketed: write 2^(-1), not 2^-1, which can be computed wrongly");
         }
         CompiledExpression formula = Evaluator.compile(text, expression.variables());
         double             result;

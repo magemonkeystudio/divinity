@@ -30,7 +30,8 @@ Update this file in the same pull request whenever something here stops being tr
 | 4.2 Stat snapshots | Done (#385) |
 | 4.2b Vanilla Thorns | Done (#384) |
 | 4.3a New event surface, `DIVINITY_<type>` inside a request | Done (#389) |
-| 4.3b Fabled: Physical Damage trigger and immediate buffs on `DivinityHitEvent.Result` | Next |
+| 4.3b Divinity: `DivinityHitEvent.Result` is Codex's `FinalDamageEvent`; Divinity registers as its provider | In review |
+| 4.3b Fabled: Physical Damage trigger and immediate buffs on `FinalDamageEvent` | In review (Fabled) |
 | Open questions on non-swing hits, and the server checklist | Written (docs and tests only); decisions pending |
 | 5. Clean-up | Not started |
 
@@ -181,7 +182,8 @@ lift the cap in the test and restore it.
   what each change does.
 - **They extend Bukkit's `Event`, not Codex's `IEvent`.** `IEvent` has one static `HandlerList` shared by every
   Codex event, so every listener of every such event is offered every one of them. Give any new event its own
-  `HandlerList`.
+  `HandlerList`. (Since 4.3b `Result` extends Codex's `FinalDamageEvent` instead and shares *its* list on purpose;
+  see below.)
 - **`DamageMeta` carries what the events report:** `origin`, `weaponStatsMode` (what Divinity did, not what the
   request asked) and `requestedAmounts`. `VanillaWrapperListener#describe` sets them before the first event
   fires. A meta built elsewhere has none; `DivinityHitEvent` then falls back to the inferred origin and `ADD`.
@@ -199,6 +201,37 @@ lift the cap in the test and restore it.
   scope and the published snapshots predate fabled#1919). The fix assumes what the task described: Fabled's
   scope is open on the target while it calls `DamageRegistry.dealDamage`. Check this in 4.3b.
 
+## `FinalDamageEvent` (4.3b, Divinity half)
+
+- **Why.** Fabled cannot see Divinity's classes, so it cannot listen to `DivinityHitEvent.Result`. Codex
+  `1.3.0-dev.3` defines `studio.magemonkey.codex.api.damage.FinalDamageEvent`, and `Result` now extends it. A
+  listener of either class receives Divinity's `Result`; a listener of `FinalDamageEvent` only receives each hit
+  once, because `Prepare` is not one.
+- **`DivinityHitEvent` is an interface now.** `Result` needs Codex's class as its superclass, so the shared getters
+  moved to the interface and the shared state to the package-private `HitDetails`. `DivinityHitEvent.Prepare` and
+  `.Result` keep their names. `Prepare` keeps its own handler list; `Result` has none of its own (do not add one:
+  `FinalDamageEvent.getHandlers()` is final, and Bukkit registers a `Result` listener on the list of the nearest
+  class with a `getHandlerList()`, which is Codex's). `DivinityHitEventTest#resultSharesCodexsHandlerList`.
+- **One set of numbers.** `Result` keeps its damage on the `DamageMeta`, passes Codex an empty map and overrides
+  `getDamages()` (by id), `getDamage(String)`, `setDamage(String, double)`, `getTotalDamage()` and
+  `setTotalDamage(double)`. The attribute-keyed view is `getDamagesByAttribute()`; `getDamagesById()` from 4.3a is
+  gone. Differences from Codex's base class, all documented on `Result`: an id that is not a Divinity damage type
+  is ignored (`isDamageType` says which are); negative and NaN count as 0 instead of throwing; `setTotalDamage` on
+  a hit with nothing left puts it all in Divinity's default type instead of splitting it.
+- **Cancelling** a `Result` through either class cancels the Bukkit event, as it did.
+- **Provider.** `FinalDamageProvider` registers in `Divinity#enable` and unregisters in `Divinity#disable` (a reload
+  does both). Its predicate mirrors the early returns of `VanillaWrapperListener#onVanillaDamage` that come before
+  any event: vanilla-only handling, a target that is not living, Fabled's throwaway events, a `RAW` request, and a
+  disabled vanilla sweep. The request is read with `DamageContexts.peek` (Codex `1.3.0-dev.4`), which does not claim
+  it; never use `claim` there. Keep the two in step; `FinalDamageProviderTest` fires each case and checks the predicate against the
+  handler. It does not repeat Codex's `canFights` (WorldGuard and Citizens), and it cannot know the dodge roll or
+  what Divinity's own event listeners will do: those hits get `true` and no event, but each of them ends cancelled.
+  **A dodged hit fires no `FinalDamageEvent`.**
+- **Hit actions run before `Result`.** Each damage type's `getHitActions().process(damager)` runs inside the
+  per-type loop, so a cancelled `Result` does not stop them. The `Result` Javadoc used to say nothing post-hit runs
+  after a cancel; it now says this. They were not moved after `Result`: that would change what runs when a
+  listener cancels or zeroes a type, and no test pins hit actions, so the move could not be shown to be safe.
+
 ## Formulas in `combat.yml` (4.1)
 
 - **Where things are.** `config/CombatCfg` loads and migrates the file and holds what is in force.
@@ -208,10 +241,9 @@ lift the cap in the test and restore it.
 - **Expressions are compiled once with Codex's `Evaluator.compile`** (needs Codex `1.3.0-dev.2`, which is why
   `MIN_CORE_VERSION` was raised). A `CompiledExpression` is immutable and safe from any thread, binds variables by
   position and returns NaN and infinity as they are, so `CombatFormulas` checks every expression against the sample
-  values in `CombatExpression` at load. Syntax follows Javaluator: `^` is left associative. **Javaluator, which
-  Codex bundles, computes `x * 2^-1` wrongly without complaining** (the old string evaluator does too), so
-  `CombatFormulas` rejects any override with `^` followed by a minus and tells the admin to write `2^(-1)`. Remove
-  that check only once Codex has fixed the parser (tracked in magemonkeystudio/codex#197).
+  values in `CombatExpression` at load. Syntax follows Javaluator: `^` is left associative. Codex `1.3.0-dev.2`
+  computed `x * 2^-1` wrongly; codex#198 fixed the parser in `1.3.0-dev.3`, and `CombatFormulas` no longer refuses a
+  `^` followed by a minus (`CombatFormulasTest#negativeExponentWithoutBrackets_isComputedCorrectly`).
 - **`DamageCalculator` keeps no state between calls** and builds a fresh argument array for each evaluation, so one
   calculator can be shared between threads and kept across hits (the stat snapshots in 4.2 may want that). It used
   to reuse arrays to avoid the allocation; measured on the benchmark that saved nothing noticeable, and it made

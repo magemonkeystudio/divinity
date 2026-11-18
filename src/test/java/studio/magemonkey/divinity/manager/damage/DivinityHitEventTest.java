@@ -13,6 +13,7 @@ import studio.magemonkey.codex.api.damage.DamageContexts;
 import studio.magemonkey.codex.api.damage.DamageOrigin;
 import studio.magemonkey.codex.api.damage.DamageRequest;
 import studio.magemonkey.codex.api.damage.DamageScope;
+import studio.magemonkey.codex.api.damage.FinalDamageEvent;
 import studio.magemonkey.codex.api.damage.WeaponStatsMode;
 import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
 import studio.magemonkey.divinity.api.event.DivinityHitEvent;
@@ -119,6 +120,14 @@ class DivinityHitEventTest extends CombatTestBase {
     }
 
     @Test
+    void resultSharesCodexsHandlerList() {
+        swing(weapon(Map.of("physical", 20D)), VANILLA_SWORD_DAMAGE);
+
+        assertSame(FinalDamageEvent.getHandlerList(), DivinityHitEvent.Result.getHandlerList());
+        assertSame(FinalDamageEvent.getHandlerList(), result().getHandlers());
+    }
+
+    @Test
     void dodgedHit_firesPrepareButNoResult() {
         liftCap(TypedStat.Type.DODGE_RATE);
         ItemStack chest = armor(Map.of());
@@ -172,7 +181,7 @@ class DivinityHitEventTest extends CombatTestBase {
 
         assertEquals(DamageOrigin.ENVIRONMENT, result().getOrigin());
         assertNull(result().getAttacker());
-        assertEquals(Map.of("physical", 4D), result().getDamagesById());
+        assertEquals(Map.of("physical", 4D), result().getDamages());
     }
 
     @Test
@@ -197,7 +206,7 @@ class DivinityHitEventTest extends CombatTestBase {
         assertEquals(DamageOrigin.SKILL, result.getOrigin());
         assertEquals(WeaponStatsMode.REPLACE, result.getWeaponStatsMode());
         assertEquals(Map.of("DIVINITY_fire", 4D), result.getRequestedAmounts());
-        assertEquals(Map.of("fire", 4D), result.getDamagesById());
+        assertEquals(Map.of("fire", 4D), result.getDamages());
     }
 
     @Test
@@ -386,5 +395,153 @@ class DivinityHitEventTest extends CombatTestBase {
         assertEquals(VANILLA_SWORD_DAMAGE, event.getDamage(), DELTA, "BASE is left as the event had it");
         assertEquals(List.of("BeforeScale", "Prepare", "Start", "Pre", "Result"), fired);
         assertEquals(10D, attacker.getHealth(), DELTA);
+    }
+
+    // ------------------------------------------------------------------ //
+    // Result as Codex's FinalDamageEvent
+    // ------------------------------------------------------------------ //
+
+    /** Registers a listener of Codex's event, as a plugin that cannot see Divinity would. */
+    private Listener onFinalDamage(EventPriority priority, Consumer<FinalDamageEvent> action) {
+        Listener listener = new Listener() {};
+        server.getPluginManager().registerEvent(FinalDamageEvent.class, listener, priority,
+                (l, e) -> action.accept((FinalDamageEvent) e), plugin);
+        return listener;
+    }
+
+    @Test
+    void codexListener_receivesOneEventPerHit_theResult() {
+        List<FinalDamageEvent> seen = new ArrayList<>();
+        Listener codex = onFinalDamage(EventPriority.NORMAL, seen::add);
+        try {
+            swing(weapon(Map.of("physical", 20D, "fire", 10D)), 0);
+        } finally {
+            HandlerList.unregisterAll(codex);
+        }
+
+        assertEquals(1, seen.size(), "Prepare is not a FinalDamageEvent");
+        assertSame(result(), seen.get(0));
+        FinalDamageEvent hit = seen.get(0);
+        assertEquals(Map.of("physical", 20D, "fire", 10D), hit.getDamages());
+        assertEquals(30D, hit.getTotalDamage(), DELTA);
+        assertSame(victim, hit.getVictim());
+        assertSame(attacker, hit.getAttacker());
+        assertEquals(DamageOrigin.WEAPON_MELEE, hit.getOrigin());
+        assertEquals(WeaponStatsMode.ADD, hit.getWeaponStatsMode());
+        assertNull(hit.getRequest());
+    }
+
+    @Test
+    void codexAndDivinityListeners_seeAndChangeTheSameNumbers() {
+        List<Double> seenByCodexAfter = new ArrayList<>();
+        // Codex's listener runs first and changes the hit; Divinity's Result listener sees that and changes it
+        // again; a later Codex listener sees Divinity's change
+        Listener first = onFinalDamage(EventPriority.LOW, e -> {
+            assertEquals(20D, e.getDamage("physical"), DELTA);
+            e.setDamage("physical", 8);
+        });
+        Listener last = onFinalDamage(EventPriority.HIGH, e -> seenByCodexAfter.add(e.getDamage("physical")));
+        onResult = e -> {
+            assertEquals(8D, e.getDamage("physical"), DELTA);
+            assertEquals(8D, e.getDamage(ItemStats.getDamageById("physical")), DELTA);
+            assertEquals(Map.of(ItemStats.getDamageById("physical"), 8D), e.getDamagesByAttribute());
+            e.setDamage(ItemStats.getDamageById("physical"), 5);
+        };
+        EntityDamageByEntityEvent event;
+        try {
+            event = swing(weapon(Map.of("physical", 20D)), VANILLA_SWORD_DAMAGE);
+        } finally {
+            HandlerList.unregisterAll(first);
+            HandlerList.unregisterAll(last);
+        }
+
+        assertEquals(List.of(5D), seenByCodexAfter);
+        assertEquals(5D, event.getFinalDamage(), DELTA);
+        assertEquals(Map.of("physical", 5D), damagesOf(victim));
+    }
+
+    @Test
+    void codexListener_setTotalDamage_keepsEachTypesShare() {
+        Listener codex = onFinalDamage(EventPriority.NORMAL, e -> e.setTotalDamage(15));
+        EntityDamageByEntityEvent event;
+        try {
+            event = swing(weapon(Map.of("physical", 20D, "fire", 10D)), 0);
+        } finally {
+            HandlerList.unregisterAll(codex);
+        }
+
+        assertEquals(Map.of("physical", 10D, "fire", 5D), rounded(damagesOf(victim)));
+        assertEquals(15D, event.getFinalDamage(), DELTA);
+    }
+
+    @Test
+    void result_setDamage_unknownTypeId_isIgnored() {
+        onResult = e -> {
+            assertFalse(e.isDamageType("not_a_type"));
+            assertTrue(e.isDamageType("physical"));
+            e.setDamage("not_a_type", 5);
+            assertEquals(0D, e.getDamage("not_a_type"), DELTA);
+            assertEquals(Map.of("physical", 20D), e.getDamages());
+            assertEquals(20D, e.getTotalDamage(), DELTA);
+        };
+
+        EntityDamageByEntityEvent event = swing(weapon(Map.of("physical", 20D)), VANILLA_SWORD_DAMAGE);
+
+        assertEquals(20D, event.getFinalDamage(), DELTA);
+    }
+
+    @Test
+    void result_negativeOrNaNDamage_countsAsZero_ratherThanThrowing() {
+        onResult = e -> {
+            e.setDamage("physical", -3);
+            assertEquals(0D, e.getDamage("physical"), DELTA);
+            e.setDamage("physical", Double.NaN);
+            assertEquals(0D, e.getDamage("physical"), DELTA);
+            e.setDamage("physical", 2);
+        };
+
+        EntityDamageByEntityEvent event = swing(weapon(Map.of("physical", 20D)), VANILLA_SWORD_DAMAGE);
+
+        assertEquals(2D, event.getFinalDamage(), DELTA);
+    }
+
+    @Test
+    void result_damagesById_cannotBeChangedDirectly() {
+        onResult = e -> assertThrows(UnsupportedOperationException.class, () -> e.getDamages().put("physical", 1D));
+
+        swing(weapon(Map.of("physical", 20D)), VANILLA_SWORD_DAMAGE);
+
+        assertEquals(Map.of("physical", 20D), damagesOf(victim));
+    }
+
+    @Test
+    void codexListener_cancelling_cancelsTheBukkitEvent() {
+        Listener codex = onFinalDamage(EventPriority.NORMAL, e -> e.setCancelled(true));
+        EntityDamageByEntityEvent event;
+        try {
+            event = swing(weapon(Map.of("physical", 20D)), VANILLA_SWORD_DAMAGE);
+        } finally {
+            HandlerList.unregisterAll(codex);
+        }
+
+        assertTrue(event.isCancelled());
+        assertTrue(result().isCancelled());
+        assertEquals(VANILLA_SWORD_DAMAGE, event.getDamage(), DELTA, "BASE is left as the event had it");
+        assertFalse(fired.contains("Exit"));
+    }
+
+    @Test
+    void codexListener_unCancelling_unCancelsTheBukkitEvent() {
+        onResult = e -> e.setCancelled(true);
+        Listener codex = onFinalDamage(EventPriority.HIGH, e -> e.setCancelled(false));
+        EntityDamageByEntityEvent event;
+        try {
+            event = swing(weapon(Map.of("physical", 20D)), VANILLA_SWORD_DAMAGE);
+        } finally {
+            HandlerList.unregisterAll(codex);
+        }
+
+        assertFalse(event.isCancelled());
+        assertEquals(20D, event.getFinalDamage(), DELTA);
     }
 }
