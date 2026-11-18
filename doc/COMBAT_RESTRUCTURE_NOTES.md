@@ -21,11 +21,11 @@ Update this file in the same pull request whenever something here stops being tr
 | 0. Safety net and bug fixes | Done |
 | 1. Extract the calculator (1.1) and the vanilla modifier bridge (1.2) | Done |
 | 2. The shared contract | Done with 2.2c, which adds the `attached-damage-types` key |
-| 3. Fabled migration | Next |
-| 4.1 Formulas in `combat.yml` | In review (#387) |
+| 3. Fabled migration | Done (Fabled #1919, #1920, #1921, #1922) |
+| 4.1 Formulas in `combat.yml` | Done (#387) |
 | 4.2 Stat snapshots | Done (#385) |
 | 4.2b Vanilla Thorns | Done (#384) |
-| 4.3 and 5 | Not started |
+| 4.3 and 5 | Next: 4.3 |
 
 ## Rules for every pull request
 
@@ -172,7 +172,7 @@ lift the cap in the test and restore it.
   values in `CombatExpression` at load. Syntax follows Javaluator: `^` is left associative. **Javaluator, which
   Codex bundles, computes `x * 2^-1` wrongly without complaining** (the old string evaluator does too), so
   `CombatFormulas` rejects any override with `^` followed by a minus and tells the admin to write `2^(-1)`. Remove
-  that check only once Codex has fixed the parser.
+  that check only once Codex has fixed the parser (tracked in magemonkeystudio/codex#197).
 - **`DamageCalculator` keeps no state between calls** and builds a fresh argument array for each evaluation, so one
   calculator can be shared between threads and kept across hits (the stat snapshots in 4.2 may want that). It used
   to reuse arrays to avoid the allocation; measured on the benchmark that saved nothing noticeable, and it made
