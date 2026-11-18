@@ -260,7 +260,8 @@ Rules for every pull request:
 | 4.1 | Divinity | Formulas move to `combat.yml` | Config layout |
 | 4.2 | Divinity | Stat snapshots. Done | Projectile timing |
 | 4.2b | Divinity | Stop treating hits that are not swings as swings: vanilla Thorns first (cause `THORNS` on every version, the damage type on 1.20.4+). Uses the origin from the damage request where there is one | Thorns damage |
-| 4.3 | Divinity and Fabled | New event and API surface. Fabled stops mutating `BASE` when Divinity is present. The Physical Damage trigger and immediate buffs act on Divinity's final numbers | Yes |
+| 4.3a | Divinity | New event and API surface (`DivinityHitEvent.Prepare` and `.Result`); the old events become deprecated shims. A `DIVINITY_<type>` hit dealt inside a dealer's open request honours that request's weapon-stats mode. In progress | `DIVINITY_<type>` inside an `IGNORE` or `RAW` request |
+| 4.3b | Fabled | Fabled stops mutating `BASE` when Divinity is present. The Physical Damage trigger and immediate buffs act on Divinity's final numbers through `DivinityHitEvent.Result` | Yes |
 
 ### Phase 5: clean-up
 
