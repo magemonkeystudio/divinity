@@ -16,6 +16,7 @@ import studio.magemonkey.divinity.command.BuffCommand;
 import studio.magemonkey.divinity.command.ModifyCommand;
 import studio.magemonkey.divinity.command.SetCommand;
 import studio.magemonkey.divinity.config.Config;
+import studio.magemonkey.divinity.config.CombatCfg;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.config.Lang;
 import studio.magemonkey.divinity.data.DivinityUserData;
@@ -208,6 +209,8 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
             this.getPluginManager().disablePlugin(this);
             return;
         }
+
+        CombatCfg.load(this);
 
         this.lang = new Lang(this);
         this.lang.setup();

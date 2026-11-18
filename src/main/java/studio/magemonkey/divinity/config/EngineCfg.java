@@ -56,7 +56,19 @@ public class EngineCfg {
     public static double  COMBAT_SHIELD_BLOCK_BONUS_RATE;
     public static double  COMBAT_SHIELD_BLOCK_BONUS_DAMAGE_MOD;
     public static int     COMBAT_SHIELD_BLOCK_COOLDOWN;
+    /**
+     * Forces the legacy preset's formulas, whatever {@code combat.yml} says.
+     *
+     * @deprecated Nothing sets this any more: {@code combat.legacy-combat} moved to {@code combat.yml}'s
+     * {@code preset}, see {@code CombatCfg}. It stays so that code written against the old switch keeps working.
+     */
+    @Deprecated
     public static boolean LEGACY_COMBAT;
+    /**
+     * The value of the old {@code combat.legacy-combat} key in {@code engine.yml}, or null if it is not there.
+     * Read only so that {@code CombatCfg} can choose the matching preset when it writes {@code combat.yml}.
+     */
+    public static Boolean LEGACY_COMBAT_OLD_KEY;
     /** Longest time, in ticks, that what was worked out from an entity's gear is reused. 0 turns the cache off. */
     public static int     PERFORMANCE_STAT_SNAPSHOT_MAX_AGE = 20;
     public static boolean COMBAT_DISABLE_VANILLA_SWEEP;
@@ -219,7 +231,8 @@ public class EngineCfg {
         // C O M B A T //
 
         path = "combat.";
-        EngineCfg.LEGACY_COMBAT = cfg.getBoolean(path + "legacy-combat", false);
+        EngineCfg.LEGACY_COMBAT_OLD_KEY =
+                cfg.contains(path + "legacy-combat") ? cfg.getBoolean(path + "legacy-combat") : null;
         EngineCfg.COMBAT_DISABLE_VANILLA_SWEEP = cfg.getBoolean(path + "disable-vanilla-sweep-attack");
         EngineCfg.COMBAT_REDUCE_PLAYER_HEALTH_BAR = cfg.getBoolean(path + "compress-player-health-bar");
         EngineCfg.COMBAT_FISHING_HOOK_DO_DAMAGE = cfg.getBoolean(path + "fishing-hook-do-damage");

@@ -1,0 +1,65 @@
+# Divinity combat formulas.
+#
+# Every number the damage calculator computes with a formula is an expression in this file. Expressions are
+# compiled when the plugin loads and evaluated once per damage type of every hit. Rolls (dodge, block, critical
+# chance), event firing and ordering are not formulas and cannot be changed here.
+#
+# Changing nothing keeps the combat Divinity has always had. This file replaces 'combat.legacy-combat' in
+# engine.yml: servers that had it set to true were moved to 'preset: legacy' automatically, and the old key is now
+# ignored.
+#
+# A formula that does not compile, uses a variable that is not listed for it, or gives NaN or infinity when tested
+# at load is reported once in the console and that one expression falls back to the chosen preset's own. If a
+# formula gives NaN or infinity in the middle of a fight (for example a division by zero on an unusual hit), the
+# preset's expression is used for that hit instead. Combat never stops because of a formula in this file.
+#
+# Syntax: numbers, variables, + - * / % ^, unary minus, brackets, and the functions min, max, abs, sqrt, sum, avg,
+# floor, ceil, round, sin, cos, tan, ln, log, plus the constants pi and e. Notes: '^' is left associative
+# (2^3^2 is (2^3)^2). A '^' followed by a minus is rejected: write '2^(-1)', not '2^-1', because Codex's parser can
+# compute the second form wrongly without complaint. Variable names are written exactly as listed below (lowercase,
+# with underscores).
+
+# Which set of default expressions to start from.
+#   default - the combat of current versions.
+#   legacy  - as 'default', but with the old defense formula (what 'legacy-combat: true' used to give).
+preset: default
+
+# Override single expressions here. Only the keys you list are changed, everything else follows the preset.
+# Each commented line below is the expression the 'default' preset uses. Remove the '#' and edit it to override.
+# Where the 'legacy' preset differs, its expression is shown too.
+#
+# The expressions of one damage type are evaluated in this order for every hit:
+#   damage-scaling -> direct-damage -> (when a defense applies) defense-value -> defense-mitigation
+expressions:
+  # damage-scaling: the damage of one damage type after every multiplier.
+  #   damage             the damage of this type before any modifier
+  #   pvp_pve_damage     1 + the attacker's PvE or PvP damage stat / 100 (PvP when both sides are players)
+  #   critical           1, or the attacker's critical damage when the critical roll succeeded
+  #   entity_type        the damage type's modifier for the victim's entity type (1 if none)
+  #   faction            the damage type's modifier for the victim's MythicMobs faction (1 if none)
+  #   enchant_protection the victim's enchantment protection factor against this cause of damage
+  #   attack_power       the attacker's attack cooldown modifier (always 1 for hits that are exempt from it)
+  #   block              1, or 1 - the victim's block damage stat / 100 when the block roll succeeded
+  # damage-scaling: "damage * pvp_pve_damage * critical * entity_type * faction * enchant_protection * attack_power * block"
+
+  # direct-damage: the part of the scaled damage that skips the defense. The calculator itself takes it out of the
+  # damage (never below 0) and adds it back after the defense; that bookkeeping is not configurable.
+  #   damage             the result of damage-scaling
+  #   direct             the fraction of the damage that is direct (0 today: direct damage is switched off)
+  # direct-damage: "damage * direct"
+
+  # defense-value: the victim's defense value for the damage type, before it is used by defense-mitigation.
+  # Only evaluated when the damage type has a defense and there is damage left after the direct part.
+  #   defense            the victim's value of the defense attached to this damage type
+  #   pvp_pve_defense    1 + the victim's PvE or PvP defense stat / 100 (PvP when both sides are players)
+  #   penetration        1 - the attacker's penetration stat / 100
+  # defense-value: "max(0, defense * pvp_pve_defense * penetration)"
+
+  # defense-mitigation: the damage left after the defense. The calculator reports damage minus this as 'defended'.
+  #   damage             the damage after the direct part was taken out
+  #   defense            the result of defense-value
+  #   protection         the defense's protection factor
+  #   toughness          the victim's armor toughness (used by the default formula only)
+  # defense-mitigation: "max(0, damage * (1 - max(defense / 5, defense - 4 * damage / max(1, toughness + 8)) * protection * 0.05))"
+  # legacy preset:
+  # defense-mitigation: "max(0, damage * (1 - (defense * protection * 0.01)))"

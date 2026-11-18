@@ -2,20 +2,33 @@ package studio.magemonkey.divinity.manager.damage;
 
 import lombok.Value;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.divinity.config.CombatCfg;
+import studio.magemonkey.divinity.manager.damage.formula.CombatExpression;
+import studio.magemonkey.divinity.manager.damage.formula.CombatFormulas;
 
 /**
- * The damage formula, on plain numbers. It needs no Bukkit and no plugin instance.
+ * The damage calculation, on plain numbers. It needs no Bukkit and no plugin instance.
  * <p>
  * {@link DamageManager} does the lookups (stats, attributes, hooks, enchantments) and passes the results in.
- * The order of the floating-point operations is deliberately the same as it was when the formula lived in
- * {@code DamageManager#onDamageRPGStart}; do not reorder them.
+ * The numbers come from the expressions in {@code combat.yml} ({@link CombatExpression}); what stays here is the
+ * order of the stages and the bookkeeping between them. With the shipped default the results are bit for bit what
+ * the formulas gave when they were written in Java, and the same holds for the legacy preset.
+ * <p>
+ * A calculator holds no state between calls, so one may be shared between threads and kept across hits.
  */
 public final class DamageCalculator {
 
-    private final Modifiers modifiers;
+    private final Modifiers       modifiers;
+    private final CombatFormulas  formulas;
 
+    /** Uses the formulas of {@code combat.yml} (or the legacy preset's when {@link Modifiers#legacyCombat}). */
     public DamageCalculator(Modifiers modifiers) {
+        this(modifiers, CombatCfg.formulas(modifiers.legacyCombat));
+    }
+
+    public DamageCalculator(Modifiers modifiers, CombatFormulas formulas) {
         this.modifiers = modifiers;
+        this.formulas = formulas;
     }
 
     /**
@@ -32,31 +45,29 @@ public final class DamageCalculator {
                             double factionModifier,
                             @Nullable Double defense,
                             double protectionFactor) {
-        double dmgType = damage;
-
-        dmgType *= modifiers.pveDamage;
-        dmgType *= modifiers.critical;
-        dmgType *= entityTypeModifier;
-        dmgType *= factionModifier;
-        dmgType *= modifiers.enchantProtection;
-        if (modifiers.applyAttackPower) dmgType *= modifiers.attackPower;
-        dmgType *= modifiers.block;
-        double directType = dmgType * modifiers.direct; // Get direct value for this damage type
+        // The values are passed in the order CombatExpression lists the variables. Each call builds its own
+        // argument array, so a calculator keeps no state between calls and may be shared between threads.
+        double dmgType = formulas.eval(CombatExpression.DAMAGE_SCALING,
+                damage,
+                modifiers.pveDamage,
+                modifiers.critical,
+                entityTypeModifier,
+                factionModifier,
+                modifiers.enchantProtection,
+                // Attack power is not applied to exempt events; 1 is the neutral value of the product
+                modifiers.applyAttackPower ? modifiers.attackPower : 1D,
+                modifiers.block);
+        double directType = formulas.eval(CombatExpression.DIRECT_DAMAGE, dmgType, modifiers.direct);
         dmgType = Math.max(0, dmgType - directType); // Deduct this value from damage
 
         boolean defenseApplied = false;
         double  defended       = 0;
         if (dmgType > 0 && defense != null) {
-            double def = Math.max(0, defense * modifiers.pveDefense * modifiers.penetrate);
+            double def = formulas.eval(CombatExpression.DEFENSE_VALUE,
+                    defense, modifiers.pveDefense, modifiers.penetrate);
 
-            double defCalced;
-            if (modifiers.legacyCombat) {
-                defCalced = Math.max(0, dmgType * (1 - (def * protectionFactor * 0.01)));
-            } else {
-                defCalced = Math.max(0,
-                        dmgType * (1 - Math.max(def / 5, def - 4 * dmgType / Math.max(1, modifiers.toughness + 8))
-                                * protectionFactor * 0.05));
-            }
+            double defCalced = formulas.eval(CombatExpression.DEFENSE_MITIGATION,
+                    dmgType, def, protectionFactor, modifiers.toughness);
             defenseApplied = true;
             defended = dmgType - defCalced;
             dmgType = defCalced;
@@ -79,9 +90,12 @@ public final class DamageCalculator {
         double  direct;
         double  pveDefense;
         double  penetrate;
-        /** The victim's armor toughness. Only the current formula uses it. */
+        /** The victim's armor toughness. Only the default preset's defense formula uses it. */
         double  toughness;
-        /** Selects the old defense formula ({@code EngineCfg.LEGACY_COMBAT}). */
+        /**
+         * Uses the legacy preset's formulas for this hit, whatever {@code combat.yml} selects
+         * ({@code EngineCfg.LEGACY_COMBAT}, deprecated: false unless something sets it).
+         */
         boolean legacyCombat;
     }
 

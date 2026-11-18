@@ -22,8 +22,10 @@ Update this file in the same pull request whenever something here stops being tr
 | 1. Extract the calculator (1.1) and the vanilla modifier bridge (1.2) | Done |
 | 2. The shared contract | Done with 2.2c, which adds the `attached-damage-types` key |
 | 3. Fabled migration | Next |
-| 4.2 Stat snapshots | Done, in this pull request (#372). 4.1 and 4.3 are not started; 4.2b is next after them |
-| 4 (rest) and 5 | Not started |
+| 4.1 Formulas in `combat.yml` | In review (#387) |
+| 4.2 Stat snapshots | Done (#385) |
+| 4.2b Vanilla Thorns | Done (#384) |
+| 4.3 and 5 | Not started |
 
 ## Rules for every pull request
 
@@ -157,6 +159,47 @@ lift the cap in the test and restore it.
 - **The end-to-end tests do not guard three bridge details:** the value written to BLOCKING when a shield
   roll fails or succeeds, the invulnerability reduction read, and resistance counting toward the absorption
   cap. Only `VanillaDamageBridgeTest` catches them, so keep that test when the bridge changes.
+
+## Formulas in `combat.yml` (4.1)
+
+- **Where things are.** `config/CombatCfg` loads and migrates the file and holds what is in force.
+  `manager/damage/formula/` holds `CombatExpression` (the four expressions, their variables and their default
+  text), `CombatPreset`, `CombatFormulas` (compiled set plus overrides) and `Formulas`.
+  `DamageCalculator` keeps the stage order and the bookkeeping between stages; the numbers come from the expressions.
+- **Expressions are compiled once with Codex's `Evaluator.compile`** (needs Codex `1.3.0-dev.2`, which is why
+  `MIN_CORE_VERSION` was raised). A `CompiledExpression` is immutable and safe from any thread, binds variables by
+  position and returns NaN and infinity as they are, so `CombatFormulas` checks every expression against the sample
+  values in `CombatExpression` at load. Syntax follows Javaluator: `^` is left associative. **Javaluator, which
+  Codex bundles, computes `x * 2^-1` wrongly without complaining** (the old string evaluator does too), so
+  `CombatFormulas` rejects any override with `^` followed by a minus and tells the admin to write `2^(-1)`. Remove
+  that check only once Codex has fixed the parser.
+- **`DamageCalculator` keeps no state between calls** and builds a fresh argument array for each evaluation, so one
+  calculator can be shared between threads and kept across hits (the stat snapshots in 4.2 may want that). It used
+  to reuse arrays to avoid the allocation; measured on the benchmark that saved nothing noticeable, and it made
+  sharing a calculator unsafe. `CombatFormulasTest` has a test that shares one calculator between eight threads and
+  one that reuses it for many calls; keep both if the calculator changes.
+- **`ReferenceDamageCalculator` (test sources) is the formula as it was written in Java.** The equivalence test
+  compares bit for bit against it for both presets. Never edit its arithmetic to make a test pass.
+- **`EngineCfg.LEGACY_COMBAT` is a deprecated override and nothing sets it.** `CombatCharacterizationTest` and
+  `DamageCalculatorTest` still set it (or `Modifiers.legacyCombat`) to run the legacy preset, which is why the
+  field and `Modifiers.legacyCombat` still exist. The old `engine.yml` key is read into
+  `EngineCfg.LEGACY_COMBAT_OLD_KEY` only so migration can pick a preset, and is ignored once `combat.yml` exists.
+  Do not make production code write `LEGACY_COMBAT` again: a stale `legacy-combat: true` in an old `engine.yml`
+  would then override the preset in `combat.yml`.
+- **Reload.** `Divinity#reload` (Codex's `CodexPlugin#reload`, what a config reload runs) goes through
+  `ConfigManager.setup`, which calls `Divinity#setConfig`; `CombatCfg.load` runs there after `EngineCfg`, and the
+  order matters because migration reads the old `legacy-combat` key `EngineCfg` has just read. `CombatReloadTest`
+  uses the real `plugin.reload()` under MockBukkit and fails if the order changes or `CombatCfg.load` leaves
+  that path.
+- **Variable names use underscores** (`pvp_pve_damage`), because a hyphen is the minus operator. `pvp_pve_damage` and
+  `pvp_pve_defense` are the PvP values when both sides are players, which is why the names say so.
+- **Presets that give NaN or infinity keep doing so.** Only a formula the config overrides is replaced by the
+  preset's result at hit time; a preset's own non-finite result is passed on as the Java formula always did.
+- **Benchmark.** `DamageCalculatorBenchmark` (test sources, not a test, has a `main`) compares the replaced Java
+  formulas with the configured ones on the same inputs. Run it after changing the evaluator. With Codex
+  `1.3.0-dev.2` the configured formulas are about 15 times slower on this calculator-only benchmark (roughly 400 ns
+  against 27 ns per hit, ten evaluations at about 35 ns); that is over the 1.5x the pull request aimed for and is
+  discussed in its description.
 
 ## Stat snapshots (4.2)
 

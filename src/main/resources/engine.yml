@@ -75,8 +75,7 @@ attributes:
   hide-flags: true
 
 combat:
-  # Whether to use the old combat formula for calculating defenses
-  legacy-combat: false
+  # The combat formulas, including the old defense formula that 'legacy-combat' used to switch on, are in combat.yml.
   # Shield settings.
   shield:
     block:
