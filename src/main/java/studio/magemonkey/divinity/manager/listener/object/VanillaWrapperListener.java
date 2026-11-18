@@ -28,6 +28,7 @@ import studio.magemonkey.codex.registry.BuffRegistry;
 import studio.magemonkey.codex.util.ItemUT;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
+import studio.magemonkey.divinity.api.event.DivinityHitEvent;
 import studio.magemonkey.divinity.api.event.DivinityProjectileLaunchEvent;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.EHook;
@@ -38,6 +39,7 @@ import studio.magemonkey.codex.api.damage.DamageSources;
 import studio.magemonkey.codex.api.damage.WeaponStatsMode;
 import studio.magemonkey.codex.api.items.PrefixHelper;
 import studio.magemonkey.divinity.manager.damage.DamageMeta;
+import studio.magemonkey.divinity.manager.damage.TypedDeals;
 import studio.magemonkey.divinity.manager.damage.VanillaDamageBridge;
 import studio.magemonkey.divinity.modules.list.arrows.ArrowManager;
 import studio.magemonkey.divinity.modules.list.arrows.ArrowManager.QArrow;
@@ -52,6 +54,7 @@ import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.api.SimpleStat;
 import studio.magemonkey.divinity.utils.ItemUtils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -192,10 +195,10 @@ public class VanillaWrapperListener extends IListener<Divinity> {
      */
     private void replaceDamage(Map<DamageAttribute, Double> damages,
                                Map<DefenseAttribute, Double> defenses,
-                               DamageRequest request) {
+                               Map<String, Double> amounts) {
         String namespace = plugin.getName().toUpperCase(Locale.US);
         damages.clear();
-        request.getAmounts().forEach((type, amount) -> {
+        amounts.forEach((type, amount) -> {
             DamageAttribute dmgAtt = ItemStats.getDamageById(PrefixHelper.stripPrefix(namespace, type));
             if (dmgAtt == null) return;
             damages.merge(dmgAtt, amount, Double::sum);
@@ -223,6 +226,10 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         // How the dealer described this hit, if it did. Fabled's throwaway events never get this far, so
         // they cannot take a request away from the real hit.
         DamageRequest request = DamageContexts.claim(e);
+        // A DIVINITY_<type> hit dealt through DamageRegistry inside the dealer's own request: the request says
+        // how to treat the weapon, the deal says what the damage is. Claimed before any early return, so a
+        // nested hit on the same target cannot pick it up.
+        TypedDeals.Deal typed = TypedDeals.claim(e);
         if (request != null && request.getWeaponStats() == WeaponStatsMode.RAW) return;
 
         // Disable vanilla armor effect.
@@ -247,6 +254,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         statsVictim.setLastDamageMeta(meta);
 
         boolean isFullDamage = false;
+        boolean thornsHit    = false;
 
         // The vanilla damage type, read at most once per event. It is read for the Thorns check on a hit with
         // no request, and reused by the attached-damage-types fallback below.
@@ -277,6 +285,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                     vanillaTypeKnown = true;
                 }
                 if (isThornsHit(cause, vanillaType)) {
+                    thornsHit = true;
                     break labelFullDamage;
                 }
             }
@@ -350,6 +359,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         if (request != null && request.getWeaponStats() == WeaponStatsMode.IGNORE && damager != null) {
             skillShouldIgnore = true;
         }
+        describe(meta, request, typed, projectile, damager, thornsHit, skillShouldIgnore);
 
         // +----------------------------------------------------+
         // | Get all DamageAttribute values of the damager.     |
@@ -450,8 +460,10 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                 .forEach((dmgAtt) -> damages.compute(dmgAtt,
                         (dmgKey, dmgVal) -> (dmgVal != null ? dmgVal : 0) + damageStart2));
 
-        if (request != null && request.getWeaponStats() == WeaponStatsMode.REPLACE) {
-            replaceDamage(damages, defenses, request);
+        if (typed != null) {
+            replaceDamage(damages, defenses, Collections.singletonMap(typed.getType(), typed.getAmount()));
+        } else if (request != null && request.getWeaponStats() == WeaponStatsMode.REPLACE) {
+            replaceDamage(damages, defenses, request.getAmounts());
         }
 
         DivinityDamageEvent.BeforeScale beforeScale = new DivinityDamageEvent.BeforeScale(victim,
@@ -470,6 +482,14 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         }
 
         scaleValuesWithCore(damager, projectile, damages, defenses, victim);
+
+        DivinityHitEvent.Prepare prepare =
+                new DivinityHitEvent.Prepare(victim, damager, projectile, e, meta, damages, defenses);
+        plugin.getPluginManager().callEvent(prepare);
+        if (prepare.isCancelled()) {
+            clearArrowBonus(statsDamager, statsVictim);
+            return;
+        }
 
         DivinityDamageEvent.Start eventStart = new DivinityDamageEvent.Start(victim,
                 damager,
@@ -498,6 +518,36 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         vanilla.settleFinalDamage(victim);
 
 //        Divinity.getInstance().info("event took: " + (System.currentTimeMillis() - l1) + " millis");
+    }
+
+    /**
+     * Records on the damage meta what {@link DivinityHitEvent} reports about the hit: its origin, how the
+     * weapon was treated, and the typed amounts it was described with.
+     */
+    private static void describe(@NotNull DamageMeta meta,
+                                 @Nullable DamageRequest request,
+                                 @Nullable TypedDeals.Deal typed,
+                                 @Nullable Projectile projectile,
+                                 @Nullable LivingEntity damager,
+                                 boolean thornsHit,
+                                 boolean ignored) {
+        meta.setOrigin(request != null
+                ? request.getOrigin()
+                : DivinityHitEvent.inferOrigin(projectile, damager, thornsHit));
+
+        WeaponStatsMode asked = request != null ? request.getWeaponStats() : null;
+        WeaponStatsMode handled;
+        if (ignored) handled = WeaponStatsMode.IGNORE;
+        else if (typed != null) handled = asked == WeaponStatsMode.IGNORE ? WeaponStatsMode.IGNORE : WeaponStatsMode.REPLACE;
+        else if (asked != null) handled = asked;
+        else handled = WeaponStatsMode.ADD;
+        meta.setWeaponStatsMode(handled);
+
+        if (typed != null) {
+            meta.setRequestedAmounts(Collections.singletonMap(typed.getType(), typed.getAmount()));
+        } else if (request != null) {
+            meta.setRequestedAmounts(request.getAmounts());
+        }
     }
 
     /**

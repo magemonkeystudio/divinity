@@ -34,6 +34,7 @@ import studio.magemonkey.codex.util.random.Rnd;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.api.PartyAPI;
 import studio.magemonkey.divinity.api.event.DivinityDamageEvent;
+import studio.magemonkey.divinity.api.event.DivinityHitEvent;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.hooks.EHook;
 import studio.magemonkey.divinity.hooks.external.FabledHook;
@@ -294,6 +295,11 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
                 dmgAtt.getHitActions().process(damager);
             }
         }
+
+        DivinityHitEvent.Result result =
+                new DivinityHitEvent.Result(victim, damager, projectile, orig, meta, e.getDamageMap());
+        plugin.getPluginManager().callEvent(result);
+        if (result.isCancelled()) return;
 
         VanillaDamageBridge vanilla = new VanillaDamageBridge(orig);
 
@@ -567,6 +573,17 @@ public class DamageManager extends IListener<Divinity> implements DamageTypeProv
         // The request cannot carry a negative amount or one that is not a number. The Bukkit call below still
         // gets the amount as it was given.
         double requested = Double.isNaN(amount) ? 0D : Math.max(0D, amount);
+
+        // Inside a dealer's own request (a Fabled skill with a DIVINITY_<type> classifier), a request of ours
+        // would be claimed in its place and the dealer's weapon-stats mode and origin would be lost. Let the
+        // listener claim the dealer's request and take the typed amount from here instead.
+        if (DamageContexts.isAnnounced(entity)) {
+            try (TypedDeals.Deal deal = TypedDeals.open(entity, damageType, requested)) {
+                entity.damage(amount, damager);
+                return deal.isClaimed();
+            }
+        }
+
         DamageRequest request = DamageRequest.builder()
                 .origin(DamageOrigin.EXTERNAL)
                 .source(damager)

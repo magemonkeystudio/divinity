@@ -7,13 +7,17 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import studio.magemonkey.codex.api.damage.DamageOrigin;
 import studio.magemonkey.codex.api.damage.DamageRequest;
+import studio.magemonkey.codex.api.damage.WeaponStatsMode;
 import studio.magemonkey.divinity.modules.list.arrows.ArrowManager.QArrow;
 import studio.magemonkey.divinity.stats.EntityStats;
 import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.DefenseAttribute;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -42,6 +46,20 @@ public class DamageMeta {
     @Setter
     @Nullable
     private       DamageRequest                 request;
+    /** What dealt the hit: the request's origin, or Divinity's guess without one. Set before any event fires. */
+    @Getter
+    @Setter
+    @Nullable
+    private       DamageOrigin                  origin;
+    /** How Divinity handled the attacker's equipment for this hit. Set before any event fires. */
+    @Getter
+    @Setter
+    @Nullable
+    private       WeaponStatsMode               weaponStatsMode;
+    /** The typed amounts the hit was described with, by type as the dealer wrote it. */
+    @Getter
+    @NotNull
+    private       Map<String, Double>           requestedAmounts          = Collections.emptyMap();
     private       String                        entityName;
     private       String                        damagerName;
 
@@ -60,6 +78,10 @@ public class DamageMeta {
         this.damageDefended = new HashMap<>();
 
         this.combatStartTime = System.currentTimeMillis();
+    }
+
+    public void setRequestedAmounts(@NotNull Map<String, Double> amounts) {
+        this.requestedAmounts = Collections.unmodifiableMap(new LinkedHashMap<>(amounts));
     }
 
     public void setArrow(@Nullable QArrow arrow, int arrowLevel) {

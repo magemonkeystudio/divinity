@@ -25,7 +25,9 @@ Update this file in the same pull request whenever something here stops being tr
 | 4.1 Formulas in `combat.yml` | Done (#387) |
 | 4.2 Stat snapshots | Done (#385) |
 | 4.2b Vanilla Thorns | Done (#384) |
-| 4.3 and 5 | Next: 4.3 |
+| 4.3a New event surface, `DIVINITY_<type>` inside a request | Done (#389) |
+| 4.3b Fabled: Physical Damage trigger and immediate buffs on `DivinityHitEvent.Result` | Next |
+| 5. Clean-up | Not started |
 
 ## Rules for every pull request
 
@@ -159,6 +161,33 @@ lift the cap in the test and restore it.
 - **The end-to-end tests do not guard three bridge details:** the value written to BLOCKING when a shield
   roll fails or succeeds, the invulnerability reduction read, and resistance counting toward the absorption
   cap. Only `VanillaDamageBridgeTest` catches them, so keep that test when the bridge changes.
+
+## The new event surface (4.3a)
+
+- **`DivinityHitEvent.Prepare` and `.Result`** are the supported events. `Prepare` is fired by
+  `VanillaWrapperListener` after Codex scaling and before `Start`. `Result` is fired by `DamageManager` after
+  the per-type loop and before the fully-mitigated check, so a listener that changes the numbers changes the
+  `BASE` written, the post-hit effects, `Exit` and the combat log. `DivinityHitEventTest` pins the order and
+  what each change does.
+- **They extend Bukkit's `Event`, not Codex's `IEvent`.** `IEvent` has one static `HandlerList` shared by every
+  Codex event, so every listener of every such event is offered every one of them. Give any new event its own
+  `HandlerList`.
+- **`DamageMeta` carries what the events report:** `origin`, `weaponStatsMode` (what Divinity did, not what the
+  request asked) and `requestedAmounts`. `VanillaWrapperListener#describe` sets them before the first event
+  fires. A meta built elsewhere has none; `DivinityHitEvent` then falls back to the inferred origin and `ADD`.
+- **The old events are deprecated but still drive Divinity.** The calculation is a `Start` listener, and the
+  durability and stats-refresh listeners are on `Exit`. Do not move them to the new events without a decision:
+  `Exit` skips `IGNORE` hits and `Result` does not.
+- **`DIVINITY_<type>` inside an open request.** `DamageManager#dealDamage` used to open its own `REPLACE` request,
+  which Codex's `claim` (newest unclaimed first) handed out in place of the dealer's. The dealer's request then
+  stayed open and unclaimed, so the next hit on the target inside the same scope claimed it. Now, when
+  `DamageContexts.isAnnounced(target)`, `dealDamage` opens a `TypedDeals.Deal` instead of a request, and the
+  listener claims both. `RAW` leaves the hit alone, `IGNORE` uses only the typed amount and is exempt, anything
+  else is `REPLACE` as before. Codex has no way to read an open request without claiming it; if it gains one,
+  `TypedDeals` could go. `TypedDamageInsideRequestTest` pins all of this; four of its tests fail without the fix.
+- **Fabled's real call path for a `DIVINITY_<type>` skill was not checked** (Fabled is outside this repository's
+  scope and the published snapshots predate fabled#1919). The fix assumes what the task described: Fabled's
+  scope is open on the target while it calls `DamageRegistry.dealDamage`. Check this in 4.3b.
 
 ## Formulas in `combat.yml` (4.1)
 

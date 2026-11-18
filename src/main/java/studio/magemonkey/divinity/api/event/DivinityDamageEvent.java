@@ -23,6 +23,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.DoubleUnaryOperator;
 
+/**
+ * The damage events Divinity fired before 2.0.
+ *
+ * @deprecated Use {@link DivinityHitEvent.Prepare} and {@link DivinityHitEvent.Result}. These events still fire at
+ * the same points with the same behaviour, and will be removed in a later 2.x release (not before
+ * {@link Dodge} has a replacement). See each subclass for the closest replacement.
+ */
+@Deprecated
 public abstract class DivinityDamageEvent extends ICancellableEvent {
 
     protected LivingEntity victim;
@@ -193,9 +201,13 @@ public abstract class DivinityDamageEvent extends ICancellableEvent {
     }
 
     /**
-     * Called at the start of Damage Event, before ANY calculations.
-     * This is the first QuantumDamageEvent instance.
+     * Called after Codex scaling, before any calculation. Divinity's own calculation listens to this event at
+     * {@code HIGHEST}.
+     *
+     * @deprecated Use {@link DivinityHitEvent.Prepare}, which fires just before this event with the same damage
+     * and defense maps.
      */
+    @Deprecated
     public static class Start extends DivinityDamageEvent {
 
         public Start(
@@ -217,6 +229,13 @@ public abstract class DivinityDamageEvent extends ICancellableEvent {
         }
     }
 
+    /**
+     * Called before Codex's attributes and buffs scale the damage and defense maps.
+     *
+     * @deprecated Use {@link DivinityHitEvent.Prepare}. It fires after the scaling; nothing replaces the point
+     * before it.
+     */
+    @Deprecated
     public static class BeforeScale extends DivinityDamageEvent {
 
         public BeforeScale(
@@ -239,9 +258,12 @@ public abstract class DivinityDamageEvent extends ICancellableEvent {
     }
 
     /**
-     * Called at the start of Damage Event, before damage calculations.
-     * This is the second QuantumDamageEvent instance.
+     * Called after the dodge roll, critical hit, block and PvP or PvE modifiers, before the formula.
+     *
+     * @deprecated Use {@link DivinityHitEvent.Prepare} to change the inputs, or {@link DivinityHitEvent.Result}
+     * to cancel the hit once critical hit and block are known.
      */
+    @Deprecated
     public static class Pre extends DivinityDamageEvent {
 
         public Pre(
@@ -255,6 +277,13 @@ public abstract class DivinityDamageEvent extends ICancellableEvent {
         }
     }
 
+    /**
+     * Called when the victim dodges. Cancelling it makes the hit land.
+     *
+     * @deprecated No replacement yet. It keeps firing and will not be removed before one exists. A dodged hit
+     * fires {@link DivinityHitEvent.Prepare} but no {@link DivinityHitEvent.Result}.
+     */
+    @Deprecated
     public static class Dodge extends DivinityDamageEvent {
 
         public Dodge(
@@ -275,9 +304,14 @@ public abstract class DivinityDamageEvent extends ICancellableEvent {
     }
 
     /**
-     * Called at the end of Damage Event, before return the damage value.
-     * This is the latest QuantumDamageEvent instance.
+     * Called at the end of the calculation, after the damage is written and the post-hit effects have run. Not
+     * called for hits that ignore Divinity's weapon stats.
+     *
+     * @deprecated Use {@link DivinityHitEvent.Result} for the final numbers (it fires for every calculated hit,
+     * those ignoring weapon stats included), or the Bukkit damage event at {@code MONITOR} for "after the hit
+     * landed".
      */
+    @Deprecated
     public static class Exit extends DivinityDamageEvent {
 
         public Exit(

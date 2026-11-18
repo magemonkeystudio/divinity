@@ -209,6 +209,7 @@ public class EntityManager extends IListener<Divinity> {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @SuppressWarnings("deprecation")
     public void onStatsDamagePacketDuplicator(DivinityDamageEvent.Exit e) {
         LivingEntity victim = e.getVictim();
         this.addDuplicatorFixer(victim);

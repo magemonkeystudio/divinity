@@ -60,6 +60,9 @@ public class ItemDurabilityListener extends IListener<Divinity> {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    // Stays on the deprecated Exit on purpose: Exit is not fired for hits that ignore weapon stats, which must
+    // cost no durability
+    @SuppressWarnings("deprecation")
     public void onDuraDamageWeapon(DivinityDamageEvent.Exit e) {
         // Reduce durability of victim's armor
         LivingEntity    victim      = e.getVictim();

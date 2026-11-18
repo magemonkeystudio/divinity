@@ -92,7 +92,8 @@ still treated as swings and are left for a follow-up.
 
 Not a bug after all: `DivinityDamageEvent.Exit` does not fire for `ignore-divinity` skill damage. Firing
 it would make those hits start costing weapon and armor durability, which is a behaviour change. It is
-left as it is and revisited with the new event surface in Phase 4.
+left as it is and revisited with the new event surface in Phase 4. In 4.3a it stays that way;
+`DivinityHitEvent.Result` does fire for those hits.
 
 ## Target design
 
@@ -197,7 +198,7 @@ These must keep working unchanged:
   classifiers such as `skill_defense_default`. Any key clean-up is alias-only.
 - The `ignore-divinity` skill setting, with its current behaviour.
 - `DivinityDamageEvent.BeforeScale`, `Start`, `Pre`, `Dodge` and `Exit`, as deprecated shims, for at
-  least one release after 2.0.
+  least one release after 2.0. Deprecated in 4.3a in favour of `DivinityHitEvent.Prepare` and `.Result`.
 - `DamageTypeProvider.dealDamage`, delegating to the new request API.
 - Existing `engine.yml` combat options, migrated where they move.
 
@@ -260,12 +261,16 @@ Rules for every pull request:
 | 4.1 | Divinity | Formulas move to `combat.yml` | Config layout |
 | 4.2 | Divinity | Stat snapshots. Done | Projectile timing |
 | 4.2b | Divinity | Stop treating hits that are not swings as swings: vanilla Thorns first (cause `THORNS` on every version, the damage type on 1.20.4+). Uses the origin from the damage request where there is one | Thorns damage |
-| 4.3a | Divinity | New event and API surface (`DivinityHitEvent.Prepare` and `.Result`); the old events become deprecated shims. A `DIVINITY_<type>` hit dealt inside a dealer's open request honours that request's weapon-stats mode. In progress | `DIVINITY_<type>` inside an `IGNORE` or `RAW` request |
+| 4.3a | Divinity | New event and API surface (`DivinityHitEvent.Prepare` and `.Result`); the old events become deprecated shims. A `DIVINITY_<type>` hit dealt inside a dealer's open request honours that request's weapon-stats mode. Done (#389) | `DIVINITY_<type>` inside an `IGNORE` or `RAW` request |
 | 4.3b | Fabled | Fabled stops mutating `BASE` when Divinity is present. The Physical Damage trigger and immediate buffs act on Divinity's final numbers through `DivinityHitEvent.Result` | Yes |
 
 ### Phase 5: clean-up
 
 Remove the shims and dead paths after a release or two. Publish documentation for plugin authors.
+
+`DivinityDamageEvent.Dodge` has no replacement in the new surface yet (4.3a). Do not remove it before one
+exists. `ItemDurabilityListener` and `EntityManager` listen to `Exit`; moving them to `Result` would make
+hits that ignore weapon stats cost durability, so they need their own decision before `Exit` goes.
 
 ## Still to verify
 
