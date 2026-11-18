@@ -118,7 +118,7 @@ class CombatFormulasTest {
 
     @Test
     void oneCalculatorForSeveralDamageTypes_doesNotLeakArgumentsBetweenCalls() {
-        // A calculator reuses its argument arrays, so a call must not see what the one before it left behind
+        // A call must not see anything the one before it left behind
         Random random = new Random(4_1);
         for (CombatPreset preset : CombatPreset.values()) {
             Modifiers m = new Modifiers(1.1, 1.5, 0.9, true, 0.8, 0.7, 0.1, 1.2, 0.9, 6, preset == CombatPreset.LEGACY);
@@ -134,6 +134,47 @@ class CombatFormulasTest {
                 Result actual   = shared.calculate(damage, entity, faction, defense, protect);
                 assertEquals(expected, actual, preset + ", call " + i);
             }
+        }
+    }
+
+    @Test
+    void oneCalculatorSharedBetweenThreads_givesEveryThreadItsOwnResults() throws Exception {
+        // A calculator keeps no state between calls, so threads using the same one must not disturb each other
+        Modifiers m = new Modifiers(1.1, 1.5, 0.9, true, 0.8, 0.7, 0.1, 1.2, 0.9, 6, false);
+        for (CombatPreset preset : CombatPreset.values()) {
+            DamageCalculator          shared    = new DamageCalculator(m, CombatFormulas.of(preset));
+            ReferenceDamageCalculator reference = new ReferenceDamageCalculator(
+                    new Modifiers(1.1, 1.5, 0.9, true, 0.8, 0.7, 0.1, 1.2, 0.9, 6, preset == CombatPreset.LEGACY));
+            int                   threads  = 8;
+            java.util.concurrent.atomic.AtomicInteger wrong = new java.util.concurrent.atomic.AtomicInteger();
+            java.util.concurrent.CountDownLatch start = new java.util.concurrent.CountDownLatch(1);
+            List<Thread> workers = new ArrayList<>();
+            for (int t = 0; t < threads; t++) {
+                final int seed = t;
+                Thread worker = new Thread(() -> {
+                    Random random = new Random(seed);
+                    try {
+                        start.await();
+                    } catch (InterruptedException e) {
+                        return;
+                    }
+                    for (int i = 0; i < 20_000; i++) {
+                        double damage  = 1 + random.nextDouble() * 200;
+                        double entity  = 0.5 + random.nextDouble();
+                        double faction = 0.5 + random.nextDouble();
+                        Double defense = random.nextInt(4) == 0 ? null : random.nextDouble() * 100;
+                        double protect = random.nextDouble() * 2;
+                        Result expected = reference.calculate(damage, entity, faction, defense, protect);
+                        Result actual   = shared.calculate(damage, entity, faction, defense, protect);
+                        if (!expected.equals(actual)) wrong.incrementAndGet();
+                    }
+                });
+                workers.add(worker);
+                worker.start();
+            }
+            start.countDown();
+            for (Thread worker : workers) worker.join();
+            assertEquals(0, wrong.get(), preset + ": calls from other threads changed results");
         }
     }
 

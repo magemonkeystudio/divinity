@@ -22,7 +22,7 @@ Update this file in the same pull request whenever something here stops being tr
 | 1. Extract the calculator (1.1) and the vanilla modifier bridge (1.2) | Done |
 | 2. The shared contract | Done with 2.2c, which adds the `attached-damage-types` key |
 | 3. Fabled migration | Next |
-| 4.1 Formulas in `combat.yml` | Done (draft PR) |
+| 4.1 Formulas in `combat.yml` | In review (#387) |
 | 4.2 onwards and 5 | Not started |
 
 ## Rules for every pull request
@@ -167,13 +167,11 @@ lift the cap in the test and restore it.
   Codex bundles, computes `x * 2^-1` wrongly without complaining** (the old string evaluator does too), so
   `CombatFormulas` rejects any override with `^` followed by a minus and tells the admin to write `2^(-1)`. Remove
   that check only once Codex has fixed the parser.
-- **`DamageCalculator` reuses its argument arrays** (one per expression) so a hit allocates nothing per
-  evaluation. That makes a calculator single-threaded and single-hit; `DamageManager` builds one per hit. The
-  reuse test varies the per-call inputs, because only those can go stale.
-- **Adding or changing an expression** means changing three places together: `CombatExpression` (variables, sample
-  values, default text), `combat.yml` (the documentation comment and the default beside it) and the call in
-  `DamageCalculator`. `CombatFormulasTest.shippedFile_documentsEveryExpressionItsVariablesAndItsDefault` fails if
-  the file and the code disagree. The order of the variables is the order values are passed in.
+- **`DamageCalculator` keeps no state between calls** and builds a fresh argument array for each evaluation, so one
+  calculator can be shared between threads and kept across hits (the stat snapshots in 4.2 may want that). It used
+  to reuse arrays to avoid the allocation; measured on the benchmark that saved nothing noticeable, and it made
+  sharing a calculator unsafe. `CombatFormulasTest` has a test that shares one calculator between eight threads and
+  one that reuses it for many calls; keep both if the calculator changes.
 - **`ReferenceDamageCalculator` (test sources) is the formula as it was written in Java.** The equivalence test
   compares bit for bit against it for both presets. Never edit its arithmetic to make a test pass.
 - **`EngineCfg.LEGACY_COMBAT` is a deprecated override and nothing sets it.** `CombatCharacterizationTest` and
