@@ -1026,6 +1026,122 @@ class CombatCharacterizationTest extends MockedTest {
     }
 
     // ------------------------------------------------------------------ //
+    // Vanilla Thorns: the Thorns wearer is the damager of the reflected hit
+    // ------------------------------------------------------------------ //
+
+    /**
+     * Combat 4.2b: a Thorns hit is not a weapon swing. Before, it was one: with this weapon it was physical 60
+     * (20 tripled by a certain critical hit), the wearer was the hit's damager and the hit counted as
+     * critical. Now it is the event's own damage, typed by the cause and not critical.
+     */
+    @Test
+    void thorns_reflectedHit_isNotAWeaponSwing_onADefaultInstall() {
+        attacker.getInventory().setItemInMainHand(thornsWearerWeapon());
+
+        // The wearer is the attacker here; the reflected hit lands on whoever struck the wearer
+        Hit hit = hit(thornsEvent(attacker, victim, 2), victim);
+
+        String byCause = ItemStats.getDamageByCause(DamageCause.THORNS).getId();
+        assertEquals("_vanilla_generic", byCause, "Test setup: the shipped config attaches THORNS to this type");
+        assertEquals(Map.of(byCause, 2D), hit.damages());
+        assertFalse(hit.meta().isCritical());
+        assertNull(hit.meta().getDamager(), "Same as environmental damage: no damager stats are read");
+        assertEquals(FULL_PIPELINE, hit.events());
+        assertEquals(2D, hit.finalDamage(), DELTA);
+    }
+
+    @Test
+    void thorns_vanillaDamageTypeAlone_isNotAWeaponSwingEither() {
+        // 1.20.4 and newer: the cause is whatever the server chose, the damage type says thorns
+        attacker.getInventory().setItemInMainHand(thornsWearerWeapon());
+        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(attacker,
+                victim,
+                DamageCause.ENTITY_ATTACK,
+                DamageSource.builder(DamageType.THORNS).withCausingEntity(attacker).withDirectEntity(attacker).build(),
+                modifiers(2),
+                functions(modifiers(2)));
+
+        Hit hit = hit(event, victim);
+
+        assertEquals(Map.of(ItemStats.getDamageByDefault().getId(), 2D), hit.damages());
+        assertFalse(hit.meta().isCritical());
+    }
+
+    @Test
+    void thorns_causeMappedToADamageType_takesPrecedenceAndDefensesStillApply() throws Exception {
+        attacker.getInventory().setItemInMainHand(thornsWearerWeapon());
+        victim.getInventory().setChestplate(armor(Map.of("fire", 10D)));
+        DamageAttribute generic = Objects.requireNonNull(ItemStats.getDamageById("_vanilla_generic"));
+        DamageAttribute fire    = Objects.requireNonNull(ItemStats.getDamageById("fire"));
+        Set<String> genericCauses = attachedCauses(generic);
+        Set<String> fireCauses    = attachedCauses(fire);
+        setAttachedCauses(generic, withoutThorns(genericCauses));
+        setAttachedCauses(fire, withThorns(fireCauses));
+        try {
+            Hit hit = hit(thornsEvent(attacker, victim, 4), victim);
+
+            // 1 - max(10 / 5, 10 - 4 * 4 / 8) * 0.8 * 0.05 = 0.68, as in environment_isReducedByMatchingDefense
+            assertEquals(2.72D, hit.damage("fire"), DELTA);
+            assertEquals(Set.of("fire"), hit.damages().keySet());
+            assertFalse(hit.meta().isCritical());
+        } finally {
+            setAttachedCauses(generic, genericCauses);
+            setAttachedCauses(fire, fireCauses);
+        }
+    }
+
+    @Test
+    void thorns_vanillaDamageTypeMappedToADamageType_takesPrecedenceOverTheCause() {
+        attacker.getInventory().setItemInMainHand(thornsWearerWeapon());
+        DamageAttribute fire = Objects.requireNonNull(ItemStats.getDamageById("fire"));
+        fire.setAttachedDamageTypes(List.of("thorns"));
+        try {
+            EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(attacker,
+                    victim,
+                    DamageCause.THORNS,
+                    DamageSource.builder(DamageType.THORNS).withCausingEntity(attacker).build(),
+                    modifiers(4),
+                    functions(modifiers(4)));
+
+            // The cause alone would give _vanilla_generic, as in the default install test
+            assertEquals(Map.of("fire", 4D), hit(event, victim).damages());
+        } finally {
+            fire.setAttachedDamageTypes(List.of());
+        }
+    }
+
+    @Test
+    void thorns_hitCarryingAnEffectRequest_isLeftToTheRequest() {
+        attacker.getInventory().setItemInMainHand(thornsWearerWeapon());
+        refresh(attacker);
+        refresh(victim);
+        DamageRequest request = DamageRequest.builder().origin(DamageOrigin.EFFECT).source(attacker).build();
+
+        Hit hit;
+        try (DamageScope scope = DamageContexts.open(victim, request)) {
+            hit = hitWithoutRefresh(thornsEvent(attacker, victim, 2), victim);
+            assertTrue(scope.isClaimed());
+        }
+
+        // Same numbers as before Combat 4.2b: the request's origin decides, not the cause
+        assertEquals(Map.of("physical", 60D), hit.damages());
+        assertTrue(hit.meta().isCritical());
+        assertSame(request, hit.meta().getRequest());
+        assertSame(attacker, hit.meta().getDamager());
+    }
+
+    @Test
+    void thorns_sameWearersOrdinaryMeleeHit_isStillAFullWeaponSwing() {
+        attacker.getInventory().setItemInMainHand(thornsWearerWeapon());
+
+        Hit hit = melee(VANILLA_SWORD_DAMAGE);
+
+        assertEquals(Map.of("physical", 60D), hit.damages());
+        assertTrue(hit.meta().isCritical());
+        assertSame(attacker, hit.meta().getDamager());
+    }
+
+    // ------------------------------------------------------------------ //
     // Projectiles
     // ------------------------------------------------------------------ //
 
@@ -1557,6 +1673,49 @@ class CombatCharacterizationTest extends MockedTest {
         return new EntityDamageByEntityEvent(damager,
                 target,
                 DamageCause.ENTITY_ATTACK,
+                modifiers(eventDamage),
+                functions(modifiers(eventDamage)));
+    }
+
+    /**
+     * A weapon whose swing would be conspicuous if a Thorns hit used it: 20 physical, a certain critical hit.
+     */
+    private ItemStack thornsWearerWeapon() {
+        ItemStack sword = weapon(Map.of("physical", 20D));
+        stat(sword, TypedStat.Type.CRITICAL_RATE, 100);
+        stat(sword, TypedStat.Type.CRITICAL_DAMAGE, 2);
+        return sword;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Set<String> attachedCauses(DamageAttribute damage) throws Exception {
+        Field field = DamageAttribute.class.getDeclaredField("attachedDamageCauses");
+        field.setAccessible(true);
+        return (Set<String>) field.get(damage);
+    }
+
+    private static void setAttachedCauses(DamageAttribute damage, Set<String> causes) throws Exception {
+        Field field = DamageAttribute.class.getDeclaredField("attachedDamageCauses");
+        field.setAccessible(true);
+        field.set(damage, causes);
+    }
+
+    private static Set<String> withThorns(Set<String> causes) {
+        Set<String> copy = new HashSet<>(causes);
+        copy.add("THORNS");
+        return copy;
+    }
+
+    private static Set<String> withoutThorns(Set<String> causes) {
+        Set<String> copy = new HashSet<>(causes);
+        copy.remove("THORNS");
+        return copy;
+    }
+
+    private EntityDamageByEntityEvent thornsEvent(Entity wearer, Entity target, double eventDamage) {
+        return new EntityDamageByEntityEvent(wearer,
+                target,
+                DamageCause.THORNS,
                 modifiers(eventDamage),
                 functions(modifiers(eventDamage)));
     }

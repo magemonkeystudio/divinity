@@ -44,6 +44,7 @@ import studio.magemonkey.divinity.modules.list.arrows.ArrowManager.QArrow;
 import studio.magemonkey.divinity.modules.list.itemgenerator.ItemGeneratorManager;
 import studio.magemonkey.divinity.stats.EntityStats;
 import studio.magemonkey.divinity.stats.ProjectileStats;
+import studio.magemonkey.divinity.stats.StatSnapshot;
 import studio.magemonkey.divinity.stats.items.ItemStats;
 import studio.magemonkey.divinity.stats.items.attributes.AmmoAttribute;
 import studio.magemonkey.divinity.stats.items.attributes.DamageAttribute;
@@ -145,6 +146,38 @@ public class VanillaWrapperListener extends IListener<Divinity> {
     }
 
     /**
+     * Records what the shooter's stats are at the moment a projectile leaves, so the hit is worked out from
+     * those and not from whatever the shooter wears when it lands. This runs last of all the launch handlers,
+     * so the weapon, the power and the custom arrow have been put on the projectile by then.
+     * <p>
+     * A projectile that is not launched through {@link DivinityProjectileLaunchEvent} gets no snapshot and
+     * is worked out at impact, as it always was.
+     */
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onProjectileLaunchSnapshot(DivinityProjectileLaunchEvent e) {
+        if (EngineCfg.VANILLA_ONLY_DAMAGE_HANDLING) return;
+        if (!(e.getProjectile() instanceof Projectile)) return;
+
+        Projectile pj = (Projectile) e.getProjectile();
+        // A pearl, a snowball or a fishing hook is not fired for its damage: leave it to be read as it always was
+        if (!ProjectileStats.canDealDamage(pj)) return;
+
+        QArrow       arrow = null;
+        int          level = 0;
+        ArrowManager arr   = plugin.getModuleCache().getArrowManager();
+        if (arr != null) {
+            arrow = arr.getArrow(pj);
+            level = arr.getArrowLevel(pj);
+        }
+
+        StatSnapshot snapshot = EntityStats.get(e.getShooter())
+                .snapshotForLaunch(ProjectileStats.getSrcWeapon(pj), arrow, level);
+        if (snapshot != null) {
+            ProjectileStats.setSnapshot(pj, snapshot);
+        }
+    }
+
+    /**
      * Applies a request's scale and bonus to the damage of the attacker's weapon. A type that ends at 0 or
      * below is dropped, as a weapon damage type of 0 always is.
      */
@@ -198,8 +231,9 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
         double damageStart = e.getDamage();
 
-        ItemStack  weapon     = null;
-        Projectile projectile = null;
+        ItemStack    weapon     = null;
+        Projectile   projectile = null;
+        StatSnapshot launched   = null;
 
         LivingEntity damager = null;
         LivingEntity victim  = (LivingEntity) eVictim;
@@ -214,6 +248,11 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
         boolean isFullDamage = false;
 
+        // The vanilla damage type, read at most once per event. It is read for the Thorns check on a hit with
+        // no request, and reused by the attached-damage-types fallback below.
+        String  vanillaType      = null;
+        boolean vanillaTypeKnown = false;
+
         FabledHook skillApi = (FabledHook) Divinity.getInstance().getHook(EHook.SKILL_API);
         // Here only check for damager
         // to be sure to use his stats or not.
@@ -226,6 +265,20 @@ public class VanillaWrapperListener extends IListener<Divinity> {
             if (!Hooks.canFights(edeDamager, victim)) {
                 ede.setCancelled(true);
                 return;
+            }
+
+            // Vanilla Thorns reports its wearer as the damager, but it is not a swing: it takes the path
+            // environmental damage takes, with no weapon damage, crit or on-hit effects from the wearer. A hit
+            // that has a request is left to its origin, as every request-carrying hit is.
+            if (request == null) {
+                // The cause decides on every version, so the damage type is only read where it is still needed
+                if (cause != DamageCause.THORNS) {
+                    vanillaType = DamageSources.get().getDamageType(e);
+                    vanillaTypeKnown = true;
+                }
+                if (isThornsHit(cause, vanillaType)) {
+                    break labelFullDamage;
+                }
             }
 
             if (edeDamager instanceof LivingEntity) {
@@ -262,6 +315,11 @@ public class VanillaWrapperListener extends IListener<Divinity> {
                 statsDamager = EntityStats.get(damager);
                 statsDamager.setLastDamageMeta(meta);
                 weapon = ProjectileStats.getSrcWeapon(projectile);
+                launched = ProjectileStats.getSnapshot(projectile);
+                // A projectile that has changed hands since it was launched is not the shooter's snapshot's
+                if (launched != null && !launched.isShooter(damager.getUniqueId())) {
+                    launched = null;
+                }
 
                 // Applying custom arrow object to damage meta,
                 // if it's present, to use additional stats from it.
@@ -306,7 +364,9 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         // Pre-cache damager damage types.
         if (statsDamager != null && !skillShouldIgnore && isFullDamage) {
             ItemStack statWeapon = projectile != null ? weapon : null;
-            damages.putAll(statsDamager.getDamageTypes(false, statWeapon));
+            damages.putAll(launched != null
+                    ? launched.rollDamage()
+                    : statsDamager.getDamageTypes(false, statWeapon));
             if (request != null && request.adjustsWeaponDamage()) {
                 adjustWeaponDamage(damages, request);
             }
@@ -316,7 +376,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
             // and the config attaches it to a damage type
             DamageAttribute dmgCause = null;
             if (ItemStats.getDamages().stream().anyMatch(dmg -> !dmg.getAttachedDamageTypes().isEmpty())) {
-                String vanillaType = DamageSources.get().getDamageType(e);
+                if (!vanillaTypeKnown) vanillaType = DamageSources.get().getDamageType(e);
                 if (vanillaType != null) dmgCause = ItemStats.getDamageByVanillaType(vanillaType);
             }
             if (dmgCause == null) dmgCause = ItemStats.getDamageByCause(cause);
@@ -327,7 +387,7 @@ public class VanillaWrapperListener extends IListener<Divinity> {
 
         if (statsDamager != null) {
             ItemStack statWeapon = projectile != null ? weapon : null;
-            stats.putAll(statsDamager.getItemStats(false, statWeapon));
+            stats.putAll(launched != null ? launched.itemStats() : statsDamager.getItemStats(false, statWeapon));
         }
 
         defenses.putAll(statsVictim.getDefenseTypes(false));
@@ -438,6 +498,18 @@ public class VanillaWrapperListener extends IListener<Divinity> {
         vanilla.settleFinalDamage(victim);
 
 //        Divinity.getInstance().info("event took: " + (System.currentTimeMillis() - l1) + " millis");
+    }
+
+    /**
+     * Whether this is the damage vanilla Thorns deals back to an attacker: cause {@code THORNS} on every
+     * version, or, where the server has vanilla damage types (1.20.4 and newer), the type
+     * {@code minecraft:thorns}.
+     */
+    private static boolean isThornsHit(@NotNull DamageCause cause, @Nullable String vanillaType) {
+        if (cause == DamageCause.THORNS) return true;
+
+        return vanillaType != null && ("minecraft:thorns".equalsIgnoreCase(vanillaType)
+                || "thorns".equalsIgnoreCase(vanillaType));
     }
 
     /**

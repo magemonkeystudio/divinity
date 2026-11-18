@@ -22,6 +22,7 @@ import studio.magemonkey.codex.util.DataUT;
 import studio.magemonkey.divinity.Divinity;
 import studio.magemonkey.divinity.config.EngineCfg;
 import studio.magemonkey.divinity.modules.api.QModuleDrop;
+import studio.magemonkey.divinity.stats.EntityStats;
 import studio.magemonkey.divinity.stats.items.api.DuplicableItemLoreStat;
 import studio.magemonkey.divinity.stats.items.api.DynamicStat;
 import studio.magemonkey.divinity.stats.items.api.ItemLoreStat;
@@ -86,6 +87,8 @@ public class ItemStats {
     // TODO Register logs
 
     public static void clear() {
+        // What was worked out from these stats is no good to anyone once they are gone
+        EntityStats.invalidateAllSnapshots();
         DAMAGES.clear();
         DEFENSES.clear();
         STATS.clear();
@@ -99,6 +102,7 @@ public class ItemStats {
     }
 
     public static void registerDamage(@NotNull DamageAttribute dmg) {
+        EntityStats.invalidateAllSnapshots();
         DAMAGES.put(dmg.getId(), dmg);
         if (DAMAGE_DEFAULT == null || dmg.getPriority() >= DAMAGE_DEFAULT.getPriority()) {
             DAMAGE_DEFAULT = dmg;
@@ -112,6 +116,7 @@ public class ItemStats {
     }
 
     public static void registerDefense(@NotNull DefenseAttribute def) {
+        EntityStats.invalidateAllSnapshots();
         DEFENSES.put(def.getId(), def);
         ItemStats.updateDefenseByDefault();
     }
@@ -119,6 +124,7 @@ public class ItemStats {
     public static void registerStat(@NotNull TypedStat stat) {
         if (stat.getCapability() == 0) return; // TODO Log
 
+        EntityStats.invalidateAllSnapshots();
         STATS.put(stat.getType(), stat);
     }
 

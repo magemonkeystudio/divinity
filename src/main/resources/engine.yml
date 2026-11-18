@@ -42,6 +42,14 @@ performance:
     # Default value: 50 ticks (2.5 seconds).
     # Recommended: 20 or more (1+ seconds).
     bonus-update-interval: 50
+    # Damage, defense and item stats are worked out from an entity's gear once and reused for hits, instead
+    # of being read from every item on every hit. Changing equipment, held items, sets, classes, profile buffs
+    # and dying all make Divinity work them out again. This is the longest time (in ticks) a result is
+    # reused when nothing told Divinity that something changed, for example gear changed by another plugin.
+    # Active effects, damage rolls and biome modifiers are never cached.
+    # Setting this value to 0 turns the cache off.
+    # Default value: 20 ticks (1 second).
+    snapshot-max-age: 20
 
 # Item Attributes Settings.
 attributes:
