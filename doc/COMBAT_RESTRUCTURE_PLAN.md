@@ -88,7 +88,10 @@ newer), takes the non-swing path environmental damage takes: the event's own dam
 `attached-damage-types`, `attached-damage-causes` or the default type, with the defender's defenses applied.
 A hit that carries a request is decided by the request's origin, as before. Divinity's own Thornmail stat is
 not affected; it deals damage through a request with no attacker. Other causes that may be non-swings are
-still treated as swings and are left for a follow-up.
+still treated as swings and are left for a follow-up. That follow-up is investigated, not decided, in
+[`COMBAT_OPEN_QUESTIONS.md`](COMBAT_OPEN_QUESTIONS.md): potions and area effect clouds, wind charges, fireballs,
+snowballs and eggs, the other projectiles, and true damage, each with its options, a recommendation and the test
+that pins today's behaviour (`NonSwingHitsCharacterizationTest`).
 
 Not a bug after all: `DivinityDamageEvent.Exit` does not fire for `ignore-divinity` skill damage. Firing
 it would make those hits start costing weapon and armor durability, which is a behaviour change. It is
@@ -271,6 +274,12 @@ Remove the shims and dead paths after a release or two. Publish documentation fo
 `DivinityDamageEvent.Dodge` has no replacement in the new surface yet (4.3a). Do not remove it before one
 exists. `ItemDurabilityListener` and `EntityManager` listen to `Exit`; moving them to `Result` would make
 hits that ignore weapon stats cost durability, so they need their own decision before `Exit` goes.
+
+## Before release
+
+Codex 1.3.0, Divinity 2.0.0 and Fabled are tested by hand on a real server first, with the plan in
+[`COMBAT_SERVER_TEST_CHECKLIST.md`](COMBAT_SERVER_TEST_CHECKLIST.md). It marks what the automated tests already
+cover, so the time goes to the rest.
 
 ## Still to verify
 

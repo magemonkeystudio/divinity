@@ -13,6 +13,10 @@ Update this file in the same pull request whenever something here stops being tr
   `Combat <phase>.<n>`, in the repository it lands in. The sub-issue states the scope, what must not
   change, and how it is proven.
 - **Safety net:** `CombatCharacterizationTest` in Divinity. It pins what the damage pipeline produces.
+- **Hits that may wrongly count as swings:** `doc/COMBAT_OPEN_QUESTIONS.md` has the cases, the options and a
+  recommendation for each; `NonSwingHitsCharacterizationTest` pins today's behaviour for them. Nothing there is
+  decided: read it before changing how `VanillaWrapperListener` chooses the full-attack path.
+- **Before a release:** `doc/COMBAT_SERVER_TEST_CHECKLIST.md`, the manual plan for a real Paper or Spigot server.
 
 ## Status
 
@@ -27,6 +31,7 @@ Update this file in the same pull request whenever something here stops being tr
 | 4.2b Vanilla Thorns | Done (#384) |
 | 4.3a New event surface, `DIVINITY_<type>` inside a request | Done (#389) |
 | 4.3b Fabled: Physical Damage trigger and immediate buffs on `DivinityHitEvent.Result` | Next |
+| Open questions on non-swing hits, and the server checklist | Written (docs and tests only); decisions pending |
 | 5. Clean-up | Not started |
 
 ## Rules for every pull request
@@ -114,6 +119,11 @@ differently from a real server:
 - **Particles are not implemented.** A bleed tick plays them; mock `EffectUT` around the tick.
 - **Effects live on the `EntityStats` object.** `EntityStats.purge` drops them, so refreshing an entity
   that way mid-test ends its bleed. Call `updateAll()` without purging.
+- **Entities other than players are limited.** `world.spawn` works for splash potions, area effect clouds, wind
+  charges, fireballs, snowballs, eggs, llama spit, shulker bullets and evoker fangs, but MockBukkit's `Trident`
+  throws `UnimplementedOperationException` when its item is used (`NonSwingHitsCharacterizationTest` uses a Mockito
+  stand-in), and a `ZombieMock` stands in for any mob shooter. A `Projectile` is not given a shooter or a source weapon
+  by a launch event under MockBukkit: set them by hand, as `onVanillaProjLaunch` would.
 - **Fabled, MythicMobs and Citizens are not loaded.** Fabled's classes are on the test classpath, so its
   events can be constructed and its statics mocked, but its listeners do not run.
 
