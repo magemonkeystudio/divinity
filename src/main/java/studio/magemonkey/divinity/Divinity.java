@@ -29,6 +29,7 @@ import studio.magemonkey.divinity.hooks.external.mythicmobs.MythicMobsHK;
 import studio.magemonkey.divinity.hooks.external.mythicmobs.MythicMobsHKv5;
 import studio.magemonkey.divinity.manager.EntityManager;
 import studio.magemonkey.divinity.manager.damage.DamageManager;
+import studio.magemonkey.divinity.manager.damage.FinalDamageProvider;
 import studio.magemonkey.divinity.manager.interactions.InteractionManager;
 import studio.magemonkey.divinity.manager.listener.ListenerManager;
 import studio.magemonkey.divinity.manager.profile.ProfileManager;
@@ -156,10 +157,12 @@ public class Divinity extends CodexDataPlugin<Divinity, DivinityUser> {
                 .getItemManager()
                 .registerProvider(DivinityProvider.NAMESPACE, new DivinityProvider());
         DamageRegistry.registerProvider(dmgManager);
+        FinalDamageProvider.register(this);
     }
 
     @Override
     public void disable() {
+        FinalDamageProvider.unregister(this);
         DamageRegistry.unregisterProvider(DamageManager.class);
         if (this.interactionManager != null) {
             this.interactionManager.shutdown();

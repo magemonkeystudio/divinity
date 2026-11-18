@@ -265,7 +265,8 @@ Rules for every pull request:
 | 4.2 | Divinity | Stat snapshots. Done | Projectile timing |
 | 4.2b | Divinity | Stop treating hits that are not swings as swings: vanilla Thorns first (cause `THORNS` on every version, the damage type on 1.20.4+). Uses the origin from the damage request where there is one | Thorns damage |
 | 4.3a | Divinity | New event and API surface (`DivinityHitEvent.Prepare` and `.Result`); the old events become deprecated shims. A `DIVINITY_<type>` hit dealt inside a dealer's open request honours that request's weapon-stats mode. Done (#389) | `DIVINITY_<type>` inside an `IGNORE` or `RAW` request |
-| 4.3b | Fabled | Fabled stops mutating `BASE` when Divinity is present. The Physical Damage trigger and immediate buffs act on Divinity's final numbers through `DivinityHitEvent.Result` | Yes |
+| 4.3b | Divinity | `DivinityHitEvent.Result` extends Codex's `FinalDamageEvent` (Codex `1.3.0-dev.3`), and Divinity registers as its provider so `FinalDamageEvent.willFire` answers for it. `DivinityHitEvent` becomes an interface; `Result#getDamages()` is keyed by id. In review | `DivinityHitEvent.Result` API (unreleased) |
+| 4.3b | Fabled | Fabled stops mutating `BASE` when `FinalDamageEvent.willFire` says a provider will fire. The Physical Damage trigger and immediate buffs act on the provider's final numbers through `FinalDamageEvent`, so Fabled needs no dependency on Divinity | Yes |
 
 ### Phase 5: clean-up
 
