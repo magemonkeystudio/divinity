@@ -139,6 +139,10 @@ lift the cap in the test and restore it.
   Divinity's defense value lowers defense where a server expects it to rise. `melee-defense` and
   `projectile-defense` are already applied that way; do not extend the pattern without a decision.
 
+- **Vanilla Thorns is not a swing (4.2b).** A request-less hit with cause `THORNS` (any version) or vanilla
+  damage type `thorns` (1.20.4+) takes the non-swing path in `VanillaWrapperListener`, whatever the damager;
+  a hit with a request is decided by the request's origin. The damage type is read once per event.
+
 - **`VanillaDamageBridge` owns every `DamageModifier` call.** It only wraps access; callers decide when to
   call it, and the order relative to event firing is unchanged. Plain `getDamage()` and `setDamage(double)`
   (which are BASE, and which Bukkit may scale other modifiers for) are not modifier calls and were left
